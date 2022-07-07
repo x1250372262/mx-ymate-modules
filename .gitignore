@@ -1,0 +1,23 @@
+*.DS_Store
+*.class
+*.settings/
+*.idea/
+
+*.project
+*.classpath
+*.iml
+*.gradle
+
+logs/
+bin/
+lib/
+target/
+src/main/resources/rebel.xml
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+/build.num
+/MANIFEST.MF
