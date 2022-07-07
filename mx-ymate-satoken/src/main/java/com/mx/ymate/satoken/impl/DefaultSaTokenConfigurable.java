@@ -47,6 +47,137 @@ public final class DefaultSaTokenConfigurable extends DefaultModuleConfigurable 
             return this;
         }
 
+        public Builder tokenName(String tokenName) {
+            configurable.addConfig(ISaTokenConfig.TOKEN_NAME, tokenName);
+            return this;
+        }
+
+        public Builder timeout(long timeout) {
+            configurable.addConfig(ISaTokenConfig.TIMEOUT, String.valueOf(timeout));
+            return this;
+        }
+
+        public Builder activityTimeout(long activityTimeout) {
+            configurable.addConfig(ISaTokenConfig.ACTIVITY_TIMEOUT, String.valueOf(activityTimeout));
+            return this;
+        }
+
+        public Builder concurrent(boolean concurrent) {
+            configurable.addConfig(ISaTokenConfig.IS_CONCURRENT, String.valueOf(concurrent));
+            return this;
+        }
+
+        public Builder share(boolean share) {
+            configurable.addConfig(ISaTokenConfig.IS_SHARE, String.valueOf(share));
+            return this;
+        }
+
+        public Builder maxLoginCount(int maxLoginCount) {
+            configurable.addConfig(ISaTokenConfig.MAX_LOGIN_COUNT, String.valueOf(maxLoginCount));
+            return this;
+        }
+
+        public Builder readBody(boolean readBody) {
+            configurable.addConfig(ISaTokenConfig.IS_READ_BODY, String.valueOf(readBody));
+            return this;
+        }
+
+        public Builder readHead(boolean readHead) {
+            configurable.addConfig(ISaTokenConfig.IS_READ_HEAD, String.valueOf(readHead));
+            return this;
+        }
+
+        public Builder readCookie(boolean readCookie) {
+            configurable.addConfig(ISaTokenConfig.IS_READ_COOKIE, String.valueOf(readCookie));
+            return this;
+        }
+
+        public Builder tokenStyle(String tokenStyle) {
+            configurable.addConfig(ISaTokenConfig.TOKEN_STYLE, tokenStyle);
+            return this;
+        }
+
+        public Builder dataRefreshPeriod(int dataRefreshPeriod) {
+            configurable.addConfig(ISaTokenConfig.DATA_REFRESH_PERIOD, String.valueOf(dataRefreshPeriod));
+            return this;
+        }
+
+        public Builder tokenSessionCheckLogin(boolean tokenSessionCheckLogin) {
+            configurable.addConfig(ISaTokenConfig.TOKEN_SESSION_CHECK_LOGIN, String.valueOf(tokenSessionCheckLogin));
+            return this;
+        }
+
+        public Builder autoRenew(boolean autoRenew) {
+            configurable.addConfig(ISaTokenConfig.AUTO_RENEW, String.valueOf(autoRenew));
+            return this;
+        }
+
+        public Builder tokenPrefix(String tokenPrefix) {
+            configurable.addConfig(ISaTokenConfig.TOKEN_PREFIX, tokenPrefix);
+            return this;
+        }
+
+        public Builder print(boolean print) {
+            configurable.addConfig(ISaTokenConfig.IS_PRINT, String.valueOf(print));
+            return this;
+        }
+
+        public Builder log(boolean log) {
+            configurable.addConfig(ISaTokenConfig.IS_LOG, String.valueOf(log));
+            return this;
+        }
+
+        public Builder jwtSecretKey(String jwtSecretKey) {
+            configurable.addConfig(ISaTokenConfig.JWT_SECRET_KEY, jwtSecretKey);
+            return this;
+        }
+
+        public Builder idTokenTimeout(long idTokenTimeout) {
+            configurable.addConfig(ISaTokenConfig.ID_TOKEN_TIMEOUT, String.valueOf(idTokenTimeout));
+            return this;
+        }
+
+        public Builder basic(String basic) {
+            configurable.addConfig(ISaTokenConfig.BASIC, basic);
+            return this;
+        }
+
+        public Builder currDomain(String currDomain) {
+            configurable.addConfig(ISaTokenConfig.CURR_DOMAIN, currDomain);
+            return this;
+        }
+
+        public Builder checkIdToken(long checkIdToken) {
+            configurable.addConfig(ISaTokenConfig.CHECK_ID_TOKEN, String.valueOf(checkIdToken));
+            return this;
+        }
+
+        public Builder cookieDomain(String cookieDomain) {
+            configurable.addConfig(ISaTokenConfig.COOKIE_DOMAIN, cookieDomain);
+            return this;
+        }
+
+        public Builder cookiePath(String cookiePath) {
+            configurable.addConfig(ISaTokenConfig.COOKIE_PATH, cookiePath);
+            return this;
+        }
+
+        public Builder cookieSecure(long cookieSecure) {
+            configurable.addConfig(ISaTokenConfig.COOKIE_SECURE, String.valueOf(cookieSecure));
+            return this;
+        }
+
+
+        public Builder cookieHttpOnly(long cookieHttpOnly) {
+            configurable.addConfig(ISaTokenConfig.COOKIE_HTTP_ONLY, String.valueOf(cookieHttpOnly));
+            return this;
+        }
+
+        public Builder cookieSameSite(String cookieSameSite) {
+            configurable.addConfig(ISaTokenConfig.COOKIE_SAME_SITE, cookieSameSite);
+            return this;
+        }
+
         public IModuleConfigurer build() {
             return configurable.toModuleConfigurer();
         }

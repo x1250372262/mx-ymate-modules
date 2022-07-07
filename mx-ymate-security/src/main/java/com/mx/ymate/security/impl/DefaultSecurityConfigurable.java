@@ -17,6 +17,8 @@ package com.mx.ymate.security.impl;
 
 import com.mx.ymate.security.ISecurity;
 import com.mx.ymate.security.ISecurityConfig;
+import com.mx.ymate.security.handler.ILoginHandler;
+import com.mx.ymate.security.handler.IUserHandler;
 import net.ymate.platform.core.module.IModuleConfigurer;
 import net.ymate.platform.core.module.impl.DefaultModuleConfigurable;
 
@@ -44,6 +46,36 @@ public final class DefaultSecurityConfigurable extends DefaultModuleConfigurable
 
         public Builder enabled(boolean enabled) {
             configurable.addConfig(ISecurityConfig.ENABLED, String.valueOf(enabled));
+            return this;
+        }
+
+        public Builder client(String client) {
+            configurable.addConfig(ISecurityConfig.CLIENT, client);
+            return this;
+        }
+
+        public Builder loginHandlerClass(ILoginHandler loginHandlerClass) {
+            configurable.addConfig(ISecurityConfig.LOGIN_HANDLER_CLASS, loginHandlerClass.getClass().getName());
+            return this;
+        }
+
+        public Builder userHandlerClass(IUserHandler userHandlerClass) {
+            configurable.addConfig(ISecurityConfig.USER_HANDLER_CLASS, userHandlerClass.getClass().getName());
+            return this;
+        }
+
+        public Builder errorCount(int errorCount) {
+            configurable.addConfig(ISecurityConfig.ERROR_COUNT, String.valueOf(errorCount));
+            return this;
+        }
+
+        public Builder openLog(boolean openLog) {
+            configurable.addConfig(ISecurityConfig.OPEN_LOG, String.valueOf(openLog));
+            return this;
+        }
+
+        public Builder excludePathPatterns(String excludePathPatterns) {
+            configurable.addConfig(ISecurityConfig.EXCLUDE_PATH_PATTERNS, excludePathPatterns);
             return this;
         }
 
