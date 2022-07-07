@@ -1,0 +1,17 @@
+# mx-ymate-modules
+
+主要用于快速开发ymp项目，具体说明如下
+
+- [mx-ymate-dev](mx-ymate-dev)  核心模块，其他模块都依赖它。提供一些常用工具类，通用返回结果等等；
+- [mx-ymate-redis](mx-ymate-redis) 整合redis  提供便利的api操作。
+- [mx-ymate-satoken](mx-ymate-satoken) 基于sa-token 权限验证 需要数据库的支持，支持扩展自己的用户体系。
+- [mx-ymate-security](mx-ymate-security) 基于sa-token 权限验证 需要数据库的支持，支持扩展自己的用户体系。
+- [mx-ymate-upload](mx-ymate-upload) 上传文件模块，支持本地、七牛、minio、腾讯、阿里。也可以自己扩展。
+
+
+
+
+
+
+## 注
+以上模块由于未发布到maven中央仓库，所以需要自己本地安装一下。
