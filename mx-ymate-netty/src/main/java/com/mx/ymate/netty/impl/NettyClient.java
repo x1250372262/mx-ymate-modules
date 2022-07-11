@@ -26,10 +26,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class NettyClient {
 
-    private final INettyConfig config = Netty.get().getConfig();
+    private final INettyConfig config;
 
     private final EventLoopGroup WORK_GROUP = new NioEventLoopGroup();
 
+    public NettyClient(INettyConfig config) {
+        this.config = config;
+    }
 
     private List<RemoteAddress> getRemoteAddressList(List<String> remoteAddressStrList) {
         List<RemoteAddress> list = new ArrayList<>();

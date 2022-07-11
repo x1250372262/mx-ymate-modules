@@ -62,37 +62,8 @@ public @interface NettyConf {
     int serverHeartBeatTime();
 
     /**
-     * 排除端口 用,号分割 只针对startPort endPort有效
-     */
-    String serverExcludePort();
-
-    /**
-     * 处理器名称 可以指定多个用,号分割 按顺序添加
-     */
-    Class<? extends ChannelInboundHandlerAdapter>[] serverHandlerClass() default {};
-
-    /**
-     * 编解码名称 只能指定一个
-     */
-    Class<? extends ChannelInboundHandlerAdapter> serverDecoderClass();
-
-    /**
-     * 远程连接地址 ip:port  多个用逗号分割
-     */
-    String[] clientRemoteAddress() default {};
-
-    /**
      * 心跳维护时间 默认不维护
      */
     int clientHeartBeatTime();
 
-    /**
-     * 处理器名称 可以指定多个用,号分割 按顺序添加
-     */
-    Class<? extends ChannelInboundHandlerAdapter>[] clientHandlerClass() default {};
-
-    /**
-     * 编解码名称 只能指定一个
-     */
-    Class<? extends ChannelInboundHandlerAdapter> clientDecoderClass();
 }

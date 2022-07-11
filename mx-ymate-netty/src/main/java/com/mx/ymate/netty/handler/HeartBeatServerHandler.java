@@ -1,6 +1,6 @@
 package com.mx.ymate.netty.handler;
 
-import com.mx.spring.dev.support.log.MxLog;
+import com.mx.ymate.dev.support.log.MxLog;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;

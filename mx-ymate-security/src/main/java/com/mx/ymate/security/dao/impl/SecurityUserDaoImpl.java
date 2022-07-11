@@ -74,8 +74,8 @@ public class SecurityUserDaoImpl implements ISecurityUserDao {
     @Override
     public SecurityUser findByUserNameAndClientAndResourceId(String userName, String client, String resourceId) throws Exception {
         Cond cond = Cond.create().eqWrap(SecurityUser.FIELDS.USER_NAME).param(userName)
-                .and().eqWrap(SecurityUser.FIELDS.RESOURCE_ID, resourceId)
-                .and().eqWrap(SecurityUser.FIELDS.CLIENT, client);
+                .and().eqWrap(SecurityUser.FIELDS.RESOURCE_ID).param(resourceId)
+                .and().eqWrap(SecurityUser.FIELDS.CLIENT).param(client);
         return SecurityUser.builder().build().findFirst(Where.create(cond));
     }
 }

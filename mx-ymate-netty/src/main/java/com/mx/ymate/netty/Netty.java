@@ -102,14 +102,14 @@ public final class Netty implements IModule, INetty {
             if (config.isEnabled()) {
 
                 if (SERVER_CLIENT_SERVER.equals(config.client())) {
-                    nettyServer = new NettyServer();
+                    nettyServer = new NettyServer(config);
                     nettyServer.run();
                 } else if (SERVER_CLIENT_CLIENT.equals(config.client())) {
-                    nettyClient = new NettyClient();
+                    nettyClient = new NettyClient(config);
                     nettyClient.run();
                 } else {
-                    nettyServer = new NettyServer();
-                    nettyClient = new NettyClient();
+                    nettyServer = new NettyServer(config);
+                    nettyClient = new NettyClient(config);
                     nettyServer.run();
                     nettyClient.run();
                 }

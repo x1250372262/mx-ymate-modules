@@ -25,10 +25,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class NettyServer {
 
-    private final INettyConfig config = Netty.get().getConfig();
+    private final INettyConfig config;
 
     private final EventLoopGroup BOSS_GROUP = new NioEventLoopGroup();
     private final EventLoopGroup WORK_GROUP = new NioEventLoopGroup();
+
+    public NettyServer(INettyConfig config) {
+        this.config = config;
+    }
 
     public void run() throws Exception {
         if (config.serverDecoder() == null) {

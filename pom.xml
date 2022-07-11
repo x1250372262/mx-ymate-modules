@@ -14,6 +14,7 @@
         <module>mx-ymate-redis</module>
         <module>mx-ymate-upload</module>
         <module>mx-ymate-netty</module>
+        <module>mx-ymate-serv</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -61,6 +62,11 @@
             <dependency>
                 <groupId>net.ymate.platform</groupId>
                 <artifactId>ymate-platform-persistence-redis</artifactId>
+                <version>${ymate.platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ymate.platform</groupId>
+                <artifactId>ymate-platform-serv</artifactId>
                 <version>${ymate.platform.version}</version>
             </dependency>
             <dependency>
