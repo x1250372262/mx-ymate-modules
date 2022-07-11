@@ -13,8 +13,6 @@ public class SecurityUserListVO extends SecurityUserVO implements Serializable {
 
     private Long createTime;
 
-    private Long lastModifyTime;
-
     private Integer disableStatus;
 
     private Integer loginLockStatus;
@@ -49,13 +47,5 @@ public class SecurityUserListVO extends SecurityUserVO implements Serializable {
 
     public void setLoginLockStatus(Integer loginLockStatus) {
         this.loginLockStatus = loginLockStatus;
-    }
-
-    public Long getLastModifyTime() {
-        return lastModifyTime;
-    }
-
-    public void setLastModifyTime(Long lastModifyTime) {
-        this.lastModifyTime = lastModifyTime;
     }
 }

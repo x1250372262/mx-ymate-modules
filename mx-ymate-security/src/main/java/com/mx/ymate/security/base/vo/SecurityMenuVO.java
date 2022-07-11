@@ -23,7 +23,9 @@ public class SecurityMenuVO implements Serializable {
 
     private Integer sort;
 
-    private String type;
+    private Integer type;
+
+    private Integer hideStatus;
 
     public String getId() {
         return id;
@@ -81,12 +83,20 @@ public class SecurityMenuVO implements Serializable {
         this.sort = sort;
     }
 
-    public String getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Integer getHideStatus() {
+        return hideStatus;
+    }
+
+    public void setHideStatus(Integer hideStatus) {
+        this.hideStatus = hideStatus;
     }
 
     @Override

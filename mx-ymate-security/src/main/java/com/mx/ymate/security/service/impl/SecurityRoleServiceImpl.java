@@ -94,7 +94,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
         if (role == null) {
             return MxResult.noData();
         }
-        if (MxResult.checkVersion(role.getLastModifyTime(), lastModifyTime)) {
+        if (!MxResult.checkVersion(role.getLastModifyTime(), lastModifyTime)) {
             return MxResult.noVersion();
         }
         role = BeanUtil.duplicate(roleBean, role);

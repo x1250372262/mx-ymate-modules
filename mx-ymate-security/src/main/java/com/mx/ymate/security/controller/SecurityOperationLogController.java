@@ -44,7 +44,7 @@ public class SecurityOperationLogController {
                       @RequestParam Long startTime,
                       @RequestParam Long endTime,
                       @ModelBind PageDTO pageDTO) throws Exception {
-        return iLogService.list(title, startTime, endTime, pageDTO.toBean()).toJsonView();
+        return iLogService.list(title, startTime, endTime, pageDTO.toBean()).toMxJsonView();
     }
 
 
@@ -59,7 +59,7 @@ public class SecurityOperationLogController {
     @SaCheckLogin
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_LOG_DETAIL)
     public IView detail(@PathVariable String id) throws Exception {
-        return iLogService.detail(id).toJsonView();
+        return iLogService.detail(id).toMxJsonView();
     }
 
     /**
@@ -75,6 +75,6 @@ public class SecurityOperationLogController {
     @OperationLog(operationType = OperationType.DELETE, title = "删除日志")
     public IView delete(@VRequired(msg = "ids不能为空")
                         @RequestParam("ids[]") String[] ids) throws Exception {
-        return iLogService.delete(ids).toJsonView();
+        return iLogService.delete(ids).toMxJsonView();
     }
 }

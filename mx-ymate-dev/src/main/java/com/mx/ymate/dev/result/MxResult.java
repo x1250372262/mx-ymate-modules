@@ -29,53 +29,14 @@ import java.util.Objects;
 public class MxResult extends MxAbstractWebResult<String> implements Serializable {
 
 
-    public static IWebResultBuilder builder() {
-        IWebResultBuilder builder = null;
-        try {
-            builder = ClassUtils.getExtensionLoader(IWebResultBuilder.class).getExtensionClass().newInstance();
-        } catch (Exception ignored) {
-        }
-        return builder != null ? builder : new DefaultWebResultBuilder();
-    }
-
-    public static IWebResultBuilder builder(ErrorCode errorCode) {
-        return builder(WebContext.getContext().getOwner(), null, errorCode);
-    }
-
-    public static IWebResultBuilder builder(String resourceName, ErrorCode errorCode) {
-        return builder(WebContext.getContext().getOwner(), resourceName, errorCode);
-    }
-
-    public static IWebResultBuilder builder(IWebMvc owner, ErrorCode errorCode) {
-        return builder(owner, null, errorCode);
-    }
-
-    public static IWebResultBuilder builder(IWebMvc owner, String resourceName, ErrorCode errorCode) {
-        IWebResultBuilder builder = builder();
-        String msg = null;
-        if (StringUtils.isNotBlank(errorCode.i18nKey())) {
-            msg = WebUtils.i18nStr(owner, resourceName, errorCode.i18nKey(), null);
-        }
-        if (StringUtils.isBlank(msg)) {
-            msg = WebUtils.errorCodeI18n(owner, resourceName, errorCode.code(), errorCode.message());
-        }
-        builder.code(errorCode.code()).msg(msg);
-        if (!errorCode.attrs().isEmpty()) {
-            builder.attrs(errorCode.attrs());
-        }
-        if (!errorCode.data().isEmpty()) {
-            builder.data(errorCode.data());
-        }
-        return builder;
-    }
 
 
     public static MxResult create() {
-        return new MxResult();
+        return new MxResult().keepNullValue();
     }
 
     public static MxResult create(String code) {
-        return new MxResult(code);
+        return new MxResult(code).keepNullValue();
     }
 
 
@@ -85,7 +46,7 @@ public class MxResult extends MxAbstractWebResult<String> implements Serializabl
 
 
     public static MxResult ok() {
-        return new MxResult(Code.SUCCESS.code());
+        return MxResult.create(Code.SUCCESS.code());
     }
 
     /**

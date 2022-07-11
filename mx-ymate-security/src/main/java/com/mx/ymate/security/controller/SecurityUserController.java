@@ -46,7 +46,7 @@ public class SecurityUserController {
                       @RequestParam String realName,
                       @RequestParam Integer disableStatus,
                       @ModelBind PageDTO pageDTO) throws Exception {
-        return iUserService.list(userName, realName, disableStatus, pageDTO.toBean()).toJsonView();
+        return iUserService.list(userName, realName, disableStatus, pageDTO.toBean()).toMxJsonView();
     }
 
     /**
@@ -64,7 +64,7 @@ public class SecurityUserController {
     public IView create(@VRequired(msg = "密码不能为空")
                         @RequestParam String password,
                         @VModel @ModelBind SecurityUserDTO securityUserDTO) throws Exception {
-        return iUserService.create(password, securityUserDTO.toBean()).toJsonView();
+        return iUserService.create(password, securityUserDTO.toBean()).toMxJsonView();
     }
 
     /**
@@ -85,7 +85,7 @@ public class SecurityUserController {
                         @RequestParam Long lastModifyTime,
                         @VRequired(msg = "状态不能为空")
                         @RequestParam Integer status) throws Exception {
-        return iUserService.status(id, lastModifyTime, status).toJsonView();
+        return iUserService.status(id, lastModifyTime, status).toMxJsonView();
     }
 
     /**
@@ -103,7 +103,7 @@ public class SecurityUserController {
     public IView unlock(@PathVariable String id,
                         @VRequired(msg = "最后修改时间(乐观锁)不能为空")
                         @RequestParam Long lastModifyTime) throws Exception {
-        return iUserService.unlock(id, lastModifyTime).toJsonView();
+        return iUserService.unlock(id, lastModifyTime).toMxJsonView();
     }
 
     /**
@@ -121,7 +121,7 @@ public class SecurityUserController {
     public IView resetPassword(@PathVariable String id,
                                @VRequired(msg = "最后修改时间(乐观锁)不能为空")
                                @RequestParam Long lastModifyTime) throws Exception {
-        return iUserService.resetPassword(id, lastModifyTime).toJsonView();
+        return iUserService.resetPassword(id, lastModifyTime).toMxJsonView();
     }
 
     /**
@@ -135,7 +135,7 @@ public class SecurityUserController {
     @SaCheckLogin
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_USER_DETAIL)
     public IView detail(@PathVariable String id) throws Exception {
-        return iUserService.detail(id).toJsonView();
+        return iUserService.detail(id).toMxJsonView();
     }
 
 
@@ -153,7 +153,7 @@ public class SecurityUserController {
     public IView roleList(@VRequired(msg = "人员ID不能为空")
                           @RequestParam String userId,
                           @ModelBind PageDTO pageDTO) throws Exception {
-        return iUserService.roleList(userId, pageDTO.toBean()).toJsonView();
+        return iUserService.roleList(userId, pageDTO.toBean()).toMxJsonView();
     }
 
     /**
@@ -172,7 +172,7 @@ public class SecurityUserController {
                             @RequestParam String userId,
                             @VRequired(msg = "角色ID不能为空")
                             @RequestParam String roleId) throws Exception {
-        return iUserService.roleCreate(userId, roleId).toJsonView();
+        return iUserService.roleCreate(userId, roleId).toMxJsonView();
     }
 
     /**
@@ -188,6 +188,6 @@ public class SecurityUserController {
     @OperationLog(operationType = OperationType.DELETE, title = "删除人员角色")
     public IView roleDelete(@VRequired(msg = "ids不能为空")
                             @RequestParam("ids[]") String[] ids) throws Exception {
-        return iUserService.roleDelete(ids).toJsonView();
+        return iUserService.roleDelete(ids).toMxJsonView();
     }
 }

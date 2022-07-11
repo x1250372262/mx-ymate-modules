@@ -15,6 +15,7 @@
  */
 package com.mx.ymate.dev.result;
 
+import com.mx.ymate.dev.view.MxJsonView;
 import net.ymate.platform.commons.json.IJsonObjectWrapper;
 import net.ymate.platform.commons.json.JsonWrapper;
 import net.ymate.platform.commons.util.ClassUtils;
@@ -34,7 +35,7 @@ import java.util.Map;
  * @author 刘镇 (suninformation@163.com) on 2020/08/26 09:59
  * @since 2.1.0
  */
-public abstract class MxAbstractWebResult<CODE_TYPE extends Serializable> implements IWebResult<CODE_TYPE>, Serializable {
+public abstract class MxAbstractWebResult<CODE_TYPE extends Serializable> implements IMxWebResult<CODE_TYPE>, Serializable {
 
     private CODE_TYPE code;
 
@@ -171,7 +172,6 @@ public abstract class MxAbstractWebResult<CODE_TYPE extends Serializable> implem
     public IJsonObjectWrapper toJsonObject() {
         IJsonObjectWrapper jsonObj = JsonWrapper.createJsonObject(true);
         if (code != null) {
-//            jsonObj.put(Type.Const.PARAM_RET, code);
             jsonObj.put("code", code);
         }
         if (StringUtils.isNotBlank(msg)) {
@@ -194,6 +194,27 @@ public abstract class MxAbstractWebResult<CODE_TYPE extends Serializable> implem
     @Override
     public JsonView toJsonView(String callback) {
         JsonView jsonView = new JsonView(toJsonObject()).withJsonCallback(callback);
+        if (snakeCase) {
+            jsonView.snakeCase();
+        }
+        if (keepNullValue) {
+            jsonView.keepNullValue();
+        }
+        if (withContentType) {
+            jsonView.withContentType();
+        }
+        return jsonView;
+    }
+
+
+    @Override
+    public MxJsonView toMxJsonView() {
+        return toMxJsonView(null);
+    }
+
+    @Override
+    public MxJsonView toMxJsonView(String callback) {
+        MxJsonView jsonView = new MxJsonView(toJsonObject()).withJsonCallback(callback);
         if (snakeCase) {
             jsonView.snakeCase();
         }

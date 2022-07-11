@@ -110,7 +110,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
         if (securityUser == null) {
             return MxResult.noData();
         }
-        if (MxResult.checkVersion(securityUser.getLastModifyTime(), lastModifyTime)) {
+        if (!MxResult.checkVersion(securityUser.getLastModifyTime(), lastModifyTime)) {
             return MxResult.noVersion();
         }
         securityUser.setLastModifyUser(saUtils.loginId());
@@ -126,7 +126,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
         if (securityUser == null) {
             return MxResult.noData();
         }
-        if (MxResult.checkVersion(securityUser.getLastModifyTime(), lastModifyTime)) {
+        if (!MxResult.checkVersion(securityUser.getLastModifyTime(), lastModifyTime)) {
             return MxResult.noVersion();
         }
         securityUser.setLastModifyUser(saUtils.loginId());
@@ -146,7 +146,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
         if (securityUser == null) {
             return MxResult.noData();
         }
-        if (MxResult.checkVersion(securityUser.getLastModifyTime(), lastModifyTime)) {
+        if (!MxResult.checkVersion(securityUser.getLastModifyTime(), lastModifyTime)) {
             return MxResult.noVersion();
         }
         securityUser.setLastModifyUser(saUtils.loginId());

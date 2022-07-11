@@ -66,7 +66,8 @@ public class SecurityUserDaoImpl implements ISecurityUserDao {
                     .field("su", SecurityUser.FIELDS.DISABLE_STATUS)
                     .field("su", SecurityUser.FIELDS.LOGIN_LOCK_STATUS)
                     .field("su", SecurityUser.FIELDS.GENDER)
-                    .field(Func.aggregate.GROUP_CONCAT(Fields.field("sr", SecurityRole.FIELDS.NAME)), "role_name");
+                    .field(Func.aggregate.GROUP_CONCAT(Fields.field("sr", SecurityRole.FIELDS.NAME)), "role_name")
+                    .where(cond).groupBy("su",SecurityUser.FIELDS.ID).orderByDesc("su",SecurityUser.FIELDS.CREATE_TIME);
             return session.find(SQL.create(select), new BeanResultSetHandler<>(SecurityUserListVO.class), page);
         });
     }

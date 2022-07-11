@@ -30,7 +30,7 @@ public class SecurityPermissionController {
     @RequestMapping("/select")
     @SaCheckLogin
     public IView list() throws Exception {
-        return iPermissionService.list().toJsonView();
+        return iPermissionService.list().toMxJsonView();
     }
 
 }

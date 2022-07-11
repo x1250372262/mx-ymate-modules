@@ -24,11 +24,12 @@ import net.ymate.platform.persistence.jdbc.query.Select;
 @Bean
 public class SecurityMenuDaoImpl implements ISecurityMenuDao {
     @Override
-    public IResultSet<SecurityMenuNavVO> findAllByType(Integer type, String client, String resourceId) throws Exception {
+    public IResultSet<SecurityMenuNavVO> findAllByType(Integer type,Integer hideStatus, String client, String resourceId) throws Exception {
         Cond cond = Cond.create()
                 .eqWrap(SecurityMenu.FIELDS.CLIENT).param(client)
                 .and().eqWrap(SecurityMenu.FIELDS.RESOURCE_ID).param(resourceId)
-                .exprNotEmpty(type, c -> c.and().eqWrap(SecurityMenu.FIELDS.TYPE).param(type));
+                .exprNotEmpty(type, c -> c.and().eqWrap(SecurityMenu.FIELDS.TYPE).param(type))
+                .exprNotEmpty(hideStatus, c -> c.and().eqWrap(SecurityMenu.FIELDS.HIDE_STATUS).param(hideStatus));
         return JDBC.get().openSession(session -> {
             Select select = Select.create(SecurityMenu.TABLE_NAME,"sm")
                     .field("sm",SecurityMenu.FIELDS.ID)
@@ -45,12 +46,13 @@ public class SecurityMenuDaoImpl implements ISecurityMenuDao {
     }
 
     @Override
-    public IResultSet<SecurityMenuNavVO> findAll(String userId, String client, String resourceId) throws Exception {
+    public IResultSet<SecurityMenuNavVO> findAll(String userId, String client, String resourceId,Integer hideStatus) throws Exception {
         Cond cond = Cond.create()
-                .eqWrap("sur", SecurityUserRole.FIELDS.USER_ID).param(userId)
+                .eqWrap("sur", SecurityUserRole.FIELDS.USER_ID).param(userId).and().eqWrap("sur",SecurityMenu.FIELDS.HIDE_STATUS).param(Constants.BOOL_FALSE)
                 .and().eqWrap("sm", SecurityMenu.FIELDS.TYPE).param(Constants.BOOL_FALSE)
                 .and().eqWrap("sm", SecurityMenu.FIELDS.CLIENT).param(client)
-                .and().eqWrap("smr", SecurityMenuRole.FIELDS.RESOURCE_ID).param(resourceId);
+                .and().eqWrap("smr", SecurityMenuRole.FIELDS.RESOURCE_ID).param(resourceId)
+                .exprNotEmpty(hideStatus,c->c.and().eqWrap("sm",SecurityMenu.FIELDS.HIDE_STATUS).param(hideStatus));
         return JDBC.get().openSession(session -> {
             String prefix = session.getConnectionHolder().getDataSourceConfig().getTablePrefix();
             Join mrJoin = Join.left(prefix, SecurityMenuRole.TABLE_NAME).alias("smr")

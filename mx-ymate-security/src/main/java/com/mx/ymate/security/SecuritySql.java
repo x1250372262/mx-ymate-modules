@@ -26,13 +26,13 @@ import java.util.Scanner;
 public class SecuritySql {
 
     private static void menuSql(List<String> sqlList, String dbName, String client) {
-        String sql = "INSERT INTO `{}`.`mx_security_menu` (`id`, `resource_id`, `client`, `type`, `parent_id`, `name`, `icon`, `path`, `url`, `sort`) VALUES ('{}', '{}', '{}',{}, '{}', '{}', '{}', '{}', '{}', {});";
+        String sql = "INSERT INTO `{}`.`mx_security_menu` (`id`, `resource_id`, `client`, `type`, `parent_id`, `name`, `icon`, `path`, `url`, `sort`, `hide_status`) VALUES ('{}', '{}', '{}',{}, '{}', '{}', '{}', '{}', '{}', {}, {});";
         String id = UUIDUtils.UUID();
-        sqlList.add(StrUtil.format(sql, dbName, id, client, client, 2, "0", "安全管理", "mdi mdi-alarm-light", "/security", "", 100));
-        sqlList.add(StrUtil.format(sql, dbName, UUIDUtils.UUID(), client, client, 0, id, "菜单管理", "", "", "/security/menu/list.html", 1));
-        sqlList.add(StrUtil.format(sql, dbName, UUIDUtils.UUID(), client, client, 0, id, "人员管理", "", "", "/security/user/list.html", 3));
-        sqlList.add(StrUtil.format(sql, dbName, UUIDUtils.UUID(), client, client, 0, id, "角色管理", "", "", "/security/role/list.html", 2));
-        sqlList.add(StrUtil.format(sql, dbName, UUIDUtils.UUID(), client, client, 0, id, "日志管理", "", "", "/security/log/list.html", 4));
+        sqlList.add(StrUtil.format(sql, dbName, id, client, client, 2, "0", "安全管理", "mdi mdi-alarm-light", "/security", "", 100, 0));
+        sqlList.add(StrUtil.format(sql, dbName, UUIDUtils.UUID(), client, client, 0, id, "菜单管理", "", "", "/security/menu/list.html", 1, 0));
+        sqlList.add(StrUtil.format(sql, dbName, UUIDUtils.UUID(), client, client, 0, id, "人员管理", "", "", "/security/user/list.html", 3, 0));
+        sqlList.add(StrUtil.format(sql, dbName, UUIDUtils.UUID(), client, client, 0, id, "角色管理", "", "", "/security/role/list.html", 2, 0));
+        sqlList.add(StrUtil.format(sql, dbName, UUIDUtils.UUID(), client, client, 0, id, "日志管理", "", "", "/security/log/list.html", 4, 0));
     }
 
     private static void userSql(List<String> sqlList, String dbName, String client, String userId) {

@@ -39,6 +39,10 @@ public class SecurityMenuDTO implements Serializable {
     @RequestParam
     private Integer type;
 
+    @VRequired(msg = "不能为空")
+    @RequestParam
+    private Integer hideStatus;
+
     public SecurityMenuBean toBean() throws Exception {
         return BeanUtil.copy(this, SecurityMenuBean::new);
     }
@@ -98,6 +102,14 @@ public class SecurityMenuDTO implements Serializable {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Integer getHideStatus() {
+        return hideStatus;
+    }
+
+    public void setHideStatus(Integer hideStatus) {
+        this.hideStatus = hideStatus;
     }
 
     @Override

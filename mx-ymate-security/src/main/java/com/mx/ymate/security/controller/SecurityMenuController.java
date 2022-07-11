@@ -41,7 +41,7 @@ public class SecurityMenuController {
     @RequestMapping("/nav")
     @SaCheckLogin
     public IView nav() throws Exception {
-        return iMenuService.nav().toJsonView();
+        return iMenuService.nav().toMxJsonView();
     }
 
 
@@ -55,7 +55,7 @@ public class SecurityMenuController {
     @SaCheckLogin
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_MENU_LIST)
     public IView list() throws Exception {
-        return iMenuService.list().toJsonView();
+        return iMenuService.list().toMxJsonView();
     }
 
     /**
@@ -70,7 +70,7 @@ public class SecurityMenuController {
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_MENU_CREATE)
     @OperationLog(operationType = OperationType.CREATE, title = "添加菜单")
     public IView create(@VModel @ModelBind SecurityMenuDTO menuDTO) throws Exception {
-        return iMenuService.create(menuDTO.toBean()).toJsonView();
+        return iMenuService.create(menuDTO.toBean()).toMxJsonView();
     }
 
     /**
@@ -88,7 +88,7 @@ public class SecurityMenuController {
     public IView update(@VRequired(msg = "ID不能为空")
                         @RequestParam String id,
                         @VModel @ModelBind SecurityMenuDTO menuDTO) throws Exception {
-        return iMenuService.update(id, menuDTO.toBean()).toJsonView();
+        return iMenuService.update(id, menuDTO.toBean()).toMxJsonView();
     }
 
     /**
@@ -103,7 +103,7 @@ public class SecurityMenuController {
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_MENU_DETAIL)
     public IView detail(@VRequired(msg = "ID不能为空")
                         @RequestParam String id) throws Exception {
-        return iMenuService.detail(id).toJsonView();
+        return iMenuService.detail(id).toMxJsonView();
     }
 
     /**
@@ -119,7 +119,7 @@ public class SecurityMenuController {
     @OperationLog(operationType = OperationType.DELETE, title = "删除菜单")
     public IView delete(@VRequired(msg = "ID不能为空")
                         @RequestParam String id) throws Exception {
-        return iMenuService.delete(id).toJsonView();
+        return iMenuService.delete(id).toMxJsonView();
     }
 
     /**
@@ -138,7 +138,7 @@ public class SecurityMenuController {
                           @RequestParam String menuId,
                           @RequestParam String name,
                           @ModelBind PageDTO pageDTO) throws Exception {
-        return iMenuService.roleList(menuId, name, pageDTO.toBean()).toJsonView();
+        return iMenuService.roleList(menuId, name, pageDTO.toBean()).toMxJsonView();
     }
 
     /**
@@ -157,7 +157,7 @@ public class SecurityMenuController {
                             @RequestParam String menuId,
                             @VRequired(msg = "角色ID不能为空")
                             @RequestParam String roleId) throws Exception {
-        return iMenuService.roleCreate(menuId, roleId).toJsonView();
+        return iMenuService.roleCreate(menuId, roleId).toMxJsonView();
     }
 
     /**
@@ -173,6 +173,6 @@ public class SecurityMenuController {
     @OperationLog(operationType = OperationType.DELETE, title = "删除菜单角色")
     public IView roleDelete(@VRequired(msg = "ids不能为空")
                             @RequestParam("ids[]") String[] ids) throws Exception {
-        return iMenuService.roleDelete(ids).toJsonView();
+        return iMenuService.roleDelete(ids).toMxJsonView();
     }
 }

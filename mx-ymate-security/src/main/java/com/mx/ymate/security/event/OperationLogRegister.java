@@ -1,8 +1,6 @@
 package com.mx.ymate.security.event;
 
 import com.mx.ymate.security.base.model.SecurityOperationLog;
-import com.mx.ymate.security.dao.ISecurityOperationLogDao;
-import net.ymate.platform.core.YMP;
 import net.ymate.platform.core.event.Events;
 import net.ymate.platform.core.event.IEventListener;
 import net.ymate.platform.core.event.IEventRegister;
@@ -16,8 +14,6 @@ import net.ymate.platform.core.event.annotation.EventRegister;
 @EventRegister
 public class OperationLogRegister implements IEventRegister {
 
-    private final ISecurityOperationLogDao iSecurityOperationLogDao = YMP.get().getBeanFactory().getBean(ISecurityOperationLogDao.class);
-
 
     @Override
     public void register(Events events) throws Exception {
@@ -28,7 +24,7 @@ public class OperationLogRegister implements IEventRegister {
                 SecurityOperationLog securityOperationLog = (SecurityOperationLog) context.getParamExtend("log");
                 if (securityOperationLog != null) {
                     try {
-                        iSecurityOperationLogDao.create(securityOperationLog);
+                        securityOperationLog.save();
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }

@@ -2,7 +2,7 @@ package com.mx.ymate.security.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.IdUtil;
+import com.mx.ymate.dev.constants.Constants;
 import com.mx.ymate.dev.result.MxResult;
 import com.mx.ymate.dev.support.page.PageBean;
 import com.mx.ymate.dev.support.page.Pages;
@@ -63,12 +63,12 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     public MxResult nav() throws Exception {
         String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.MENU), config.client());
         if (saUtils.isFounder()) {
-            return MxResult.ok().data(iSecurityMenuDao.findAllByType(null, config.client(), resourceId).getResultData());
+            return MxResult.ok().data(iSecurityMenuDao.findAllByType(null, Constants.BOOL_FALSE, config.client(), resourceId).getResultData());
         }
         //查询带权限的还有公开的 合并到一起
-        List<SecurityMenuNavVO> list = iSecurityMenuDao.findAll(saUtils.loginId(), config.client(), userHandler.buildResourceId(ResourceType.ROLE)).getResultData();
+        List<SecurityMenuNavVO> list = iSecurityMenuDao.findAll(saUtils.loginId(), config.client(), userHandler.buildResourceId(ResourceType.ROLE),Constants.BOOL_FALSE).getResultData();
 
-        List<SecurityMenuNavVO> publicList = iSecurityMenuDao.findAllByType(MenuType.PUBLIC.value(), config.client(), resourceId).getResultData();
+        List<SecurityMenuNavVO> publicList = iSecurityMenuDao.findAllByType(MenuType.PUBLIC.value(), Constants.BOOL_FALSE, config.client(), resourceId).getResultData();
         list.addAll(publicList);
         if (CollUtil.isNotEmpty(list)) {
             list = list.stream().sorted(Comparator.comparing(SecurityMenuNavVO::getSort)).collect(Collectors.toList());
@@ -105,7 +105,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     @Override
     public MxResult list() throws Exception {
         String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.MENU), config.client());
-        List<SecurityMenuNavVO> menuNavVOList = iSecurityMenuDao.findAllByType(null, config.client(), resourceId).getResultData();
+        List<SecurityMenuNavVO> menuNavVOList = iSecurityMenuDao.findAllByType(null, null, config.client(), resourceId).getResultData();
         List<SecurityMenuListVO> menuListVOList = new ArrayList<>();
         if (CollUtil.isEmpty(menuNavVOList)) {
             return MxResult.ok().data(menuListVOList);
@@ -137,7 +137,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
         }
         menu = BeanUtil.duplicate(menuBean, menu);
         menu = iSecurityMenuDao.update(menu, SecurityMenu.FIELDS.PARENT_ID, SecurityMenu.FIELDS.NAME, SecurityMenu.FIELDS.ICON,
-                SecurityMenu.FIELDS.PATH, SecurityMenu.FIELDS.URL, SecurityMenu.FIELDS.SORT, SecurityMenu.FIELDS.TYPE);
+                SecurityMenu.FIELDS.PATH, SecurityMenu.FIELDS.URL, SecurityMenu.FIELDS.SORT, SecurityMenu.FIELDS.TYPE,SecurityMenu.FIELDS.HIDE_STATUS);
         return MxResult.result(menu);
     }
 

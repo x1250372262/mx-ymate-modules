@@ -65,7 +65,7 @@ public class MxSaAnnotationInterceptor extends AbstractInterceptor {
             securityConfig.loginHandlerClass().checkLoginCustom(securityUser);
 
         } catch (NotLoginException notLoginException) {
-            return MxResult.create(Code.NOT_LOGIN).toJsonView();
+            return MxResult.create(Code.NOT_LOGIN).toMxJsonView();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

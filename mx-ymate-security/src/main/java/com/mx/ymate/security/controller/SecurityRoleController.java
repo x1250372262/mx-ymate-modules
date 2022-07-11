@@ -41,7 +41,7 @@ public class SecurityRoleController {
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_ROLE_LIST)
     public IView list(@RequestParam String name,
                       @ModelBind PageDTO pageDTO) throws Exception {
-        return iRoleService.list(name, pageDTO.toBean()).toJsonView();
+        return iRoleService.list(name, pageDTO.toBean()).toMxJsonView();
     }
 
     /**
@@ -56,7 +56,7 @@ public class SecurityRoleController {
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_ROLE_CREATE)
     @OperationLog(operationType = OperationType.CREATE, title = "添加角色")
     public IView create(@VModel @ModelBind SecurityRoleDTO roleDTO) throws Exception {
-        return iRoleService.create(roleDTO.toBean()).toJsonView();
+        return iRoleService.create(roleDTO.toBean()).toMxJsonView();
     }
 
     /**
@@ -75,7 +75,7 @@ public class SecurityRoleController {
                         @VRequired(msg = "最后修改时间(乐观锁)不能为空")
                         @RequestParam Long lastModifyTime,
                         @VModel @ModelBind SecurityRoleDTO roleDTO) throws Exception {
-        return iRoleService.update(id, lastModifyTime, roleDTO.toBean()).toJsonView();
+        return iRoleService.update(id, lastModifyTime, roleDTO.toBean()).toMxJsonView();
     }
 
     /**
@@ -89,7 +89,7 @@ public class SecurityRoleController {
     @SaCheckLogin
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_ROLE_DETAIL)
     public IView detail(@PathVariable String id) throws Exception {
-        return iRoleService.detail(id).toJsonView();
+        return iRoleService.detail(id).toMxJsonView();
     }
 
     /**
@@ -105,7 +105,7 @@ public class SecurityRoleController {
     @OperationLog(operationType = OperationType.DELETE, title = "删除角色")
     public IView delete(@VRequired(msg = "ids不能为空")
                         @RequestParam("ids[]") String[] ids) throws Exception {
-        return iRoleService.delete(ids).toJsonView();
+        return iRoleService.delete(ids).toMxJsonView();
     }
 
 
@@ -121,7 +121,7 @@ public class SecurityRoleController {
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_ROLE_PERMISSION_LIST)
     public IView permissionList(@VRequired(msg = "id不能为空")
                                 @RequestParam String id) throws Exception {
-        return iRoleService.permissionList(id).toJsonView();
+        return iRoleService.permissionList(id).toMxJsonView();
     }
 
 
@@ -140,7 +140,7 @@ public class SecurityRoleController {
     public IView permissionBind(@VRequired(msg = "id不能为空")
                                 @RequestParam String id,
                                 @RequestParam(value = "permissions[]") String[] permissions) throws Exception {
-        return iRoleService.permissionBind(id, permissions).toJsonView();
+        return iRoleService.permissionBind(id, permissions).toMxJsonView();
     }
 
 

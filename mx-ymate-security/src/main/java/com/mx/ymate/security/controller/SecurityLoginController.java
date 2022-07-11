@@ -40,11 +40,12 @@ public class SecurityLoginController {
      */
     @RequestMapping(value = "/login", method = Type.HttpMethod.POST)
     @NoLogin
+    @OperationLog(operationType = OperationType.LOGIN, title = "管理员登录")
     public IView login(@VRequired(msg = "用户名不能为空")
                        @RequestParam String userName,
                        @VRequired(msg = "密码不能为空")
                        @RequestParam String password) throws Exception {
-        return iSecurityLoginService.login(userName, password).toJsonView();
+        return iSecurityLoginService.login(userName, password).toMxJsonView();
     }
 
     /**
@@ -55,8 +56,9 @@ public class SecurityLoginController {
      */
     @RequestMapping(value = "/logout", method = Type.HttpMethod.POST)
     @NoLogin
+    @OperationLog(operationType = OperationType.LOGIN, title = "管理员退出")
     public IView logout() throws Exception {
-        return iSecurityLoginService.logout().toJsonView();
+        return iSecurityLoginService.logout().toMxJsonView();
     }
 
     /**
@@ -68,7 +70,7 @@ public class SecurityLoginController {
     @RequestMapping(value = "/info", method = Type.HttpMethod.GET)
     @SaCheckLogin
     public IView info() throws Exception {
-        return MxResult.ok().data(iSecurityLoginService.info()).toJsonView();
+        return MxResult.ok().data(iSecurityLoginService.info()).toMxJsonView();
     }
 
     /**
@@ -82,7 +84,7 @@ public class SecurityLoginController {
     @OperationLog(operationType = OperationType.UPDATE, title = "修改管理员信息")
     @SaCheckLogin
     public IView update(@VModel @ModelBind SecurityLoginInfoDTO securityLoginInfoDTO) throws Exception {
-        return iSecurityLoginService.update(securityLoginInfoDTO.toBean()).toJsonView();
+        return iSecurityLoginService.update(securityLoginInfoDTO.toBean()).toMxJsonView();
     }
 
 
@@ -104,7 +106,7 @@ public class SecurityLoginController {
                           @RequestParam String newPassword,
                           @VRequired(msg = "确认密码不能为空")
                           @RequestParam String rePassword) throws Exception {
-        return iSecurityLoginService.password(oldPassword, newPassword, rePassword).toJsonView();
+        return iSecurityLoginService.password(oldPassword, newPassword, rePassword).toMxJsonView();
     }
 
 

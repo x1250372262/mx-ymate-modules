@@ -4,7 +4,8 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.mx.ymate.dev.result.MxResult;
+import com.mx.ymate.dev.code.Code;
+import com.mx.ymate.dev.view.MxJsonView;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
@@ -12,13 +13,13 @@ import com.mx.ymate.security.annotation.OperationLog;
 import com.mx.ymate.security.base.enums.ResourceType;
 import com.mx.ymate.security.base.model.SecurityOperationLog;
 import com.mx.ymate.security.base.model.SecurityUser;
-import com.mx.ymate.security.dao.ISecurityUserDao;
 import com.mx.ymate.security.event.OperationLogEvent;
 import com.mx.ymate.security.handler.IUserHandler;
+import net.ymate.platform.commons.json.IJsonObjectWrapper;
+import net.ymate.platform.commons.json.JsonWrapper;
 import net.ymate.platform.commons.util.DateTimeUtils;
 import net.ymate.platform.commons.util.UUIDUtils;
 import net.ymate.platform.core.YMP;
-import net.ymate.platform.core.beans.annotation.Inject;
 import net.ymate.platform.core.beans.intercept.AbstractInterceptor;
 import net.ymate.platform.core.beans.intercept.InterceptContext;
 import net.ymate.platform.core.beans.intercept.InterceptException;
@@ -38,11 +39,7 @@ import java.lang.reflect.Method;
 public class OperationLogInterceptor extends AbstractInterceptor {
 
     private final ISecurityConfig securityConfig = Security.get().getConfig();
-
-    @Inject
-    private ISecurityUserDao iSecurityUserDao;
-    @Inject
-    private SaUtil saUtil;
+    private final SaUtil saUtil = YMP.get().getBeanFactory().getBean(SaUtil.class);
 
     private final ILogger iLogger = Logs.get().getLogger();
 
@@ -82,8 +79,10 @@ public class OperationLogInterceptor extends AbstractInterceptor {
                 return;
             }
             Object ret = context.getResultObject();
-            String code = ((MxResult) ret).code();
-            String msg = ((MxResult) ret).msg();
+            Object result = ((MxJsonView) ret).getJsonObj();
+            IJsonObjectWrapper jsonWrapper = JsonWrapper.toJson(result).getAsJsonObject();
+            String code = StringUtils.defaultString(jsonWrapper.getString("code"),"未知");
+            String msg = StringUtils.defaultString(jsonWrapper.getString("msg"), Code.SUCCESS.code().equals(code)?Code.SUCCESS.msg():"未知");
             HttpServletRequest request = WebContext.getRequest();
             String userAgentStr = request.getHeader("user-agent");
             // *========数据库日志=========*//

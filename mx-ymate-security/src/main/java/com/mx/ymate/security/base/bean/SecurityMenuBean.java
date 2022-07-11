@@ -23,6 +23,8 @@ public class SecurityMenuBean implements Serializable {
 
     private Integer type;
 
+    private Integer hideStatus;
+
 
     public String getParentId() {
         return parentId;
@@ -78,6 +80,14 @@ public class SecurityMenuBean implements Serializable {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Integer getHideStatus() {
+        return hideStatus;
+    }
+
+    public void setHideStatus(Integer hideStatus) {
+        this.hideStatus = hideStatus;
     }
 
     @Override
