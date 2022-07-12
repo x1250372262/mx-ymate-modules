@@ -3,24 +3,17 @@ package com.mx.ymate.satoken.ymate;
 import cn.dev33.satoken.dao.SaTokenDao;
 import cn.dev33.satoken.util.SaFoxUtil;
 import cn.hutool.core.util.StrUtil;
-import com.mx.ymate.redis.api.IRedisApi;
-import com.mx.ymate.redis.api.impl.RedisApiImpl;
+import com.mx.ymate.redis.api.RedisApi;
 import net.ymate.platform.commons.serialize.ISerializer;
 import net.ymate.platform.commons.serialize.SerializerManager;
-import net.ymate.platform.core.YMP;
 import net.ymate.platform.core.beans.annotation.Bean;
-import net.ymate.platform.core.beans.annotation.Inject;
 
-import java.sql.JDBCType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 @Bean
 public class SaTokenDaoRedis implements SaTokenDao {
-
-//    @Inject
-    private final IRedisApi iRedisApi = new RedisApiImpl();
 
     private final ISerializer serializer = SerializerManager.getDefaultSerializer();
 
@@ -36,7 +29,7 @@ public class SaTokenDaoRedis implements SaTokenDao {
     public String get(String key) {
         try {
             key = StrUtil.format(CACHE_NAME, key);
-            return iRedisApi.strGet(key);
+            return RedisApi.strGet(key);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -57,9 +50,9 @@ public class SaTokenDaoRedis implements SaTokenDao {
         key = StrUtil.format(CACHE_NAME, key);
         try {
             if (timeout == SaTokenDao.NEVER_EXPIRE) {
-                iRedisApi.strSet(key, value);
+                RedisApi.strSet(key, value);
             } else {
-                iRedisApi.strSet(key, value, timeout);
+                RedisApi.strSet(key, value, timeout);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -91,7 +84,7 @@ public class SaTokenDaoRedis implements SaTokenDao {
     public void delete(String key) {
         key = StrUtil.format(CACHE_NAME, key);
         try {
-            iRedisApi.strDelete(key);
+            RedisApi.strDelete(key);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -107,7 +100,7 @@ public class SaTokenDaoRedis implements SaTokenDao {
     public long getTimeout(String key) {
         key = StrUtil.format(CACHE_NAME, key);
         try {
-            return iRedisApi.getExpire(key);
+            return RedisApi.getExpire(key);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -132,7 +125,7 @@ public class SaTokenDaoRedis implements SaTokenDao {
             return;
         }
         try {
-            iRedisApi.setExpire(key, timeout);
+            RedisApi.setExpire(key, timeout);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -147,7 +140,7 @@ public class SaTokenDaoRedis implements SaTokenDao {
     @Override
     public Object getObject(String key) {
         try {
-            return valueFromBytes(iRedisApi.strGet(keyToBytes(key)));
+            return valueFromBytes(RedisApi.strGet(keyToBytes(key)));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -167,9 +160,9 @@ public class SaTokenDaoRedis implements SaTokenDao {
         }
         try {
             if (timeout == SaTokenDao.NEVER_EXPIRE) {
-                iRedisApi.strSet(keyToBytes(key), valueToBytes(object));
+                RedisApi.strSet(keyToBytes(key), valueToBytes(object));
             } else {
-                iRedisApi.strSet(keyToBytes(key), valueToBytes(object), timeout);
+                RedisApi.strSet(keyToBytes(key), valueToBytes(object), timeout);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -200,7 +193,7 @@ public class SaTokenDaoRedis implements SaTokenDao {
     @Override
     public void deleteObject(String key) {
         try {
-            iRedisApi.strDelete(keyToBytes(key));
+            RedisApi.strDelete(keyToBytes(key));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -209,7 +202,7 @@ public class SaTokenDaoRedis implements SaTokenDao {
     @Override
     public long getObjectTimeout(String key) {
         try {
-            return iRedisApi.getExpire(keyToBytes(key));
+            return RedisApi.getExpire(keyToBytes(key));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -234,7 +227,7 @@ public class SaTokenDaoRedis implements SaTokenDao {
             return;
         }
         try {
-            iRedisApi.setExpire(keyToBytes(key), timeout);
+            RedisApi.setExpire(keyToBytes(key), timeout);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -253,7 +246,7 @@ public class SaTokenDaoRedis implements SaTokenDao {
     public List<String> searchData(String prefix, String keyword, int start, int size) {
         Set<String> keys;
         try {
-            keys = iRedisApi.keys(prefix + "*" + keyword + "*");
+            keys = RedisApi.keys(prefix + "*" + keyword + "*");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -271,7 +264,7 @@ public class SaTokenDaoRedis implements SaTokenDao {
     }
 
     protected Object valueFromBytes(byte[] bytes) throws Exception {
-        if(bytes == null){
+        if (bytes == null) {
             return null;
         }
         return serializer.deserialize(bytes, Object.class);

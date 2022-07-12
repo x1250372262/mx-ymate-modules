@@ -1,6 +1,8 @@
 package com.mx.ymate.security.interceptor;
 
 import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotPermissionException;
+import cn.dev33.satoken.exception.NotRoleException;
 import cn.dev33.satoken.strategy.SaStrategy;
 import com.mx.ymate.dev.code.Code;
 import com.mx.ymate.dev.constants.Constants;
@@ -66,6 +68,8 @@ public class MxSaAnnotationInterceptor extends AbstractInterceptor {
 
         } catch (NotLoginException notLoginException) {
             return MxResult.create(Code.NOT_LOGIN).toMxJsonView();
+        }catch (NotPermissionException | NotRoleException notPermissionException) {
+            return MxResult.create(Code.NOT_PERMISSION).toMxJsonView();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

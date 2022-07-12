@@ -9,7 +9,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.mx.ymate.dev.constants.Constants;
 import com.mx.ymate.dev.result.MxResult;
 import com.mx.ymate.dev.util.BeanUtil;
-import com.mx.ymate.redis.api.IRedisApi;
+import com.mx.ymate.redis.api.RedisApi;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
@@ -50,10 +50,6 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     private ISecurityUserDao iSecurityUserDao;
     @Inject
     private ISecurityUserRoleService iSecurityUserRoleService;
-    @Inject
-    private IRedisApi iRedisApi;
-    @Inject
-    private SaUtil saUtils;
     private final ISecurityConfig config = Security.get().getConfig();
 
     @Override
@@ -150,30 +146,30 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         StpUtil.getTokenSessionByToken(saTokenInfo.getTokenValue()).set(userKey, securityUser);
         //设置权限到redis
         //先删除redis的数据
-        String permissionKey = StrUtil.format(PERMISSION_LIST, securityUser.getClient(), saUtils.getToken(), StpUtil.getLoginType(), securityUser.getId());
-        String permissionStr = Convert.toStr(iRedisApi.strGet(permissionKey));
+        String permissionKey = StrUtil.format(PERMISSION_LIST, securityUser.getClient(), SaUtil.getToken(), StpUtil.getLoginType(), securityUser.getId());
+        String permissionStr = Convert.toStr(RedisApi.strGet(permissionKey));
         if (StringUtils.isNotBlank(permissionStr)) {
-            iRedisApi.delete(permissionKey);
+            RedisApi.delete(permissionKey);
         }
         List<String> permissionList = iSecurityUserRoleService.securityUserPermissionList(securityUser.getId(), saTokenInfo.getTokenValue());
-        iRedisApi.strSet(permissionKey, JSONObject.toJSONString(permissionList));
+        RedisApi.strSet(permissionKey, JSONObject.toJSONString(permissionList));
     }
 
     @Override
     public SecurityLoginVO info() throws Exception {
-        SecurityUser securityUser = iSecurityUserDao.findById(saUtils.loginId());
+        SecurityUser securityUser = iSecurityUserDao.findById(SaUtil.loginId());
         SecurityLoginVO securityUserVO = BeanUtil.copy(securityUser, SecurityLoginVO::new);
         return BeanUtil.copy(securityUserVO, SecurityLoginVO::new);
     }
 
     @Override
     public MxResult update(SecurityLoginInfoBean securityLoginInfoBean) throws Exception {
-        SecurityUser securityUser = iSecurityUserDao.findById(saUtils.loginId());
+        SecurityUser securityUser = iSecurityUserDao.findById(SaUtil.loginId());
         if (securityUser == null) {
             return MxResult.noData();
         }
         securityUser = BeanUtil.duplicate(securityLoginInfoBean, securityUser);
-        securityUser.setLastModifyUser(saUtils.loginId());
+        securityUser.setLastModifyUser(SaUtil.loginId());
         securityUser.setLastModifyTime(DateTimeUtils.currentTimeMillis());
         securityUser = iSecurityUserDao.update(securityUser, SecurityUser.FIELDS.REAL_NAME, SecurityUser.FIELDS.PHOTO_URI,
                 SecurityUser.FIELDS.MOBILE, SecurityUser.FIELDS.GENDER, SecurityUser.FIELDS.LAST_MODIFY_USER, SecurityUser.FIELDS.LAST_MODIFY_TIME);
@@ -185,7 +181,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         if (!newPassword.equals(rePassword)) {
             return MxResult.create(SECURITY_USER_PASSWORD_NOT_SAME);
         }
-        SecurityUser securityUser = iSecurityUserDao.findById(saUtils.loginId());
+        SecurityUser securityUser = iSecurityUserDao.findById(SaUtil.loginId());
         if (securityUser == null) {
             return MxResult.noData();
         }

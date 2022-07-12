@@ -6,13 +6,11 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.mx.ymate.redis.api.IRedisApi;
+import com.mx.ymate.redis.api.RedisApi;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
 import com.mx.ymate.security.service.ISecurityUserRoleService;
-import net.ymate.platform.core.YMP;
-import net.ymate.platform.core.beans.IBeanFactory;
 import net.ymate.platform.core.beans.annotation.Bean;
 import net.ymate.platform.core.beans.annotation.Inject;
 import org.apache.commons.lang3.StringUtils;
@@ -34,11 +32,6 @@ public class SecurityStpImpl implements StpInterface {
     @Inject
     private ISecurityUserRoleService iSecurityUserRoleService;
 
-    @Inject
-    private IRedisApi iRedisApi;
-
-    @Inject
-    private SaUtil saUtils;
 
     private final ISecurityConfig mxSecurityConfig = Security.get().getConfig();
 
@@ -46,8 +39,8 @@ public class SecurityStpImpl implements StpInterface {
     public List<String> getPermissionList(Object loginId, String loginType) {
         List<String> permissionList = new ArrayList<>();
         try {
-            String permissionKey = StrUtil.format(PERMISSION_LIST, mxSecurityConfig.client(), saUtils.getToken(), StpUtil.getLoginType(), saUtils.loginId());
-            String permissionStr = Convert.toStr(iRedisApi.strGet(permissionKey));
+            String permissionKey = StrUtil.format(PERMISSION_LIST, mxSecurityConfig.client(), SaUtil.getToken(), StpUtil.getLoginType(), SaUtil.loginId());
+            String permissionStr = Convert.toStr(RedisApi.strGet(permissionKey));
             if (StringUtils.isNotBlank(permissionStr)) {
                 JSONArray redisPermissionList = JSONObject.parseArray(permissionStr);
                 for (Object redisRole : redisPermissionList) {
@@ -55,7 +48,7 @@ public class SecurityStpImpl implements StpInterface {
                 }
             } else {
                 permissionList = iSecurityUserRoleService.securityUserPermissionList((String) loginId, null);
-                iRedisApi.strSet(permissionKey, JSONObject.toJSONString(permissionList));
+                RedisApi.strSet(permissionKey, JSONObject.toJSONString(permissionList));
             }
         } catch (Exception e) {
             e.printStackTrace();

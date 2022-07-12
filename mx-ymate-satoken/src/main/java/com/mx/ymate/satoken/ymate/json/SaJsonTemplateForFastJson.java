@@ -18,7 +18,7 @@ public class SaJsonTemplateForFastJson implements SaJsonTemplate {
      * @return 转换后的 json 字符串
      */
     public String toJsonString(Object obj) {
-        return JsonWrapper.toJsonString(obj);
+        return JsonWrapper.toJsonString(obj,true,true);
     }
 
     /**
