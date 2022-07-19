@@ -50,8 +50,6 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
     private ISecurityRolePermissionDao iSecurityRolePermissionDao;
     @Inject
     private ISecurityPermissionDao isecurityPermissionDao;
-    @Inject
-    private SaUtil saUtils;
 
     private final ISecurityConfig config = Security.get().getConfig();
 
@@ -76,9 +74,9 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
         role.setClient(config.client());
         role.setResourceId(resourceId);
         role.setCreateTime(DateTimeUtils.currentTimeMillis());
-        role.setCreateUser(saUtils.loginId());
+        role.setCreateUser(SaUtil.loginId());
         role.setLastModifyTime(DateTimeUtils.currentTimeMillis());
-        role.setLastModifyUser(saUtils.loginId());
+        role.setLastModifyUser(SaUtil.loginId());
         role = iSecurityRoleDao.create(role);
         return MxResult.result(role);
     }
@@ -99,7 +97,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
         }
         role = BeanUtil.duplicate(roleBean, role);
         role.setLastModifyTime(DateTimeUtils.currentTimeMillis());
-        role.setLastModifyUser(saUtils.loginId());
+        role.setLastModifyUser(SaUtil.loginId());
         role = iSecurityRoleDao.update(role, SecurityRole.FIELDS.NAME, SecurityRole.FIELDS.REMARK, SecurityRole.FIELDS.LAST_MODIFY_TIME, SecurityRole.FIELDS.LAST_MODIFY_USER);
         return MxResult.result(role);
     }

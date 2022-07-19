@@ -48,7 +48,7 @@ public class SecurityMenuDaoImpl implements ISecurityMenuDao {
     @Override
     public IResultSet<SecurityMenuNavVO> findAll(String userId, String client, String resourceId,Integer hideStatus) throws Exception {
         Cond cond = Cond.create()
-                .eqWrap("sur", SecurityUserRole.FIELDS.USER_ID).param(userId).and().eqWrap("sur",SecurityMenu.FIELDS.HIDE_STATUS).param(Constants.BOOL_FALSE)
+                .eqWrap("sur", SecurityUserRole.FIELDS.USER_ID).param(userId)
                 .and().eqWrap("sm", SecurityMenu.FIELDS.TYPE).param(Constants.BOOL_FALSE)
                 .and().eqWrap("sm", SecurityMenu.FIELDS.CLIENT).param(client)
                 .and().eqWrap("smr", SecurityMenuRole.FIELDS.RESOURCE_ID).param(resourceId)

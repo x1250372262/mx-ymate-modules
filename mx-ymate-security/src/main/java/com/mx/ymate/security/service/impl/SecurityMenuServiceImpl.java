@@ -51,8 +51,6 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     private ISecurityMenuDao iSecurityMenuDao;
     @Inject
     private ISecurityMenuRoleDao iSecurityMenuRoleDao;
-    @Inject
-    private SaUtil saUtils;
 
     private final ISecurityConfig config = Security.get().getConfig();
 
@@ -62,18 +60,18 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     @Override
     public MxResult nav() throws Exception {
         String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.MENU), config.client());
-        if (saUtils.isFounder()) {
+        if (SaUtil.isFounder()) {
             return MxResult.ok().data(iSecurityMenuDao.findAllByType(null, Constants.BOOL_FALSE, config.client(), resourceId).getResultData());
         }
         //查询带权限的还有公开的 合并到一起
-        List<SecurityMenuNavVO> list = iSecurityMenuDao.findAll(saUtils.loginId(), config.client(), userHandler.buildResourceId(ResourceType.ROLE),Constants.BOOL_FALSE).getResultData();
-
+        List<SecurityMenuNavVO> list = iSecurityMenuDao.findAll(SaUtil.loginId(), config.client(), StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE), config.client()), Constants.BOOL_FALSE).getResultData();
+        List<SecurityMenuNavVO> tempList = new ArrayList<>(list);
         List<SecurityMenuNavVO> publicList = iSecurityMenuDao.findAllByType(MenuType.PUBLIC.value(), Constants.BOOL_FALSE, config.client(), resourceId).getResultData();
-        list.addAll(publicList);
-        if (CollUtil.isNotEmpty(list)) {
-            list = list.stream().sorted(Comparator.comparing(SecurityMenuNavVO::getSort)).collect(Collectors.toList());
+        tempList.addAll(publicList);
+        if (CollUtil.isNotEmpty(tempList)) {
+            tempList = tempList.stream().sorted(Comparator.comparing(SecurityMenuNavVO::getSort)).collect(Collectors.toList());
         }
-        return MxResult.ok().data(list);
+        return MxResult.ok().data(tempList);
     }
 
     private List<SecurityMenuListVO> createTree(List<SecurityMenuNavVO> resultSet, List<SecurityMenuNavVO> allCategory) {
@@ -137,7 +135,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
         }
         menu = BeanUtil.duplicate(menuBean, menu);
         menu = iSecurityMenuDao.update(menu, SecurityMenu.FIELDS.PARENT_ID, SecurityMenu.FIELDS.NAME, SecurityMenu.FIELDS.ICON,
-                SecurityMenu.FIELDS.PATH, SecurityMenu.FIELDS.URL, SecurityMenu.FIELDS.SORT, SecurityMenu.FIELDS.TYPE,SecurityMenu.FIELDS.HIDE_STATUS);
+                SecurityMenu.FIELDS.PATH, SecurityMenu.FIELDS.URL, SecurityMenu.FIELDS.SORT, SecurityMenu.FIELDS.TYPE, SecurityMenu.FIELDS.HIDE_STATUS);
         return MxResult.result(menu);
     }
 
@@ -175,7 +173,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
                 .menuId(menuId)
                 .roleId(roleId)
                 .client(config.client())
-                .createUser(saUtils.loginId())
+                .createUser(SaUtil.loginId())
                 .createTime(DateTimeUtils.currentTimeMillis())
                 .build();
         menuRole = iSecurityMenuRoleDao.create(menuRole);

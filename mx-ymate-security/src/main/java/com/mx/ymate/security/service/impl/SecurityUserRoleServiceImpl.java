@@ -30,8 +30,6 @@ public class SecurityUserRoleServiceImpl implements ISecurityUserRoleService {
     private ISecurityUserRoleDao iSecurityUserRoleDao;
     @Inject
     private ISecurityPermissionDao isecurityPermissionDao;
-    @Inject
-    private SaUtil saUtils;
 
     private final ISecurityConfig config = Security.get().getConfig();
     private final IUserHandler userHandler = config.userHandlerClass();
@@ -40,7 +38,7 @@ public class SecurityUserRoleServiceImpl implements ISecurityUserRoleService {
     public List<String> securityUserPermissionList(String securityUserId, String token) throws Exception {
         String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.USER), config.client());
         List<String> permissionList = new ArrayList<>();
-        if (saUtils.isFounder(securityUserId, token)) {
+        if (SaUtil.isFounder(securityUserId, token)) {
             IResultSet<SecurityPermission> resultSet = isecurityPermissionDao.findAll(config.client(), resourceId);
             if (resultSet.isResultsAvailable()) {
                 List<SecurityPermission> permissions = resultSet.getResultData();

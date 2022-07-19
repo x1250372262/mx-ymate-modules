@@ -46,7 +46,7 @@ public class SecuritySql {
 
     private static void permissionSql(List<String> sqlList, String dbName, String client, String userId) {
         long time = DateTimeUtils.currentTimeMillis();
-        String sql = "INSERT INTO `{}`.`mx_security_permission` (`id`, `resource_id`,`client`, `group_name`, `permission_name`, `permission_code`, `create_user`, `create_time`, `last_modify_user`, `last_modify_time`) VALUES ('{}', '{}', '{}', '{}', '{}', '{}', {}, '{}', {});";
+        String sql = "INSERT INTO `{}`.`mx_security_permission` (`id`, `resource_id`,`client`, `group_name`, `permission_name`, `permission_code`, `create_user`, `create_time`, `last_modify_user`, `last_modify_time`) VALUES ('{}', '{}', '{}', '{}', '{}', '{}','{}', {}, '{}', {});";
         SecurityPermissionConfig.permissionList().forEach(permission -> sqlList.add(StrUtil.format(sql, dbName, UUIDUtils.UUID(), client, client, permission.getGroupName(), permission.getName(), permission.getCode(), userId, time, userId, time)));
     }
 

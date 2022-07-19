@@ -51,8 +51,6 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
     private ISecurityUserDao iSecurityUserDao;
     @Inject
     private ISecurityUserRoleDao iSecurityUserRoleDao;
-    @Inject
-    private SaUtil saUtils;
 
     private final ISecurityConfig config = Security.get().getConfig();
     private final IUserHandler userHandler = config.userHandlerClass();
@@ -86,9 +84,9 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
         securityUser.setClient(config.client());
         securityUser.setResourceId(resourceId);
         securityUser.setPassword(password);
-        securityUser.setCreateUser(saUtils.loginId());
+        securityUser.setCreateUser(SaUtil.loginId());
         securityUser.setCreateTime(DateTimeUtils.currentTimeMillis());
-        securityUser.setLastModifyUser(saUtils.loginId());
+        securityUser.setLastModifyUser(SaUtil.loginId());
         securityUser.setLastModifyTime(DateTimeUtils.currentTimeMillis());
         securityUser.setSalt(salt);
         r = userHandler.createAfter(params);
@@ -113,7 +111,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
         if (!MxResult.checkVersion(securityUser.getLastModifyTime(), lastModifyTime)) {
             return MxResult.noVersion();
         }
-        securityUser.setLastModifyUser(saUtils.loginId());
+        securityUser.setLastModifyUser(SaUtil.loginId());
         securityUser.setLastModifyTime(DateTimeUtils.currentTimeMillis());
         securityUser.setDisableStatus(status);
         securityUser = iSecurityUserDao.update(securityUser, SecurityUser.FIELDS.LAST_MODIFY_USER, SecurityUser.FIELDS.LAST_MODIFY_TIME, SecurityUser.FIELDS.DISABLE_STATUS);
@@ -129,7 +127,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
         if (!MxResult.checkVersion(securityUser.getLastModifyTime(), lastModifyTime)) {
             return MxResult.noVersion();
         }
-        securityUser.setLastModifyUser(saUtils.loginId());
+        securityUser.setLastModifyUser(SaUtil.loginId());
         securityUser.setLastModifyTime(DateTimeUtils.currentTimeMillis());
         securityUser.setLoginErrorCount(0);
         securityUser.setLoginLockStatus(Constants.BOOL_FALSE);
@@ -149,7 +147,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
         if (!MxResult.checkVersion(securityUser.getLastModifyTime(), lastModifyTime)) {
             return MxResult.noVersion();
         }
-        securityUser.setLastModifyUser(saUtils.loginId());
+        securityUser.setLastModifyUser(SaUtil.loginId());
         securityUser.setLastModifyTime(DateTimeUtils.currentTimeMillis());
         String userName = securityUser.getUserName();
         userName = DigestUtils.md5Hex(userName.getBytes(StandardCharsets.UTF_8));
@@ -160,7 +158,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
             e.printStackTrace();
         }
         securityUser.setPassword(password);
-        securityUser.setLastModifyUser(saUtils.loginId());
+        securityUser.setLastModifyUser(SaUtil.loginId());
         securityUser.setLastModifyTime(DateTimeUtils.currentTimeMillis());
         securityUser = iSecurityUserDao.update(securityUser, SecurityUser.FIELDS.LAST_MODIFY_USER, SecurityUser.FIELDS.LAST_MODIFY_TIME, SecurityUser.FIELDS.PASSWORD);
         return MxResult.result(securityUser);
@@ -186,9 +184,9 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
                 .roleId(roleId)
                 .resourceId(resourceId)
                 .client(config.client())
-                .createUser(saUtils.loginId())
+                .createUser(SaUtil.loginId())
                 .createTime(DateTimeUtils.currentTimeMillis())
-                .lastModifyUser(saUtils.loginId())
+                .lastModifyUser(SaUtil.loginId())
                 .lastModifyTime(DateTimeUtils.currentTimeMillis())
                 .build();
         securityUserRole = iSecurityUserRoleDao.create(securityUserRole);
