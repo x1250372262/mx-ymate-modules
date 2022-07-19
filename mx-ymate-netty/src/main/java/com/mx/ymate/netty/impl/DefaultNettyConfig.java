@@ -51,6 +51,10 @@ public final class DefaultNettyConfig implements INettyConfig {
 
     private boolean initialized;
 
+    private String serverDecoderClassName;
+    private String clientDecoderClassName;
+
+
     public static DefaultNettyConfig defaultConfig() {
         return builder().build();
     }
@@ -89,10 +93,7 @@ public final class DefaultNettyConfig implements INettyConfig {
             }
         }
 
-        String serverDecoderClassName = configReader.getString(SERVER_DECODER_CLASS);
-        if (StringUtils.isNotBlank(serverDecoderClassName)) {
-            serverDecoder = ClassUtils.impl(serverDecoderClassName, ChannelInboundHandlerAdapter.class, this.getClass());
-        }
+         serverDecoderClassName = configReader.getString(SERVER_DECODER_CLASS);
 
         clientRemoteAddress = ObjectUtil.defaultIfNull(configReader.getList(CLIENT_REMOTE_ADDRESS), clientRemoteAddress);
         clientHeartBeatTime = configReader.getInt(CLIENT_HEART_BEAT_TIME, confAnn != null ? confAnn.clientHeartBeatTime() : clientHeartBeatTime);
@@ -103,10 +104,8 @@ public final class DefaultNettyConfig implements INettyConfig {
                 clientHandler.add(ClassUtils.impl(className, ChannelInboundHandlerAdapter.class, this.getClass()));
             }
         }
-        String clientDecoderClassName = configReader.getString(CLIENT_DECODER_CLASS);
-        if (StringUtils.isNotBlank(clientDecoderClassName)) {
-            clientDecoder = ClassUtils.impl(clientDecoderClassName, ChannelInboundHandlerAdapter.class, this.getClass());
-        }
+        clientDecoderClassName = configReader.getString(CLIENT_DECODER_CLASS);
+
     }
 
     @Override
@@ -166,6 +165,10 @@ public final class DefaultNettyConfig implements INettyConfig {
 
     @Override
     public ChannelInboundHandlerAdapter serverDecoder() {
+        if (StringUtils.isNotBlank(serverDecoderClassName)) {
+            serverDecoder = ClassUtils.impl(serverDecoderClassName, ChannelInboundHandlerAdapter.class, this.getClass());
+        }
+
         return serverDecoder;
     }
 
@@ -186,6 +189,9 @@ public final class DefaultNettyConfig implements INettyConfig {
 
     @Override
     public ChannelInboundHandlerAdapter clientDecoder() {
+        if (StringUtils.isNotBlank(clientDecoderClassName)) {
+            clientDecoder = ClassUtils.impl(clientDecoderClassName, ChannelInboundHandlerAdapter.class, this.getClass());
+        }
         return clientDecoder;
     }
 

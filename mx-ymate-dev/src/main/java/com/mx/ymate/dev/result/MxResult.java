@@ -10,9 +10,7 @@ import com.mx.ymate.dev.code.ICode;
 import net.ymate.platform.commons.util.ClassUtils;
 import net.ymate.platform.core.support.ErrorCode;
 import net.ymate.platform.webmvc.IWebMvc;
-import net.ymate.platform.webmvc.IWebResultBuilder;
 import net.ymate.platform.webmvc.context.WebContext;
-import net.ymate.platform.webmvc.impl.DefaultWebResultBuilder;
 import net.ymate.platform.webmvc.util.WebUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,6 +27,45 @@ import java.util.Objects;
 public class MxResult extends MxAbstractWebResult<String> implements Serializable {
 
 
+    public static IMxResultBuilder builder() {
+        IMxResultBuilder builder = null;
+        try {
+            builder = ClassUtils.getExtensionLoader(IMxResultBuilder.class).getExtensionClass().newInstance();
+        } catch (Exception ignored) {
+        }
+        return builder != null ? builder : new DefaultMxResultBuilder();
+    }
+
+    public static IMxResultBuilder builder(ErrorCode errorCode) {
+        return builder(WebContext.getContext().getOwner(), null, errorCode);
+    }
+
+    public static IMxResultBuilder builder(String resourceName, ErrorCode errorCode) {
+        return builder(WebContext.getContext().getOwner(), resourceName, errorCode);
+    }
+
+    public static IMxResultBuilder builder(IWebMvc owner, ErrorCode errorCode) {
+        return builder(owner, null, errorCode);
+    }
+
+    public static IMxResultBuilder builder(IWebMvc owner, String resourceName, ErrorCode errorCode) {
+        IMxResultBuilder builder = builder();
+        String msg = null;
+        if (StringUtils.isNotBlank(errorCode.i18nKey())) {
+            msg = WebUtils.i18nStr(owner, resourceName, errorCode.i18nKey(), null);
+        }
+        if (StringUtils.isBlank(msg)) {
+            msg = WebUtils.errorCodeI18n(owner, resourceName, errorCode.code(), errorCode.message());
+        }
+        builder.code(errorCode.code()).msg(msg);
+        if (!errorCode.attrs().isEmpty()) {
+            builder.attrs(errorCode.attrs());
+        }
+        if (!errorCode.data().isEmpty()) {
+            builder.data(errorCode.data());
+        }
+        return builder;
+    }
 
 
     public static MxResult create() {

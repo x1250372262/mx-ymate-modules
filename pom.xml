@@ -24,7 +24,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <ymate.platform.version>2.1.1</ymate.platform.version>
+        <ymate.platform.version>2.1.2-dev</ymate.platform.version>
         <ymate.platform.test.version>1.0.0</ymate.platform.test.version>
         <ymate.apidocs.version>2.0.0</ymate.apidocs.version>
         <ymate.maven.plugin.version>1.0.1</ymate.maven.plugin.version>
@@ -40,6 +40,7 @@
         <cos_api.version>5.6.95</cos_api.version>
         <aliyun-sdk-oss.version>3.15.1</aliyun-sdk-oss.version>
         <ymate-module-fileuploader.version>2.0.0</ymate-module-fileuploader.version>
+        <org.apache.httpcomponents.version>4.5.13</org.apache.httpcomponents.version>
     </properties>
 
     <dependencyManagement>
@@ -169,6 +170,21 @@
                 <artifactId>jsp-api</artifactId>
                 <version>2.2</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpmime</artifactId>
+                <version>${org.apache.httpcomponents.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-codec</groupId>
+                        <artifactId>commons-codec</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>

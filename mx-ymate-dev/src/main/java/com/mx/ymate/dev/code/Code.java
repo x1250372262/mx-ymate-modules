@@ -20,7 +20,9 @@ public enum Code implements ICode {
     SYSTEM_ERROR("M0006", "系统繁忙"),
     INVALID_PARAMETER("M0007", "参数验证无效"),
     NOT_REPEAT_REQUEST("M0008", "{}秒内请勿重复请求"),
-    NOT_SUPPORT_REQUEST("M0009", "不支持{}请求");
+    NOT_SUPPORT_REQUEST("M0009", "不支持{}请求"),
+    SERVER_HTTP_METHOD_ERROR("M0010", "请求方式错误"),
+    SERVER_REQUEST_ERROR("M0011", "请求失败");
 
     private final String code;
     private final String msg;
