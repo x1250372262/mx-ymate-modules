@@ -10,6 +10,8 @@ import com.mx.ymate.redis.api.RedisApi;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
+import com.mx.ymate.security.base.model.SecurityUser;
+import com.mx.ymate.security.dao.ISecurityUserDao;
 import com.mx.ymate.security.service.ISecurityUserRoleService;
 import net.ymate.platform.core.beans.annotation.Bean;
 import net.ymate.platform.core.beans.annotation.Inject;
@@ -32,6 +34,9 @@ public class SecurityStpImpl implements StpInterface {
     @Inject
     private ISecurityUserRoleService iSecurityUserRoleService;
 
+    @Inject
+    private ISecurityUserDao iSecurityUserDao;
+
 
     private final ISecurityConfig mxSecurityConfig = Security.get().getConfig();
 
@@ -39,9 +44,13 @@ public class SecurityStpImpl implements StpInterface {
     public List<String> getPermissionList(Object loginId, String loginType) {
         List<String> permissionList = new ArrayList<>();
         try {
+            if(SaUtil.isFounder()){
+                permissionList = iSecurityUserRoleService.securityUserPermissionList((String) loginId, null);
+                return permissionList;
+            }
             String permissionKey = StrUtil.format(PERMISSION_LIST, mxSecurityConfig.client(), SaUtil.getToken(), StpUtil.getLoginType(), SaUtil.loginId());
             String permissionStr = Convert.toStr(RedisApi.strGet(permissionKey));
-            if (StringUtils.isNotBlank(permissionStr)) {
+            if (StringUtils.isNotBlank(permissionStr) && !SaUtil.isFounder()) {
                 JSONArray redisPermissionList = JSONObject.parseArray(permissionStr);
                 for (Object redisRole : redisPermissionList) {
                     permissionList.add(Convert.toStr(redisRole));
