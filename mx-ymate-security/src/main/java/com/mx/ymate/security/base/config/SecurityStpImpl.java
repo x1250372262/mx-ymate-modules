@@ -10,7 +10,6 @@ import com.mx.ymate.redis.api.RedisApi;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
-import com.mx.ymate.security.base.model.SecurityUser;
 import com.mx.ymate.security.dao.ISecurityUserDao;
 import com.mx.ymate.security.service.ISecurityUserRoleService;
 import net.ymate.platform.core.beans.annotation.Bean;
@@ -44,7 +43,7 @@ public class SecurityStpImpl implements StpInterface {
     public List<String> getPermissionList(Object loginId, String loginType) {
         List<String> permissionList = new ArrayList<>();
         try {
-            if(SaUtil.isFounder()){
+            if (SaUtil.isFounder()) {
                 permissionList = iSecurityUserRoleService.securityUserPermissionList((String) loginId, null);
                 return permissionList;
             }
