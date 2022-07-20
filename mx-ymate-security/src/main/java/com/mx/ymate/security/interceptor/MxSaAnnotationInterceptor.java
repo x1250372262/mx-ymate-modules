@@ -34,7 +34,6 @@ public class MxSaAnnotationInterceptor extends AbstractInterceptor {
 
     private final ISecurityUserDao iSecurityUserDao = YMP.get().getBeanFactory().getBean(ISecurityUserDao.class);
 
-    private final SaUtil saUtil = YMP.get().getBeanFactory().getBean(SaUtil.class);
 
     /**
      * 构建： 注解式鉴权 - 拦截器
@@ -57,7 +56,7 @@ public class MxSaAnnotationInterceptor extends AbstractInterceptor {
                 return null;
             }
             SaStrategy.me.checkMethodAnnotation.accept(method);
-            SecurityUser securityUser = iSecurityUserDao.findById(saUtil.loginId());
+            SecurityUser securityUser = iSecurityUserDao.findById(SaUtil.loginId());
             if (securityUser == null) {
                 throw new NotLoginException(Code.NOT_LOGIN.code(), null, null);
             }

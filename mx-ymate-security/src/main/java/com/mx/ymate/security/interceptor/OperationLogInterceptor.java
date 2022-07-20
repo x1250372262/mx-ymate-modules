@@ -26,6 +26,7 @@ import net.ymate.platform.core.beans.intercept.InterceptException;
 import net.ymate.platform.log.ILogger;
 import net.ymate.platform.log.Logs;
 import net.ymate.platform.webmvc.context.WebContext;
+import net.ymate.platform.webmvc.view.impl.JsonView;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +40,6 @@ import java.lang.reflect.Method;
 public class OperationLogInterceptor extends AbstractInterceptor {
 
     private final ISecurityConfig securityConfig = Security.get().getConfig();
-    private final SaUtil saUtil = YMP.get().getBeanFactory().getBean(SaUtil.class);
 
     private final ILogger iLogger = Logs.get().getLogger();
 
@@ -74,15 +74,15 @@ public class OperationLogInterceptor extends AbstractInterceptor {
             if (operationLog == null) {
                 return;
             }
-            SecurityUser securityUser = saUtil.user();
+            SecurityUser securityUser = SaUtil.user();
             if (securityUser == null) {
                 return;
             }
             Object ret = context.getResultObject();
             Object result = ((MxJsonView) ret).getJsonObj();
             IJsonObjectWrapper jsonWrapper = JsonWrapper.toJson(result).getAsJsonObject();
-            String code = StringUtils.defaultString(jsonWrapper.getString("code"),"未知");
-            String msg = StringUtils.defaultString(jsonWrapper.getString("msg"), Code.SUCCESS.code().equals(code)?Code.SUCCESS.msg():"未知");
+            String code = StringUtils.defaultString(jsonWrapper.getString("code"), "未知");
+            String msg = StringUtils.defaultString(jsonWrapper.getString("msg"), Code.SUCCESS.code().equals(code) ? Code.SUCCESS.msg() : "未知");
             HttpServletRequest request = WebContext.getRequest();
             String userAgentStr = request.getHeader("user-agent");
             // *========数据库日志=========*//

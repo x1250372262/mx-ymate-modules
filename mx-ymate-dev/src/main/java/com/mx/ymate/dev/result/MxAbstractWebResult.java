@@ -130,7 +130,7 @@ public abstract class MxAbstractWebResult<CODE_TYPE extends Serializable> implem
     }
 
     @Override
-    public IWebResult<CODE_TYPE> withContentType() {
+    public IMxWebResult<CODE_TYPE> withContentType() {
         withContentType = true;
         return this;
     }

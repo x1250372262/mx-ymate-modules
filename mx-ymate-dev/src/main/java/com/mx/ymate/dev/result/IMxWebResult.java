@@ -10,4 +10,6 @@ public interface IMxWebResult<CODE_TYPE extends Serializable> extends IWebResult
     MxJsonView toMxJsonView();
 
     MxJsonView toMxJsonView(String callback);
+
+    IMxWebResult<CODE_TYPE> withContentType();
 }

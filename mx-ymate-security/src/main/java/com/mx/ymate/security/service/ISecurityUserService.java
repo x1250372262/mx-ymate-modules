@@ -25,6 +25,8 @@ public interface ISecurityUserService {
      */
     MxResult list(String userName, String realName, Integer disableStatus, PageBean pageBean) throws Exception;
 
+    MxResult select(Integer disableStatus) throws Exception;
+
     /**
      * 添加角色
      *

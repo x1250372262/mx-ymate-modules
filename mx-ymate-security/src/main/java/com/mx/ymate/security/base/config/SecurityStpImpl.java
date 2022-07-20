@@ -43,10 +43,6 @@ public class SecurityStpImpl implements StpInterface {
     public List<String> getPermissionList(Object loginId, String loginType) {
         List<String> permissionList = new ArrayList<>();
         try {
-            if (SaUtil.isFounder()) {
-                permissionList = iSecurityUserRoleService.securityUserPermissionList((String) loginId, null);
-                return permissionList;
-            }
             String permissionKey = StrUtil.format(PERMISSION_LIST, mxSecurityConfig.client(), SaUtil.getToken(), StpUtil.getLoginType(), SaUtil.loginId());
             String permissionStr = Convert.toStr(RedisApi.strGet(permissionKey));
             if (StringUtils.isNotBlank(permissionStr) && !SaUtil.isFounder()) {

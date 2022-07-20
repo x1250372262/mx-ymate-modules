@@ -14,6 +14,7 @@ public class SecurityOperationLogListVO implements Serializable {
     private String title;
 
     private String typeName;
+    private String returnCode;
 
     private String userName;
 
@@ -87,6 +88,14 @@ public class SecurityOperationLogListVO implements Serializable {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getReturnCode() {
+        return returnCode;
+    }
+
+    public void setReturnCode(String returnCode) {
+        this.returnCode = returnCode;
     }
 
     @Override

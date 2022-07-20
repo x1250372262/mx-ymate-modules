@@ -72,7 +72,7 @@ public class MxSaTokenListener implements SaTokenListener {
     public void doLogin(String loginType, Object loginId, String tokenValue, SaLoginModel loginModel) {
         if (config.openLog()) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("code", "0");
+            jsonObject.put("code", "00000");
             jsonObject.put("msg", "登录成功");
             try {
                 SecurityOperationLog securityOperationLog = createOperationLog("管理员登录", jsonObject, "login", Convert.toStr(loginId));
@@ -93,7 +93,7 @@ public class MxSaTokenListener implements SaTokenListener {
     public void doLogout(String loginType, Object loginId, String tokenValue) {
         if (config.openLog()) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("code", "0");
+            jsonObject.put("code", "00000");
             jsonObject.put("msg", "退出成功");
             try {
                 SecurityOperationLog securityOperationLog = createOperationLog("管理员退出", jsonObject, "logout", Convert.toStr(loginId));

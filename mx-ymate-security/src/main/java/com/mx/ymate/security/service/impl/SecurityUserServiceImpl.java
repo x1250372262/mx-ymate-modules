@@ -27,6 +27,8 @@ import net.ymate.platform.core.beans.annotation.Bean;
 import net.ymate.platform.core.beans.annotation.Inject;
 import net.ymate.platform.core.persistence.IResultSet;
 import net.ymate.platform.core.persistence.annotation.Transaction;
+import net.ymate.platform.persistence.jdbc.query.Cond;
+import net.ymate.platform.persistence.jdbc.query.Where;
 import net.ymate.platform.webmvc.context.WebContext;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -64,6 +66,14 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
     }
 
     @Override
+    public MxResult select(Integer disableStatus) throws Exception {
+        Cond cond = Cond.create().eqOne()
+                .exprNotEmpty(disableStatus, c -> c.and().eqWrap(SecurityUser.FIELDS.DISABLE_STATUS).param(disableStatus));
+        IResultSet<SecurityUser> resultSet = SecurityUser.builder().build().find(Where.create(cond));
+        return MxResult.ok().data(resultSet.getResultData());
+    }
+
+    @Override
     @Transaction
     public MxResult create(String password, SecurityUserBean userBean) throws Exception {
         String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.USER), config.client());
@@ -78,7 +88,6 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
         }
         String salt = RandomUtil.randomString(6);
         password = DigestUtils.md5Hex(Base64.encodeBase64((password + salt).getBytes(StandardCharsets.UTF_8)));
-        String finalPassword = password;
         securityUser = BeanUtil.copy(userBean, SecurityUser::new);
         securityUser.setId(UUIDUtils.UUID());
         securityUser.setClient(config.client());

@@ -49,6 +49,20 @@ public class SecurityUserController {
         return iUserService.list(userName, realName, disableStatus, pageDTO.toBean()).toMxJsonView();
     }
 
+
+    /**
+     * 人员下拉选
+     *
+     * @param disableStatus
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/select")
+    @SaCheckLogin
+    public IView select(@RequestParam Integer disableStatus) throws Exception {
+        return iUserService.select(disableStatus).toMxJsonView();
+    }
+
     /**
      * 添加人员
      *

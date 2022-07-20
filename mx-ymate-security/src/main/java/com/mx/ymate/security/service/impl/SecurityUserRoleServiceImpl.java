@@ -36,15 +36,17 @@ public class SecurityUserRoleServiceImpl implements ISecurityUserRoleService {
 
     @Override
     public List<String> securityUserPermissionList(String securityUserId, String token) throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.USER), config.client());
+        String resourceId;
         List<String> permissionList = new ArrayList<>();
         if (SaUtil.isFounder(securityUserId, token)) {
+            resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.PERMISSION), config.client());
             IResultSet<SecurityPermission> resultSet = isecurityPermissionDao.findAll(config.client(), resourceId);
             if (resultSet.isResultsAvailable()) {
                 List<SecurityPermission> permissions = resultSet.getResultData();
                 permissions.forEach(permission -> permissionList.add(permission.getPermissionCode()));
             }
         } else {
+            resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.USER), config.client());
             IResultSet<SecurityUserPermissionVO> resultSet = iSecurityUserRoleDao.permissionList(securityUserId, config.client(), resourceId);
             if (resultSet.isResultsAvailable()) {
                 List<SecurityUserPermissionVO> securityUserPermissionVOList = resultSet.getResultData();
