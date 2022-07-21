@@ -40,7 +40,8 @@ public class SecuritySql {
         String salt = RandomUtil.randomString(6);
         String password = DigestUtils.md5Hex("admin".getBytes(StandardCharsets.UTF_8));
         password = DigestUtils.md5Hex(Base64.encodeBase64((password + salt).getBytes(StandardCharsets.UTF_8)));
-        String sql = "INSERT INTO `{}`.`mx_security_user` (`id`, `resource_id`,`client`, `user_name`, `real_name`, `photo_uri`, `password`, `mobile`, `gender`, `create_user`, `create_time`, `last_modify_time`, `last_modify_user`, `salt`, `disable_status`, `founder`, `login_error_count`, `login_lock_status`, `login_lock_start_time`, `login_lock_end_time`) VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', {}, '{}', {}, {}, '{}', '{}', {}, {}, {}, {}, {}, {});";
+        String sql = "INSERT INTO `{}`.`mx_security_user` (`id`, `resource_id`,`client`, `user_name`, `real_name`, `photo_uri`, `password`, `mobile`, `gender`, `create_user`, `create_time`, `last_modify_time`, `last_modify_user`, `salt`, `disable_status`, `founder`, `login_error_count`, `login_lock_status`, `login_lock_start_time`, `login_lock_end_time`) " +
+                                                  "VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}','{}', {}, '{}', {}, {}, '{}', '{}', {}, {}, {}, {}, {}, {});";
         sqlList.add(StrUtil.format(sql, dbName, userId, client, client, "admin", "管理员", "", password, "13111111111", 1, userId, time, time, userId, salt, 0, 1, 0, 0, 0, 0));
     }
 
