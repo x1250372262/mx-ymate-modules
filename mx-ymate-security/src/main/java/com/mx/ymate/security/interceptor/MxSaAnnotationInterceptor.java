@@ -58,7 +58,7 @@ public class MxSaAnnotationInterceptor extends AbstractInterceptor {
             SaStrategy.me.checkMethodAnnotation.accept(method);
             SecurityUser securityUser = iSecurityUserDao.findById(SaUtil.loginId());
             if (securityUser == null) {
-                throw new NotLoginException(Code.NOT_LOGIN.code(), null, null);
+                throw new NotLoginException(Code.NOT_LOGIN.msg(), null, null);
             }
             if (Objects.equals(Constants.BOOL_TRUE, securityUser.getDisableStatus())) {
                 throw new NotLoginException(SecurityCode.SECURITY_LOGIN_USER_DISABLE.msg(), null, null);

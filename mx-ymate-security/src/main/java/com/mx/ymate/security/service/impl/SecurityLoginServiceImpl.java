@@ -109,8 +109,10 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         securityUser.setLoginErrorCount(0);
         securityUser.setLoginLockStartTime(0L);
         securityUser.setLoginLockEndTime(0L);
+        securityUser.setLoginTime(DateTimeUtils.currentTimeMillis());
+        securityUser.setLoginIp(ServletUtil.getClientIP(WebContext.getRequest()));
         iSecurityUserDao.update(securityUser, SecurityUser.FIELDS.LOGIN_ERROR_COUNT, SecurityUser.FIELDS.LOGIN_LOCK_STATUS,
-                SecurityUser.FIELDS.LOGIN_LOCK_START_TIME, SecurityUser.FIELDS.LOGIN_LOCK_END_TIME);
+                SecurityUser.FIELDS.LOGIN_LOCK_START_TIME, SecurityUser.FIELDS.LOGIN_LOCK_END_TIME,SecurityUser.FIELDS.LOGIN_IP,SecurityUser.FIELDS.LOGIN_TIME);
         StpUtil.login(securityUser.getId());
         SaTokenInfo saTokenInfo = StpUtil.getTokenInfo();
 

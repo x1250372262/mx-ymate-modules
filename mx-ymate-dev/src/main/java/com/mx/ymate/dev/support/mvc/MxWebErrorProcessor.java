@@ -1,5 +1,6 @@
 package com.mx.ymate.dev.support.mvc;
 
+import com.mx.ymate.dev.code.Code;
 import com.mx.ymate.dev.result.MxResult;
 import net.ymate.platform.commons.util.RuntimeUtils;
 import net.ymate.platform.validation.ValidateResult;
@@ -7,6 +8,7 @@ import net.ymate.platform.webmvc.*;
 import net.ymate.platform.webmvc.base.Type;
 import net.ymate.platform.webmvc.context.WebContext;
 import net.ymate.platform.webmvc.impl.DefaultWebErrorProcessor;
+import net.ymate.platform.webmvc.util.WebErrorCode;
 import net.ymate.platform.webmvc.util.WebUtils;
 import net.ymate.platform.webmvc.view.IView;
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +16,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MxWebErrorProcessor extends AbstractResponseErrorProcessor implements IWebErrorProcessor, IWebInitialization {
 
@@ -69,6 +73,18 @@ public class MxWebErrorProcessor extends AbstractResponseErrorProcessor implemen
     @Override
     public IView onValidation(IWebMvc owner, Map<String, ValidateResult> results) {
         return showValidationResults(owner, results);
+    }
+
+    public IView showValidationResults(IWebMvc owner, Map<String, ValidateResult> results) {
+        String message = WebUtils.errorCodeI18n(owner, Code.INVALID_PARAMETER.code(), WebErrorCode.MSG_INVALID_PARAMS_VALIDATION);
+        //
+        HttpServletRequest httpServletRequest = WebContext.getRequest();
+        if (!WebUtils.isAjax(httpServletRequest) && !WebUtils.isXmlFormat(httpServletRequest) && !WebUtils.isJsonFormat(httpServletRequest) && !StringUtils.containsAny(getErrorDefaultViewFormat(owner), Type.Const.FORMAT_JSON, Type.Const.FORMAT_XML)) {
+            // 拼装所有的验证消息
+            message = WebUtils.messageWithTemplate(owner.getOwner(), message, results.values());
+        }
+        Map<String, Object> dataMap = results.values().stream().collect(Collectors.toMap(ValidateResult::getName, ValidateResult::getMsg, (a, b) -> b, () -> new HashMap<>(results.size())));
+        return showErrorMsg(owner, String.valueOf(Code.INVALID_PARAMETER.code()), message, dataMap);
     }
 
     @Override

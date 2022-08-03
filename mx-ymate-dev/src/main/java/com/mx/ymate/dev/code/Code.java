@@ -15,7 +15,7 @@ public enum Code implements ICode {
     NO_DATA("M0001", "数据不存在"),
     FIELDS_EXISTS("M0002", "{}已存在"),
     VERSION_NOT_SAME("M0003", "数据版本不一致"),
-    NOT_LOGIN("40000", "用户未授权登录或会话已过期，请重新登录"),
+    NOT_LOGIN("M0004", "用户未授权登录或会话已过期，请重新登录"),
     NOT_PERMISSION("M0005", "没有访问的权限"),
     SYSTEM_ERROR("M0006", "系统繁忙"),
     INVALID_PARAMETER("M0007", "参数验证无效"),
