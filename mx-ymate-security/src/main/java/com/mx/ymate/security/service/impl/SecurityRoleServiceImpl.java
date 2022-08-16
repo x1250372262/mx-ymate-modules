@@ -141,7 +141,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
         if (role == null) {
             return MxResult.noData();
         }
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE), config.client());
+        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.PERMISSION), config.client());
         iSecurityRolePermissionDao.deleteByClientAndRoleIdAndResourceId(config.client(), resourceId, id);
         List<SecurityPermission> permissionList = isecurityPermissionDao.findAll(config.client(), resourceId).getResultData();
         if (permissions != null && permissions.length > 0) {
@@ -151,7 +151,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
                 SecurityRolePermission rolePermission = SecurityRolePermission.builder()
                         .id(UUIDUtils.UUID())
                         .roleId(id)
-                        .resourceId(resourceId)
+                        .resourceId(StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE), config.client()))
                         .client(config.client())
                         .permissonId(permission.getId())
                         .createTime(DateTimeUtils.currentTimeMillis())

@@ -38,6 +38,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import static com.mx.ymate.security.Security.DEFAULT_PASSWORD;
 import static com.mx.ymate.security.base.code.SecurityCode.SECURITY_USER_ROLE_EXISTS;
 
 /**
@@ -158,11 +159,9 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
         }
         securityUser.setLastModifyUser(SaUtil.loginId());
         securityUser.setLastModifyTime(DateTimeUtils.currentTimeMillis());
-        String userName = securityUser.getUserName();
-        userName = DigestUtils.md5Hex(userName.getBytes(StandardCharsets.UTF_8));
-        String password = null;
+        String password = DigestUtils.md5Hex(DEFAULT_PASSWORD.getBytes(StandardCharsets.UTF_8));
         try {
-            password = DigestUtils.md5Hex(Base64.encodeBase64((userName + securityUser.getSalt()).getBytes(Constants.DEFAULT_CHARSET)));
+            password = DigestUtils.md5Hex(Base64.encodeBase64((password + securityUser.getSalt()).getBytes(Constants.DEFAULT_CHARSET)));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

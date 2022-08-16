@@ -15,16 +15,7 @@
  */
 package com.mx.ymate.security;
 
-import cn.dev33.satoken.SaManager;
-import cn.dev33.satoken.listener.SaTokenListener;
-import cn.dev33.satoken.stp.StpInterface;
-import com.mx.ymate.satoken.SaToken;
-import com.mx.ymate.satoken.ymate.SaTokenContextForYmate;
-import com.mx.ymate.satoken.ymate.SaTokenDaoRedis;
-import com.mx.ymate.satoken.ymate.json.SaJsonTemplateForFastJson;
-import com.mx.ymate.security.base.config.SecurityStpImpl;
 import com.mx.ymate.security.impl.DefaultSecurityConfig;
-import com.mx.ymate.security.satoken.listener.MxSaTokenListener;
 import net.ymate.platform.core.*;
 import net.ymate.platform.core.module.IModule;
 import net.ymate.platform.core.module.IModuleConfigurer;
@@ -38,6 +29,8 @@ import org.apache.commons.logging.LogFactory;
  * @author YMP (https://www.ymate.net/)
  */
 public final class Security implements IModule, ISecurity {
+
+    public static final String DEFAULT_PASSWORD = "123456";
 
     private static final Log LOG = LogFactory.getLog(Security.class);
 

@@ -37,6 +37,11 @@
             <artifactId>ymate-platform-validation</artifactId>
         </dependency>
         <dependency>
+            <groupId>net.ymate.platform</groupId>
+            <artifactId>ymate-platform-persistence-jdbc</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <scope>compile</scope>
