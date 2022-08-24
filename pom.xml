@@ -15,6 +15,8 @@
         <module>mx-ymate-upload</module>
         <module>mx-ymate-netty</module>
         <module>mx-ymate-serv</module>
+        <module>mx-ymate-maven-plugin</module>
+        <module>mx-ymate-undertow</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -41,6 +43,9 @@
         <aliyun-sdk-oss.version>3.15.1</aliyun-sdk-oss.version>
         <ymate-module-fileuploader.version>2.0.0</ymate-module-fileuploader.version>
         <org.apache.httpcomponents.version>4.5.13</org.apache.httpcomponents.version>
+        <freemarker.version>2.3.31</freemarker.version>
+        <jansi.version>2.4.0</jansi.version>
+        <undertow.version>2.2.19.Final</undertow.version>
     </properties>
 
     <dependencyManagement>
@@ -89,6 +94,11 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.all.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>${freemarker.version}</version>
             </dependency>
             <!--druid-->
             <dependency>
@@ -172,6 +182,11 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
+                <groupId>org.fusesource.jansi</groupId>
+                <artifactId>jansi</artifactId>
+                <version>${jansi.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpmime</artifactId>
                 <version>${org.apache.httpcomponents.version}</version>
@@ -185,6 +200,21 @@
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>io.undertow</groupId>
+                <artifactId>undertow-core</artifactId>
+                <version>${undertow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.undertow</groupId>
+                <artifactId>undertow-servlet</artifactId>
+                <version>${undertow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.undertow</groupId>
+                <artifactId>undertow-websockets-jsr</artifactId>
+                <version>${undertow.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
