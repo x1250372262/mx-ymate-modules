@@ -16,6 +16,9 @@
 
 package com.jfinal.server.undertow;
 
+import net.ymate.platform.core.Version;
+import net.ymate.platform.core.YMP;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -113,35 +116,6 @@ public class UndertowKit {
 	public static void doNothing(Throwable e) {
 		
 	}
-	
-	public static void configJFinalPathKit(UndertowConfig config) {
-		try {
-			doConfigJFinalPathKit(config);
-		} catch (Exception e) {
-			doNothing(e);
-		}
-	}
-	
-	/**
-	 * 经测试，在 "非部署" 情况下，即便通过本方法设置了 PathKit.setWebRootPath(...) 的值
-	 * 后续仍然会被 JFinal.initPathKit() 中的 servletContext.getRealPath("/") 值覆盖掉
-	 * 所以对 PathKit.webRootPath 的注入对于开发时来说始终没有任何影响
-	 * 
-	 * 剩下的只需要关注 "部署" 情况，以及 PathKit.rootClassPath 这个值的走向，目前来说没有问题
-	 */
-	private static void doConfigJFinalPathKit(UndertowConfig config) throws ReflectiveOperationException {
-		Class<?> c = config.getClassLoader().loadClass("com.jfinal.kit.PathKit");
-		Method setWebRootPath = c.getMethod("setWebRootPath", String.class);
-		String webRootPath = PathKitExt.getWebRootPath();
-		setWebRootPath.invoke(null, webRootPath);
-		
-		// -------
-		
-		Method setRootClassPath = c.getMethod("setRootClassPath", String.class);
-		String rootClassPath = PathKitExt.getRootClassPath();
-		setRootClassPath.invoke(null, rootClassPath);
-	}
-	
 	// ----------------------------------------------------------------
 	
 	private static Boolean deployMode = null;
@@ -193,14 +167,8 @@ public class UndertowKit {
 		return path;
 	}
 	
-	public static String getJFinalVersion() {
-		try {
-			Class<?> clazz = Class.forName("com.jfinal.core.Const");
-			java.lang.reflect.Field field = clazz.getField("JFINAL_VERSION");
-			return (String)field.get(null);
-		} catch (Exception e) {
-			return com.jfinal.core.Const.JFINAL_VERSION;
-		}
+	public static String getYmpVersion() {
+		return YMP.VERSION.toString();
 	}
 }
 

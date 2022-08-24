@@ -48,8 +48,9 @@ public class HotSwapResolver {
 	};
 	
 	protected String[] hotSwapClassPrefix = {
-			"com.jfinal.",
-			
+//			"net.ymate.",
+//			"com.mx.",
+
 			"net.sf.ehcache.",					// 支持 ehcache，否则从 ehcache 中读取到的数据将出现类型转换异常
 			"redis.clients.", "org.nustaq.",		// 支持 RedisPlugin
 			"org.quartz.",						// 支持 quartz

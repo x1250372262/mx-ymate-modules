@@ -16,8 +16,9 @@
 
 package com.jfinal.server.undertow;
 
-import com.jfinal.core.Const;
 import com.jfinal.server.undertow.hotswap.ClassLoaderKit;
+import com.mx.ymate.dev.constants.Constants;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.util.Properties;
@@ -69,7 +70,7 @@ public class PropExt {
 	 * @see #PropExt(String, String)
 	 */
 	public PropExt(String fileName) {
-		this(fileName, Const.DEFAULT_ENCODING);
+		this(fileName, Constants.DEFAULT_CHARSET);
 	}
 	
 	/**
@@ -98,7 +99,9 @@ public class PropExt {
 			throw new RuntimeException("Error loading properties file.", e);
 		}
 		finally {
-			if (inputStream != null) try {inputStream.close();} catch (IOException e) {UndertowKit.doNothing(e);}
+			if (inputStream != null) {
+				try {inputStream.close();} catch (IOException e) {UndertowKit.doNothing(e);}
+			}
 		}
 	}
 	
@@ -107,7 +110,7 @@ public class PropExt {
 	 * @see #PropExt(File, String)
 	 */
 	public PropExt(File file) {
-		this(file, Const.DEFAULT_ENCODING);
+		this(file, Constants.DEFAULT_CHARSET);
 	}
 	
 	/**
@@ -137,7 +140,9 @@ public class PropExt {
 			throw new RuntimeException("Error loading properties file.", e);
 		}
 		finally {
-			if (inputStream != null) try {inputStream.close();} catch (IOException e) {UndertowKit.doNothing(e);}
+			if (inputStream != null) {
+				try {inputStream.close();} catch (IOException e) {UndertowKit.doNothing(e);}
+			}
 		}
 	}
 	
@@ -154,7 +159,7 @@ public class PropExt {
 	}
 	
 	public PropExt append(String fileName) {
-		return append(fileName, Const.DEFAULT_ENCODING);
+		return append(fileName, Constants.DEFAULT_CHARSET);
 	}
 	
 	public PropExt appendIfExists(String fileName, String encoding) {
@@ -166,7 +171,7 @@ public class PropExt {
 	}
 	
 	public PropExt appendIfExists(String fileName) {
-		return appendIfExists(fileName, Const.DEFAULT_ENCODING);
+		return appendIfExists(fileName, Constants.DEFAULT_CHARSET);
 	}
 	
 	public String get(String key) {
@@ -186,7 +191,7 @@ public class PropExt {
 	
 	public Integer getInt(String key, Integer defaultValue) {
 		String value = properties.getProperty(key);
-		if (value != null) {
+		if (StringUtils.isNotBlank(value)) {
 			return Integer.parseInt(value.trim());
 		}
 		return defaultValue;
@@ -198,7 +203,7 @@ public class PropExt {
 	
 	public Long getLong(String key, Long defaultValue) {
 		String value = properties.getProperty(key);
-		if (value != null) {
+		if (StringUtils.isNotBlank(value)) {
 			return Long.parseLong(value.trim());
 		}
 		return defaultValue;
@@ -210,7 +215,7 @@ public class PropExt {
 	
 	public Double getDouble(String key, Double defaultValue) {
 		String value = properties.getProperty(key);
-		if (value != null) {
+		if (StringUtils.isNotBlank(value)) {
 			return Double.parseDouble(value.trim());
 		}
 		return defaultValue;
@@ -222,7 +227,7 @@ public class PropExt {
 	
 	public Boolean getBoolean(String key, Boolean defaultValue) {
 		String value = properties.getProperty(key);
-		if (value != null) {
+		if (StringUtils.isNotBlank(value)) {
 			value = value.toLowerCase().trim();
 			if ("true".equals(value)) {
 				return true;

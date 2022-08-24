@@ -16,6 +16,7 @@
 
 package com.jfinal.server.undertow;
 
+import cn.hutool.core.net.NetUtil;
 import com.jfinal.server.undertow.hotswap.ClassLoaderKit;
 import com.jfinal.server.undertow.hotswap.HotSwapResolver;
 import com.jfinal.server.undertow.ssl.SslConfig;
@@ -25,6 +26,7 @@ import io.undertow.util.StatusCodes;
 
 import java.util.zip.Deflater;
 
+
 /**
  * UndertowConfig
  */
@@ -33,6 +35,7 @@ public class UndertowConfig {
 	static final String UNDERTOW_CONFIG					= "undertow.txt";
 	
 	static final String DEV_MODE							= "undertow.devMode";
+	static final String MICRO_SERVICE_MODE = "undertow.microServiceMode";
 	static final String PORT								= "undertow.port";
 	static final String HOST								= "undertow.host";
 	static final String CONTEXT_PATH						= "undertow.contextPath";
@@ -65,11 +68,12 @@ public class UndertowConfig {
 	
 	// ----------------------------------------------------------------------------
 	
-	protected String jfinalConfig;
+//	protected String jfinalConfig;
 	
 	// 开发模式才支持热加载，此配置与 jfinal 中的是不同的用途
 	protected volatile static boolean devMode		= false;
-	protected int port								= 80;
+	protected boolean microServiceMode		= false;
+	protected Integer port								= 8080;
 	protected String host							= "0.0.0.0";
 	protected String contextPath						= "/";
 	protected String resourcePath					= "src/main/webapp, WebRoot, WebContent";	// web 资源路径
@@ -101,17 +105,9 @@ public class UndertowConfig {
 	
 	protected PropExt p;
 	
-	/**
-	 * 尝试加载默认配置文件 "undertow.txt" 与 "undertow-pro.txt" 初始化
-	 * UndertowConfig，这两个配置文件不存在时不抛出异常
-	 */
-	public UndertowConfig(Class<?> jfinalConfigClass) {
-		this(jfinalConfigClass.getName());
-	}
-	
-	public UndertowConfig(String jfinalConfigClass) {
-		this.jfinalConfig = jfinalConfigClass;
-		
+
+	public UndertowConfig() {
+
 		p = createPropExt(UNDERTOW_CONFIG);
 		if (p.notEmpty()) {
 			init();
@@ -127,12 +123,8 @@ public class UndertowConfig {
 	 * 注意：生产环境配置文件不存在时不抛出异常，便于支持 fatjar 模式下创建
 	 *      config/abc-pro.txt 文件用于配置生产环境 
 	 */
-	public UndertowConfig(Class<?> jfinalConfigClass, String undertowConfig) {
-		this(jfinalConfigClass.getName(), undertowConfig);
-	}
-	
-	public UndertowConfig(String jfinalConfigClass, String undertowConfig) {
-		this.jfinalConfig = jfinalConfigClass;
+
+	public UndertowConfig(String undertowConfig) {
 		undertowConfig = undertowConfig.trim();
 		
 		p = createPropExt(undertowConfig);
@@ -178,12 +170,26 @@ public class UndertowConfig {
 		}
 		return main;
 	}
-	
+
+	private Integer getPort(Integer portInteger,int defaultValue) {
+		if (portInteger!=null) {
+			return portInteger;
+		}
+		//不是微服务模式
+		if (!microServiceMode) {
+			return defaultValue;
+		}
+		//返回随机可以用端口
+		return NetUtil.getUsableLocalPort();
+	}
+
 	protected void init() {
 		initAllowResourceChangeListeners();
 		
 		devMode						= p.getBoolean(DEV_MODE, devMode);
-		port							= p.getInt(PORT, port);
+		microServiceMode						= p.getBoolean(MICRO_SERVICE_MODE, microServiceMode);
+		port							= getPort(p.getInt(PORT),port);
+
 		host							= p.get(HOST, host).trim();
 		contextPath					= p.get(CONTEXT_PATH, contextPath).trim();
 		resourcePath					= p.get(RESOURCE_PATH, resourcePath).trim();
@@ -290,10 +296,7 @@ public class UndertowConfig {
 		return stopKey;
 	} */
 	
-	public String getJFinalConfig() {
-		return jfinalConfig;
-	}
-	
+
 	public ResourceManager getResourceManager() {
 		/*
 		CompositeResourceManager ret = new CompositeResourceManager();
@@ -623,7 +626,7 @@ public class UndertowConfig {
 	 */
 	public String getServerName() {
 		if (isBlank(serverName)) {
-			return "JFinal " + UndertowKit.getJFinalVersion();
+			return "YMP " + UndertowKit.getYmpVersion();
 		} else {
 			return "disable".equals(serverName.trim()) ? null : serverName.trim();
 		}
