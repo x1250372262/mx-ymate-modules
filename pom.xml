@@ -17,6 +17,7 @@
         <module>mx-ymate-serv</module>
         <module>mx-ymate-maven-plugin</module>
         <module>mx-ymate-undertow</module>
+        <module>mx-ymate-excel</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -27,25 +28,25 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <ymate.platform.version>2.1.2-dev</ymate.platform.version>
-        <ymate.platform.test.version>1.0.0</ymate.platform.test.version>
-        <ymate.apidocs.version>2.0.0</ymate.apidocs.version>
-        <ymate.maven.plugin.version>1.0.1</ymate.maven.plugin.version>
-        <mysql.connector.java.version>8.0.29</mysql.connector.java.version>
-        <druid.version>1.2.11</druid.version>
-        <hutool.all.version>5.8.4</hutool.all.version>
+        <hutool.all.version>5.8.9</hutool.all.version>
         <redisson.version>3.17.4</redisson.version>
-        <clickhouse-jdbc.version>0.3.2</clickhouse-jdbc.version>
         <netty-all.version>4.1.76.Final</netty-all.version>
         <sa.token.version>1.30.0</sa.token.version>
-        <minio.version>8.4.2</minio.version>
+        <minio.version>8.4.5</minio.version>
         <qiniu-java-sdk.version>7.11.0</qiniu-java-sdk.version>
-        <cos_api.version>5.6.95</cos_api.version>
-        <aliyun-sdk-oss.version>3.15.1</aliyun-sdk-oss.version>
+        <cos_api.version>5.6.108</cos_api.version>
+        <aliyun-sdk-oss.version>3.15.2</aliyun-sdk-oss.version>
         <ymate-module-fileuploader.version>2.0.0</ymate-module-fileuploader.version>
         <org.apache.httpcomponents.version>4.5.13</org.apache.httpcomponents.version>
         <freemarker.version>2.3.31</freemarker.version>
         <jansi.version>2.4.0</jansi.version>
         <undertow.version>2.2.19.Final</undertow.version>
+        <easyexcel.version>3.1.1</easyexcel.version>
+        <poi.version>4.0.0</poi.version>
+        <jxls.version>2.6.1-SNAPSHOT</jxls.version>
+        <jxls-poi.version>1.2.1-SNAPSHOT</jxls-poi.version>
+        <jxls-jexcel.version>1.0.7</jxls-jexcel.version>
+        <jxls-reader.version>2.0.5</jxls-reader.version>
     </properties>
 
     <dependencyManagement>
@@ -76,19 +77,9 @@
                 <version>${ymate.platform.version}</version>
             </dependency>
             <dependency>
-                <groupId>net.ymate.apidocs</groupId>
-                <artifactId>ymate-apidocs-core</artifactId>
-                <version>${ymate.apidocs.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>net.ymate.module</groupId>
                 <artifactId>ymate-module-fileuploader</artifactId>
                 <version>${ymate-module-fileuploader.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>${mysql.connector.java.version}</version>
             </dependency>
             <dependency>
                 <groupId>cn.hutool</groupId>
@@ -99,12 +90,6 @@
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
                 <version>${freemarker.version}</version>
-            </dependency>
-            <!--druid-->
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>druid</artifactId>
-                <version>${druid.version}</version>
             </dependency>
             <!--sa-token-->
             <dependency>
@@ -156,12 +141,6 @@
                 <groupId>com.aliyun.oss</groupId>
                 <artifactId>aliyun-sdk-oss</artifactId>
                 <version>${aliyun-sdk-oss.version}</version>
-            </dependency>
-            <!--clickhouse-jdbc-->
-            <dependency>
-                <groupId>ru.yandex.clickhouse</groupId>
-                <artifactId>clickhouse-jdbc</artifactId>
-                <version>${clickhouse-jdbc.version}</version>
             </dependency>
             <!--netty-->
             <dependency>
@@ -215,6 +194,41 @@
                 <groupId>io.undertow</groupId>
                 <artifactId>undertow-websockets-jsr</artifactId>
                 <version>${undertow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jxls</groupId>
+                <artifactId>jxls</artifactId>
+                <version>${jxls.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jxls</groupId>
+                <artifactId>jxls-poi</artifactId>
+                <version>${jxls-poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jxls</groupId>
+                <artifactId>jxls-jexcel</artifactId>
+                <version>${jxls-jexcel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jxls</groupId>
+                <artifactId>jxls-reader</artifactId>
+                <version>${jxls-reader.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
