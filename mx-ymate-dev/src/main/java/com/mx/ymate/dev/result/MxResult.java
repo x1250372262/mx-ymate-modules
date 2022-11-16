@@ -90,7 +90,7 @@ public class MxResult extends MxAbstractWebResult<String> implements Serializabl
 
 
     public static MxResult ok() {
-        return MxResult.create(Code.SUCCESS.code());
+        return MxResult.create(Code.SUCCESS);
     }
 
     /**
