@@ -38,10 +38,10 @@ import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
 import io.undertow.servlet.api.ListenerInfo;
 import net.ymate.platform.webmvc.support.DispatchFilter;
+import net.ymate.platform.webmvc.support.GeneralWebFilter;
 import net.ymate.platform.webmvc.support.WebAppEventListener;
 
 import javax.servlet.DispatcherType;
-import javax.servlet.Filter;
 import javax.servlet.ServletException;
 import java.text.DecimalFormat;
 import java.util.function.BiConsumer;
@@ -51,16 +51,16 @@ import static com.jfinal.server.undertow.UndertowConfig.*;
 
 /**
  * UndertowServer
- *
+ * <p>
  * 官方示例：https://github.com/undertow-io/undertow/tree/master/examples/src/main/java/io/undertow/examples
- *
- *
+ * <p>
+ * <p>
  * 注意：关闭服务时使用：kill pid，不要使用：kill -9 pid，
- *      否则 JFinalConfig.onStop() 不会被回调
- *
+ * 否则 JFinalConfig.onStop() 不会被回调
+ * <p>
  * 文档：
- *   http://undertow.io/undertow-docs/undertow-docs-2.0.0/index.html
- *   https://blog.csdn.net/zhaowen25/article/details/45324805
+ * http://undertow.io/undertow-docs/undertow-docs-2.0.0/index.html
+ * https://blog.csdn.net/zhaowen25/article/details/45324805
  */
 public class UndertowServer {
 
@@ -93,7 +93,7 @@ public class UndertowServer {
 
     /**
      * 创建 UndertowServer
-     *
+     * <p>
      * 尝试使用 "undertow.txt" 以及 "undertow-pro.txt" 初始化 undertow
      * 当配置文件不存在时不抛出异常而是使用默认值进行初始化
      */
@@ -103,10 +103,10 @@ public class UndertowServer {
 
     /**
      * 创建 UndertowServer
-     *
+     * <p>
      * 使用指定的配置文件及其生产环境配置文件初始化 undertow，假定指定的配置文件名为
      * "abc.txt"，其生产环境配置文件名约定为 "abc-pro.txt"
-     *
+     * <p>
      * 注意：指定的配置文件必须要存在，而约定的那个生产环境配置文件可以不必存在
      */
     public static UndertowServer create(String undertowConfig) {
@@ -172,10 +172,10 @@ public class UndertowServer {
      * 使用 System.getProperty(...) 加载命令行传入的 undertow.port 与 undertow.host 参数，
      * 因为这两个参数最有可能在运行项目时进行变动，这个功能可以免去创建 config/undertow-pro.txt
      * 来配置最需要变动的 port 与 host 参数，进一步节省时间
-     *
+     * <p>
      * 使用示例：
      * java -Dundertow.port=8080 -Dundertow.host=0.0.0.0 -jar jfinal-club-release.jar
-     *
+     * <p>
      * 传参注意事项：
      * 1：传参规则由 java 命令行给定，与 jfinal undertow 项目完全无关
      * 2：传参以 "-D" 为前缀，并且该前缀与后方的参数名之间不能有空格
@@ -309,12 +309,12 @@ public class UndertowServer {
 
     /**
      * 子类覆盖此方法可以添加 Handler 到 Handler 链条之中
-     *
+     * <p>
      * 假定子类扩展出了一个 MyHandler，子类覆盖中的代码一般如下：
-     *   protected HttpHandler configHandler(HttpHandler next) {
-     *      return new MyHandler(next);
-     *   }
-     *
+     * protected HttpHandler configHandler(HttpHandler next) {
+     * return new MyHandler(next);
+     * }
+     * <p>
      * 更详细的示例参考 jfinal 社区分享： https://jfinal.com/share/2066
      */
     protected HttpHandler configHandler(HttpHandler next) {
@@ -353,7 +353,7 @@ public class UndertowServer {
 
         configUndertow();
 
-         configListener();
+        configListener();
         // configWebSocket();
         // configServlet();
         // configFilter();
@@ -465,7 +465,7 @@ public class UndertowServer {
     /**
      * 安插在 DeploymentManager.deploy() 前的钩子方法，目前用于支持添加 shiro 的
      * EnvironmentLoaderListener，支持 shiro 还需要调用：
-     *     addHotSwapClassPrefix("org.apache.shiro.")
+     * addHotSwapClassPrefix("org.apache.shiro.")
      *
      * <pre>
      * 支持 shiro 的例子代码如下：
@@ -496,7 +496,7 @@ public class UndertowServer {
 
     /**
      * 安插在启动前的钩子方法，便于用户通过 lambda 表达式进行更多个性化配置
-     *
+     * <p>
      * 例如以下配置：
      * // In HTTP/1.1, connections are persistent unless declared otherwise.
      * // Adding a "Connection: keep-alive" header to every response would only
@@ -556,28 +556,20 @@ public class UndertowServer {
         }
     }
 
-    private void configListener(){
+    private void configListener() {
         deploymentInfo.addListener(new ListenerInfo(WebAppEventListener.class));
     }
 
     protected void configYmpFilter() {
-        deploymentInfo.addFilter(
-                Servlets.filter("DispatchFilter", DispatchFilter.class)
-        ).addFilterUrlMapping("DispatchFilter", "/*", DispatcherType.REQUEST);
+        deploymentInfo.addFilter(Servlets.filter("DispatchFilter", DispatchFilter.class))
+                .addFilterUrlMapping("DispatchFilter", "/*", DispatcherType.REQUEST);
 
-//        deploymentInfo.addFilter(
-//                Servlets.filter("DispatchFilter", getYmpFilter())
-//        ).addFilterUrlMapping("DispatchFilter", "/*", DispatcherType.REQUEST);
+        deploymentInfo.addFilter(Servlets.filter("GeneralWebFilter", GeneralWebFilter.class)
+                        .addInitParam("responseHeaders", "X-Frame-Options=SAMEORIGIN"))
+                .addFilterUrlMapping("DispatchFilter", "/*", DispatcherType.REQUEST);
+
     }
 
-    @SuppressWarnings("unchecked")
-    private Class<? extends Filter> getYmpFilter() {
-        try {
-            return (Class<? extends Filter>) config.getClassLoader().loadClass("net.ymate.platform.webmvc.support.DispatchFilter");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     protected void configWeb() {
         if (webBuilder != null) {
@@ -698,9 +690,9 @@ public class UndertowServer {
     /**
      * 设置为 true 时支持热加载，开发环境必配置项。建议在配置文件中进行配置：
      * undertow.devMode=true
-     *
+     * <p>
      * 配置文件中配置便于生产环境修改该项配置，提升性能
-     *
+     * <p>
      * 注意：undertow.devMode 与 jfinal 中的 devMode 没有任何关系
      */
     public UndertowServer setDevMode(boolean devMode) {
@@ -721,18 +713,18 @@ public class UndertowServer {
     /**
      * 仅用于解决项目的 JFinalConfig 继承类打成 jar 包，并且使用 undertow.devMode=true 配置
      * 时报出的异常，以上两个条件没有同时成立时无需理会，也就是说没有报异常就无需理会
-     *
+     * <p>
      * 假定项目中的 JFinalConfig 的继承类 com.abc.MyConfig 被打进了 jar 包并且
      * undertow.devMode 设置成了 true，这里在启动项目的时候由于 ClassLoader
      * 不同会报出以下异常：
-     *   Can not create instance of class: com.abc.MyConfig. Please check the config in web.xml
-     *
+     * Can not create instance of class: com.abc.MyConfig. Please check the config in web.xml
+     * <p>
      * 解决办法是使用 addHotSwapClassPrefix(...) :
-     *   UndertowServer.create(MyConfig.class).addHotSwapClassPrefix("com.abc.").start();
-     *
+     * UndertowServer.create(MyConfig.class).addHotSwapClassPrefix("com.abc.").start();
+     * <p>
      * 只添加 JFinalConfig 的继承类 com.abc.MyConfig 也可以：
-     *   UndertowServer.create(MyConfig.class).addHotSwapClassPrefix("com.abc.MyConfig").start();
-     *
+     * UndertowServer.create(MyConfig.class).addHotSwapClassPrefix("com.abc.MyConfig").start();
+     * <p>
      * 注意：该配置对生产环境无任何影响，在打包部署前无需删除该配置
      */
     public UndertowServer addHotSwapClassPrefix(String prefix) {
@@ -749,7 +741,7 @@ public class UndertowServer {
      * jfinal.sh 脚本中的 MAIN_CLASS 始终配置为 com.jfinal.server.undertow.UndertowServer
      * undertow.txt 中配置 configClass=jfinalConfigClass 指向 JFinalConfig 的继承类
      * 这样就可以避免修改 jfinal.sh，只需修改 undertow.txt
-     *
+     * <p>
      * 此方法仅适用于无需对 UndertowServer 进行代码配置的场景，例如需要添加
      * servlet、websocket 的场景则不适用，因为配置文件不支持这些配置
      */
