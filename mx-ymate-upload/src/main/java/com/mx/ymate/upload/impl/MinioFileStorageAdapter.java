@@ -15,7 +15,14 @@
  */
 package com.mx.ymate.upload.impl;
 
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.mx.ymate.upload.config.MinioConfig;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.minio.credentials.AssumeRoleBaseProvider;
 import net.ymate.module.fileuploader.*;
+import net.ymate.platform.commons.util.DateTimeUtils;
 import net.ymate.platform.commons.util.FileUtils;
 import net.ymate.platform.commons.util.RuntimeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +30,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -33,43 +43,58 @@ public class MinioFileStorageAdapter extends AbstractFileStorageAdapter {
 
     private static final Log LOG = LogFactory.getLog(MinioFileStorageAdapter.class);
 
-    private File fileStoragePath;
+    private MinioConfig minioConfig;
 
-    private File thumbStoragePath;
+    private MinioClient minioClient;
 
     @Override
     protected void doInitialize() throws Exception {
-        this.fileStoragePath = doCheckAndFixStorageDir(IFileUploaderConfig.FILE_STORAGE_PATH, new File(RuntimeUtils.replaceEnvVariable(StringUtils.defaultIfBlank(getOwner().getConfig().getFileStoragePath(), IFileUploaderConfig.DEFAULT_STORAGE_PATH))), true);
-        if (StringUtils.isBlank(getOwner().getConfig().getThumbStoragePath())) {
-            this.thumbStoragePath = new File(this.fileStoragePath.getPath());
-        } else {
-            this.thumbStoragePath = doCheckAndFixStorageDir(IFileUploaderConfig.THUMB_STORAGE_PATH, new File(RuntimeUtils.replaceEnvVariable(getOwner().getConfig().getThumbStoragePath())), true);
+        if(minioConfig == null){
+            minioConfig = new MinioConfig();
+        }
+        if(minioClient == null){
+            // 使用MinIO服务的URL，端口，Access key和Secret key创建一个MinioClient对象
+            minioClient = MinioClient.builder().endpoint(minioConfig.getUrl()).credentials(minioConfig.getAccessKey(), minioConfig.getSecretKey()).build();
         }
     }
 
     @Override
     public boolean isExists(UploadFileMeta fileMeta) {
-        File target = new File(fileStoragePath, fileMeta.getSourcePath());
-        return target.exists() && target.isFile();
+       return false;
+    }
+
+    private String getFilePath(String type, String filename) {
+        //路径格式 例如 image/20210/01/01/hash.png
+        long time = System.currentTimeMillis();
+        String year = DateTimeUtils.formatTime(time, "yyyy");
+        String month = DateTimeUtils.formatTime(time, "MM");
+        String day = DateTimeUtils.formatTime(time, "dd");
+        return StrUtil.format("{}/{}/{}/{}/{}", type, year, month, day, filename);
+    }
+
+    private String getUrl(String url) {
+        if (!url.endsWith(StrUtil.SLASH)) {
+            url = url + StrUtil.SLASH;
+        }
+        return url;
     }
 
     @Override
     public UploadFileMeta writeFile(String hash, IFileWrapper file) throws Exception {
         ResourceType resourceType = ResourceType.valueOf(StringUtils.substringBefore(file.getContentType(), IResourcesProcessor.URL_SEPARATOR).toUpperCase());
         Map<String, Object> attributes = doBuildFileAttributes(hash, resourceType, file);
-        // 转存文件，路径格式：{TYPE_NAME}/{FILE_HASH_1-2BIT}/{FILE_HASH_3-4BIT}/{FILE_HASH_32BIT}.{EXT}
+        // 路径格式 例如 image/20210/01/01/hash.png
         String extension = StringUtils.trimToNull(file.getSuffix());
         String filename = StringUtils.join(new Object[]{hash, extension}, FileUtils.POINT_CHAR);
-        String sourcePathDir = UploadFileMeta.buildSourcePath(resourceType, hash);
-        String sourcePath = String.format("%s/%s", sourcePathDir, filename);
-        File targetFile = new File(fileStoragePath, sourcePath);
-        if (targetFile.getParentFile().mkdirs() && LOG.isInfoEnabled()) {
-            LOG.info(String.format("Successfully created directory: %s", targetFile.getParentFile().getPath()));
-        }
-        file.writeTo(targetFile);
-        //
-        doAfterWriteFile(resourceType, targetFile, sourcePathDir, thumbStoragePath.getPath(), hash);
-        //
+        String newFileName = getFilePath(resourceType.name(),filename);
+        // 重新生成一个文件名
+        InputStream inputStram = file.getInputStream();
+        minioClient.putObject(PutObjectArgs.builder().bucket(minioConfig.getBucket())
+                .object(newFileName)
+                .stream(inputStram, file.getContentLength(), -1)
+                .contentType(file.getContentType())
+                .build());
+        String url = getUrl(minioConfig.getUrl()) + minioConfig.getBucket() + "/" + newFileName;
         long lastModifyTime = file.getLastModifyTime();
         return UploadFileMeta.builder()
                 .hash(hash)
@@ -79,7 +104,7 @@ public class MinioFileStorageAdapter extends AbstractFileStorageAdapter {
                 .mimeType(file.getContentType())
                 .type(resourceType)
                 .status(0)
-                .sourcePath(sourcePath)
+                .url(url)
                 .createTime(lastModifyTime)
                 .lastModifyTime(lastModifyTime)
                 .attributes(attributes)
@@ -88,11 +113,11 @@ public class MinioFileStorageAdapter extends AbstractFileStorageAdapter {
 
     @Override
     public File readFile(String hash, String sourcePath) {
-        return new File(fileStoragePath, sourcePath);
+        return null;
     }
 
     @Override
     public File getThumbStoragePath() {
-        return thumbStoragePath;
+        return null;
     }
 }

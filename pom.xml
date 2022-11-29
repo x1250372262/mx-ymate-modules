@@ -15,7 +15,6 @@
         <module>mx-ymate-upload</module>
         <module>mx-ymate-netty</module>
         <module>mx-ymate-serv</module>
-        <module>mx-ymate-maven-plugin</module>
         <module>mx-ymate-undertow</module>
         <module>mx-ymate-excel</module>
     </modules>
