@@ -52,6 +52,11 @@
         <dependencies>
             <dependency>
                 <groupId>net.ymate.platform</groupId>
+                <artifactId>ymate-platform-core</artifactId>
+                <version>${ymate.platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ymate.platform</groupId>
                 <artifactId>ymate-platform-starter-web</artifactId>
                 <version>${ymate.platform.version}</version>
             </dependency>

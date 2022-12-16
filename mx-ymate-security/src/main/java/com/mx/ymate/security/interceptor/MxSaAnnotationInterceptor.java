@@ -14,6 +14,7 @@ import com.mx.ymate.security.Security;
 import com.mx.ymate.security.base.code.SecurityCode;
 import com.mx.ymate.security.base.model.SecurityUser;
 import com.mx.ymate.security.dao.ISecurityUserDao;
+import com.mx.ymate.security.exception.MxLoginException;
 import net.ymate.platform.core.YMP;
 import net.ymate.platform.core.beans.annotation.Inject;
 import net.ymate.platform.core.beans.intercept.AbstractInterceptor;
@@ -61,12 +62,14 @@ public class MxSaAnnotationInterceptor extends AbstractInterceptor {
                 throw new NotLoginException(Code.NOT_LOGIN.msg(), null, null);
             }
             if (Objects.equals(Constants.BOOL_TRUE, securityUser.getDisableStatus())) {
-                throw new NotLoginException(SecurityCode.SECURITY_LOGIN_USER_DISABLE.msg(), null, null);
+                throw new MxLoginException(SecurityCode.SECURITY_LOGIN_USER_DISABLE.msg());
             }
             securityConfig.loginHandlerClass().checkLoginCustom(securityUser);
 
         } catch (NotLoginException notLoginException) {
             return MxResult.create(Code.NOT_LOGIN).toMxJsonView();
+        } catch (MxLoginException mxLoginException) {
+            return MxResult.create(Code.NOT_LOGIN.code()).msg(mxLoginException.getMessage()).toMxJsonView();
         }catch (NotPermissionException | NotRoleException notPermissionException) {
             return MxResult.create(Code.NOT_PERMISSION).toMxJsonView();
         } catch (Exception e) {
