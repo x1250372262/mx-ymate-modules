@@ -228,12 +228,12 @@ public class UndertowServer {
         }
 
         init();
-		
-		/* 挪到 init() 之中，让 config 中的值更早生效
-		if (configConsumer != null) {
-			configConsumer.accept(config);
-			configConsumer = null;			// 配置在整个生命周期只能调用一次
-		}*/
+
+        /* 挪到 init() 之中，让 config 中的值更早生效
+        if (configConsumer != null) {
+            configConsumer.accept(config);
+            configConsumer = null;			// 配置在整个生命周期只能调用一次
+        }*/
 
         if (onDeployConsumer != null) {
             onDeployConsumer.accept(config.getClassLoader(), deploymentInfo);
@@ -344,12 +344,12 @@ public class UndertowServer {
 
     protected void init() {
         builder = Undertow.builder();
-		
-		/*
-		if (configConsumer != null) {
-			configConsumer.accept(config);
-			configConsumer = null;			// 配置在整个生命周期只能调用一次
-		}*/
+
+        /*
+        if (configConsumer != null) {
+            configConsumer.accept(config);
+            configConsumer = null;			// 配置在整个生命周期只能调用一次
+        }*/
 
         configUndertow();
 
@@ -534,6 +534,13 @@ public class UndertowServer {
         }
         if (config.getWorkerThreads() != null) {
             builder.setWorkerThreads(config.getWorkerThreads());
+        }
+
+        if (config.getBufferSize() != null) {
+            builder.setBufferSize(config.getBufferSize());
+        }
+        if (config.getDirectBuffers() != null) {
+            builder.setDirectBuffers(config.getDirectBuffers());
         }
 
         // ---------------------------------------------------------------------------------

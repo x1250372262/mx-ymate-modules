@@ -44,6 +44,11 @@ undertow.contextPath=/
 # 其中 cores 为 cpu 核心数量，阻塞系数 = 阻塞时间 / (阻塞时间 + 使用CPU的时间)
 # undertow.workerThreads=
 
+# 服务器连接 IO 操作缓冲区
+# undertow.bufferSize = 4096
+# 是否使用直接内存缓冲区
+# undertow.directBuffers = true
+
 
 # gzip 压缩开关
 undertow.gzip.enable=false
