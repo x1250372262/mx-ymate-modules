@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <title>人员角色列表</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <script src="/statics/js/custom/dpstudio.js?_V=2"></script>
+
+
+</head>
+
+<body ng-app="">
+<div class="lyear-layout-web">
+    <div class="lyear-layout-container">
+        <!--左侧导航-->
+        <ng-include src="'/admin/common/sidebar.html'"></ng-include>
+        <!--End 左侧导航-->
+        <!--头部信息-->
+        <ng-include src="'/admin/common/header.html'"></ng-include>
+        <!--End 头部信息-->
+
+        <!--页面主要内容-->
+        <main class="lyear-layout-content">
+            <div class="container-fluid p-t-15">
+
+                <!--添加-->
+                <div class="modal fade bs-example-modal-lg" id="commonDiv" tabindex="-1" role="dialog"
+                     aria-labelledby="myLargeModalLabel" data-backdrop="static">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title" id="myModalLabel">添加</h6>
+                                <div class="float-right">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="modal-body">
+                                <form action="" id="commonForm">
+                                    <div class="form-group col-md-12 mx_validator">
+                                        <label>角色名称</label><span class="required">
+										* </span>
+                                       <select name="roleId" class="form-control mx_required select-init" isDefault="1"
+                                               mx_required_type="select" mx_required_msg="请选择角色名称">
+
+                                       </select>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary mx_validator_button" id="submit">保存</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <header class="card-header">
+                                <div class="card-title">人员角色列表</div>
+                            </header>
+                            <div class="card-body">
+
+                                <div class="card-toolbar clearfix">
+                                    <div class="form-inline">
+                                        <a class="btn btn-primary m-b-5 m-r-5 creates" data-toggle="modal" data-target="#commonDiv" href="#!"><i class="mdi mdi-plus"></i> 新增</a>
+                                        <a class="btn btn-danger m-b-5 m-r-5 deletes" data-toggle="modal" data-target=".removeDio" href="#!"><i class="mdi mdi-window-close"></i> 删除</a>
+                                    </div>
+
+                                </div>
+
+                                <table id="tableAjaxId"></table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </main>
+        <!--End 页面主要内容-->
+    </div>
+</div>
+
+<script type="text/javascript" src="/statics/js/apis/user.js"></script>
+<script type="text/javascript" src="/statics/js/apis/role.js"></script>
+<script type="text/javascript" src="/statics/js/custom/table.js?_v=1"></script>
+<script type="text/javascript">
+    var id = $.trim(MX.getQueryVariable("id"));
+    $(function () {
+        var listUrl = USER_ROLE_LIST + "?userId=" + id;
+        var createUrl = USER_ROLE_CREATE + "?userId=" + id;
+        Table.setUrl(listUrl,createUrl,null,null,USER_ROLE_DELETE,null);
+        Table.init();
+        SELECT.init($("#commonForm"),"id","name",ROLE_LIST,null,"?page=1&pageSize=-1","resultData")
+    });
+
+    columns = [
+        {
+            checkbox: true, // 显示一个勾选框
+            align: 'center' // 居中显示
+        }, {
+            field: 'roleName',
+            title: '角色名称',
+            align: 'center',
+            valign: 'middle'
+        }, {
+            field: 'createTime',
+            title: '创建时间',
+            align: 'center',
+            valign: 'middle',
+            formatter: function (value, row, index) { // 单元格格式化函数
+                return MX.changeTimeToString(new Date(value));
+            }
+        }, {
+            title: "操作",
+            align: 'center',
+            valign: 'middle',
+            width: 160, // 定义列的宽度，单位为像素px
+            formatter: option
+        }
+    ]
+
+    function option(value, row, index) {
+        return '<a class="btn btn-xs btn-default deletes" data-toggle="modal" data-target=".removeDio" dataId="' + row.id + '"  title="删除" >删除</a>';
+
+    }
+</script>
+</body>
+</html>

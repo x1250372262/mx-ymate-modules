@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <title>角色管理</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <script src="/statics/js/custom/dpstudio.js?_V=1"></script>
+    <link rel="stylesheet" type="text/css" href="/statics/plugins/jquery-multi-select/css/multi-select.css"/>
+    <link rel="stylesheet" type="text/css" href="/statics/plugins/select2/select2.css"/>
+    <style>
+        .ms-container .ms-optgroup-label {
+            color: #33cabb !important;
+        }
+
+        .ms-container .ms-selection li.ms-elem-selection {
+            cursor: pointer;
+        }
+
+        .layui-layer-content{
+            padding: 10px;
+            text-indent: 28px;
+        }
+    </style>
+</head>
+
+<body ng-app="">
+<div class="lyear-layout-web">
+    <div class="lyear-layout-container">
+        <!--左侧导航-->
+        <ng-include src="'/admin/common/sidebar.html'"></ng-include>
+        <!--End 左侧导航-->
+        <!--头部信息-->
+        <ng-include src="'/admin/common/header.html'"></ng-include>
+        <!--End 头部信息-->
+
+        <!--页面主要内容-->
+        <main class="lyear-layout-content">
+            <div class="container-fluid p-t-15">
+
+                <!--添加-->
+                <div class="modal fade bs-example-modal-lg" id="commonDiv" tabindex="-1" role="dialog"
+                     aria-labelledby="myLargeModalLabel" data-backdrop="static">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title" id="myModalLabel">添加</h6>
+                                <div class="float-right">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="modal-body">
+                                <form action="" id="commonForm">
+                                    <div class="form-group col-md-12 mx_validator">
+                                        <label for="name">名称</label><span class="required">
+										* </span>
+                                        <input type="hidden" name="id" value="">
+                                        <input type="hidden" name="lastModifyTime" value="">
+                                        <input type="text" class="form-control mx_required" mx_required_msg="名称不能为空"
+                                               id="name" name="name" value=""
+                                               placeholder="请输入名称"/>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="remark">备注</label>
+                                        <textarea class="form-control" id="remark" name="remark"
+                                                  placeholder="请输入备注"></textarea>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary mx_validator_button" id="submit">保存
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--编辑权限-->
+                <div class="modal fade bs-example-modal-lg" id="permissionDiv" tabindex="-1" role="dialog"
+                     aria-labelledby="myLargeModalLabel" data-backdrop="static">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title">编辑权限</h6>
+                                <div class="float-right">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="modal-body">
+                                <form action="" id="permissionForm">
+                                    <div class="form-group col-md-12">
+                                        <input type="hidden" name="last_modify_time" value="">
+                                    </div>
+                                    <div class="form-group col-md-12 mx_validator">
+                                        <label for="name">权限名称</label><span class="required">
+										* </span>
+                                        <input type="hidden" name="id" value="">
+                                        <select multiple="multiple" class="multi-select" id="my_multi_select2"
+                                                name="permissions">
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary mx_validator_button" id="submitPermission">
+                                    保存
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <header class="card-header">
+                                <div class="card-title"></div>
+                            </header>
+                            <div class="card-body">
+                                <div class="card-toolbar clearfix">
+                                    <form class="form-inline" id="searchForm" method="post">
+                                        <div class="mx_search">
+
+                                            <div class="fom-group m-b-5 m-r-10">
+                                                <input class="form-control" type="text" name="name"
+                                                       placeholder="请输入名称..">
+                                            </div>
+
+
+                                        </div>
+                                        <div>
+                                            <a class="btn btn-primary m-b-5 m-r-5" id="searchButton"><i
+                                                    class="mdi mdi-magnify"></i> 搜索</a>
+                                            <button class="btn btn-secondary m-b-5" id="resetButton"><i
+                                                    class="mdi mdi-delete"></i> 重置查询
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="card-toolbar clearfix">
+                                    <div class="form-inline">
+                                        <a class="btn btn-primary m-b-5 m-r-5 creates" data-toggle="modal"
+                                           data-target="#commonDiv" href="#!"><i class="mdi mdi-plus"></i> 新增</a>
+                                        <a class="btn btn-danger m-b-5 m-r-5 deletes" data-toggle="modal"
+                                           data-target=".removeDio" href="#!"><i class="mdi mdi-window-close"></i>
+                                            删除</a>
+                                    </div>
+                                </div>
+
+                                <table id="tableAjaxId">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+        <!--End 页面主要内容-->
+    </div>
+</div>
+
+<script type="text/javascript" src="/statics/js/apis/role.js"></script>
+<script type="text/javascript" src="/statics/js/custom/table.js?_v=1"></script>
+<script type="text/javascript" src="/statics/plugins/select2/select2.min.js"></script>
+<script type="text/javascript" src="/statics/plugins/jquery-multi-select/js/jquery.multi-select.js"></script>
+<script type="text/javascript">
+
+    var handleSelectInit = function () {
+        var ths = $("#my_multi_select2");
+        var str = "";
+        MX.axget(PERMISSION_SELECT, null, true, null, function (e) {
+            if (e.code === "00000") {
+                //权限列表
+                $.each(e.data, function (i, group) {
+                    str += "<optgroup label='" + group.groupName + "'>";
+                    $.each(group.permissionVOList, function (j, permission) {
+                        str += "<option value='" + permission.code + "'>" + permission.name + "</option>"
+                    });
+                    str += "</optgroup>";
+                });
+                if (str !== "") {
+                    ths.append(str);
+                }
+                //$('#my_multi_select1').multiSelect();
+                ths.multiSelect({
+                    selectableOptgroup: true,
+                    afterSelect: function (values) {
+                        ths.parent().find("span.repermition").remove();
+                    }
+                });
+
+            }
+        })
+
+    }
+
+    $(function () {
+        Table.setUrl(ROLE_LIST, ROLE_CREATE, ROLE_UPDATE, ROLE_DETAIL, ROLE_DELETE, null);
+        Table.init();
+        handleSelectInit();
+        $("#submitPermission").click(function () {
+            var permissionFormDom = $("#permissionForm");
+            var data = {};
+            data.id = permissionFormDom.find("input[name=id]").val();
+            permissionFormDom.find("select").each(function () {//select2
+                if ($(this).attr("id") === "my_multi_select2") {
+                    data[$(this).attr("name")] = $(this).val();
+                }
+            });
+            MX.axpost(permissionFormDom.attr("action"), data, true, null, function (e) {
+                if (e.code === "00000") {
+                    MX.successMsg("操作成功~")
+                    setTimeout(function () {
+                        $("#tableAjaxId").bootstrapTable('refresh');
+                        $("#permissionDiv").find(".close").trigger("click");
+                    }, 1000)
+                } else {
+                    MX.failMsg(e.msg != null ? e.msg : "操作失败")
+                }
+            })
+        });
+
+        $("#tableAjaxId").on("click", ".permission", function () {
+            var my_multi_select2Dom = $("#my_multi_select2");
+            var permissionFormDom = $("#permissionForm");
+            var id = $(this).attr("dataId");
+            var dom = $(this).attr("data-target");
+            $(dom).find("h6").text("编辑权限-" + $(this).attr("dataName"));
+            $(dom).find("form").attr("action", ROLE_PERMISSION_BIND);
+            MX.axget(ROLE_PERMISSION_LIST, {"id": id}, true, null, function (e) {
+                var data = e.data;
+                my_multi_select2Dom.multiSelect("deselect_all");
+                permissionFormDom.find("input[name=id]").val(id);
+                permissionFormDom.find("select").each(function () {//select2
+                    if (data[$(this).attr("name")]) {
+                        my_multi_select2Dom.multiSelect("select", data[$(this).attr("name")]);
+                        my_multi_select2Dom.val(data[$(this).attr("name")]);
+                    }
+                });
+
+            });
+        });
+    });
+
+    columns = [
+        {
+            checkbox: true, // 显示一个勾选框
+            align: 'center' // 居中显示
+        }, {
+            field: 'name', // 返回json数据中的name
+            title: '名称', // 表格表头显示文字
+            align: 'center', // 左右居中
+            valign: 'middle' // 上下居中
+        }, {
+            field: 'remark', // 返回json数据中的name
+            title: '备注',
+            align: 'center', // 左右居中
+            valign: 'middle',
+            formatter: function (value  , row, index) { // 单元格格式化函数
+                return Table.moreText(value);
+            }
+        }, {
+            field: 'createTime',
+            title: '创建时间',
+            align: 'center',
+            valign: 'middle',
+            formatter: function (value, row, index) { // 单元格格式化函数
+                return MX.changeTimeToString(value);
+            }
+        }, {
+            title: "操作",
+            align: 'center',
+            valign: 'middle',
+            width: 160, // 定义列的宽度，单位为像素px
+            formatter: option
+        }
+    ]
+
+    function option(value, row, index) {
+        return Table.tableOptionDefault(value, row, index, function () {
+            return '<a class="btn btn-xs btn-default permission" data-toggle="modal" dataName="' + row.name + '" data-target="#permissionDiv" dataId="' + row.id + '"  title="编辑" >编辑权限</a>';
+        });
+    }
+</script>
+</body>
+</html>
