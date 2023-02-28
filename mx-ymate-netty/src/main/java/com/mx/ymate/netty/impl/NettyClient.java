@@ -77,7 +77,7 @@ public class NettyClient {
                         for (ChannelInboundHandlerAdapter clazz : config.clientHandler()) {
                             channelPipeline.addLast(clazz);
                         }
-                        if (Objects.nonNull(config.clientHeartBeatTime())) {
+                        if (Objects.nonNull(config.clientHeartBeatTime()) && config.serverHeartBeatTime() > 0) {
                             channelPipeline.addLast(new HeartBeatServerHandler());
                         }
                     }
