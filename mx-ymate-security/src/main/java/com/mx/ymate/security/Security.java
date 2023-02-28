@@ -80,9 +80,9 @@ public final class Security implements IModule, ISecurity {
                     IApplicationConfigurer configurer = configureFactory.getConfigurer();
                     IModuleConfigurer moduleConfigurer = configurer == null ? null : configurer.getModuleConfigurer(MODULE_NAME);
                     if (moduleConfigurer != null) {
-                        config = DefaultSecurityConfig.create(configureFactory.getMainClass(), moduleConfigurer);
+                        config = DefaultSecurityConfig.create(moduleConfigurer);
                     } else {
-                        config = DefaultSecurityConfig.create(configureFactory.getMainClass(), DefaultModuleConfigurer.createEmpty(MODULE_NAME));
+                        config = DefaultSecurityConfig.create(DefaultModuleConfigurer.createEmpty(MODULE_NAME));
                     }
                 }
                 if (config == null) {

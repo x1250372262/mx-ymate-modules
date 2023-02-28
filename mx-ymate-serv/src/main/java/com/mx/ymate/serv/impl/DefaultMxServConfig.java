@@ -19,7 +19,6 @@ import com.mx.ymate.serv.IClientHandler;
 import com.mx.ymate.serv.IMxServ;
 import com.mx.ymate.serv.IMxServConfig;
 import com.mx.ymate.serv.IServerHandler;
-import com.mx.ymate.serv.annotation.MxServConf;
 import net.ymate.platform.commons.util.ClassUtils;
 import net.ymate.platform.core.configuration.IConfigReader;
 import net.ymate.platform.core.module.IModuleConfigurer;
@@ -41,7 +40,7 @@ import java.util.Map;
  */
 public final class DefaultMxServConfig implements IMxServConfig {
 
-    private boolean enabled = true;
+    private boolean enabled;
 
 
     /**
@@ -54,21 +53,21 @@ public final class DefaultMxServConfig implements IMxServConfig {
     /**
      * 启动的端
      */
-    private String client  = "all";
+    private String client;
 
     /**
      * 获取服务名称
      *
      * @return 返回服务名称
      */
-    private String serverName = "mxServer";
+    private String serverName;
 
     /**
      * 获取主机名称或IP地址
      *
      * @return 返回主机名称或IP地址
      */
-    private String serverHost = "0.0.0.0";
+    private String serverHost;
 
     /**
      * 获取服务监听端口
@@ -108,7 +107,7 @@ public final class DefaultMxServConfig implements IMxServConfig {
      *
      * @return 返回空闲线程等待新任务的最长时间
      */
-    private long serverKeepAliveTime = 0;
+    private long serverKeepAliveTime;
 
     /**
      * 获取最大线程池大小，默认为 200
@@ -143,7 +142,7 @@ public final class DefaultMxServConfig implements IMxServConfig {
      *
      * @return 返回客户端名称
      */
-    private String clientName = "mxClient";
+    private String clientName;
 
     /**
      * 获取远程主机名称或IP地址
@@ -220,12 +219,9 @@ public final class DefaultMxServConfig implements IMxServConfig {
     }
 
     public static DefaultMxServConfig create(IModuleConfigurer moduleConfigurer) {
-        return new DefaultMxServConfig(null, moduleConfigurer);
+        return new DefaultMxServConfig(moduleConfigurer);
     }
 
-    public static DefaultMxServConfig create(Class<?> mainClass, IModuleConfigurer moduleConfigurer) {
-        return new DefaultMxServConfig(mainClass, moduleConfigurer);
-    }
 
     public static Builder builder() {
         return new Builder();
@@ -234,13 +230,10 @@ public final class DefaultMxServConfig implements IMxServConfig {
     private DefaultMxServConfig() {
     }
 
-    private DefaultMxServConfig(Class<?> mainClass, IModuleConfigurer moduleConfigurer) {
+    private DefaultMxServConfig(IModuleConfigurer moduleConfigurer) {
         IConfigReader configReader = moduleConfigurer.getConfigReader();
-        //
-        MxServConf confAnn = mainClass == null ? null : mainClass.getAnnotation(MxServConf.class);
-        //
-        enabled = configReader.getBoolean(ENABLED, confAnn == null || confAnn.enabled());
-        client = configReader.getString(CLIENT,client);
+        enabled = configReader.getBoolean(ENABLED, true);
+        client = configReader.getString(CLIENT, "all");
         String codecName = configReader.getString(CODEC);
         if (StringUtils.isNotBlank(codecName)) {
             codec = ClassUtils.impl(codecName, INioCodec.class, this.getClass());
@@ -249,58 +242,54 @@ public final class DefaultMxServConfig implements IMxServConfig {
             codec = new TextLineCodec();
         }
 
-        serverName = configReader.getString(SERVER_NAME, confAnn != null ? confAnn.serverName() : serverName);
-        serverHost = configReader.getString(SERVER_HOST, confAnn != null ? confAnn.serverHost() : serverHost);
-        serverPort = configReader.getInt(SERVER_PORT, confAnn != null ? confAnn.serverPort() : serverPort);
+        serverName = configReader.getString(SERVER_NAME, "mxServer");
+        serverHost = configReader.getString(SERVER_HOST, "0.0.0.0");
+        serverPort = configReader.getInt(SERVER_PORT);
         String serverHandlerName = configReader.getString(SERVER_HANDLER);
         if (StringUtils.isNotBlank(serverHandlerName)) {
             serverHandler = ClassUtils.impl(serverHandlerName, IServerHandler.class, this.getClass());
         }
-        serverCharset = configReader.getString(SERVER_CHARSET, confAnn != null ? confAnn.serverCharset() : serverCharset);
-        serverBufferSize = configReader.getInt(SERVER_BUFFER_SIZE, confAnn != null ? confAnn.serverBufferSize() : serverBufferSize);
-        serverExecutorCount = configReader.getInt(SERVER_EXECUTOR_COUNT, confAnn != null ? confAnn.serverExecutorCount() : serverExecutorCount);
-        serverKeepAliveTime = configReader.getLong(SERVER_KEEP_ALIVE_TIME, confAnn != null ? confAnn.serverKeepAliveTime() : serverKeepAliveTime);
-        serverThreadMaxPoolSize = configReader.getInt(SERVER_THREAD_MAX_POOL_SIZE, confAnn != null ? confAnn.serverThreadMaxPoolSize() : serverThreadMaxPoolSize);
-        serverThreadQueueSize = configReader.getInt(SERVER_THREAD_QUEUE_SIZE, confAnn != null ? confAnn.serverThreadQueueSize() : serverThreadQueueSize);
-        serverSelectorCount = configReader.getInt(SERVER_SELECTOR_COUNT, confAnn != null ? confAnn.serverSelectorCount() : serverSelectorCount);
-        String serverParamsStr = configReader.getString(SERVER_PARAMS, confAnn != null ? confAnn.serverParams() : "");
+        serverCharset = configReader.getString(SERVER_CHARSET);
+        serverBufferSize = configReader.getInt(SERVER_BUFFER_SIZE);
+        serverExecutorCount = configReader.getInt(SERVER_EXECUTOR_COUNT);
+        serverKeepAliveTime = configReader.getLong(SERVER_KEEP_ALIVE_TIME);
+        serverThreadMaxPoolSize = configReader.getInt(SERVER_THREAD_MAX_POOL_SIZE);
+        serverThreadQueueSize = configReader.getInt(SERVER_THREAD_QUEUE_SIZE);
+        serverSelectorCount = configReader.getInt(SERVER_SELECTOR_COUNT);
+        String serverParamsStr = configReader.getString(SERVER_PARAMS);
         serverParams = new HashMap<>();
         if (StringUtils.isNotBlank(serverParamsStr)) {
             String[] paramsArr = serverParamsStr.split("\\|");
-            if (paramsArr.length > 0) {
-                for (String param : paramsArr) {
-                    String[] paramIitem = param.split(",");
-                    if (paramIitem.length == 2) {
-                        serverParams.put(paramIitem[0], paramIitem[1]);
-                    }
+            for (String param : paramsArr) {
+                String[] paramItem = param.split(",");
+                if (paramItem.length == 2) {
+                    serverParams.put(paramItem[0], paramItem[1]);
                 }
             }
         }
 
-        clientName = configReader.getString(CLIENT_NAME, confAnn != null ? confAnn.clientName() : clientName);
-        clientRemoteHost = configReader.getString(CLIENT_REMOTE_HOST, confAnn != null ? confAnn.clientRemoteHost() : clientRemoteHost);
-        clientPort = configReader.getInt(CLIENT_PORT, confAnn != null ? confAnn.clientPort() : clientPort);
+        clientName = configReader.getString(CLIENT_NAME, "mxClient");
+        clientRemoteHost = configReader.getString(CLIENT_REMOTE_HOST);
+        clientPort = configReader.getInt(CLIENT_PORT);
         String clientHandlerName = configReader.getString(CLIENT_HANDLER);
         if (StringUtils.isNotBlank(clientHandlerName)) {
             clientHandler = ClassUtils.impl(clientHandlerName, IClientHandler.class, this.getClass());
         }
-        clientCharset = configReader.getString(CLIENT_CHARSET, confAnn != null ? confAnn.clientCharset() : clientCharset);
-        clientBufferSize = configReader.getInt(CLIENT_BUFFER_SIZE, confAnn != null ? confAnn.clientBufferSize() : clientBufferSize);
-        clientExecutorCount = configReader.getInt(CLIENT_EXECUTOR_COUNT, confAnn != null ? confAnn.clientExecutorCount() : clientExecutorCount);
-        clientConnectionTimeout = configReader.getInt(CLIENT_CONNECTION_TIMEOUT, confAnn != null ? confAnn.clientConnectionTimeout() : clientConnectionTimeout);
-        clientReconnectionInterval = configReader.getInt(CLIENT_RECONNECTION_INTERVAL, confAnn != null ? confAnn.clientReconnectionInterval() : clientReconnectionInterval);
-        clientHeartbeatInterval = configReader.getInt(CLIENT_HEARTBEAT_INTERVAL, confAnn != null ? confAnn.clientHeartbeatInterval() : clientHeartbeatInterval);
+        clientCharset = configReader.getString(CLIENT_CHARSET);
+        clientBufferSize = configReader.getInt(CLIENT_BUFFER_SIZE);
+        clientExecutorCount = configReader.getInt(CLIENT_EXECUTOR_COUNT);
+        clientConnectionTimeout = configReader.getInt(CLIENT_CONNECTION_TIMEOUT);
+        clientReconnectionInterval = configReader.getInt(CLIENT_RECONNECTION_INTERVAL);
+        clientHeartbeatInterval = configReader.getInt(CLIENT_HEARTBEAT_INTERVAL);
 
-        String clientParamsStr = configReader.getString(CLIENT_PARAMS, confAnn != null ? confAnn.clientParams() : "");
+        String clientParamsStr = configReader.getString(CLIENT_PARAMS);
         clientParams = new HashMap<>();
         if (StringUtils.isNotBlank(clientParamsStr)) {
             String[] paramsArr = clientParamsStr.split("\\|");
-            if (paramsArr.length > 0) {
-                for (String param : paramsArr) {
-                    String[] paramIitem = param.split(",");
-                    if (paramIitem.length == 2) {
-                        clientParams.put(paramIitem[0], paramIitem[1]);
-                    }
+            for (String param : paramsArr) {
+                String[] paramItem = param.split(",");
+                if (paramItem.length == 2) {
+                    clientParams.put(paramItem[0], paramItem[1]);
                 }
             }
         }

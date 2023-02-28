@@ -86,9 +86,9 @@ public final class Netty implements IModule, INetty {
                     IApplicationConfigurer configurer = configureFactory.getConfigurer();
                     IModuleConfigurer moduleConfigurer = configurer == null ? null : configurer.getModuleConfigurer(MODULE_NAME);
                     if (moduleConfigurer != null) {
-                        config = DefaultNettyConfig.create(configureFactory.getMainClass(), moduleConfigurer);
+                        config = DefaultNettyConfig.create(moduleConfigurer);
                     } else {
-                        config = DefaultNettyConfig.create(configureFactory.getMainClass(), DefaultModuleConfigurer.createEmpty(MODULE_NAME));
+                        config = DefaultNettyConfig.create(DefaultModuleConfigurer.createEmpty(MODULE_NAME));
                     }
                 }
                 if (config == null) {

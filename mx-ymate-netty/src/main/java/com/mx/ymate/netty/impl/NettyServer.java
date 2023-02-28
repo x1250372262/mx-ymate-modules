@@ -36,7 +36,7 @@ public class NettyServer {
 
     public void run() throws Exception {
         if (config.serverDecoder() == null) {
-            throw new Exception("请指定handler处理类");
+            throw new Exception("请指定decoder解码器");
         }
         if (CollUtil.isEmpty(config.serverHandler())) {
             throw new Exception("请指定handler处理类");
@@ -53,7 +53,7 @@ public class NettyServer {
                 for (ChannelInboundHandlerAdapter clazz : config.serverHandler()) {
                     channelPipeline.addLast(clazz);
                 }
-                if (Objects.nonNull(config.serverHeartBeatTime()) && config.serverHeartBeatTime() > 0) {
+                if (Objects.nonNull(config.serverHeartBeatTime())) {
                     channelPipeline.addLast(new HeartBeatServerHandler());
                 }
             }

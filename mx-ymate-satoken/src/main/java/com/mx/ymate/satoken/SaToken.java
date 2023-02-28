@@ -15,12 +15,7 @@
  */
 package com.mx.ymate.satoken;
 
-import cn.dev33.satoken.SaManager;
-import cn.dev33.satoken.dao.SaTokenDao;
 import com.mx.ymate.satoken.impl.DefaultSaTokenConfig;
-import com.mx.ymate.satoken.ymate.SaTokenContextForYmate;
-import com.mx.ymate.satoken.ymate.SaTokenDaoRedis;
-import com.mx.ymate.satoken.ymate.json.SaJsonTemplateForFastJson;
 import net.ymate.platform.core.*;
 import net.ymate.platform.core.module.IModule;
 import net.ymate.platform.core.module.IModuleConfigurer;
@@ -83,9 +78,9 @@ public final class SaToken implements IModule, ISaToken {
                     IApplicationConfigurer configurer = configureFactory.getConfigurer();
                     IModuleConfigurer moduleConfigurer = configurer == null ? null : configurer.getModuleConfigurer(MODULE_NAME);
                     if (moduleConfigurer != null) {
-                        config = DefaultSaTokenConfig.create(configureFactory.getMainClass(), moduleConfigurer);
+                        config = DefaultSaTokenConfig.create(moduleConfigurer);
                     } else {
-                        config = DefaultSaTokenConfig.create(configureFactory.getMainClass(), DefaultModuleConfigurer.createEmpty(MODULE_NAME));
+                        config = DefaultSaTokenConfig.create(DefaultModuleConfigurer.createEmpty(MODULE_NAME));
                     }
                 }
                 if (config == null) {

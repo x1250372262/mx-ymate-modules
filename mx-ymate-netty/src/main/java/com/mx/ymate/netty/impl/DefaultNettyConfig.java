@@ -16,12 +16,11 @@
 package com.mx.ymate.netty.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.mx.ymate.dev.util.ConfigUtil;
 import com.mx.ymate.netty.INetty;
 import com.mx.ymate.netty.INettyConfig;
-import com.mx.ymate.netty.annotation.NettyConf;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import net.ymate.platform.commons.util.ClassUtils;
-import net.ymate.platform.core.configuration.IConfigReader;
 import net.ymate.platform.core.module.IModuleConfigurer;
 import org.apache.commons.lang3.StringUtils;
 
@@ -35,24 +34,23 @@ import java.util.List;
  */
 public final class DefaultNettyConfig implements INettyConfig {
 
-    private boolean enabled = true;
-    private String client = "all";
-    private int serverPort;
-    private int serverStartPort;
-    private int serverEndPort;
-    private int serverHeartBeatTime;
-    private List<String> serverExcludePort = new ArrayList<>();
+    private boolean enabled;
+    private String client;
+    private Integer serverPort;
+    private Integer serverStartPort;
+    private Integer serverEndPort;
+    private Integer serverHeartBeatTime;
+    private List<String> serverExcludePort;
     private List<ChannelInboundHandlerAdapter> serverHandler = new ArrayList<>();
     private ChannelInboundHandlerAdapter serverDecoder;
-    private List<String> clientRemoteAddress = new ArrayList<>();
-    private int clientHeartBeatTime;
+    private List<String> clientRemoteAddress;
+    private Integer clientHeartBeatTime;
     private List<ChannelInboundHandlerAdapter> clientHandler = new ArrayList<>();
     private ChannelInboundHandlerAdapter clientDecoder;
-
-    private boolean initialized;
-
     private String serverDecoderClassName;
     private String clientDecoderClassName;
+
+    private boolean initialized;
 
 
     public static DefaultNettyConfig defaultConfig() {
@@ -60,11 +58,7 @@ public final class DefaultNettyConfig implements INettyConfig {
     }
 
     public static DefaultNettyConfig create(IModuleConfigurer moduleConfigurer) {
-        return new DefaultNettyConfig(null, moduleConfigurer);
-    }
-
-    public static DefaultNettyConfig create(Class<?> mainClass, IModuleConfigurer moduleConfigurer) {
-        return new DefaultNettyConfig(mainClass, moduleConfigurer);
+        return new DefaultNettyConfig(moduleConfigurer);
     }
 
     public static Builder builder() {
@@ -74,37 +68,34 @@ public final class DefaultNettyConfig implements INettyConfig {
     private DefaultNettyConfig() {
     }
 
-    private DefaultNettyConfig(Class<?> mainClass, IModuleConfigurer moduleConfigurer) {
-        IConfigReader configReader = moduleConfigurer.getConfigReader();
-        //
-        NettyConf confAnn = mainClass == null ? null : mainClass.getAnnotation(NettyConf.class);
-        //
-        enabled = configReader.getBoolean(ENABLED, confAnn == null || confAnn.enabled());
-        client = configReader.getString(CLIENT, confAnn != null ? confAnn.client() : client);
-        serverPort = configReader.getInt(SERVER_PORT, confAnn != null ? confAnn.serverPort() : serverPort);
-        serverStartPort = configReader.getInt(SERVER_START_PORT, confAnn != null ? confAnn.serverStartPort() : serverStartPort);
-        serverEndPort = configReader.getInt(SERVER_END_PORT, confAnn != null ? confAnn.serverEndPort() : serverEndPort);
-        serverHeartBeatTime = configReader.getInt(SERVER_HEART_BEAT_TIME, confAnn != null ? confAnn.serverHeartBeatTime() : serverHeartBeatTime);
-        serverExcludePort = ObjectUtil.defaultIfNull(configReader.getList(SERVER_EXCLUDE_PORT), serverExcludePort);
-        List<String> serverHandlerClassNameList = ObjectUtil.defaultIfNull(configReader.getList(SERVER_HANDLER_CLASS), new ArrayList<>());
+    private DefaultNettyConfig(IModuleConfigurer moduleConfigurer) {
+        ConfigUtil configUtil = new ConfigUtil(moduleConfigurer.getConfigReader().toMap());
+        enabled = configUtil.getBool(ENABLED, true);
+        client = configUtil.getString(CLIENT, "all");
+        serverPort = configUtil.getInteger(SERVER_PORT);
+        serverStartPort = configUtil.getInteger(SERVER_START_PORT);
+        serverEndPort = configUtil.getInteger(SERVER_END_PORT);
+        serverHeartBeatTime = configUtil.getInteger(SERVER_HEART_BEAT_TIME);
+        serverExcludePort = ObjectUtil.defaultIfNull(configUtil.getList(SERVER_EXCLUDE_PORT), new ArrayList<>());
+        List<String> serverHandlerClassNameList = ObjectUtil.defaultIfNull(configUtil.getList(SERVER_HANDLER_CLASS), new ArrayList<>());
         if (!serverHandlerClassNameList.isEmpty()) {
             for (String className : serverHandlerClassNameList) {
                 serverHandler.add(ClassUtils.impl(className, ChannelInboundHandlerAdapter.class, this.getClass()));
             }
         }
 
-         serverDecoderClassName = configReader.getString(SERVER_DECODER_CLASS);
+        serverDecoderClassName = configUtil.getString(SERVER_DECODER_CLASS);
 
-        clientRemoteAddress = ObjectUtil.defaultIfNull(configReader.getList(CLIENT_REMOTE_ADDRESS), clientRemoteAddress);
-        clientHeartBeatTime = configReader.getInt(CLIENT_HEART_BEAT_TIME, confAnn != null ? confAnn.clientHeartBeatTime() : clientHeartBeatTime);
+        clientRemoteAddress = ObjectUtil.defaultIfNull(configUtil.getList(CLIENT_REMOTE_ADDRESS), new ArrayList<>());
+        clientHeartBeatTime = configUtil.getInteger(CLIENT_HEART_BEAT_TIME);
 
-        List<String> clientHandlerClassNameList = ObjectUtil.defaultIfNull(configReader.getList(CLIENT_HANDLER_CLASS), new ArrayList<>());
+        List<String> clientHandlerClassNameList = ObjectUtil.defaultIfNull(configUtil.getList(CLIENT_HANDLER_CLASS), new ArrayList<>());
         if (!clientHandlerClassNameList.isEmpty()) {
             for (String className : clientHandlerClassNameList) {
                 clientHandler.add(ClassUtils.impl(className, ChannelInboundHandlerAdapter.class, this.getClass()));
             }
         }
-        clientDecoderClassName = configReader.getString(CLIENT_DECODER_CLASS);
+        clientDecoderClassName = configUtil.getString(CLIENT_DECODER_CLASS);
 
     }
 

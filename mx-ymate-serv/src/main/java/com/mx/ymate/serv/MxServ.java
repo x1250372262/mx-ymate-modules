@@ -25,7 +25,6 @@ import net.ymate.platform.core.module.IModule;
 import net.ymate.platform.core.module.IModuleConfigurer;
 import net.ymate.platform.core.module.impl.DefaultModuleConfigurer;
 import net.ymate.platform.serv.nio.INioSession;
-import net.ymate.platform.serv.nio.client.NioClient;
 import net.ymate.platform.serv.nio.server.NioSessionManager;
 import net.ymate.platform.serv.nio.server.NioSessionWrapper;
 import org.apache.commons.logging.Log;
@@ -96,9 +95,9 @@ public final class MxServ implements IModule, IMxServ {
                     IApplicationConfigurer configurer = configureFactory.getConfigurer();
                     IModuleConfigurer moduleConfigurer = configurer == null ? null : configurer.getModuleConfigurer(MODULE_NAME);
                     if (moduleConfigurer != null) {
-                        config = DefaultMxServConfig.create(configureFactory.getMainClass(), moduleConfigurer);
+                        config = DefaultMxServConfig.create(moduleConfigurer);
                     } else {
-                        config = DefaultMxServConfig.create(configureFactory.getMainClass(), DefaultModuleConfigurer.createEmpty(MODULE_NAME));
+                        config = DefaultMxServConfig.create(DefaultModuleConfigurer.createEmpty(MODULE_NAME));
                     }
                 }
                 if (config == null) {
@@ -182,7 +181,7 @@ public final class MxServ implements IModule, IMxServ {
     public void cts(String key, Object message) throws IOException {
         INioSession nioClient = TcpClientStore.getClient(key);
         if (nioClient != null) {
-             nioClient.send(message);
+            nioClient.send(message);
         }
     }
 }

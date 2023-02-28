@@ -19,7 +19,6 @@ import cn.dev33.satoken.config.SaCookieConfig;
 import cn.dev33.satoken.config.SaTokenConfig;
 import com.mx.ymate.satoken.ISaToken;
 import com.mx.ymate.satoken.ISaTokenConfig;
-import com.mx.ymate.satoken.annotation.SaTokenConf;
 import net.ymate.platform.core.configuration.IConfigReader;
 import net.ymate.platform.core.module.IModuleConfigurer;
 
@@ -30,73 +29,73 @@ import net.ymate.platform.core.module.IModuleConfigurer;
  */
 public final class DefaultSaTokenConfig implements ISaTokenConfig {
 
-    private boolean enabled = true;
+    private boolean enabled;
 
     /**
      * token名称 (同时也是cookie名称)
      */
-    private String tokenName = "satoken";
+    private String tokenName;
 
     /**
      * token的长久有效期(单位:秒) 默认30天, -1代表永久
      */
-    private long timeout = 60 * 60 * 24 * 30;
+    private long timeout;
 
     /**
      * token临时有效期 [指定时间内无操作就视为token过期] (单位: 秒), 默认-1 代表不限制
      * (例如可以设置为1800代表30分钟内无操作就过期)
      */
-    private long activityTimeout = -1;
+    private long activityTimeout;
 
     /**
      * 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
      */
-    private boolean isConcurrent = true;
+    private boolean isConcurrent;
 
     /**
      * 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
      */
-    private boolean isShare = true;
+    private boolean isShare;
 
     /**
      * 同一账号最大登录数量，-1代表不限 （只有在 isConcurrent=true, isShare=false 时此配置才有效）
      */
-    private int maxLoginCount = 12;
+    private int maxLoginCount;
 
     /**
      * 是否尝试从请求体里读取token
      */
-    private boolean isReadBody = true;
+    private boolean isReadBody;
 
     /**
      * 是否尝试从header里读取token
      */
-    private boolean isReadHead = true;
+    private boolean isReadHead;
 
     /**
      * 是否尝试从cookie里读取token
      */
-    private boolean isReadCookie = true;
+    private boolean isReadCookie;
 
     /**
      * token风格(默认可取值：uuid、simple-uuid、random-32、random-64、random-128、tik)
      */
-    private String tokenStyle = "uuid";
+    private String tokenStyle;
 
     /**
      * 默认dao层实现类中，每次清理过期数据间隔的时间 (单位: 秒) ，默认值30秒，设置为-1代表不启动定时清理
      */
-    private int dataRefreshPeriod = 30;
+    private int dataRefreshPeriod;
 
     /**
      * 获取[token专属session]时是否必须登录 (如果配置为true，会在每次获取[token-session]时校验是否登录)
      */
-    private boolean tokenSessionCheckLogin = true;
+    private boolean tokenSessionCheckLogin;
 
     /**
      * 是否打开自动续签 (如果此值为true, 框架会在每次直接或间接调用getLoginId()时进行一次过期检查与续签操作)
      */
-    private boolean autoRenew = true;
+    private boolean autoRenew;
 
     /**
      * token前缀, 格式样例(satoken: Bearer xxxx-xxxx-xxxx-xxxx)
@@ -106,12 +105,12 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
     /**
      * 是否在初始化配置时打印版本字符画
      */
-    private boolean isPrint = true;
+    private boolean isPrint;
 
     /**
      * 是否打印操作日志
      */
-    private boolean isLog = false;
+    private boolean isLog;
 
     /**
      * jwt秘钥 (只有集成 jwt 模块时此参数才会生效)
@@ -121,12 +120,12 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
     /**
      * Id-Token的有效期 (单位: 秒)
      */
-    private long idTokenTimeout = 60 * 60 * 24;
+    private long idTokenTimeout;
 
     /**
      * Http Basic 认证的账号和密码
      */
-    private String basic = "";
+    private String basic;
 
     /**
      * 配置当前项目的网络访问地址
@@ -136,7 +135,7 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
     /**
      * 是否校验Id-Token（部分rpc插件有效）
      */
-    private boolean checkIdToken = false;
+    private boolean checkIdToken;
 
     /**
      * 域（写入Cookie时显式指定的作用域, 常用于单点登录二级域名共享Cookie的场景）
@@ -151,12 +150,12 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
     /**
      * 是否只在 https 协议下有效
      */
-    private Boolean cookieSecure = false;
+    private Boolean cookieSecure;
 
     /**
      * 是否禁止 js 操作 Cookie
      */
-    private Boolean cookieHttpOnly = false;
+    private Boolean cookieHttpOnly;
 
     /**
      * 第三方限制级别（Strict=完全禁止，Lax=部分允许，None=不限制）
@@ -170,12 +169,9 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
     }
 
     public static DefaultSaTokenConfig create(IModuleConfigurer moduleConfigurer) {
-        return new DefaultSaTokenConfig(null, moduleConfigurer);
+        return new DefaultSaTokenConfig(moduleConfigurer);
     }
 
-    public static DefaultSaTokenConfig create(Class<?> mainClass, IModuleConfigurer moduleConfigurer) {
-        return new DefaultSaTokenConfig(mainClass, moduleConfigurer);
-    }
 
     public static Builder builder() {
         return new Builder();
@@ -185,38 +181,35 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
     }
 
 
-    private DefaultSaTokenConfig(Class<?> mainClass, IModuleConfigurer moduleConfigurer) {
+    private DefaultSaTokenConfig(IModuleConfigurer moduleConfigurer) {
         IConfigReader configReader = moduleConfigurer.getConfigReader();
-        //
-        SaTokenConf confAnn = mainClass == null ? null : mainClass.getAnnotation(SaTokenConf.class);
-        //
-        enabled = configReader.getBoolean(ENABLED, confAnn == null || confAnn.enabled());
-        tokenName = configReader.getString(TOKEN_NAME, confAnn != null ? confAnn.tokenName() : tokenName);
-        timeout = configReader.getLong(TIMEOUT, confAnn != null ? confAnn.timeout() : timeout);
-        activityTimeout = configReader.getLong(ACTIVITY_TIMEOUT, confAnn != null ? confAnn.activityTimeout() : activityTimeout);
-        isConcurrent = configReader.getBoolean(IS_CONCURRENT, confAnn != null ? confAnn.isConcurrent() : isConcurrent);
-        isShare = configReader.getBoolean(IS_SHARE, confAnn != null ? confAnn.isShare() : isShare);
-        maxLoginCount = configReader.getInt(MAX_LOGIN_COUNT, confAnn != null ? confAnn.maxLoginCount() : maxLoginCount);
-        isReadBody = configReader.getBoolean(IS_READ_BODY, confAnn != null ? confAnn.isReadBody() : isReadBody);
-        isReadHead = configReader.getBoolean(IS_READ_HEAD, confAnn != null ? confAnn.isReadHead() : isReadHead);
-        isReadCookie = configReader.getBoolean(IS_READ_COOKIE, confAnn != null ? confAnn.isReadCookie() : isReadCookie);
-        tokenStyle = configReader.getString(TOKEN_STYLE, confAnn != null ? confAnn.tokenStyle() : tokenStyle);
-        dataRefreshPeriod = configReader.getInt(DATA_REFRESH_PERIOD, confAnn != null ? confAnn.dataRefreshPeriod() : dataRefreshPeriod);
-        tokenSessionCheckLogin = configReader.getBoolean(TOKEN_SESSION_CHECK_LOGIN, confAnn != null ? confAnn.tokenSessionCheckLogin() : tokenSessionCheckLogin);
-        autoRenew = configReader.getBoolean(AUTO_RENEW, confAnn != null ? confAnn.autoRenew() : autoRenew);
-        tokenPrefix = configReader.getString(TOKEN_PREFIX, confAnn != null ? confAnn.tokenPrefix() : tokenPrefix);
-        isPrint = configReader.getBoolean(IS_PRINT, confAnn != null ? confAnn.isPrint() : isPrint);
-        isLog = configReader.getBoolean(IS_LOG, confAnn != null ? confAnn.isLog() : isLog);
-        jwtSecretKey = configReader.getString(JWT_SECRET_KEY, confAnn != null ? confAnn.jwtSecretKey() : jwtSecretKey);
-        idTokenTimeout = configReader.getLong(ID_TOKEN_TIMEOUT, confAnn != null ? confAnn.idTokenTimeout() : idTokenTimeout);
-        basic = configReader.getString(BASIC, confAnn != null ? confAnn.basic() : basic);
-        currDomain = configReader.getString(CURR_DOMAIN, confAnn != null ? confAnn.currDomain() : currDomain);
-        checkIdToken = configReader.getBoolean(CHECK_ID_TOKEN, confAnn != null ? confAnn.checkIdToken() : checkIdToken);
-        cookieDomain = configReader.getString(COOKIE_DOMAIN, confAnn != null ? confAnn.cookieDomain() : cookieDomain);
-        cookiePath = configReader.getString(COOKIE_PATH, confAnn != null ? confAnn.cookiePath() : cookiePath);
-        cookieSecure = configReader.getBoolean(COOKIE_SECURE, confAnn != null ? confAnn.cookieSecure() : cookieSecure);
-        cookieHttpOnly = configReader.getBoolean(COOKIE_HTTP_ONLY, confAnn != null ? confAnn.cookieHttpOnly() : cookieHttpOnly);
-        cookieSameSite = configReader.getString(COOKIE_SAME_SITE, confAnn != null ? confAnn.cookieSameSite() : cookieSameSite);
+        enabled = configReader.getBoolean(ENABLED, true);
+        tokenName = configReader.getString(TOKEN_NAME, "saToken");
+        timeout = configReader.getLong(TIMEOUT, 60 * 60 * 24 * 30);
+        activityTimeout = configReader.getLong(ACTIVITY_TIMEOUT, -1);
+        isConcurrent = configReader.getBoolean(IS_CONCURRENT, true);
+        isShare = configReader.getBoolean(IS_SHARE, true);
+        maxLoginCount = configReader.getInt(MAX_LOGIN_COUNT, -1);
+        isReadBody = configReader.getBoolean(IS_READ_BODY, true);
+        isReadHead = configReader.getBoolean(IS_READ_HEAD, true);
+        isReadCookie = configReader.getBoolean(IS_READ_COOKIE, true);
+        tokenStyle = configReader.getString(TOKEN_STYLE, "uuid");
+        dataRefreshPeriod = configReader.getInt(DATA_REFRESH_PERIOD, 30);
+        tokenSessionCheckLogin = configReader.getBoolean(TOKEN_SESSION_CHECK_LOGIN, true);
+        autoRenew = configReader.getBoolean(AUTO_RENEW, true);
+        tokenPrefix = configReader.getString(TOKEN_PREFIX);
+        isPrint = configReader.getBoolean(IS_PRINT, true);
+        isLog = configReader.getBoolean(IS_LOG, false);
+        jwtSecretKey = configReader.getString(JWT_SECRET_KEY);
+        idTokenTimeout = configReader.getLong(ID_TOKEN_TIMEOUT, 60 * 60 * 24);
+        basic = configReader.getString(BASIC);
+        currDomain = configReader.getString(CURR_DOMAIN);
+        checkIdToken = configReader.getBoolean(CHECK_ID_TOKEN, false);
+        cookieDomain = configReader.getString(COOKIE_DOMAIN);
+        cookiePath = configReader.getString(COOKIE_PATH);
+        cookieSecure = configReader.getBoolean(COOKIE_SECURE, false);
+        cookieHttpOnly = configReader.getBoolean(COOKIE_HTTP_ONLY, false);
+        cookieSameSite = configReader.getString(COOKIE_SAME_SITE);
         //
         // TODO What to do?
     }
@@ -572,7 +565,6 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
     public void setInitialized(boolean initialized) {
         this.initialized = initialized;
     }
-
 
 
     public static final class Builder {

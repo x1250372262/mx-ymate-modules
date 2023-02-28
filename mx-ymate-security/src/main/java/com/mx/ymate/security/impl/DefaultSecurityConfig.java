@@ -18,7 +18,6 @@ package com.mx.ymate.security.impl;
 import com.mx.ymate.dev.result.MxResult;
 import com.mx.ymate.security.ISecurity;
 import com.mx.ymate.security.ISecurityConfig;
-import com.mx.ymate.security.annotation.SecurityConf;
 import com.mx.ymate.security.base.code.SecurityCode;
 import com.mx.ymate.security.handler.ILoginHandler;
 import com.mx.ymate.security.handler.IUserHandler;
@@ -33,12 +32,12 @@ import net.ymate.platform.core.module.IModuleConfigurer;
  */
 public final class DefaultSecurityConfig implements ISecurityConfig {
 
-    private boolean enabled = true;
+    private boolean enabled;
 
     /**
      * 客户端名称
      */
-    private String client = "default";
+    private String client;
 
     /**
      * loginHandler实现类
@@ -53,12 +52,12 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
     /**
      * 验证错误N次后锁定账户  默认不锁定  -1不锁定
      */
-    private int errorCount = -1;
+    private int errorCount;
 
     /**
      * 是否开启日志记录 默认false
      */
-    private boolean openLog = false;
+    private boolean openLog;
 
     /**
      * 登录拦截排除的路径用|分割
@@ -72,12 +71,9 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
     }
 
     public static DefaultSecurityConfig create(IModuleConfigurer moduleConfigurer) {
-        return new DefaultSecurityConfig(null, moduleConfigurer);
+        return new DefaultSecurityConfig(moduleConfigurer);
     }
 
-    public static DefaultSecurityConfig create(Class<?> mainClass, IModuleConfigurer moduleConfigurer) {
-        return new DefaultSecurityConfig(mainClass, moduleConfigurer);
-    }
 
     public static Builder builder() {
         return new Builder();
@@ -87,20 +83,17 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
     }
 
 
-    private DefaultSecurityConfig(Class<?> mainClass, IModuleConfigurer moduleConfigurer) {
+    private DefaultSecurityConfig(IModuleConfigurer moduleConfigurer) {
         IConfigReader configReader = moduleConfigurer.getConfigReader();
-        //
-        SecurityConf confAnn = mainClass == null ? null : mainClass.getAnnotation(SecurityConf.class);
-        //
-        enabled = configReader.getBoolean(ENABLED, confAnn == null || confAnn.enabled());
-        client = configReader.getString(CLIENT, confAnn != null ? confAnn.client() : client);
-        String loginHandlerClassName = configReader.getString(LOGIN_HANDLER_CLASS, confAnn != null ? confAnn.loginHandlerClass().getName() : ILoginHandler.DefaultLoginHandler.class.getName());
+        enabled = configReader.getBoolean(ENABLED, true);
+        client = configReader.getString(CLIENT, "default");
+        String loginHandlerClassName = configReader.getString(LOGIN_HANDLER_CLASS, ILoginHandler.DefaultLoginHandler.class.getName());
         loginHandlerClass = ClassUtils.impl(loginHandlerClassName, ILoginHandler.class, this.getClass());
-        String userHandlerClassName = configReader.getString(USER_HANDLER_CLASS, confAnn != null ? confAnn.userHandlerClass().getName() : IUserHandler.DefaultUserHandler.class.getName());
+        String userHandlerClassName = configReader.getString(USER_HANDLER_CLASS, IUserHandler.DefaultUserHandler.class.getName());
         userHandlerClass = ClassUtils.impl(userHandlerClassName, IUserHandler.class, this.getClass());
-        errorCount = configReader.getInt(ERROR_COUNT, confAnn != null ? confAnn.errorCount() : errorCount);
-        openLog = configReader.getBoolean(OPEN_LOG, confAnn != null ? confAnn.openLog() : openLog);
-        excludePathPatterns = configReader.getString(EXCLUDE_PATH_PATTERNS, confAnn != null ? confAnn.excludePathPatterns() : excludePathPatterns);
+        errorCount = configReader.getInt(ERROR_COUNT, -1);
+        openLog = configReader.getBoolean(OPEN_LOG, false);
+        excludePathPatterns = configReader.getString(EXCLUDE_PATH_PATTERNS, excludePathPatterns);
         //
         // TODO What to do?
     }
