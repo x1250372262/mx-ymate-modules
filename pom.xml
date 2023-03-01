@@ -17,6 +17,7 @@
         <module>mx-ymate-serv</module>
         <module>mx-ymate-undertow</module>
         <module>mx-ymate-excel</module>
+        <module>mx-ymate-tomcat</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -30,7 +31,7 @@
         <hutool.all.version>5.8.9</hutool.all.version>
         <redisson.version>3.17.4</redisson.version>
         <netty-all.version>4.1.76.Final</netty-all.version>
-        <sa.token.version>1.30.0</sa.token.version>
+        <sa.token.version>1.34.0</sa.token.version>
         <minio.version>8.4.5</minio.version>
         <qiniu-java-sdk.version>7.11.0</qiniu-java-sdk.version>
         <cos_api.version>5.6.108</cos_api.version>
@@ -98,11 +99,6 @@
             <!--sa-token-->
             <dependency>
                 <groupId>cn.dev33</groupId>
-                <artifactId>sa-token-core</artifactId>
-                <version>${sa.token.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.dev33</groupId>
                 <artifactId>sa-token-servlet</artifactId>
                 <version>${sa.token.version}</version>
             </dependency>
@@ -134,18 +130,18 @@
                 <artifactId>qiniu-java-sdk</artifactId>
                 <version>${qiniu-java-sdk.version}</version>
             </dependency>
-            <!--腾讯云文件存储-->
-            <dependency>
-                <groupId>com.qcloud</groupId>
-                <artifactId>cos_api</artifactId>
-                <version>${cos_api.version}</version>
-            </dependency>
-            <!--阿里云文件存储-->
-            <dependency>
-                <groupId>com.aliyun.oss</groupId>
-                <artifactId>aliyun-sdk-oss</artifactId>
-                <version>${aliyun-sdk-oss.version}</version>
-            </dependency>
+<!--            &lt;!&ndash;腾讯云文件存储&ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>com.qcloud</groupId>-->
+<!--                <artifactId>cos_api</artifactId>-->
+<!--                <version>${cos_api.version}</version>-->
+<!--            </dependency>-->
+<!--            &lt;!&ndash;阿里云文件存储&ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>com.aliyun.oss</groupId>-->
+<!--                <artifactId>aliyun-sdk-oss</artifactId>-->
+<!--                <version>${aliyun-sdk-oss.version}</version>-->
+<!--            </dependency>-->
             <!--netty-->
             <dependency>
                 <groupId>io.netty</groupId>
