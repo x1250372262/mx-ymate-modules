@@ -82,13 +82,18 @@ public final class DefaultSaTokenConfigurable extends DefaultModuleConfigurable 
             return this;
         }
 
-        public Builder readHead(boolean readHead) {
-            configurable.addConfig(ISaTokenConfig.IS_READ_HEAD, String.valueOf(readHead));
+        public Builder readHeader(boolean readHeader) {
+            configurable.addConfig(ISaTokenConfig.IS_READ_HEADER, String.valueOf(readHeader));
             return this;
         }
 
         public Builder readCookie(boolean readCookie) {
             configurable.addConfig(ISaTokenConfig.IS_READ_COOKIE, String.valueOf(readCookie));
+            return this;
+        }
+
+        public Builder writeHeader(boolean writeHeader) {
+            configurable.addConfig(ISaTokenConfig.IS_WRITE_HEADER, String.valueOf(writeHeader));
             return this;
         }
 
@@ -127,13 +132,18 @@ public final class DefaultSaTokenConfigurable extends DefaultModuleConfigurable 
             return this;
         }
 
-        public Builder jwtSecretKey(String jwtSecretKey) {
-            configurable.addConfig(ISaTokenConfig.JWT_SECRET_KEY, jwtSecretKey);
+        public Builder logLevel(String logLevel) {
+            configurable.addConfig(ISaTokenConfig.LOG_LEVEL, String.valueOf(logLevel));
             return this;
         }
 
-        public Builder idTokenTimeout(long idTokenTimeout) {
-            configurable.addConfig(ISaTokenConfig.ID_TOKEN_TIMEOUT, String.valueOf(idTokenTimeout));
+        public Builder logLevelInt(int logLevelInt) {
+            configurable.addConfig(ISaTokenConfig.LOG_LEVEL_INT, String.valueOf(logLevelInt));
+            return this;
+        }
+
+        public Builder jwtSecretKey(String jwtSecretKey) {
+            configurable.addConfig(ISaTokenConfig.JWT_SECRET_KEY, jwtSecretKey);
             return this;
         }
 
@@ -147,8 +157,8 @@ public final class DefaultSaTokenConfigurable extends DefaultModuleConfigurable 
             return this;
         }
 
-        public Builder checkIdToken(long checkIdToken) {
-            configurable.addConfig(ISaTokenConfig.CHECK_ID_TOKEN, String.valueOf(checkIdToken));
+        public Builder sameTokenTimeout(long sameTokenTimeout) {
+            configurable.addConfig(ISaTokenConfig.SAME_TOKEN_TIMEOUT, String.valueOf(sameTokenTimeout));
             return this;
         }
 

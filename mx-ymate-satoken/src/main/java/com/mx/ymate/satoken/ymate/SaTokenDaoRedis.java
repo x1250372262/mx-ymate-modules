@@ -1,12 +1,14 @@
 package com.mx.ymate.satoken.ymate;
 
 import cn.dev33.satoken.dao.SaTokenDao;
+import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.util.SaFoxUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mx.ymate.redis.api.RedisApi;
 import net.ymate.platform.commons.serialize.ISerializer;
 import net.ymate.platform.commons.serialize.SerializerManager;
 import net.ymate.platform.core.beans.annotation.Bean;
+import redis.clients.jedis.Jedis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -233,26 +235,29 @@ public class SaTokenDaoRedis implements SaTokenDao {
         }
     }
 
+
     /**
      * 搜索数据
+     * @param prefix 前缀
+     * @param keyword 关键字
+     * @param start 开始处索引
+     * @param size 获取数量  (-1代表从start处一直取到末尾)
+     * @param sortType 排序类型（true=正序，false=反序）
      *
-     * @param prefix
-     * @param keyword
-     * @param start
-     * @param size
      * @return
      */
     @Override
-    public List<String> searchData(String prefix, String keyword, int start, int size) {
-        Set<String> keys;
+    public List<String> searchData(String prefix, String keyword, int start, int size, boolean sortType) {
+
         try {
-            keys = RedisApi.keys(prefix + "*" + keyword + "*");
+            Set<String> keys = RedisApi.keys(prefix + "*" + keyword + "*");
+            List<String> list = new ArrayList<>(keys);
+            return SaFoxUtil.searchList(list, start, size, sortType);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        List<String> list = new ArrayList<>(keys);
-        return SaFoxUtil.searchList(list, start, size);
     }
+
 
 
     protected byte[] keyToBytes(Object key) {

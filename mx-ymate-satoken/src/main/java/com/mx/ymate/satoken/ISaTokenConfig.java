@@ -43,9 +43,11 @@ public interface ISaTokenConfig extends IInitialization<ISaToken> {
 
     String IS_READ_BODY = "isReadBody";
 
-    String IS_READ_HEAD = "isReadHead";
+    String IS_READ_HEADER = "isReadHeader";
 
     String IS_READ_COOKIE = "isReadCookie";
+
+    String IS_WRITE_HEADER = "isWriteHeader";
 
     String TOKEN_STYLE = "tokenStyle";
 
@@ -61,15 +63,15 @@ public interface ISaTokenConfig extends IInitialization<ISaToken> {
 
     String IS_LOG = "isLog";
 
-    String JWT_SECRET_KEY = "jwtSecretKey";
+    String LOG_LEVEL = "logLevel";
+    String LOG_LEVEL_INT = "logLevelInt";
 
-    String ID_TOKEN_TIMEOUT = "idTokenTimeout";
+    String JWT_SECRET_KEY = "jwtSecretKey";
 
     String BASIC = "basic";
 
     String CURR_DOMAIN = "currDomain";
-
-    String CHECK_ID_TOKEN = "checkIdToken";
+    String SAME_TOKEN_TIMEOUT = "sameTokenTimeout";
 
     String COOKIE_DOMAIN = "cookieDomain";
 
@@ -90,15 +92,11 @@ public interface ISaTokenConfig extends IInitialization<ISaToken> {
 
     /**
      * token名称 (同时也是cookie名称)
-     *
-     * @return
      */
     String tokenName();
 
     /**
      * token的长久有效期(单位:秒) 默认30天, -1代表永久
-     *
-     * @return
      */
     long timeout();
 
@@ -111,12 +109,12 @@ public interface ISaTokenConfig extends IInitialization<ISaToken> {
     /**
      * 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
      */
-    boolean isConcurrent();
+    Boolean isConcurrent();
 
     /**
      * 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
      */
-    boolean isShare();
+    Boolean isShare();
 
     /**
      * 同一账号最大登录数量，-1代表不限 （只有在 isConcurrent=true, isShare=false 时此配置才有效）
@@ -126,17 +124,22 @@ public interface ISaTokenConfig extends IInitialization<ISaToken> {
     /**
      * 是否尝试从请求体里读取token
      */
-    boolean isReadBody();
+    Boolean isReadBody();
 
     /**
      * 是否尝试从header里读取token
      */
-    boolean isReadHead();
+    Boolean isReadHeader();
 
     /**
      * 是否尝试从cookie里读取token
      */
-    boolean isReadCookie();
+    Boolean isReadCookie();
+
+    /**
+     * 是否在登录后将 Token 写入到响应头
+     */
+    Boolean isWriteHeader();
 
     /**
      * token风格(默认可取值：uuid、simple-uuid、random-32、random-64、random-128、tik)
@@ -151,12 +154,12 @@ public interface ISaTokenConfig extends IInitialization<ISaToken> {
     /**
      * 获取[token专属session]时是否必须登录 (如果配置为true，会在每次获取[token-session]时校验是否登录)
      */
-    boolean tokenSessionCheckLogin();
+    Boolean tokenSessionCheckLogin();
 
     /**
      * 是否打开自动续签 (如果此值为true, 框架会在每次直接或间接调用getLoginId()时进行一次过期检查与续签操作)
      */
-    boolean autoRenew();
+    Boolean autoRenew();
 
     /**
      * token前缀, 格式样例(satoken: Bearer xxxx-xxxx-xxxx-xxxx)
@@ -166,22 +169,28 @@ public interface ISaTokenConfig extends IInitialization<ISaToken> {
     /**
      * 是否在初始化配置时打印版本字符画
      */
-    boolean isPrint();
+    Boolean isPrint();
 
     /**
      * 是否打印操作日志
      */
-    boolean isLog();
+    Boolean isLog();
+
+    /**
+     * 日志等级（trace、debug、info、warn、error、fatal）
+     */
+    String logLevel();
+
+    /**
+     * 日志等级 int 值（1=trace、2=debug、3=info、4=warn、5=error、6=fatal）
+     */
+    int logLevelInt();
 
     /**
      * jwt秘钥 (只有集成 jwt 模块时此参数才会生效)
      */
     String jwtSecretKey();
 
-    /**
-     * Id-Token的有效期 (单位: 秒)
-     */
-    long idTokenTimeout();
 
     /**
      * Http Basic 认证的账号和密码
@@ -190,18 +199,18 @@ public interface ISaTokenConfig extends IInitialization<ISaToken> {
 
     /**
      * 配置当前项目的网络访问地址
-     *
-     * @return
      */
     String currDomain();
 
     /**
-     * 是否校验Id-Token（部分rpc插件有效
-     *
-     * @return
+     * Same-Token 的有效期 (单位: 秒)
      */
-    boolean checkIdToken();
+    long sameTokenTimeout();
 
+    /**
+     * 是否校验Same-Token（部分rpc插件有效
+     */
+    Boolean checkSameToken();
 
     /**
      * 域（写入Cookie时显式指定的作用域, 常用于单点登录二级域名共享Cookie的场景）
@@ -216,12 +225,12 @@ public interface ISaTokenConfig extends IInitialization<ISaToken> {
     /**
      * 是否只在 https 协议下有效
      */
-    boolean cookieSecure();
+    Boolean cookieSecure();
 
     /**
      * 是否禁止 js 操作 Cookie
      */
-    boolean cookieHttpOnly();
+    Boolean cookieHttpOnly();
 
     /**
      * 第三方限制级别（Strict=完全禁止，Lax=部分允许，None=不限制）

@@ -50,12 +50,12 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
     /**
      * 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
      */
-    private boolean isConcurrent;
+    private Boolean isConcurrent;
 
     /**
      * 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
      */
-    private boolean isShare;
+    private Boolean isShare;
 
     /**
      * 同一账号最大登录数量，-1代表不限 （只有在 isConcurrent=true, isShare=false 时此配置才有效）
@@ -65,17 +65,22 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
     /**
      * 是否尝试从请求体里读取token
      */
-    private boolean isReadBody;
+    private Boolean isReadBody;
 
     /**
      * 是否尝试从header里读取token
      */
-    private boolean isReadHead;
+    private Boolean isReadHeader;
 
     /**
      * 是否尝试从cookie里读取token
      */
-    private boolean isReadCookie;
+    private Boolean isReadCookie;
+
+    /**
+     * 是否在登录后将 Token 写入到响应头
+     */
+    private Boolean isWriteHeader;
 
     /**
      * token风格(默认可取值：uuid、simple-uuid、random-32、random-64、random-128、tik)
@@ -90,12 +95,12 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
     /**
      * 获取[token专属session]时是否必须登录 (如果配置为true，会在每次获取[token-session]时校验是否登录)
      */
-    private boolean tokenSessionCheckLogin;
+    private Boolean tokenSessionCheckLogin;
 
     /**
      * 是否打开自动续签 (如果此值为true, 框架会在每次直接或间接调用getLoginId()时进行一次过期检查与续签操作)
      */
-    private boolean autoRenew;
+    private Boolean autoRenew;
 
     /**
      * token前缀, 格式样例(satoken: Bearer xxxx-xxxx-xxxx-xxxx)
@@ -105,22 +110,28 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
     /**
      * 是否在初始化配置时打印版本字符画
      */
-    private boolean isPrint;
+    private Boolean isPrint;
 
     /**
      * 是否打印操作日志
      */
-    private boolean isLog;
+    private Boolean isLog;
+
+    /**
+     * 日志等级（trace、debug、info、warn、error、fatal）
+     */
+    private String logLevel;
+
+    /**
+     * 日志等级 int 值（1=trace、2=debug、3=info、4=warn、5=error、6=fatal）
+     */
+    private int logLevelInt;
 
     /**
      * jwt秘钥 (只有集成 jwt 模块时此参数才会生效)
      */
     private String jwtSecretKey;
 
-    /**
-     * Id-Token的有效期 (单位: 秒)
-     */
-    private long idTokenTimeout;
 
     /**
      * Http Basic 认证的账号和密码
@@ -133,9 +144,14 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
     private String currDomain;
 
     /**
-     * 是否校验Id-Token（部分rpc插件有效）
+     * Same-Token 的有效期 (单位: 秒)
      */
-    private boolean checkIdToken;
+    private long sameTokenTimeout;
+
+    /**
+     * 是否校验Same-Token（部分rpc插件有效
+     */
+    private Boolean checkSameToken;
 
     /**
      * 域（写入Cookie时显式指定的作用域, 常用于单点登录二级域名共享Cookie的场景）
@@ -189,10 +205,11 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
         activityTimeout = configReader.getLong(ACTIVITY_TIMEOUT, -1);
         isConcurrent = configReader.getBoolean(IS_CONCURRENT, true);
         isShare = configReader.getBoolean(IS_SHARE, true);
-        maxLoginCount = configReader.getInt(MAX_LOGIN_COUNT, -1);
+        maxLoginCount = configReader.getInt(MAX_LOGIN_COUNT, 12);
         isReadBody = configReader.getBoolean(IS_READ_BODY, true);
-        isReadHead = configReader.getBoolean(IS_READ_HEAD, true);
+        isReadHeader = configReader.getBoolean(IS_READ_HEADER, true);
         isReadCookie = configReader.getBoolean(IS_READ_COOKIE, true);
+        isWriteHeader = configReader.getBoolean(IS_WRITE_HEADER, true);
         tokenStyle = configReader.getString(TOKEN_STYLE, "uuid");
         dataRefreshPeriod = configReader.getInt(DATA_REFRESH_PERIOD, 30);
         tokenSessionCheckLogin = configReader.getBoolean(TOKEN_SESSION_CHECK_LOGIN, true);
@@ -200,11 +217,12 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
         tokenPrefix = configReader.getString(TOKEN_PREFIX);
         isPrint = configReader.getBoolean(IS_PRINT, true);
         isLog = configReader.getBoolean(IS_LOG, false);
+        logLevel = configReader.getString(LOG_LEVEL, "trace");
+        logLevelInt = configReader.getInt(LOG_LEVEL_INT, 1);
         jwtSecretKey = configReader.getString(JWT_SECRET_KEY);
-        idTokenTimeout = configReader.getLong(ID_TOKEN_TIMEOUT, 60 * 60 * 24);
         basic = configReader.getString(BASIC);
         currDomain = configReader.getString(CURR_DOMAIN);
-        checkIdToken = configReader.getBoolean(CHECK_ID_TOKEN, false);
+        sameTokenTimeout = configReader.getLong(SAME_TOKEN_TIMEOUT, 60 * 60 * 24);
         cookieDomain = configReader.getString(COOKIE_DOMAIN);
         cookiePath = configReader.getString(COOKIE_PATH);
         cookieSecure = configReader.getBoolean(COOKIE_SECURE, false);
@@ -236,133 +254,149 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
 
     @Override
     public String tokenName() {
-        return tokenName;
+        return this.tokenName;
     }
 
     @Override
     public long timeout() {
-        return timeout;
+        return this.timeout;
     }
 
     @Override
     public long activityTimeout() {
-        return activityTimeout;
+        return this.activityTimeout;
     }
 
     @Override
-    public boolean isConcurrent() {
-        return isConcurrent;
+    public Boolean isConcurrent() {
+        return this.isConcurrent;
     }
 
     @Override
-    public boolean isShare() {
-        return isShare;
+    public Boolean isShare() {
+        return this.isShare;
     }
 
     @Override
     public int maxLoginCount() {
-        return maxLoginCount;
+        return this.maxLoginCount;
     }
 
     @Override
-    public boolean isReadBody() {
-        return isReadBody;
+    public Boolean isReadBody() {
+        return this.isReadBody;
     }
 
     @Override
-    public boolean isReadHead() {
-        return isReadHead;
+    public Boolean isReadHeader() {
+        return this.isReadHeader;
     }
 
     @Override
-    public boolean isReadCookie() {
-        return isReadCookie;
+    public Boolean isReadCookie() {
+        return this.isReadCookie;
+    }
+
+    @Override
+    public Boolean isWriteHeader() {
+        return this.isWriteHeader;
     }
 
     @Override
     public String tokenStyle() {
-        return tokenStyle;
+        return this.tokenStyle;
     }
 
     @Override
     public int dataRefreshPeriod() {
-        return dataRefreshPeriod;
+        return this.dataRefreshPeriod;
     }
 
     @Override
-    public boolean tokenSessionCheckLogin() {
-        return tokenSessionCheckLogin;
+    public Boolean tokenSessionCheckLogin() {
+        return this.tokenSessionCheckLogin;
     }
 
     @Override
-    public boolean autoRenew() {
-        return autoRenew;
+    public Boolean autoRenew() {
+        return this.autoRenew;
     }
 
     @Override
     public String tokenPrefix() {
-        return tokenPrefix;
+        return this.tokenPrefix;
     }
 
     @Override
-    public boolean isPrint() {
-        return isPrint;
+    public Boolean isPrint() {
+        return this.isPrint;
     }
 
     @Override
-    public boolean isLog() {
-        return isLog;
+    public Boolean isLog() {
+        return this.isLog;
+    }
+
+    @Override
+    public String logLevel() {
+        return this.logLevel;
+    }
+
+    @Override
+    public int logLevelInt() {
+        return this.logLevelInt;
     }
 
     @Override
     public String jwtSecretKey() {
-        return jwtSecretKey;
-    }
-
-    @Override
-    public long idTokenTimeout() {
-        return idTokenTimeout;
+        return this.jwtSecretKey;
     }
 
     @Override
     public String basic() {
-        return basic;
+        return this.basic;
     }
 
     @Override
     public String currDomain() {
-        return currDomain;
+        return this.currDomain;
     }
 
     @Override
-    public boolean checkIdToken() {
-        return checkIdToken;
+    public long sameTokenTimeout() {
+        return this.sameTokenTimeout;
+    }
+
+    @Override
+    public Boolean checkSameToken() {
+        return this.checkSameToken;
     }
 
     @Override
     public String cookieDomain() {
-        return cookieDomain;
+        return this.cookieDomain;
     }
 
     @Override
     public String cookiePath() {
-        return cookiePath;
+        return this.cookiePath;
     }
 
     @Override
-    public boolean cookieSecure() {
-        return cookieSecure;
+    public Boolean cookieSecure() {
+        return this.cookieSecure;
     }
 
     @Override
-    public boolean cookieHttpOnly() {
-        return cookieHttpOnly;
+    public Boolean cookieHttpOnly() {
+        return this.cookieHttpOnly;
     }
 
     @Override
     public String cookieSameSite() {
-        return cookieSameSite;
+        return this.cookieSameSite;
     }
+
 
     @Override
     public SaTokenConfig toSaTokenConfig() {
@@ -374,8 +408,9 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
         saTokenConfig.setIsShare(this.isShare);
         saTokenConfig.setMaxLoginCount(this.maxLoginCount);
         saTokenConfig.setIsReadBody(this.isReadBody);
-        saTokenConfig.setIsReadHead(this.isReadHead);
+        saTokenConfig.setIsReadHeader(this.isReadHeader);
         saTokenConfig.setIsReadCookie(this.isReadCookie);
+        saTokenConfig.setIsWriteHeader(this.isWriteHeader);
         saTokenConfig.setTokenStyle(this.tokenStyle);
         saTokenConfig.setDataRefreshPeriod(this.dataRefreshPeriod);
         saTokenConfig.setTokenSessionCheckLogin(this.tokenSessionCheckLogin);
@@ -383,11 +418,13 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
         saTokenConfig.setTokenPrefix(this.tokenPrefix);
         saTokenConfig.setIsPrint(this.isPrint);
         saTokenConfig.setIsLog(this.isLog);
+        saTokenConfig.setLogLevel(this.logLevel);
+        saTokenConfig.setLogLeveInt(this.logLevelInt);
         saTokenConfig.setJwtSecretKey(this.jwtSecretKey);
-        saTokenConfig.setIdTokenTimeout(this.idTokenTimeout);
         saTokenConfig.setBasic(this.basic);
         saTokenConfig.setCurrDomain(this.currDomain);
-        saTokenConfig.setCheckIdToken(this.checkIdToken);
+        saTokenConfig.setSameTokenTimeout(this.sameTokenTimeout);
+        saTokenConfig.setCheckSameToken(this.checkSameToken);
 
         SaCookieConfig saCookieConfig = new SaCookieConfig();
         saCookieConfig.setDomain(this.cookieDomain);
@@ -424,13 +461,13 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
         }
     }
 
-    public void setConcurrent(boolean concurrent) {
+    public void setConcurrent(Boolean concurrent) {
         if (!initialized) {
             this.isConcurrent = concurrent;
         }
     }
 
-    public void setShare(boolean share) {
+    public void setShare(Boolean share) {
         if (!initialized) {
             this.isShare = share;
         }
@@ -442,21 +479,27 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
         }
     }
 
-    public void setReadBody(boolean readBody) {
+    public void setReadBody(Boolean readBody) {
         if (!initialized) {
             this.isReadBody = readBody;
         }
     }
 
-    public void setReadHead(boolean readHead) {
+    public void setReadHead(Boolean readHeader) {
         if (!initialized) {
-            this.isReadHead = readHead;
+            this.isReadHeader = readHeader;
         }
     }
 
-    public void setReadCookie(boolean readCookie) {
+    public void setReadCookie(Boolean readCookie) {
         if (!initialized) {
             this.isReadCookie = readCookie;
+        }
+    }
+
+    public void setWriteHeader(Boolean writeHeader) {
+        if (!initialized) {
+            this.isWriteHeader = writeHeader;
         }
     }
 
@@ -472,13 +515,13 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
         }
     }
 
-    public void setTokenSessionCheckLogin(boolean tokenSessionCheckLogin) {
+    public void setTokenSessionCheckLogin(Boolean tokenSessionCheckLogin) {
         if (!initialized) {
             this.tokenSessionCheckLogin = tokenSessionCheckLogin;
         }
     }
 
-    public void setAutoRenew(boolean autoRenew) {
+    public void setAutoRenew(Boolean autoRenew) {
         if (!initialized) {
             this.autoRenew = autoRenew;
         }
@@ -490,27 +533,33 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
         }
     }
 
-    public void setPrint(boolean print) {
+    public void setPrint(Boolean print) {
         if (!initialized) {
             this.isPrint = print;
         }
     }
 
-    public void setLog(boolean log) {
+    public void setLog(Boolean log) {
         if (!initialized) {
             this.isLog = log;
+        }
+    }
+
+    public void setLogLevel(String logLevel) {
+        if (!initialized) {
+            this.logLevel = logLevel;
+        }
+    }
+
+    public void setLogLevelInt(int logLevelInt) {
+        if (!initialized) {
+            this.logLevelInt = logLevelInt;
         }
     }
 
     public void setJwtSecretKey(String jwtSecretKey) {
         if (!initialized) {
             this.jwtSecretKey = jwtSecretKey;
-        }
-    }
-
-    public void setIdTokenTimeout(long idTokenTimeout) {
-        if (!initialized) {
-            this.idTokenTimeout = idTokenTimeout;
         }
     }
 
@@ -526,9 +575,15 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
         }
     }
 
-    public void setCheckIdToken(boolean checkIdToken) {
+    public void setSameTokenTimeout(long sameTokenTimeout) {
         if (!initialized) {
-            this.checkIdToken = checkIdToken;
+            this.sameTokenTimeout = sameTokenTimeout;
+        }
+    }
+
+    public void setCheckSameToken(Boolean checkSameToken) {
+        if (!initialized) {
+            this.checkSameToken = checkSameToken;
         }
     }
 
@@ -594,12 +649,12 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
             return this;
         }
 
-        public Builder concurrent(boolean concurrent) {
+        public Builder concurrent(Boolean concurrent) {
             config.setConcurrent(concurrent);
             return this;
         }
 
-        public Builder share(boolean share) {
+        public Builder share(Boolean share) {
             config.setShare(share);
             return this;
         }
@@ -609,18 +664,23 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
             return this;
         }
 
-        public Builder readBody(boolean readBody) {
+        public Builder readBody(Boolean readBody) {
             config.setReadBody(readBody);
             return this;
         }
 
-        public Builder readHead(boolean readHead) {
+        public Builder readHead(Boolean readHead) {
             config.setReadHead(readHead);
             return this;
         }
 
-        public Builder readCookie(boolean readCookie) {
+        public Builder readCookie(Boolean readCookie) {
             config.setReadCookie(readCookie);
+            return this;
+        }
+
+        public Builder writeHeader(Boolean writeHeader) {
+            config.setWriteHeader(writeHeader);
             return this;
         }
 
@@ -634,12 +694,12 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
             return this;
         }
 
-        public Builder tokenSessionCheckLogin(boolean tokenSessionCheckLogin) {
+        public Builder tokenSessionCheckLogin(Boolean tokenSessionCheckLogin) {
             config.setTokenSessionCheckLogin(tokenSessionCheckLogin);
             return this;
         }
 
-        public Builder autoRenew(boolean autoRenew) {
+        public Builder autoRenew(Boolean autoRenew) {
             config.setAutoRenew(autoRenew);
             return this;
         }
@@ -649,13 +709,23 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
             return this;
         }
 
-        public Builder print(boolean print) {
+        public Builder print(Boolean print) {
             config.setPrint(print);
             return this;
         }
 
-        public Builder log(boolean log) {
+        public Builder log(Boolean log) {
             config.setLog(log);
+            return this;
+        }
+
+        public Builder logLevel(String logLevel) {
+            config.setLogLevel(logLevel);
+            return this;
+        }
+
+        public Builder logLevelInt(int logLevelInt) {
+            config.setLogLevelInt(logLevelInt);
             return this;
         }
 
@@ -664,10 +734,6 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
             return this;
         }
 
-        public Builder idTokenTimeout(long idTokenTimeout) {
-            config.setIdTokenTimeout(idTokenTimeout);
-            return this;
-        }
 
         public Builder basic(String basic) {
             config.setBasic(basic);
@@ -679,8 +745,14 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
             return this;
         }
 
-        public Builder checkIdToken(boolean checkIdToken) {
-            config.setCheckIdToken(checkIdToken);
+        public Builder sameTokenTimeout(long sameTokenTimeout) {
+            config.setSameTokenTimeout(sameTokenTimeout);
+            return this;
+        }
+
+
+        public Builder checkSameToken(Boolean checkSameToken) {
+            config.setCheckSameToken(checkSameToken);
             return this;
         }
 

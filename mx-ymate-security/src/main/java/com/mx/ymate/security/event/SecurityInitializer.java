@@ -1,6 +1,7 @@
 package com.mx.ymate.security.event;
 import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.listener.SaTokenEventCenter;
 import com.mx.ymate.satoken.SaToken;
 import com.mx.ymate.satoken.ymate.SaTokenContextForYmate;
 import com.mx.ymate.satoken.ymate.SaTokenDaoRedis;
@@ -28,28 +29,6 @@ import static net.ymate.platform.core.ApplicationEvent.EVENT.APPLICATION_INITIAL
  * @create: 2022-07-03 11:50
  * @Description:
  */
-//public class SecurityInitializer implements IApplicationInitializer {
-//
-//    @Override
-//    public void afterEventInit(IApplication application, Events events) {
-//        // 订阅模块事件：默认同步
-//        events.registerListener(ApplicationEvent.class, (IEventListener<ApplicationEvent>) context -> {
-//            if (context.getEventName() == APPLICATION_INITIALIZED) {
-//                //集成初始化
-//                // 注入上下文Bean
-//                SaManager.setSaTokenContext(new SaTokenContextForYmate());
-//                SaManager.setConfig(SaToken.get().getConfig().toSaTokenConfig());
-//                SaManager.setSaTokenDao(new SaTokenDaoRedis());
-//                SaManager.setSaJsonTemplate(new SaJsonTemplateForFastJson());
-//                // 注入权限
-//                SaManager.setStpInterface(YMP.get().getBeanFactory().getBean(SecurityStpImpl.class));
-//                //注入MxSaTokenListener
-//                SaManager.setSaTokenListener(YMP.get().getBeanFactory().getBean(MxSaTokenListener.class));
-//            }
-//            return false;
-//        });
-//    }
-//}
 
 @EventRegister
 public class SecurityInitializer implements IEventRegister {
@@ -68,7 +47,7 @@ public class SecurityInitializer implements IEventRegister {
                 // 注入权限
                 SaManager.setStpInterface(YMP.get().getBeanFactory().getBean(SecurityStpImpl.class));
                 //注入MxSaTokenListener
-                SaManager.setSaTokenListener(YMP.get().getBeanFactory().getBean(MxSaTokenListener.class));
+                SaTokenEventCenter.registerListener(YMP.get().getBeanFactory().getBean(MxSaTokenListener.class));
             }
             return false;
         });

@@ -121,14 +121,25 @@ public class MxSaTokenListener implements SaTokenListener {
     }
 
     @Override
-    public void doDisable(String loginType, Object loginId, long disableTime) {
+    public void doDisable(String loginType, Object loginId, String service, int level, long disableTime) {
 
     }
 
     @Override
-    public void doUntieDisable(String loginType, Object loginId) {
+    public void doUntieDisable(String loginType, Object loginId, String service) {
 
     }
+
+    @Override
+    public void doOpenSafe(String loginType, String tokenValue, String service, long safeTime) {
+
+    }
+
+    @Override
+    public void doCloseSafe(String loginType, String tokenValue, String service) {
+
+    }
+
 
     @Override
     public void doCreateSession(String id) {
@@ -137,6 +148,11 @@ public class MxSaTokenListener implements SaTokenListener {
 
     @Override
     public void doLogoutSession(String id) {
+
+    }
+
+    @Override
+    public void doRenewTimeout(String tokenValue, Object loginId, long timeout) {
 
     }
 }
