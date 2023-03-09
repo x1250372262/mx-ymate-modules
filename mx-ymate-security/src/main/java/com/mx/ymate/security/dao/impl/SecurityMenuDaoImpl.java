@@ -95,7 +95,7 @@ public class SecurityMenuDaoImpl implements ISecurityMenuDao {
     }
 
     @Override
-    public SecurityMenu delete(String id) throws Exception {
+    public int delete(String id) throws Exception {
         return SecurityMenu.builder().id(id).build().delete();
     }
 }

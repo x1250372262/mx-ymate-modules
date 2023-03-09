@@ -74,5 +74,5 @@ public interface ISecurityMenuDao {
      * @return
      * @throws Exception
      */
-    SecurityMenu delete(String id) throws Exception;
+    int delete(String id) throws Exception;
 }
