@@ -4,10 +4,10 @@ import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.exception.NotRoleException;
 import cn.dev33.satoken.strategy.SaStrategy;
-import cn.hutool.core.text.AntPathMatcher;
 import com.mx.ymate.dev.code.Code;
 import com.mx.ymate.dev.constants.Constants;
 import com.mx.ymate.dev.result.MxResult;
+import com.mx.ymate.dev.util.PathMatchUtil;
 import com.mx.ymate.satoken.annotation.NoLogin;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
@@ -59,12 +59,12 @@ public class MxSaAnnotationInterceptor extends AbstractInterceptor {
             return true;
         }
         String[] excludePathPatternArray = excludePathPatterns.split("\\|");
-        if (excludePathPatternArray.length <= 0) {
+        if (excludePathPatternArray.length == 0) {
             return true;
         }
         boolean flag = false;
         for (String excludePathPattern : excludePathPatternArray) {
-            flag = new AntPathMatcher().match(excludePathPattern, requestUri);
+            flag = new PathMatchUtil().isMatch(requestUri, excludePathPattern);
             if (flag) {
                 break;
             }
