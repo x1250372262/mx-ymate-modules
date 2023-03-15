@@ -56,11 +56,11 @@ public class MxSaAnnotationInterceptor extends AbstractInterceptor {
         }
         String excludePathPatterns = securityConfig.excludePathPatterns();
         if (StringUtils.isBlank(excludePathPatterns)) {
-            return true;
+            return false;
         }
         String[] excludePathPatternArray = excludePathPatterns.split("\\|");
         if (excludePathPatternArray.length == 0) {
-            return true;
+            return false;
         }
         boolean flag = false;
         for (String excludePathPattern : excludePathPatternArray) {

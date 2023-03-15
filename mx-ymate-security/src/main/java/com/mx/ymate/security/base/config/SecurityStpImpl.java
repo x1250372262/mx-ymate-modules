@@ -7,6 +7,8 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.mx.ymate.redis.api.RedisApi;
+import com.mx.ymate.satoken.ISaTokenConfig;
+import com.mx.ymate.satoken.SaToken;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
@@ -38,12 +40,13 @@ public class SecurityStpImpl implements StpInterface {
 
 
     private final ISecurityConfig mxSecurityConfig = Security.get().getConfig();
+    private final ISaTokenConfig saTokenConfig = SaToken.get().getConfig();
 
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
         List<String> permissionList = new ArrayList<>();
         try {
-            String permissionKey = StrUtil.format(PERMISSION_LIST, mxSecurityConfig.client(), SaUtil.getToken(), StpUtil.getLoginType(), SaUtil.loginId());
+            String permissionKey = StrUtil.format(PERMISSION_LIST, saTokenConfig.tokenName(), mxSecurityConfig.client(), SaUtil.getToken(), StpUtil.getLoginType(), SaUtil.loginId());
             String permissionStr = Convert.toStr(RedisApi.strGet(permissionKey));
             if (StringUtils.isNotBlank(permissionStr) && !SaUtil.isFounder()) {
                 JSONArray redisPermissionList = JSONObject.parseArray(permissionStr);

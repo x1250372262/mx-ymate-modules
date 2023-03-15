@@ -10,10 +10,13 @@ import com.mx.ymate.dev.constants.Constants;
 import com.mx.ymate.dev.result.MxResult;
 import com.mx.ymate.dev.util.BeanUtil;
 import com.mx.ymate.redis.api.RedisApi;
+import com.mx.ymate.satoken.ISaTokenConfig;
+import com.mx.ymate.satoken.SaToken;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
 import com.mx.ymate.security.base.bean.LoginResult;
+import com.mx.ymate.security.base.bean.LoginUser;
 import com.mx.ymate.security.base.bean.SecurityLoginInfoBean;
 import com.mx.ymate.security.base.model.SecurityUser;
 import com.mx.ymate.security.base.vo.SecurityLoginVO;
@@ -21,6 +24,7 @@ import com.mx.ymate.security.dao.ISecurityUserDao;
 import com.mx.ymate.security.handler.ILoginHandler;
 import com.mx.ymate.security.service.ISecurityLoginService;
 import com.mx.ymate.security.service.ISecurityUserRoleService;
+import net.ymate.platform.commons.json.JsonWrapper;
 import net.ymate.platform.commons.util.DateTimeUtils;
 import net.ymate.platform.core.beans.annotation.Bean;
 import net.ymate.platform.core.beans.annotation.Inject;
@@ -34,8 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.mx.ymate.security.SaUtil.PERMISSION_LIST;
-import static com.mx.ymate.security.SaUtil.USER_INFO;
+import static com.mx.ymate.security.SaUtil.*;
 import static com.mx.ymate.security.base.code.SecurityCode.*;
 
 /**
@@ -51,6 +54,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     @Inject
     private ISecurityUserRoleService iSecurityUserRoleService;
     private final ISecurityConfig config = Security.get().getConfig();
+    private final ISaTokenConfig saTokenConfig = SaToken.get().getConfig();
 
     @Override
     public MxResult login(String userName, String password) throws Exception {
@@ -112,7 +116,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         securityUser.setLoginTime(DateTimeUtils.currentTimeMillis());
         securityUser.setLoginIp(ServletUtil.getClientIP(WebContext.getRequest()));
         iSecurityUserDao.update(securityUser, SecurityUser.FIELDS.LOGIN_ERROR_COUNT, SecurityUser.FIELDS.LOGIN_LOCK_STATUS,
-                SecurityUser.FIELDS.LOGIN_LOCK_START_TIME, SecurityUser.FIELDS.LOGIN_LOCK_END_TIME,SecurityUser.FIELDS.LOGIN_IP,SecurityUser.FIELDS.LOGIN_TIME);
+                SecurityUser.FIELDS.LOGIN_LOCK_START_TIME, SecurityUser.FIELDS.LOGIN_LOCK_END_TIME, SecurityUser.FIELDS.LOGIN_IP, SecurityUser.FIELDS.LOGIN_TIME);
         StpUtil.login(securityUser.getId());
         SaTokenInfo saTokenInfo = StpUtil.getTokenInfo();
 
@@ -143,12 +147,13 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     }
 
     public void cacheUser(SecurityUser securityUser, SaTokenInfo saTokenInfo) throws Exception {
+        LoginUser loginUser = BeanUtil.copy(securityUser, LoginUser::new);
         //设置用户信息到redis
-        String userKey = StrUtil.format(USER_INFO, securityUser.getClient(), securityUser.getId());
-        StpUtil.getTokenSessionByToken(saTokenInfo.getTokenValue()).set(userKey, securityUser);
+        String userKey = StrUtil.format(USER_INFO, saTokenConfig.tokenName(), securityUser.getClient(), securityUser.getId());
+        RedisApi.strSet(userKey, JsonWrapper.toJsonString(loginUser));
         //设置权限到redis
         //先删除redis的数据
-        String permissionKey = StrUtil.format(PERMISSION_LIST, securityUser.getClient(), SaUtil.getToken(), StpUtil.getLoginType(), securityUser.getId());
+        String permissionKey = StrUtil.format(PERMISSION_LIST, saTokenConfig.tokenName(), securityUser.getClient(), SaUtil.getToken(), StpUtil.getLoginType(), securityUser.getId());
         String permissionStr = Convert.toStr(RedisApi.strGet(permissionKey));
         if (StringUtils.isNotBlank(permissionStr)) {
             RedisApi.delete(permissionKey);

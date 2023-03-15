@@ -10,6 +10,7 @@ import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
 import com.mx.ymate.security.annotation.OperationLog;
+import com.mx.ymate.security.base.bean.LoginUser;
 import com.mx.ymate.security.base.enums.ResourceType;
 import com.mx.ymate.security.base.model.SecurityOperationLog;
 import com.mx.ymate.security.base.model.SecurityUser;
@@ -74,8 +75,8 @@ public class OperationLogInterceptor extends AbstractInterceptor {
             if (operationLog == null) {
                 return;
             }
-            SecurityUser securityUser = SaUtil.user();
-            if (securityUser == null) {
+            LoginUser loginUser = SaUtil.user();
+            if (loginUser == null) {
                 return;
             }
             Object ret = context.getResultObject();
@@ -94,8 +95,8 @@ public class OperationLogInterceptor extends AbstractInterceptor {
                     .resourceId(resourceId)
                     .type(operationLog.operationType().name())
                     .typeName(operationLog.operationType().value())
-                    .userId(securityUser.getId())
-                    .userName(securityUser.getUserName())
+                    .userId(loginUser.getId())
+                    .userName(loginUser.getUserName())
                     .createTime(DateTimeUtils.currentTimeMillis())
                     .requestUrl(request.getRequestURI())
                     .requestParam(JSONObject.toJSONString(ServletUtil.getParams(request)))
