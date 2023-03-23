@@ -33,7 +33,7 @@ public class HeartBeatServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        MxLog.error("心跳检测异常", cause);
+        MxLog.error("netty异常", cause);
 //        ctx.close();
     }
 }

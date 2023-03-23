@@ -35,6 +35,7 @@ import java.util.List;
 public final class DefaultNettyConfig implements INettyConfig {
 
     private boolean enabled;
+    private Boolean autoStart;
     private String client;
     private Integer serverPort;
     private Integer serverStartPort;
@@ -71,6 +72,7 @@ public final class DefaultNettyConfig implements INettyConfig {
     private DefaultNettyConfig(IModuleConfigurer moduleConfigurer) {
         ConfigUtil configUtil = new ConfigUtil(moduleConfigurer.getConfigReader().toMap());
         enabled = configUtil.getBool(ENABLED, true);
+        autoStart = configUtil.getBool(AUTO_START, true);
         client = configUtil.getString(CLIENT, "all");
         serverPort = configUtil.getInteger(SERVER_PORT);
         serverStartPort = configUtil.getInteger(SERVER_START_PORT);
@@ -117,6 +119,11 @@ public final class DefaultNettyConfig implements INettyConfig {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    @Override
+    public Boolean autoStart() {
+        return autoStart;
     }
 
     @Override
@@ -189,6 +196,12 @@ public final class DefaultNettyConfig implements INettyConfig {
     public void setEnabled(boolean enabled) {
         if (!initialized) {
             this.enabled = enabled;
+        }
+    }
+
+    public void setAutoStart(Boolean autoStart) {
+        if (!initialized) {
+            this.autoStart = autoStart;
         }
     }
 

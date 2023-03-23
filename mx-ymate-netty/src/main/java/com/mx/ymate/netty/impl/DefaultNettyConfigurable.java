@@ -50,6 +50,11 @@ public final class DefaultNettyConfigurable extends DefaultModuleConfigurable {
             return this;
         }
 
+        public Builder autoStart(boolean autoStart) {
+            configurable.addConfig(INettyConfig.AUTO_START, String.valueOf(autoStart));
+            return this;
+        }
+
         public Builder client(String client) {
             configurable.addConfig(INettyConfig.CLIENT, client);
             return this;

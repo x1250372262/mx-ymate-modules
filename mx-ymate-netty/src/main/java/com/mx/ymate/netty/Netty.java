@@ -22,8 +22,6 @@ import net.ymate.platform.core.*;
 import net.ymate.platform.core.module.IModule;
 import net.ymate.platform.core.module.IModuleConfigurer;
 import net.ymate.platform.core.module.impl.DefaultModuleConfigurer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import static com.mx.ymate.netty.INettyConfig.SERVER_CLIENT_CLIENT;
 import static com.mx.ymate.netty.INettyConfig.SERVER_CLIENT_SERVER;
@@ -35,7 +33,6 @@ import static com.mx.ymate.netty.INettyConfig.SERVER_CLIENT_SERVER;
  */
 public final class Netty implements IModule, INetty {
 
-    private static final Log LOG = LogFactory.getLog(Netty.class);
 
     private static volatile INetty instance;
 
@@ -99,7 +96,7 @@ public final class Netty implements IModule, INetty {
                 config.initialize(this);
             }
 
-            if (config.isEnabled()) {
+            if (config.isEnabled() && config.autoStart()) {
 
                 if (SERVER_CLIENT_SERVER.equals(config.client())) {
                     nettyServer = new NettyServer(config);
@@ -138,9 +135,11 @@ public final class Netty implements IModule, INetty {
                         nettyClient.stop();
                     }
                 } else {
-                    if (nettyClient != null && nettyServer != null) {
-                        nettyServer.stop();
+                    if (nettyClient != null) {
                         nettyClient.stop();
+                    }
+                    if (nettyServer != null) {
+                        nettyServer.stop();
                     }
 
                 }
@@ -159,5 +158,57 @@ public final class Netty implements IModule, INetty {
     @Override
     public INettyConfig getConfig() {
         return config;
+    }
+
+    @Override
+    public void startServer() throws Exception {
+        if(nettyServer == null){
+            nettyServer = new NettyServer(config);
+            nettyServer.run();
+        }
+    }
+
+    @Override
+    public void startClient() throws Exception{
+        if(nettyClient == null){
+            nettyClient = new NettyClient(config);
+            nettyClient.run();
+        }
+    }
+
+    @Override
+    public void startAll() throws Exception {
+        if(nettyClient == null){
+            nettyClient = new NettyClient(config);
+            nettyClient.run();
+        }
+        if(nettyServer == null){
+            nettyServer = new NettyServer(config);
+            nettyServer.run();
+        }
+    }
+
+    @Override
+    public void stopServer(){
+        if (nettyServer != null) {
+            nettyServer.stop();
+        }
+    }
+
+    @Override
+    public void stopClient(){
+        if (nettyClient != null) {
+            nettyClient.stop();
+        }
+    }
+
+    @Override
+    public void stoptAll(){
+        if (nettyClient != null) {
+            nettyClient.stop();
+        }
+        if (nettyServer != null) {
+            nettyServer.stop();
+        }
     }
 }

@@ -1,10 +1,9 @@
-package com.mx.ymate.excel;
+package com.mx.ymate.excel.export;
 
 
 import cn.hutool.core.map.MapUtil;
 import com.mx.ymate.excel.util.FileUtil;
 import net.ymate.platform.commons.util.DateTimeUtils;
-import net.ymate.platform.commons.util.RuntimeUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.jexl3.JexlBuilder;
 import org.apache.commons.jexl3.JexlEngine;
@@ -29,11 +28,7 @@ import java.util.zip.ZipOutputStream;
  * @Time: 14:30.
  * @Description: Excel文件导出助手类
  */
-public class ExcelExportHelper implements Closeable {
-
-    public static final String ZIP_URL = "/mx/excel/download/zip/";
-
-    public static final String EXCEL_URL = "/mx/excel/download/excel/";
+public class ExcelExportJxlsHelper extends IExportHelper implements Closeable {
 
     private final Class<?> funClass;
 
@@ -46,24 +41,24 @@ public class ExcelExportHelper implements Closeable {
     //zip临时文件目录
     private final String zipFilePath;
 
-    private ExcelExportHelper(Class<?> funcClass, String templatePath, String excelFilePath, String zipFilePath) {
+    private ExcelExportJxlsHelper(Class<?> funcClass, String templatePath, String excelFilePath, String zipFilePath) {
         this.funClass = funcClass;
         this.templatePath = templatePath;
         this.excelFilePath = excelFilePath;
         this.zipFilePath = zipFilePath;
     }
 
-    public static ExcelExportHelper init(Class<?> funcClass, String templatePath, String excelFilePath, String zipFilePath) {
-        return new ExcelExportHelper(funcClass, templatePath, excelFilePath, zipFilePath);
+    public static ExcelExportJxlsHelper init(Class<?> funcClass, String templatePath, String excelFilePath, String zipFilePath) {
+        return new ExcelExportJxlsHelper(funcClass, templatePath, excelFilePath, zipFilePath);
     }
 
-    public static ExcelExportHelper init(Class<?> funcClass, String templatePath) {
-        String excelFilePath = RuntimeUtils.getRootPath() + File.separator + "export" + File.separator;
-        String zipFilePath = RuntimeUtils.getRootPath() + File.separator + "zip" + File.separator;
-        return new ExcelExportHelper(funcClass, templatePath, excelFilePath, zipFilePath);
+    public static ExcelExportJxlsHelper init(Class<?> funcClass, String templatePath) {
+        String excelFilePath = EXCEL_FILE_PATH;
+        String zipFilePath = ZIP_FILE_PATH;
+        return new ExcelExportJxlsHelper(funcClass, templatePath, excelFilePath, zipFilePath);
     }
 
-    public ExcelExportHelper addData(Map<String, Object> data) {
+    public ExcelExportJxlsHelper addData(Map<String, Object> data) {
         if (resultData == null) {
             resultData = new ArrayList<>();
         }
@@ -72,11 +67,11 @@ public class ExcelExportHelper implements Closeable {
     }
 
 
-    public ExcelExportHelper addData(Object data) {
+    public ExcelExportJxlsHelper addData(Object data) {
         return addData(MapUtil.builder("data",data).build());
     }
 
-    public File export(String fileName) throws Exception {
+    public File exportZip(String fileName) throws Exception {
         FileUtil.fixAndMkDir(excelFilePath);
         FileUtil.fixAndMkDir(zipFilePath);
         //输入信息
@@ -105,7 +100,34 @@ public class ExcelExportHelper implements Closeable {
 
     }
 
-    public File exportExcel(InputStream is, File outFile, Map<String, Object> params) throws Exception {
+    public File exportOneFile(String fileName) throws Exception {
+        FileUtil.fixAndMkDir(excelFilePath);
+        //输入信息
+        File inFile = getTemplate(templatePath);
+        if (inFile == null) {
+            throw new Exception("Excel 模板未找到。");
+        }
+        InputStream is = Files.newInputStream(inFile.toPath());
+        File outFile = new File(EXCEL_FILE_PATH, fileName + ".xlsx");
+        if (resultData != null && resultData.size() > 0) {
+            for (int idx = 0; ; idx++) {
+                if (resultData.size() <= idx) {
+                    break;
+                }
+                Map<String, Object> data = resultData.get(idx);
+                if (data == null || data.isEmpty()) {
+                    break;
+                }
+                //输出信息
+                File excelFile = new File(excelFilePath, fileName + DateTimeUtils.formatTime(DateTimeUtils.systemTimeUTC(),"yyyyMMdd-HHmmss") +".xlsx");
+                exportExcel(is, excelFile, data);
+            }
+        }
+        return outFile;
+
+    }
+
+    private File exportExcel(InputStream is, File outFile, Map<String, Object> params) throws Exception {
         OutputStream os = Files.newOutputStream(outFile.toPath());
         //参数信息
         Context context = PoiTransformer.createInitialContext();

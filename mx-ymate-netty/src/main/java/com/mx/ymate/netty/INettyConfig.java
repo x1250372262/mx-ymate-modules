@@ -31,6 +31,8 @@ public interface INettyConfig extends IInitialization<INetty> {
 
     String ENABLED = "enabled";
     String CLIENT = "client";
+
+    String AUTO_START = "autoStart";
     String SERVER_PORT = "server.port";
     String SERVER_START_PORT = "server.startPort";
     String SERVER_END_PORT = "server.endPort";
@@ -52,6 +54,12 @@ public interface INettyConfig extends IInitialization<INetty> {
      * @return 返回false表示禁用
      */
     boolean isEnabled();
+
+    /**
+     * 是否自动启动
+     * @return
+     */
+    Boolean autoStart();
 
     /**
      * #启动的客户端 all全部 server服务端  client 客户端  默认all
