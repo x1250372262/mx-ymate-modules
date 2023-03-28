@@ -174,6 +174,16 @@ var FORM = function () {
             dom.find("select").each(function () {
                 var dataValue = data[$(this).attr("name")];
                 $(this).find("option[value='" + dataValue + "']").prop('selected', true)
+                if($(this).hasClass("select-cascade")){
+                    var cascadeId = $.trim($(this).attr("cascadeId"));
+                    var cascadeKey = $.trim($(this).attr("cascadeKey"));
+                    if(!dataValue || !cascadeKey || !cascadeId){
+                        MX.failMsg("value、cascadeKey、cascadeId都不能为空")
+                        return false;
+                    }
+                    SELECT.selectData(cascadeKey,cascadeId,dataValue)
+                }
+
             });
             //wang编辑器 重置内部html内容
             if (dom.find(".wangContent").length > 0) {
