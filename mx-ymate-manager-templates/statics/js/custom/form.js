@@ -177,11 +177,12 @@ var FORM = function () {
                 if($(this).hasClass("select-cascade")){
                     var cascadeId = $.trim($(this).attr("cascadeId"));
                     var cascadeKey = $.trim($(this).attr("cascadeKey"));
+                    var cascadePid = $.trim($(this).attr("cascadePid"));
                     if(!dataValue || !cascadeKey || !cascadeId){
                         MX.failMsg("value、cascadeKey、cascadeId都不能为空")
                         return false;
                     }
-                    SELECT.selectData(cascadeKey,cascadeId,dataValue)
+                    SELECT.selectData(cascadeKey,cascadeId,cascadePid,dataValue)
                 }
 
             });

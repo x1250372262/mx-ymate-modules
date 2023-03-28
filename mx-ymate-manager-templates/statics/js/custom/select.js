@@ -278,11 +278,14 @@ var SELECT = function () {
             params = $.trim(params) ? params : null;
             initCascade(domId, id, value, $.trim(url), styles, params, returnKey,handlerDataFun);
         },
-        selectData:function(cascadeKey,cascadeId,value){
+        selectData:function(cascadeKey,cascadeId,cascadePid,value){
             var data = CASECAD_DATA[cascadeKey];
             var result = [];
+            if(!cascadePid){
+                cascadePid = "pid";
+            }
             $.each(data,function(index,item){
-                if(value===item.pid){
+                if(value===item[cascadePid]){
                     result.push(item);
                 }
             })

@@ -52,7 +52,7 @@ json格式
 ### 级联使用使用
 html
 ```html
-<div class="form-row">
+<div class="form-row col-md-12">
     <div class="form-group col-md-4 mx_validator">
         <label for="provinceId">省份</label><span class="required">* </span>
         <input type="hidden" name="id" value="">
