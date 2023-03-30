@@ -136,3 +136,37 @@ html
   }
 }
 ```
+
+### 添加一行使用
+```html
+<div class="form-group col-md-12" >
+                                        <button type="button" class="btn btn-primary btn-sm m-r-sm" id="newRow"><i
+                                                class="fa fa-plus m-r-xs"></i>新增一行
+                                        </button>
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="table-responsive" style="max-height: 500px">
+                                            <table class="table table-stripped table-bordered">
+                                                <thead>
+                                                    <tr style="background-color: #F5F5F6;text-align: center;">
+                                                        <th>产品</th>
+                                                        <th>数量</th>
+                                                        <th>操作</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="rowTemplate" dataKey="content">
+                                                    <tr style="text-align: center;" class="rowValueDom rowValueUpdate">
+                                                        <td>
+                                                            <select class="select-init form-control mx_required" isDefault="1"
+                                                                    defaultOptionText="请选择产品"  id="provinceId" name="productId"
+                                                                    mx_required_msg="请选择产品" mx_required_type="select"
+                                                            ></select>
+                                                        </td>
+                                                        <td> <input type="text" class="form-control" name="num" placeholder="请输入重量"></td>
+                                                        <td><button class="btn btn-danger deleteRow btn-sm" >删除</button></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="hr-line-dashed"></div>
+                                    </div>
+```

@@ -111,11 +111,6 @@ var Table = function () {
     //点击添加事件
     $(".creates").on("click", function () {
         var dom = $(this).attr("data-target");
-        $(dom).find('[name]').each(function () {
-            if (!$(this).hasClass("no_clear")) {
-                $(this).val('');
-            }
-        });
         $(dom).find("h4").text("添加");
         var url = $.trim(ADD_URL);
         if (!url) {
@@ -126,64 +121,10 @@ var Table = function () {
             return false;
         }
         $(dom).find("form").attr("action", url);
-
-        $(dom).find("img").each(function () {
-            $(this).attr("src", "/statics/images/no_image.gif");
-        });
-        //radio 按钮
-        $(dom).find("input[type='radio']").each(function () {
-            if ("0" === $(this).val()) {
-                $(this).prop('checked', true)
-            }
-        });
-
-        $(dom).find(".mx_fileName").each(function () {
-            $(this).html("")
-        });
-        $(dom).find(".fileresult").val("");
-
-        //百度编辑器 重置内部html内容
-        if ($(dom).find(".editor").length > 0) {
-            $(dom).find(".editor").each(function () {
-                if (editors[$(this).attr("id")].body) {
-                    editors[$(this).attr("id")].setContent("");
-                } else {
-                    $(this).find("iframe").contents().find("body").html("");
-                }
-
-            });
-        }
-        $(dom).find(".js-tags-input").each(function () {
-            $(this).importTags('');
-            $(this).tagsInput({
-                height: '36px',
-                width: '100%',
-                defaultText: '添加值',
-                removeWithBackspace: true,
-                delimiter: [',']
-            });
-        });
-
-        $(dom).find("input[type='file']").each(function () {
-            $(this).val("")
-            $(this).next().val("")
-            $(this).parent().next().html("")
-        });
-
-        $(dom).find(".lyear-switch").each(function () {
-            var inputChecked = $(this).children("input[type=checkbox]");
-            inputChecked.prop('checked', false)
-        });
-        //删除input下方的红字提醒
-        if ($(dom).find(".has-error").length > 0) {
-            $(dom).find(".has-error").each(function () {
-                $(this).removeClass("has-error")
-            })
-        }
-        if ($(dom).find(".help-block").length > 0) {
-            $(dom).find(".help-block").each(function () {
-                $(this).remove()
-            })
+        FORM.clearValues($(dom))
+        if($(dom).find("#rowTemplate").length > 0){
+            MMP.clearValues();
+            MMP.addTag();
         }
     });
 
@@ -211,28 +152,13 @@ var Table = function () {
         editUrl = editUrl + "/" + id;
         $(dom).find("h4").text("编辑");
         $(dom).find("form").attr("action", editUrl);
-        $(dom).find(".mx_fileName").each(function () {
-            $(this).html("")
-        });
-        $(dom).find("input[type='file']").each(function () {
-            $(this).val("")
-            $(this).next().val("")
-            $(this).parent().next().html("")
-        });
         var isToken = true;
         if (needToken() !== undefined && needToken() !== null && needToken() !== "") {
             isToken = needToken() === "true";
         }
-        //删除input下方的红字提醒
-        if ($(dom).find(".has-error").length > 0) {
-            $(dom).find(".has-error").each(function () {
-                $(this).removeClass("has-error")
-            })
-        }
-        if ($(dom).find(".help-block").length > 0) {
-            $(dom).find(".help-block").each(function () {
-                $(this).remove()
-            })
+        FORM.clearValues($(dom))
+        if($(dom).find("#rowTemplate").length > 0){
+            MMP.clearValues();
         }
         MX.axget(detailUrl, null, isToken, null, function (e) {
             if (e.code === "00000") {

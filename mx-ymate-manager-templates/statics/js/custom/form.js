@@ -124,6 +124,13 @@ var FORM = function () {
                     }
                 }
             });
+            //
+            if(dom.find("#rowTemplate").length > 0){
+                var dataKey = $.trim($("#rowTemplate").attr("dataKey"))?$("#rowTemplate").attr("dataKey"):"dataKey";
+                var datakeyValue = data[dataKey];
+                MMP.setValues(".rowValueDom",datakeyValue);
+            }
+
             //radio 按钮
             dom.find("input[type='radio']").each(function () {
                 if (data[$(this).attr("name")] === parseInt($(this).val())) {
@@ -301,6 +308,12 @@ var FORM = function () {
                     data[$(this).attr("name")] = $(this).val();
                 }
             });
+            //
+            if(dom.find("#rowTemplate").length > 0){
+                var dataKey = $.trim($("#rowTemplate").attr("dataKey"))?$("#rowTemplate").attr("dataKey"):"dataKey";
+                data[dataKey] = MMP.getValues(".rowValueDom");
+            }
+
             dom.find(".times").each(function () {//时间插件
                 if ($(this).val()) {
                     data[$(this).attr("name")] = new Date($(this).val().replace(/-/g, "/")).getTime();
