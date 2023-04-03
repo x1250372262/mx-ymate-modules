@@ -250,8 +250,8 @@ var FORM = function () {
             $(dom).find(".fileresult").val("");
 
             //wang编辑器 重置内部html内容
-            if (dom.find(".wangContent").length > 0) {
-                dom.find(".wangContent").each(function () {
+            if ($(dom).find(".wangContent").length > 0) {
+                $(dom).find(".wangContent").each(function () {
                     // editors[$(this).attr("id")].dangerouslyInsertHtml("")
                     editors[$(this).attr("id")].setHtml('<p></p>')
                 });

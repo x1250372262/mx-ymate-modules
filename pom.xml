@@ -28,9 +28,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <ymate.platform.version>2.1.2-dev</ymate.platform.version>
-        <hutool.all.version>5.8.9</hutool.all.version>
+        <hutool.all.version>5.8.16</hutool.all.version>
         <redisson.version>3.17.4</redisson.version>
-        <netty-all.version>4.1.76.Final</netty-all.version>
+        <netty-all.version>4.1.90.Final</netty-all.version>
         <sa.token.version>1.34.0</sa.token.version>
         <minio.version>8.4.5</minio.version>
         <qiniu-java-sdk.version>7.11.0</qiniu-java-sdk.version>
@@ -42,7 +42,7 @@
         <jansi.version>2.4.0</jansi.version>
         <undertow.version>2.2.22.Final</undertow.version>
         <easyexcel.version>3.1.1</easyexcel.version>
-        <poi.version>4.0.0</poi.version>
+        <poi.version>5.2.3</poi.version>
         <jxls.version>2.6.1-SNAPSHOT</jxls.version>
         <jxls-poi.version>1.2.1-SNAPSHOT</jxls-poi.version>
         <jxls-jexcel.version>1.0.7</jxls-jexcel.version>
