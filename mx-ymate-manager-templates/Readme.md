@@ -51,7 +51,19 @@ json格式
 
 ### 级联使用使用
 html
+
+cascadePid下级的关联id （json中关联的id）
+
+cascadeId 下级的元素id （省份下级城市，cityId）
+
+cascadeKey下级的指定键名（下级的json名）
+
+类名”select-init“只在级联第一级加
+
+类名“select-cascade”每一级都加
+
 ```html
+
 <div class="form-row col-md-12">
     <div class="form-group col-md-4 mx_validator">
         <label for="provinceId">省份</label><span class="required">* </span>
@@ -59,12 +71,11 @@ html
         <input type="hidden" name="lastModifyTime" value="">
         <select class="select-init select-cascade form-control mx_required" isDefault="1"
                 defaultOptionText="请选择省份" cascadePid="pid" cascadeId="cityId" cascadeKey="city" id="provinceId" name="provinceId"
-                mx_required_msg="请选择省份" mx_required_type="select"
-        ></select>
+                mx_required_msg="请选择省份" mx_required_type="select"></select>
     </div>
     <div class="form-group col-md-4 mx_validator">
         <label for="cityId">城市</label><span class="required">* </span>
-        <select class="form-control select-cascade mx_required" cascadePid="pid" cascadeId="memberId"  cascadeKey="member"
+        <select class="form-control select-cascade mx_required" cascadePid="pid" cascadeId="memberId" cascadeKey="member"
                 isDefault="1" defaultOptionText="请选择城市" id="cityId" name="cityId"
                 mx_required_msg="请选择城市" mx_required_type="select"></select>
     </div>
@@ -75,9 +86,12 @@ html
     </div>
 </div>
 ```
+js
 ```js
    SELECT.initCascade("provinceId","id","name",baseUrl + "/select/select",null,null,"province",null);
 ```
+json
+
 注意:/select/select接口需要返回三个级联需要的参数 比如
 ```json
 {
