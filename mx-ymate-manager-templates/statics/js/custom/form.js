@@ -351,7 +351,16 @@ var FORM = function () {
                 }
             });
             dom.find("select").each(function () {
-                data[$(this).attr("name")] = $(this).val();
+                var dataType = $.trim($(this).attr("dataType"));
+                if("all"===dataType){
+                    data[$(this).attr("name")] = $(this).val();
+                    data[$(this).attr("name")+"_text"] = $(this).find("option:selected").text();
+                }else if("text" === dataType){
+                    data[$(this).attr("name")+"_text"] = $(this).find("option:selected").text();
+                }else{
+                    data[$(this).attr("name")] = $(this).val();
+                }
+
             });
             dom.find(".lyear-switch").each(function () {
                 var inputChecked = $(this).children("input[type=checkbox]");

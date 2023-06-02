@@ -26,6 +26,10 @@ public class PageBean {
         return Page.createIfNeed(page,pageSize);
     }
 
+    public static PageBean create(){
+        return new PageBean(0,0);
+    }
+
     public Integer getPage() {
         return page;
     }

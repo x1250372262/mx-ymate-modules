@@ -10,7 +10,6 @@ import com.mx.ymate.dev.code.ICode;
 import net.ymate.platform.commons.util.ClassUtils;
 import net.ymate.platform.core.support.ErrorCode;
 import net.ymate.platform.webmvc.IWebMvc;
-import net.ymate.platform.webmvc.IWebResult;
 import net.ymate.platform.webmvc.base.Type;
 import net.ymate.platform.webmvc.context.WebContext;
 import net.ymate.platform.webmvc.util.WebUtils;
@@ -167,7 +166,7 @@ public class MxResult extends MxAbstractWebResult<String> implements Serializabl
     }
 
     public static boolean checkVersion(Object var1, Object var2) {
-        return Objects.equals(var1, var2);
+        return !Objects.equals(var1, var2);
     }
 
     public MxResult() {
