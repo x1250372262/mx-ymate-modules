@@ -17,6 +17,8 @@ package com.mx.ymate.netty.impl;
 
 import com.mx.ymate.netty.INetty;
 import com.mx.ymate.netty.INettyConfig;
+import com.mx.ymate.netty.heart.IHeartClient;
+import com.mx.ymate.netty.heart.IHeartServer;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import net.ymate.platform.core.module.IModuleConfigurer;
 import net.ymate.platform.core.module.impl.DefaultModuleConfigurable;
@@ -80,6 +82,11 @@ public final class DefaultNettyConfigurable extends DefaultModuleConfigurable {
             return this;
         }
 
+        public Builder serverHeartBeatClass(IHeartServer heartServer) {
+            configurable.addConfig(INettyConfig.SERVER_HEART_BEAT_CLASS, String.valueOf(heartServer));
+            return this;
+        }
+
         public Builder serverExcludePort(List<Integer> serverExcludePort) {
             configurable.addConfig(INettyConfig.SERVER_EXCLUDE_PORT, String.valueOf(serverExcludePort));
             return this;
@@ -103,6 +110,11 @@ public final class DefaultNettyConfigurable extends DefaultModuleConfigurable {
 
         public Builder clientHeartBeatTime(Integer clientHeartBeatTime) {
             configurable.addConfig(INettyConfig.CLIENT_HEART_BEAT_TIME, String.valueOf(clientHeartBeatTime));
+            return this;
+        }
+
+        public Builder  clientHeartBeatClass(IHeartClient heartClient) {
+            configurable.addConfig(INettyConfig.CLIENT_HEART_BEAT_CLASS, String.valueOf(heartClient));
             return this;
         }
 

@@ -15,13 +15,18 @@
  */
 package com.mx.ymate.netty;
 
+import cn.hutool.core.util.StrUtil;
+import com.mx.ymate.dev.support.log.MxLog;
 import com.mx.ymate.netty.impl.DefaultNettyConfig;
 import com.mx.ymate.netty.impl.NettyClient;
 import com.mx.ymate.netty.impl.NettyServer;
+import io.netty.channel.ChannelHandlerContext;
 import net.ymate.platform.core.*;
 import net.ymate.platform.core.module.IModule;
 import net.ymate.platform.core.module.IModuleConfigurer;
 import net.ymate.platform.core.module.impl.DefaultModuleConfigurer;
+
+import java.net.InetSocketAddress;
 
 import static com.mx.ymate.netty.INettyConfig.SERVER_CLIENT_CLIENT;
 import static com.mx.ymate.netty.INettyConfig.SERVER_CLIENT_SERVER;
@@ -210,5 +215,13 @@ public final class Netty implements IModule, INetty {
         if (nettyServer != null) {
             nettyServer.stop();
         }
+    }
+
+    @Override
+    public void connect(ChannelHandlerContext context) throws Exception {
+        InetSocketAddress ipSocket = (InetSocketAddress) context.channel().remoteAddress();
+        int port = ipSocket.getPort();
+        String host = ipSocket.getHostString();
+        nettyClient.connect(new NettyClient.RemoteAddress(host,port));
     }
 }

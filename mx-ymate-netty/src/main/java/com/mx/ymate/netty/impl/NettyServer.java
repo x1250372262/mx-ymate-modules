@@ -47,7 +47,7 @@ public class NettyServer {
             protected void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline channelPipeline = ch.pipeline();
                 if (Objects.nonNull(config.serverHeartBeatTime())) {
-                    channelPipeline.addLast(new IdleStateHandler(config.serverHeartBeatTime(), 0, 0, TimeUnit.SECONDS));
+                    channelPipeline.addLast(new IdleStateHandler(config.serverHeartBeatTime(), config.serverHeartBeatTime(), config.serverHeartBeatTime(), TimeUnit.SECONDS));
                 }
                 channelPipeline.addLast(config.serverDecoder());
                 for (ChannelInboundHandlerAdapter clazz : config.serverHandler()) {

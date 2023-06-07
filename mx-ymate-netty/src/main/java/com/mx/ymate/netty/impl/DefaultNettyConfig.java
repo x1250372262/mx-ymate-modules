@@ -19,6 +19,10 @@ import cn.hutool.core.util.ObjectUtil;
 import com.mx.ymate.dev.util.ConfigUtil;
 import com.mx.ymate.netty.INetty;
 import com.mx.ymate.netty.INettyConfig;
+import com.mx.ymate.netty.heart.IHeartClient;
+import com.mx.ymate.netty.heart.IHeartServer;
+import com.mx.ymate.netty.heart.impl.HeartClientImpl;
+import com.mx.ymate.netty.heart.impl.HeartServerImpl;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import net.ymate.platform.commons.util.ClassUtils;
 import net.ymate.platform.core.module.IModuleConfigurer;
@@ -41,11 +45,15 @@ public final class DefaultNettyConfig implements INettyConfig {
     private Integer serverStartPort;
     private Integer serverEndPort;
     private Integer serverHeartBeatTime;
+
+    private IHeartServer heartServer;
     private List<String> serverExcludePort;
     private List<ChannelInboundHandlerAdapter> serverHandler = new ArrayList<>();
     private ChannelInboundHandlerAdapter serverDecoder;
     private List<String> clientRemoteAddress;
     private Integer clientHeartBeatTime;
+
+    private IHeartClient heartClient;
     private List<ChannelInboundHandlerAdapter> clientHandler = new ArrayList<>();
     private ChannelInboundHandlerAdapter clientDecoder;
     private String serverDecoderClassName;
@@ -78,6 +86,10 @@ public final class DefaultNettyConfig implements INettyConfig {
         serverStartPort = configUtil.getInteger(SERVER_START_PORT);
         serverEndPort = configUtil.getInteger(SERVER_END_PORT);
         serverHeartBeatTime = configUtil.getInteger(SERVER_HEART_BEAT_TIME);
+        heartServer = configUtil.getClassImpl(SERVER_HEART_BEAT_CLASS,IHeartServer.class);
+        if(heartServer == null){
+            heartServer = new HeartServerImpl();
+        }
         serverExcludePort = ObjectUtil.defaultIfNull(configUtil.getList(SERVER_EXCLUDE_PORT), new ArrayList<>());
         List<String> serverHandlerClassNameList = ObjectUtil.defaultIfNull(configUtil.getList(SERVER_HANDLER_CLASS), new ArrayList<>());
         if (!serverHandlerClassNameList.isEmpty()) {
@@ -90,7 +102,10 @@ public final class DefaultNettyConfig implements INettyConfig {
 
         clientRemoteAddress = ObjectUtil.defaultIfNull(configUtil.getList(CLIENT_REMOTE_ADDRESS), new ArrayList<>());
         clientHeartBeatTime = configUtil.getInteger(CLIENT_HEART_BEAT_TIME);
-
+        heartClient = configUtil.getClassImpl(CLIENT_HEART_BEAT_CLASS,IHeartClient.class);
+        if(heartClient == null){
+            heartClient = new HeartClientImpl();
+        }
         List<String> clientHandlerClassNameList = ObjectUtil.defaultIfNull(configUtil.getList(CLIENT_HANDLER_CLASS), new ArrayList<>());
         if (!clientHandlerClassNameList.isEmpty()) {
             for (String className : clientHandlerClassNameList) {
@@ -152,6 +167,11 @@ public final class DefaultNettyConfig implements INettyConfig {
     }
 
     @Override
+    public IHeartServer heartServer() {
+        return heartServer;
+    }
+
+    @Override
     public List<String> serverExcludePort() {
         return serverExcludePort;
     }
@@ -178,6 +198,11 @@ public final class DefaultNettyConfig implements INettyConfig {
     @Override
     public Integer clientHeartBeatTime() {
         return clientHeartBeatTime;
+    }
+
+    @Override
+    public IHeartClient heartClient() {
+        return heartClient;
     }
 
     @Override
@@ -235,6 +260,12 @@ public final class DefaultNettyConfig implements INettyConfig {
         }
     }
 
+    public void setServerHeartBeatClass(IHeartServer heartServer) {
+        if (!initialized) {
+            this.heartServer = heartServer;
+        }
+    }
+
     public void setServerExcludePort(List<String> serverExcludePort) {
         if (!initialized) {
             this.serverExcludePort = serverExcludePort;
@@ -264,6 +295,13 @@ public final class DefaultNettyConfig implements INettyConfig {
             this.clientHeartBeatTime = clientHeartBeatTime;
         }
     }
+
+    public void setClientHeartBeatClass(IHeartClient heartClient) {
+        if (!initialized) {
+            this.heartClient = heartClient;
+        }
+    }
+
 
     public void setClientHandlerClass(List<ChannelInboundHandlerAdapter> clientHandler) {
         if (!initialized) {
@@ -315,6 +353,11 @@ public final class DefaultNettyConfig implements INettyConfig {
             return this;
         }
 
+        public Builder serverHeartBeatClass(IHeartServer heartServer) {
+            config.setServerHeartBeatClass(heartServer);
+            return this;
+        }
+
         public Builder serverExcludePort(List<String> serverExcludePort) {
             config.setServerExcludePort(serverExcludePort);
             return this;
@@ -338,6 +381,11 @@ public final class DefaultNettyConfig implements INettyConfig {
 
         public Builder clientHeartBeatTime(Integer clientHeartBeatTime) {
             config.setClientHeartBeatTime(clientHeartBeatTime);
+            return this;
+        }
+
+        public Builder clientHeartBeatClass(IHeartClient heartClient) {
+            config.setClientHeartBeatClass(heartClient);
             return this;
         }
 

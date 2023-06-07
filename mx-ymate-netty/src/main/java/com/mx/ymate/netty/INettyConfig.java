@@ -15,6 +15,8 @@
  */
 package com.mx.ymate.netty;
 
+import com.mx.ymate.netty.heart.IHeartClient;
+import com.mx.ymate.netty.heart.IHeartServer;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import net.ymate.platform.core.beans.annotation.Ignored;
 import net.ymate.platform.core.support.IInitialization;
@@ -38,10 +40,14 @@ public interface INettyConfig extends IInitialization<INetty> {
     String SERVER_END_PORT = "server.endPort";
     String SERVER_EXCLUDE_PORT = "server.excludePort";
     String SERVER_HEART_BEAT_TIME = "server.heartBeatTime";
+
+    String SERVER_HEART_BEAT_CLASS = "server.heartBeatClass";
     String SERVER_HANDLER_CLASS = "server.handlerClass";
     String SERVER_DECODER_CLASS = "server.decoderClass";
     String CLIENT_REMOTE_ADDRESS = "client.remoteAddress";
     String CLIENT_HEART_BEAT_TIME = "client.heartBeatTime";
+
+    String CLIENT_HEART_BEAT_CLASS = "client.heartBeatClass";
     String CLIENT_HANDLER_CLASS = "client.handlerClass";
     String CLIENT_DECODER_CLASS = "client.decoderClass";
 
@@ -89,6 +95,12 @@ public interface INettyConfig extends IInitialization<INetty> {
     Integer serverHeartBeatTime();
 
     /**
+     * 心跳实现类 当serverHeartBeatTime不等于0的时候有效
+     * @return
+     */
+    IHeartServer heartServer();
+
+    /**
      * 排除端口 用,号分割 只针对startPort endPort有效
      */
     List<String> serverExcludePort();
@@ -114,6 +126,12 @@ public interface INettyConfig extends IInitialization<INetty> {
      * 心跳维护时间 默认不维护
      */
     Integer clientHeartBeatTime();
+
+    /**
+     * 心跳实现类 当clientHeartBeatTime不等于0的时候有效
+     * @return
+     */
+    IHeartClient heartClient();
 
 
     /**

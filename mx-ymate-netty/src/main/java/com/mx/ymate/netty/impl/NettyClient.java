@@ -2,8 +2,11 @@ package com.mx.ymate.netty.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.StrUtil;
+import com.mx.ymate.dev.support.log.MxLog;
 import com.mx.ymate.netty.INettyConfig;
-import com.mx.ymate.netty.Netty;
+import com.mx.ymate.netty.handler.HeartBeatClientHandler;
 import com.mx.ymate.netty.handler.HeartBeatServerHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -28,7 +31,9 @@ public class NettyClient {
 
     private final INettyConfig config;
 
-    private final EventLoopGroup WORK_GROUP = new NioEventLoopGroup();
+    private EventLoopGroup WORK_GROUP;
+    private Bootstrap BOOTSTRAP;
+    private List<RemoteAddress> REMOTE_ADDRESS_LIST;
 
     public NettyClient(INettyConfig config) {
         this.config = config;
@@ -47,22 +52,27 @@ public class NettyClient {
 
 
     public void run() throws Exception {
-        List<String> remoteAddressStrList = config.clientRemoteAddress();
-        if (CollUtil.isEmpty(remoteAddressStrList)) {
-            throw new Exception("请指定需要连接的服务地址");
-        }
-        List<RemoteAddress> remoteAddressList = getRemoteAddressList(remoteAddressStrList);
-        if (CollUtil.isEmpty(remoteAddressList)) {
-            throw new Exception("请指定需要连接的服务地址");
-        }
         if (config.clientDecoder() == null) {
-            throw new Exception("请指定handler处理类");
+            throw new Exception("请指定decoder解码器");
         }
         if (CollUtil.isEmpty(config.clientHandler())) {
             throw new Exception("请指定handler处理类");
         }
-        Bootstrap bootstrap = new Bootstrap();
-        bootstrap.group(WORK_GROUP)
+        List<String> remoteAddressStrList = config.clientRemoteAddress();
+        if (CollUtil.isEmpty(remoteAddressStrList)) {
+            throw new Exception("请指定需要连接的服务地址");
+        }
+        REMOTE_ADDRESS_LIST = getRemoteAddressList(remoteAddressStrList);
+        if (CollUtil.isEmpty(REMOTE_ADDRESS_LIST)) {
+            throw new Exception("请指定需要连接的服务地址");
+        }
+        if (BOOTSTRAP == null) {
+            BOOTSTRAP = new Bootstrap();
+        }
+        if (WORK_GROUP == null) {
+            WORK_GROUP = new NioEventLoopGroup();
+        }
+        BOOTSTRAP.group(WORK_GROUP)
                 .channel(NioSocketChannel.class)
                 .option(ChannelOption.SO_BACKLOG, 100)
                 .handler(new ChannelInitializer<SocketChannel>() {
@@ -71,22 +81,57 @@ public class NettyClient {
                         ChannelPipeline channelPipeline = ch.pipeline();
                         channelPipeline.addLast(new LoggingHandler(LogLevel.INFO));
                         if (Objects.nonNull(config.clientHeartBeatTime())) {
-                            channelPipeline.addLast(new IdleStateHandler(config.clientHeartBeatTime(), 0, 0, TimeUnit.SECONDS));
+                            channelPipeline.addLast(new IdleStateHandler(config.clientHeartBeatTime(), config.clientHeartBeatTime(), config.clientHeartBeatTime(), TimeUnit.SECONDS));
                         }
                         channelPipeline.addLast(config.clientDecoder());
                         for (ChannelInboundHandlerAdapter clazz : config.clientHandler()) {
                             channelPipeline.addLast(clazz);
                         }
                         if (Objects.nonNull(config.clientHeartBeatTime())) {
-                            channelPipeline.addLast(new HeartBeatServerHandler());
+                            channelPipeline.addLast(new HeartBeatClientHandler());
                         }
                     }
                 });
-        for (RemoteAddress remoteAddress : remoteAddressList) {
-            bootstrap.connect(remoteAddress.getHost(), remoteAddress.getPort()).sync();
-        }
+
+        connect();
 
     }
+
+    public void connect(RemoteAddress remoteAddress) throws Exception {
+        MxLog.info(StrUtil.format("和ip:{},端口:{}服务进行连接"),remoteAddress.getHost(),remoteAddress.getPort());
+        ChannelFuture cf = BOOTSTRAP.connect(remoteAddress.getHost(), remoteAddress.getPort());
+        cf.addListener((ChannelFutureListener) future -> {
+            if (!future.isSuccess()) {
+                //重连交给后端线程执行
+                future.channel().eventLoop().schedule(() -> {
+                    MxLog.error("重连服务端...");
+                    try {
+                        connect(remoteAddress);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }, 3, TimeUnit.SECONDS);
+            } else {
+                MxLog.info("服务端连接成功...");
+            }
+        });
+        //对通道关闭进行监听
+        cf.channel().closeFuture().sync();
+    }
+
+    private void connect() {
+        //启动客户端去连接服务器端
+        for (RemoteAddress remoteAddress : REMOTE_ADDRESS_LIST) {
+            ThreadUtil.execAsync(() -> {
+                try {
+                    connect(remoteAddress);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+    }
+
 
     public void stop() {
         //优雅退出，释放线程池

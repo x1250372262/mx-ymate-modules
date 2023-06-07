@@ -15,6 +15,7 @@
  */
 package com.mx.ymate.netty;
 
+import io.netty.channel.ChannelHandlerContext;
 import net.ymate.platform.core.IApplication;
 import net.ymate.platform.core.beans.annotation.Ignored;
 import net.ymate.platform.core.support.IDestroyable;
@@ -57,5 +58,7 @@ public interface INetty extends IInitialization<IApplication>, IDestroyable {
     void stopClient() throws Exception;
 
     void stoptAll() throws Exception;
+
+    void connect(ChannelHandlerContext context) throws Exception;
 
 }
