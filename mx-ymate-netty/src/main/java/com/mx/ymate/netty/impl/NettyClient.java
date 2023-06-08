@@ -115,8 +115,6 @@ public class NettyClient {
                 MxLog.info("服务端连接成功...");
             }
         });
-        //对通道关闭进行监听
-        cf.channel().closeFuture().sync();
     }
 
     private void connect() {
