@@ -108,7 +108,7 @@ public class NettyClient {
                     try {
                         connect(remoteAddress);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        throw new RuntimeException(e);
                     }
                 }, 3, TimeUnit.SECONDS);
             } else {
