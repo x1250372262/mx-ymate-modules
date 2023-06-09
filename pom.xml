@@ -18,6 +18,8 @@
         <module>mx-ymate-undertow</module>
         <module>mx-ymate-excel</module>
         <module>mx-ymate-tomcat</module>
+<!--        <module>mx-ymate-apidocs</module>-->
+        <module>mx-ymate-work-robot</module>
     </modules>
     <packaging>pom</packaging>
 

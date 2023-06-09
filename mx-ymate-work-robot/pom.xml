@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.mx.moudules</groupId>
+        <artifactId>mx-ymate-modules</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>mx-ymate-work-robot</artifactId>
+    <packaging>jar</packaging>
+
+    <name>mx-ymate-work-robot</name>
+    <url>https://www.ymate.net/</url>
+    <description>企业微信机器人</description>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.mx.moudules</groupId>
+            <artifactId>mx-ymate-dev</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
+</project>
