@@ -26,6 +26,16 @@
         <dependency>
             <groupId>net.ymate.module</groupId>
             <artifactId>ymate-module-fileuploader</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.ymate.platform</groupId>
+                    <artifactId>ymate-platform-webmvc</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>net.ymate.platform</groupId>
+                    <artifactId>ymate-platform-commons</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>

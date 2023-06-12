@@ -3,6 +3,7 @@ package com.mx.ymate.redis.api;
 import net.ymate.platform.persistence.redis.IRedisCommander;
 import net.ymate.platform.persistence.redis.IRedisSessionExecutor;
 import net.ymate.platform.persistence.redis.Redis;
+import redis.clients.jedis.JedisPubSub;
 
 import java.util.List;
 import java.util.Map;
@@ -227,5 +228,17 @@ public class RedisApi {
 
     public static Long delete(String key) throws Exception {
         return Redis.get().openSession(session -> session.getConnectionHolder().getConnection().del(key));
+    }
+
+    public static void subscribe(JedisPubSub jedisPubSub, String... channels) throws Exception {
+        Redis.get().subscribe(jedisPubSub, channels);
+    }
+
+    public static void publish(String channel, String message) throws Exception {
+        Redis.get().openSession((IRedisSessionExecutor<Object>) session -> session.getConnectionHolder().getConnection().publish(channel, message));
+    }
+
+    public static void publish(byte[] channel, byte[] message) throws Exception {
+        Redis.get().openSession((IRedisSessionExecutor<Object>) session -> session.getConnectionHolder().getConnection().publish(channel, message));
     }
 }
