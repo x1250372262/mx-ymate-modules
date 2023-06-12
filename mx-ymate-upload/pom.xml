@@ -38,6 +38,11 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>net.ymate.platform</groupId>
+            <artifactId>ymate-platform-starter-web</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <scope>compile</scope>
