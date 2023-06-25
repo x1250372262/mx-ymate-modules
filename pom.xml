@@ -18,6 +18,7 @@
         <module>mx-ymate-excel</module>
 <!--        <module>mx-ymate-apidocs</module>-->
         <module>mx-ymate-work-robot</module>
+        <module>mx-ymate-clickhouse</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -47,6 +48,7 @@
         <jxls-poi.version>1.2.1-SNAPSHOT</jxls-poi.version>
         <jxls-jexcel.version>1.0.7</jxls-jexcel.version>
         <jxls-reader.version>2.0.5</jxls-reader.version>
+        <clickhouse.version>0.4.6</clickhouse.version>
     </properties>
 
     <dependencyManagement>
@@ -229,6 +231,11 @@
                 <groupId>org.jxls</groupId>
                 <artifactId>jxls-reader</artifactId>
                 <version>${jxls-reader.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.clickhouse</groupId>
+                <artifactId>clickhouse-jdbc</artifactId>
+                <version>${clickhouse.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
