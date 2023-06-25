@@ -81,7 +81,7 @@ public class NettyClient {
                         ChannelPipeline channelPipeline = ch.pipeline();
                         channelPipeline.addLast(new LoggingHandler(LogLevel.INFO));
                         if (Objects.nonNull(config.clientHeartBeatTime())) {
-                            channelPipeline.addLast(new IdleStateHandler(config.clientHeartBeatTime(), config.clientHeartBeatTime(), config.clientHeartBeatTime(), TimeUnit.SECONDS));
+                            channelPipeline.addLast(new IdleStateHandler(0, config.clientHeartBeatTime(), 0));
                         }
                         channelPipeline.addLast(config.clientDecoder());
                         for (ChannelInboundHandlerAdapter clazz : config.clientHandler()) {
