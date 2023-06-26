@@ -28,6 +28,9 @@ public class SecuritySql {
     private static void menuSql(List<String> sqlList, String dbName, String client, String prefix) {
         String sql = "INSERT INTO `{}`.`{}security_menu` (`id`, `resource_id`, `client`, `type`, `parent_id`, `name`, `icon`, `path`, `url`, `sort`, `hide_status`) VALUES ('{}', '{}', '{}',{}, '{}', '{}', '{}', '{}', '{}', {}, {});";
         String id = UUIDUtils.UUID();
+        //首页
+        sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, client, 0, "0", "首页", "mdi mdi-home", "", "/admin/home.html", 0, 0));
+        //安全
         sqlList.add(StrUtil.format(sql, dbName, prefix, id, client, client, 2, "0", "安全管理", "mdi mdi-alarm-light", "/security", "", 100, 0));
         sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, client, 0, id, "菜单管理", "", "", "/security/menu/list.html", 1, 0));
         sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, client, 0, id, "人员管理", "", "", "/security/user/list.html", 3, 0));

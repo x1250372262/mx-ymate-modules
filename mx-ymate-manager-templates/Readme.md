@@ -184,3 +184,20 @@ json
                                         <div class="hr-line-dashed"></div>
                                     </div>
 ```
+
+### 富文本编辑器使用
+```html
+ <div class="form-group col-md-12 mx_validator">
+    <label for="remark">备注</label>
+    <div class="wangDiv">
+        <div id="bar" class="wangBar"></div>
+        <div id="remark" name="remark" mx_required_type="wangEditor" mx_required_msg="备注不能为空" class="wangContent mx_required"></div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="/statics/plugins/wangeditor/wangEditor.css">
+<link rel="stylesheet" href="/statics/plugins/wangeditor/nfew/css/wangeditor.css">
+
+<script src="/statics/plugins/wangeditor/nfew/wangeditor.js"></script>
+<script src="/statics/js/custom/wangEditor.js"></script>
+```
