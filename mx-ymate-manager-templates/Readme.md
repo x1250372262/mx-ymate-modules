@@ -201,3 +201,58 @@ json
 <script src="/statics/plugins/wangeditor/nfew/wangeditor.js"></script>
 <script src="/statics/js/custom/wangEditor.js"></script>
 ```
+
+### 导入excel使用
+```html
+  <a class="btn btn-primary m-l-10 importExcel" data-toggle="modal"
+                                               data-target="#import" href="#!"><i class="mdi mdi-file-import"></i> 导入</a>
+
+
+
+<div class="modal fade bs-example-modal-lg" id="import" tabindex="-1" role="dialog"
+     aria-labelledby="myLargeModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="import1">添加</h6>
+                <div class="float-right">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <form action="" id="importForm">
+                    <div class="form-group col-md-12">
+                        <label>导入文件</label>
+                        <div>
+                            <input type="file" name="file" id="file" class="form-control fileInputExcel">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="name">名称</label>
+                        <input type="text" class="form-control"
+                               name="name" value=""
+                               placeholder="请输入名称"/>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="remark">备注</label>
+                        <textarea class="form-control"name="remark"
+                                  placeholder="请输入备注"></textarea>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary mx_validator_button uploadExcelButton">保存
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/statics/js/custom/import_excel.js?_v=1"></script>
+
+EXCEL_IMPORT.init(dom,url,"xlsx,xls")
+```

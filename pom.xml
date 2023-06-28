@@ -50,6 +50,7 @@
         <jxls-jexcel.version>1.0.7</jxls-jexcel.version>
         <jxls-reader.version>2.0.5</jxls-reader.version>
         <clickhouse.version>0.4.6</clickhouse.version>
+        <zxing.version>3.3.2</zxing.version>
     </properties>
 
     <dependencyManagement>
@@ -237,6 +238,11 @@
                 <groupId>com.clickhouse</groupId>
                 <artifactId>clickhouse-jdbc</artifactId>
                 <version>${clickhouse.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>core</artifactId>
+                <version>${zxing.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

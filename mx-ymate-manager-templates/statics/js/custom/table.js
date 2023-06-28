@@ -128,6 +128,17 @@ var Table = function () {
         }
     });
 
+    //点击导入excel
+    $(".importExcel").on("click", function () {
+        var dom = $(this).attr("data-target");
+        $(dom).find("h4").text("导入excel");
+        FORM.clearValues($(dom))
+        if($(dom).find("#rowTemplate").length > 0){
+            MMP.clearValues();
+            MMP.addTag();
+        }
+    });
+
     //点击编辑事件
     tableDom.on("click", ".edits", function () {
         var id = $(this).attr("dataId");
