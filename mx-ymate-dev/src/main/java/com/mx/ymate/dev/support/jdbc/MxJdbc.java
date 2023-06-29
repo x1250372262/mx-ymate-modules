@@ -1,9 +1,13 @@
 package com.mx.ymate.dev.support.jdbc;
 
+import com.mx.ymate.dev.support.jdbc.cond.MxCond;
+import net.ymate.platform.commons.util.ClassUtils;
 import net.ymate.platform.core.persistence.Fields;
 import net.ymate.platform.persistence.jdbc.IDatabaseSession;
 import net.ymate.platform.persistence.jdbc.query.Cond;
 import net.ymate.platform.persistence.jdbc.query.Join;
+
+import java.lang.reflect.Field;
 
 public class MxJdbc {
 
@@ -14,6 +18,37 @@ public class MxJdbc {
     public static Cond eqOne() {
         return Cond.create().eqOne();
     }
+
+    public static Cond createByBean(Object obj,boolean eqOne) throws IllegalAccessException {
+        Cond cond = Cond.create();
+        if(eqOne){
+            cond.eqOne();
+        }
+        Class<?> clazz = obj.getClass();
+        for(Field field :  ClassUtils.getFields(clazz,false)) {
+            MxCond mxCond = field.getAnnotation(MxCond.class);
+            if (mxCond == null) {
+                continue;
+            }
+            String prefix = mxCond.prefix();
+            Cond.OPT opt = mxCond.opt();
+            String tableField = mxCond.tableField();
+            field.setAccessible(true);
+            Object value = field.get(obj);
+            Object oldValue = value;
+            if(Cond.OPT.LIKE.equals(opt)){
+                value = likeParam(value);
+            }
+            if(mxCond.checkEmpty()){
+                Object finalValue = value;
+                cond.exprNotEmpty(oldValue, c->c.and().optWrap(Fields.field(prefix, tableField),opt).param(finalValue));
+            }else{
+                cond.and().optWrap(Fields.field(prefix, tableField),opt).param(value);
+            }
+        }
+        return cond;
+    }
+
 
     public static String likeParam(Object param) {
         return likeParam(param, true, true);
