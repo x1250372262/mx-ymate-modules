@@ -22,7 +22,7 @@ public @interface MxCond {
 
 
     /**
-     * 前缀
+     * 类型
      *
      * @return
      */
