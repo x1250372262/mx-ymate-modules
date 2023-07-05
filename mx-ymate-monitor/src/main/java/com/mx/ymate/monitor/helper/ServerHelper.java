@@ -167,6 +167,7 @@ public class ServerHelper {
                 serverBean.setServerId(config.serverId());
                 serverBean.setProjectId(config.projectId());
                 serverBean.setCreateTime(System.currentTimeMillis());
+                MxLog.info("发布系统信息");
                 RedisMq.pushServer(serverBean);
                 ThreadUtil.sleep(config.time(), TimeUnit.SECONDS);
             }
