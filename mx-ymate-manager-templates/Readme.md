@@ -256,3 +256,30 @@ json
 
 EXCEL_IMPORT.init(dom,url,"xlsx,xls")
 ```
+
+### select使用
+```html
+ <div class="form-group col-md-12 mx_validator serviceId">
+    <label for="serviceId">服务商</label><span class="required">
+    * </span>
+    <select class="form-control select-init mx_required" mx_required_type="select"
+            mx_required_msg="请选择服务商" id="serviceId" name="serviceId"
+            isDefault="1">
+    </select>
+</div>
+
+SELECT.init($(".serviceId"), "id", "name", url, null, null, "resultData")
+```
+
+### 时间插件使用
+```html
+ <div class="form-group col-md-12 mx_validator">
+    <label for="startTime">有效期开始</label><span class="required">
+										* </span>
+    <input class="form-control js-datetimepicker dates mx_required" autocomplete="off"
+           data-date-format="yyyy-mm-dd" type="text" id="startTime"
+           dateType="day" mx_required_msg="请选择有效期开始"
+           name="startTime" placeholder="选择有效期">
+</div>
+
+```

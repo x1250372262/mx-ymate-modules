@@ -19,7 +19,8 @@
 <!--        <module>mx-ymate-apidocs</module>-->
         <module>mx-ymate-work-robot</module>
         <module>mx-ymate-clickhouse</module>
-<!--        <module>mx-ymate-maven-plugin</module>-->
+        <module>mx-ymate-monitor</module>
+        <!--        <module>mx-ymate-maven-plugin</module>-->
     </modules>
     <packaging>pom</packaging>
 
@@ -51,6 +52,7 @@
         <jxls-reader.version>2.0.5</jxls-reader.version>
         <clickhouse.version>0.4.6</clickhouse.version>
         <zxing.version>3.3.2</zxing.version>
+        <oshi.version>6.4.3</oshi.version>
     </properties>
 
     <dependencyManagement>
@@ -243,6 +245,11 @@
                 <groupId>com.google.zxing</groupId>
                 <artifactId>core</artifactId>
                 <version>${zxing.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.oshi</groupId>
+                <artifactId>oshi-core</artifactId>
+                <version>${oshi.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

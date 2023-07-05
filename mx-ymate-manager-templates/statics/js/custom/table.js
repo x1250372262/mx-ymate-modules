@@ -306,7 +306,7 @@ var Table = function () {
         $('#searchForm').find('[name]').each(function () {
             $(this).val('');
         });
-        $("#tableAjaxId").bootstrapTable('refresh');
+        $("#tableAjaxId").bootstrapTable('refresh', {pageNumber: 1});
     });
 
     //表格内修改状态

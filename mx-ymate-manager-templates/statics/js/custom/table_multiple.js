@@ -365,7 +365,7 @@ var TableMultiple = function () {
             $(tableDom.attr("searchFormClass")).find('[name]').each(function () {
                 $(this).val('');
             });
-            tableDom.bootstrapTable('refresh');
+            tableDom.bootstrapTable('refresh', {pageNumber: 1});
         })
 
         //点击批量启用
