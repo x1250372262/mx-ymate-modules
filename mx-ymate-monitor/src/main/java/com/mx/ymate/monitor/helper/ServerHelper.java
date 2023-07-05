@@ -1,15 +1,18 @@
 package com.mx.ymate.monitor.helper;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import cn.hutool.system.oshi.CpuInfo;
 import cn.hutool.system.oshi.OshiUtil;
 import com.mx.ymate.dev.support.log.MxLog;
+import com.mx.ymate.monitor.IMonitorConfig;
 import com.mx.ymate.monitor.bean.server.DiskBean;
 import com.mx.ymate.monitor.bean.server.NetworkBean;
 import com.mx.ymate.monitor.bean.server.ServerBean;
+import com.mx.ymate.monitor.mq.RedisMq;
 import net.ymate.platform.commons.util.DateTimeUtils;
 import oshi.SystemInfo;
 import oshi.hardware.GlobalMemory;
@@ -23,6 +26,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ServerHelper {
 
@@ -33,6 +37,8 @@ public class ServerHelper {
     private static final GlobalMemory globalMemory;
 
     private static final int GB = 1024 * 1024 * 1024;
+
+    private static boolean runningFlag = false;
 
     private ServerHelper() {
     }
@@ -151,6 +157,25 @@ public class ServerHelper {
         osBean.setNetworkList(getNetworkInfo());
 
         return osBean;
+    }
+
+    public static void start(IMonitorConfig config){
+        runningFlag = true;
+        ThreadUtil.execAsync(() -> {
+            while (runningFlag) {
+                ServerBean serverBean = getSystemInfo();
+                serverBean.setServerId(config.serverId());
+                serverBean.setProjectId(config.projectId());
+                serverBean.setCreateTime(System.currentTimeMillis());
+                RedisMq.pushServer(serverBean);
+                ThreadUtil.sleep(config.time(), TimeUnit.SECONDS);
+            }
+            return true;
+        });
+    }
+
+    public static void stop(){
+        runningFlag = false;
     }
 
 
