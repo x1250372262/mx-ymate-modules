@@ -126,7 +126,7 @@ public class MxDaoImpl<Entity extends BaseEntity<Entity, String>> implements IMx
     }
 
     @Override
-    public Entity save(Entity entity) throws Exception {
+    public Entity create(Entity entity) throws Exception {
         return JDBC.get().openSession(session -> session.insert(entity));
     }
 

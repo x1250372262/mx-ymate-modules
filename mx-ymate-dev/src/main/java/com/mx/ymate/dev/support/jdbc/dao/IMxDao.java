@@ -36,7 +36,7 @@ public interface IMxDao<Entity extends BaseEntity<Entity, String>> {
 
     IResultSet<Entity> find(String... fields) throws Exception;
 
-    Entity save(Entity entity) throws Exception;
+    Entity create(Entity entity) throws Exception;
 
     Entity update(Entity entity, String... fields) throws Exception;
 
