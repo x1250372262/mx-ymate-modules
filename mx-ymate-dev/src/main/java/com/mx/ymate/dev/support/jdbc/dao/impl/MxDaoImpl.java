@@ -149,6 +149,13 @@ public class MxDaoImpl<Entity extends BaseEntity<Entity, String>> implements IMx
     }
 
     @Override
+    public Entity delete(Entity entity) throws Exception {
+        return JDBC.get().openSession(session -> {
+            return session.delete(entity);
+        });
+    }
+
+    @Override
     public int[] delete(String[] ids) throws Exception {
         return JDBC.get().openSession(session -> session.delete(entityClass, ids));
     }

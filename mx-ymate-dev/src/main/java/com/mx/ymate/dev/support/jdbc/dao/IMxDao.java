@@ -44,6 +44,8 @@ public interface IMxDao<Entity extends BaseEntity<Entity, String>> {
 
     int delete(Cond cond) throws Exception;
 
+    Entity delete(Entity entity) throws Exception;
+
     int[] delete(String[] ids) throws Exception;
 
     List<Entity> delete(List<Entity> entities) throws Exception;
