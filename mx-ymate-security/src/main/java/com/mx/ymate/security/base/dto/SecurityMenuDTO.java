@@ -14,11 +14,11 @@ import java.io.Serializable;
  */
 public class SecurityMenuDTO implements Serializable {
 
-    @VRequired(msg = "不能为空")
+    @VRequired(msg = "父ID不能为空")
     @RequestParam
     private String parentId;
 
-    @VRequired(msg = "不能为空")
+    @VRequired(msg = "名称不能为空")
     @RequestParam
     private String name;
 
@@ -31,15 +31,15 @@ public class SecurityMenuDTO implements Serializable {
     @RequestParam
     private String url;
 
-    @VRequired(msg = "不能为空")
+    @VRequired(msg = "排序不能为空")
     @RequestParam
     private Integer sort;
 
-    @VRequired(msg = "不能为空")
+    @VRequired(msg = "类型不能为空")
     @RequestParam
     private Integer type;
 
-    @VRequired(msg = "不能为空")
+    @VRequired(msg = "是否隐藏不能为空")
     @RequestParam
     private Integer hideStatus;
 

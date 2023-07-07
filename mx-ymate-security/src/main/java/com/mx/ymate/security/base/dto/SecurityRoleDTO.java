@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class SecurityRoleDTO implements Serializable {
 
 
-    @VRequired(msg = "不能为空")
+    @VRequired(msg = "名称不能为空")
     @RequestParam
     private String name;
 

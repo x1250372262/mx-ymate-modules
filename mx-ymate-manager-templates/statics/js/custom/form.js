@@ -237,8 +237,6 @@ var FORM = function () {
             });
             //radio 按钮
             $(dom).find("input[type='radio']").each(function () {
-                var oldValue = $(this).attr("oldValue");
-                $(this).val(oldValue);
                 if ("0" === $(this).val()) {
                     $(this).prop('checked', true)
                 }

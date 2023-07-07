@@ -17,14 +17,14 @@ public class SecurityUserDTO implements Serializable {
     /**
      * 用户名
      */
-    @VRequired(msg = "不能为空")
+    @VRequired(msg = "用户名不能为空")
     @RequestParam
     private String userName;
 
     /**
      * 真实姓名
      */
-    @VRequired(msg = "不能为空")
+    @VRequired(msg = "真实姓名不能为空")
     @RequestParam
     private String realName;
 
@@ -37,14 +37,14 @@ public class SecurityUserDTO implements Serializable {
     /**
      * 手机号
      */
-    @VRequired(msg = "不能为空")
+    @VRequired(msg = "手机号不能为空")
     @RequestParam
     private String mobile;
 
     /**
      * 性别
      */
-    @VRequired(msg = "不能为空")
+    @VRequired(msg = "性别不能为空")
     @RequestParam
     private Integer gender;
 

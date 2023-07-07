@@ -17,7 +17,7 @@ public class SecurityLoginInfoDTO implements Serializable {
     /**
      * 真实姓名
      */
-    @VRequired(msg = "不能为空")
+    @VRequired(msg = "真实姓名不能为空")
     @RequestParam
     private String realName;
 
@@ -30,14 +30,14 @@ public class SecurityLoginInfoDTO implements Serializable {
     /**
      * 手机号
      */
-    @VRequired(msg = "不能为空")
+    @VRequired(msg = "头像不能为空")
     @RequestParam
     private String mobile;
 
     /**
      * 性别
      */
-    @VRequired(msg = "不能为空")
+    @VRequired(msg = "性别不能为空")
     @RequestParam
     private Integer gender;
 
