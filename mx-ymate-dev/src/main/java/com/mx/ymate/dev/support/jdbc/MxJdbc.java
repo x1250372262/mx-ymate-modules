@@ -1,11 +1,13 @@
 package com.mx.ymate.dev.support.jdbc;
 
 import com.mx.ymate.dev.support.jdbc.cond.MxCond;
+import net.ymate.platform.commons.lang.BlurObject;
 import net.ymate.platform.commons.util.ClassUtils;
 import net.ymate.platform.core.persistence.Fields;
 import net.ymate.platform.persistence.jdbc.IDatabaseSession;
 import net.ymate.platform.persistence.jdbc.query.Cond;
 import net.ymate.platform.persistence.jdbc.query.Join;
+import net.ymate.platform.persistence.jdbc.query.Like;
 
 import java.lang.reflect.Field;
 
@@ -37,7 +39,7 @@ public class MxJdbc {
             Object value = field.get(obj);
             Object oldValue = value;
             if(Cond.OPT.LIKE.equals(opt)){
-                value = likeParam(value);
+                value = Like.create(BlurObject.bind(value).toStringValue()).contains();
             }
             if(mxCond.checkEmpty()){
                 Object finalValue = value;
@@ -50,27 +52,6 @@ public class MxJdbc {
     }
 
 
-    public static String likeParam(Object param) {
-        return likeParam(param, true, true);
-    }
-
-    public static String likeParamBefore(Object param) {
-        return likeParam(param, true, false);
-    }
-
-    public static String likeParamAfter(Object param) {
-        return likeParam(param, false, true);
-    }
-
-    private static String likeParam(Object param, boolean before, boolean after) {
-        if (before && !after) {
-            return "%" + param;
-        } else if (!before && after) {
-            return param + "%";
-        } else {
-            return "%" + param + "%";
-        }
-    }
 
     public static Join innerJoin(String prefix, String joinTableName, String joinTableAlias, String joinFieldName, String tableAlias, String fieldName) {
         return Join.inner(prefix, joinTableName).alias(joinTableAlias)

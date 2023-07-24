@@ -60,7 +60,7 @@ public class NettyServerUtil {
      */
     public static void sendHex(String key, String hex) {
         ByteBuf buffer = Unpooled.wrappedBuffer(HexUtil.decodeHex(hex));
-        sendBuffer(key, buffer);
+        sendBuffer(key, buffer,hex);
     }
 
 
@@ -72,13 +72,13 @@ public class NettyServerUtil {
      */
     public static void sendStr(String key, String message) {
         ByteBuf buffer = Unpooled.wrappedBuffer(message.getBytes(StandardCharsets.UTF_8));
-        sendBuffer(key, buffer);
+        sendBuffer(key, buffer,message);
     }
 
-    public static void sendBuffer(String key, ByteBuf buffer) {
+    public static void sendBuffer(String key, ByteBuf buffer,String raw) {
         ChannelHandlerContext channelHandlerContext = NettyServerStore.getChannelHandlerContext(key);
         if (channelHandlerContext != null) {
-            MxLog.debug("key:===" + "message:" + ByteBufUtil.hexDump(buffer));
+            MxLog.debug("key:===" + "message:" + raw);
             try {
                 channelHandlerContext.writeAndFlush(buffer);
             } catch (Exception exception) {

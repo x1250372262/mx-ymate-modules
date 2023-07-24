@@ -86,7 +86,7 @@ public class ExcelExportHelper<T> extends IExportHelper implements Closeable {
         return outFile;
     }
 
-    public File export(String fileName) throws Exception {
+    public File exportZip(String fileName) throws Exception {
         FileUtil.fixAndMkDir(EXCEL_FILE_PATH);
         FileUtil.fixAndMkDir(ZIP_FILE_PATH);
         List<File> files = new ArrayList<>();
