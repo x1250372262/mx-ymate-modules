@@ -283,3 +283,31 @@ SELECT.init($(".serviceId"), "id", "name", url, null, null, "resultData")
 </div>
 
 ```
+
+### 自定义验证
+```html
+  <div class="form-group col-md-12 mx_validator">
+    <label for="name">名称</label><span class="required">
+    * </span>
+    <input type="hidden" name="id" value="">
+    <input type="hidden" name="lastModifyTime" value="">
+    <input type="text" class="form-control mx_required mx_custom"
+           mx_required_msg="名称不能为空"
+           id="name" name="name" value=""
+           placeholder="请输入名称"/>
+</div>
+```
+
+```javascript
+Table.setCustomFunction(check)
+
+function check(validatorDom){
+    console.log(validatorDom)
+    if(validatorDom.attr("name")==="name" && validatorDom.val().length<5){
+        return {
+            "retBool": true,
+            "msg": "用户名长度不能小于5"
+        };
+    }
+}
+```

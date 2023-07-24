@@ -4,6 +4,7 @@ var ADD_URL;
 var UPDATE_URL;
 var DETAIL_URL;
 var STATUS_URL;
+var CUSTOM_FUNCTION;
 var Table = function () {
 
     var tableDom = $("#tableAjaxId");
@@ -217,8 +218,9 @@ var Table = function () {
         if (needToken() !== undefined && needToken() !== null && needToken() !== "") {
             isToken = needToken() === "true";
         }
+        var customFunction = CUSTOM_FUNCTION!==undefined?CUSTOM_FUNCTION:null;
         if (isToken) {
-            VALIDATE.validate($("#commonForm"), null, null, null, function (e) {
+            VALIDATE.validate($("#commonForm"), null, customFunction, null, function (e) {
                 if (e.code === "00000") {
                     MX.successMsg("操作成功~")
                     setTimeout(function () {
@@ -230,7 +232,7 @@ var Table = function () {
                 }
             })
         } else {
-            VALIDATE.validateNoToken($("#commonForm"), null, null, null, function (e) {
+            VALIDATE.validateNoToken($("#commonForm"), null, customFunction, null, function (e) {
                 if (e.code === "00000") {
                     MX.successMsg("操作成功~")
                     setTimeout(function () {
@@ -393,6 +395,9 @@ var Table = function () {
     return {
         setUrl: function (listUrl, addUrl, updateUrl, detailUrl, deleteUrl, statusUrl) {
             setUrl(listUrl, addUrl, updateUrl, detailUrl, deleteUrl, statusUrl);
+        },
+        setCustomFunction:function(customFunction){
+            CUSTOM_FUNCTION = customFunction;
         },
         init: function (method, footerFunction) {
             setToken(true);
