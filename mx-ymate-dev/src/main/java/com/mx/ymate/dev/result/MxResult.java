@@ -100,6 +100,14 @@ public class MxResult extends MxAbstractWebResult<String> implements Serializabl
         return MxResult.create(Code.ERROR);
     }
 
+    public static MxResult okData(Object data) {
+        return ok().data(data);
+    }
+
+    public static MxResult failData(Object data) {
+        return fail().data(data);
+    }
+
 
     public static MxResult sameName() {
         return MxResult.create(Code.FIELDS_EXISTS.code()).msg(StrUtil.format(Code.FIELDS_EXISTS.msg(), "名称"));

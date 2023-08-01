@@ -315,15 +315,11 @@ var FORM = function () {
             dom.find(".times").each(function () {//时间插件
                 if ($(this).val()) {
                     data[$(this).attr("name")] = new Date($(this).val().replace(/-/g, "/")).getTime();
-                } else {
-                    data[$(this).attr("name")] = 0;
                 }
             });
             dom.find(".dates").each(function () {//时间插件
                 if ($(this).val()) {
                     data[$(this).attr("name")] = new Date($(this).val().replace(/-/g, "/")).getTime();
-                } else {
-                    data[$(this).attr("name")] = 0;
                 }
             });
             //金額插件

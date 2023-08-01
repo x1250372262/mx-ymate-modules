@@ -1,7 +1,7 @@
 var TableMultiple = function () {
 
     var table;
-    var init = function (tableDom,columnsName,method,url,isToken, footerFunction) {
+    var init = function (tableDom,columnsName,method,url,isToken, showFooter) {
         table = tableDom;
         if(!$.trim(url)){
             url = tableDom.attr("listurl");
@@ -18,6 +18,7 @@ var TableMultiple = function () {
             showColumns: true,         // 是否显示所有的列
             showRefresh: true,         // 是否显示刷新按钮
             showToggle: true,        // 是否显示详细视图和列表视图的切换按钮(clickToSelect同时设置为true时点击会报错)
+            showFooter:showFooter,
             pagination: true, // 在表格底部显示分页组件，默认false
             pageList: [10, 20, 50, 100, 300], // 设置页面可以显示的数据条数
             pageSize: 10, // 页面数据条数
@@ -65,9 +66,9 @@ var TableMultiple = function () {
             },
             columns: columnsName!==undefined&&columnsName!==null&&columnsName!==""?columns[columnsName]:columns,
             onLoadSuccess: function (data) {  //加载成功时执行
-                if(footerFunction!==undefined&&footerFunction!=null){
-                    footerFunction(data);
-                }
+                // if(footerFunction!==undefined&&footerFunction!=null){
+                //     footerFunction(data);
+                // }
             },
             onLoadError: function () {  //加载失败时执行
             }
@@ -433,12 +434,12 @@ var TableMultiple = function () {
 
 
     return {
-        init: function (tableDom,columnsName,method,footerFunction) {
+        init: function (tableDom,columnsName,method,showFooter) {
             setToken(true);
             if(tableDom===undefined||tableDom===null||tableDom===""){
                 tableDom = $("#tableAjaxId");
             }
-            init(tableDom,columnsName,method,null,true, footerFunction);
+            init(tableDom,columnsName,method,null,true, showFooter);
         },
         initNotToken: function (tableDom,columnsName,method,footerFunction) {
             setToken(false);
@@ -480,10 +481,12 @@ var TableMultiple = function () {
                 '<label class="custom-control-label mx_status" style="cursor: pointer;" dataId="'+dataId+'" status="'+statusTemp+'"></label></div>';
 
         },
-        setFooter: function (index, value) {
-            var footer = $(".table-responsive").children(".bootstrap-table").children(".fixed-table-container").children(".fixed-table-footer");
-            var ths = footer.children("table").children("thead").children("tr").find("th");
-            $(ths).eq(index).children(".th-inner").html(value);
+        calcFooter: function (data,key){
+            var sum = 0;
+            $.each(data,function(index,item){
+                sum += item[key];
+            })
+            return sum;
         },
         tableOptionDefault: function (value, row, index, customFuc) {
             var html = ' <a class="btn btn-xs btn-default edits" data-toggle="modal" data-target="#commonDiv" dataId="' + row.id + '" title="编辑" >编辑</a>' +

@@ -1,6 +1,10 @@
 package com.mx.ymate.dev.support.jdbc;
 
-public abstract class AbstractBaseVO {
+import java.io.Serializable;
+
+public abstract class AbstractBaseVO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String id;
 

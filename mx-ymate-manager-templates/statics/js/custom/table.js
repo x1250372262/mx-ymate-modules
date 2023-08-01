@@ -18,7 +18,7 @@ var Table = function () {
         STATUS_URL = statusUrl;
     }
 
-    var init = function (method, isToken, footerFunction) {
+    var init = function (method, isToken, showFooter) {
         var url = $.trim(LIST_URL);
         if (!url) {
             url = $.trim(tableDom.attr("listurl"));
@@ -40,6 +40,7 @@ var Table = function () {
             showColumns: true,         // 是否显示所有的列
             showRefresh: true,         // 是否显示刷新按钮
             showToggle: true,        // 是否显示详细视图和列表视图的切换按钮(clickToSelect同时设置为true时点击会报错)
+            showFooter:showFooter,
             pagination: true, // 在表格底部显示分页组件，默认false
             pageList: [10, 20, 50, 100, 300], // 设置页面可以显示的数据条数
             pageSize: 10, // 页面数据条数
@@ -90,9 +91,9 @@ var Table = function () {
             },
             columns: columns,
             onLoadSuccess: function (data) {  //加载成功时执行
-                if (footerFunction !== undefined && footerFunction != null) {
-                    footerFunction(data);
-                }
+                // if (footerFunction !== undefined && footerFunction != null) {
+                //     footerFunction(data);
+                // }
             },
             onLoadError: function () {  //加载失败时执行
             }
@@ -399,9 +400,9 @@ var Table = function () {
         setCustomFunction:function(customFunction){
             CUSTOM_FUNCTION = customFunction;
         },
-        init: function (method, footerFunction) {
+        init: function (method, showFooter) {
             setToken(true);
-            init(method, true, footerFunction);
+            init(method, true, showFooter);
         },
         initNotToken: function (method, footerFunction) {
             setToken(false);
@@ -439,10 +440,12 @@ var Table = function () {
                 '<label class="custom-control-label mx_status" style="cursor: pointer;" lastModifyTime="' + row.lastModifyTime + '" dataId="' + row.id + '" status="' + statusTemp + '"></label></div>';
 
         },
-        setFooter: function (index, value) {
-            var footer = $(".table-responsive").children(".bootstrap-table").children(".fixed-table-container").children(".fixed-table-footer");
-            var ths = footer.children("table").children("thead").children("tr").find("th");
-            $(ths).eq(index).children(".th-inner").html(value);
+        calcFooter: function (data,key){
+            var sum = 0;
+            $.each(data,function(index,item){
+                sum += item[key];
+            })
+            return sum;
         },
         moreText: function (value) {
             if (value === null || value === undefined) {

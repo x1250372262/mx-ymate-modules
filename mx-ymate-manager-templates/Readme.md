@@ -198,8 +198,8 @@ json
 <link rel="stylesheet" href="/statics/plugins/wangeditor/wangEditor.css">
 <link rel="stylesheet" href="/statics/plugins/wangeditor/nfew/css/wangeditor.css">
 
-<script src="/statics/plugins/wangeditor/nfew/wangeditor.js"></script>
-<script src="/statics/js/custom/wangEditor.js"></script>
+<script type="text/javascript" src="/statics/plugins/wangeditor/nfew/wangeditor.js"></script>
+<script type="text/javascript" src="/statics/js/custom/wangEditor.js"></script>
 ```
 
 ### 导入excel使用
@@ -308,6 +308,51 @@ function check(validatorDom){
             "retBool": true,
             "msg": "用户名长度不能小于5"
         };
+    }
+}
+```
+
+### 图片上传
+```html
+<div class="form-group col-md-12 mx_validator">
+    <label>活动封面图</label><span class="required">
+* </span>
+    <div class="form-controls">
+
+        <ul class="list-inline row lyear-uploads-pic mb-0">
+            <li class="col-6 col-md-4 col-lg-2">
+                <figure class="thumbnail">
+                    <img name="thumb" src="/statics/images/no_image.gif">
+                    <figcaption>
+                        <input type="file" filter=".png,.jpg,.jpeg,.bmp,.gif"
+                               class="fileInput" style="display: none;"
+                               name="file"/>
+                        <input type="hidden" name="thumb" mx_required_type="pic"
+                               class="fileresult mx_required"
+                               mx_required_msg="活动封面图不能为空">
+                        <a class="btn btn-round btn-square btn-primary picUpload"
+                           href="#!">上传</a>
+                        <a class="btn btn-round btn-square btn-danger picDelete"
+                           href="#!">移除</a>
+                    </figcaption>
+                </figure>
+            </li>
+        </ul>
+    </div>
+</div>
+```
+
+### 底部合计使用
+```javascript
+Table.init("GET",true);
+{
+    field: 'weight',
+    title: '重量(斤)',
+    align: 'center',
+    valign: 'middle',
+    footerFormatter:function(data){
+        var total =  Table.calcFooter(data,"weight");
+        return "合计:" + total;
     }
 }
 ```
