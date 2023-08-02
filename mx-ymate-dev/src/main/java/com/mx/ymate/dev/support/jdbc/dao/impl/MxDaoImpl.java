@@ -6,6 +6,7 @@ import net.ymate.platform.core.beans.annotation.Bean;
 import net.ymate.platform.core.persistence.Fields;
 import net.ymate.platform.core.persistence.IResultSet;
 import net.ymate.platform.core.persistence.Page;
+import net.ymate.platform.core.persistence.annotation.Entity;
 import net.ymate.platform.persistence.jdbc.IDBLocker;
 import net.ymate.platform.persistence.jdbc.JDBC;
 import net.ymate.platform.persistence.jdbc.query.*;
@@ -14,28 +15,41 @@ import net.ymate.platform.persistence.jdbc.support.BaseEntity;
 import java.util.List;
 
 @Bean
-public class MxDaoImpl<Entity extends BaseEntity<Entity, String>> implements IMxDao<Entity> {
+public class MxDaoImpl<MxEntity extends BaseEntity<MxEntity, String>> implements IMxDao<MxEntity> {
 
 
-    private final Class<Entity> entityClass;
+    private final Class<MxEntity> entityClass;
 
     @SuppressWarnings("unchecked")
     public MxDaoImpl() {
-        entityClass = (Class<Entity>) ClassUtils.getParameterizedTypes(getUsefulClass(getClass())).get(0);
+        entityClass = (Class<MxEntity>) getEntityClass(getClass());
+        Entity entity = entityClass.getAnnotation(Entity.class);
+        if (entity == null) {
+            throw new RuntimeException("Dao最多支持两层继承");
+        }
     }
 
-    private static Class<?> getUsefulClass(Class<?> clazz) {
+    private static Class<?> getEntityClass(Class<?> clazz) {
         final String name = clazz.getName();
         if (name.contains("$$EnhancerBy") || name.contains("_$$_")) {
-            return clazz.getSuperclass();
+            Class<?> resultClass = ClassUtils.getParameterizedTypes(clazz.getSuperclass()).get(0);
+            Entity entity = resultClass.getAnnotation(Entity.class);
+            if (entity != null) {
+                return resultClass;
+            }
+            Bean bean = resultClass.getAnnotation(Bean.class);
+            if (bean == null) {
+                throw new RuntimeException("Dao异常，请检查代码");
+            }
+            return ClassUtils.getParameterizedTypes(resultClass).get(0);
         }
         return clazz;
     }
 
     @Override
-    public Entity findById(String id, IDBLocker dbLocker, String... fields) throws Exception {
+    public MxEntity findById(String id, IDBLocker dbLocker, String... fields) throws Exception {
         return JDBC.get().openSession(session -> {
-            EntitySQL<Entity> entitySql = EntitySQL.create(entityClass);
+            EntitySQL<MxEntity> entitySql = EntitySQL.create(entityClass);
             if (fields != null && fields.length > 0) {
                 entitySql.field(Fields.create(fields));
             }
@@ -47,14 +61,14 @@ public class MxDaoImpl<Entity extends BaseEntity<Entity, String>> implements IMx
     }
 
     @Override
-    public Entity findById(String id, String... fields) throws Exception {
+    public MxEntity findById(String id, String... fields) throws Exception {
         return findById(id, null, fields);
     }
 
     @Override
-    public Entity findFirst(Cond cond, IDBLocker dbLocker, String... fields) throws Exception {
+    public MxEntity findFirst(Cond cond, IDBLocker dbLocker, String... fields) throws Exception {
         return JDBC.get().openSession(session -> {
-            EntitySQL<Entity> entitySql = EntitySQL.create(entityClass);
+            EntitySQL<MxEntity> entitySql = EntitySQL.create(entityClass);
             if (fields != null && fields.length > 0) {
                 entitySql.field(Fields.create(fields));
             }
@@ -66,24 +80,24 @@ public class MxDaoImpl<Entity extends BaseEntity<Entity, String>> implements IMx
     }
 
     @Override
-    public Entity findFirst(Cond cond, String... fields) throws Exception {
+    public MxEntity findFirst(Cond cond, String... fields) throws Exception {
         return findFirst(cond, null, fields);
     }
 
     @Override
-    public Entity findByVar(String var, String value, String... fields) throws Exception {
-        return findFirst(Cond.create().eqWrap(var).param(value),fields);
+    public MxEntity findByVar(String var, String value, String... fields) throws Exception {
+        return findFirst(Cond.create().eqWrap(var).param(value), fields);
     }
 
     @Override
-    public Entity findByVarNotId(String var, String value, String id, String... fields) throws Exception {
-        return findFirst(Cond.create().eqWrap(var).param(value).and().notEqWrap("id").param(id),fields);
+    public MxEntity findByVarNotId(String var, String value, String id, String... fields) throws Exception {
+        return findFirst(Cond.create().eqWrap(var).param(value).and().notEqWrap("id").param(id), fields);
     }
 
     @Override
-    public IResultSet<Entity> find(Where where, IDBLocker dbLocker, Page page, String... fields) throws Exception {
+    public IResultSet<MxEntity> find(Where where, IDBLocker dbLocker, Page page, String... fields) throws Exception {
         return JDBC.get().openSession(session -> {
-            EntitySQL<Entity> entitySql = EntitySQL.create(entityClass);
+            EntitySQL<MxEntity> entitySql = EntitySQL.create(entityClass);
             if (fields != null && fields.length > 0) {
                 entitySql.field(Fields.create(fields));
             }
@@ -95,29 +109,29 @@ public class MxDaoImpl<Entity extends BaseEntity<Entity, String>> implements IMx
     }
 
     @Override
-    public IResultSet<Entity> find(Where where, Page page, String... fields) throws Exception {
+    public IResultSet<MxEntity> find(Where where, Page page, String... fields) throws Exception {
         return find(where, null, page, fields);
     }
 
     @Override
-    public IResultSet<Entity> find(Where where, String... fields) throws Exception {
+    public IResultSet<MxEntity> find(Where where, String... fields) throws Exception {
         return find(where, null, null, fields);
     }
 
     @Override
-    public IResultSet<Entity> find(Cond cond, String... fields) throws Exception {
+    public IResultSet<MxEntity> find(Cond cond, String... fields) throws Exception {
         return find(cond, null, fields);
     }
 
     @Override
-    public IResultSet<Entity> find(Cond cond, Page page, String... fields) throws Exception {
+    public IResultSet<MxEntity> find(Cond cond, Page page, String... fields) throws Exception {
         return find(Where.create(cond), null, page, fields);
     }
 
     @Override
-    public IResultSet<Entity> find(String... fields) throws Exception {
+    public IResultSet<MxEntity> find(String... fields) throws Exception {
         return JDBC.get().openSession(session -> {
-            EntitySQL<Entity> entitySql = EntitySQL.create(entityClass);
+            EntitySQL<MxEntity> entitySql = EntitySQL.create(entityClass);
             if (fields != null && fields.length > 0) {
                 entitySql.field(Fields.create(fields));
             }
@@ -126,12 +140,12 @@ public class MxDaoImpl<Entity extends BaseEntity<Entity, String>> implements IMx
     }
 
     @Override
-    public Entity create(Entity entity) throws Exception {
+    public MxEntity create(MxEntity entity) throws Exception {
         return JDBC.get().openSession(session -> session.insert(entity));
     }
 
     @Override
-    public Entity update(Entity entity, String... fields) throws Exception {
+    public MxEntity update(MxEntity entity, String... fields) throws Exception {
         return JDBC.get().openSession(session -> session.update(entity, Fields.create(fields)));
     }
 
@@ -149,10 +163,8 @@ public class MxDaoImpl<Entity extends BaseEntity<Entity, String>> implements IMx
     }
 
     @Override
-    public Entity delete(Entity entity) throws Exception {
-        return JDBC.get().openSession(session -> {
-            return session.delete(entity);
-        });
+    public MxEntity delete(MxEntity entity) throws Exception {
+        return JDBC.get().openSession(session -> session.delete(entity));
     }
 
     @Override
@@ -161,7 +173,7 @@ public class MxDaoImpl<Entity extends BaseEntity<Entity, String>> implements IMx
     }
 
     @Override
-    public List<Entity> delete(List<Entity> entities) throws Exception {
+    public List<MxEntity> delete(List<MxEntity> entities) throws Exception {
         return JDBC.get().openSession(session -> session.delete(entities));
     }
 }
