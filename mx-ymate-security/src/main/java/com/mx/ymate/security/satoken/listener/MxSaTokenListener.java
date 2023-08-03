@@ -73,6 +73,8 @@ public class MxSaTokenListener implements SaTokenListener {
             if (!NetUtil.isInnerIP(ip)) {
                 IpRegionBean ipRegionBean = IpRegionUtil.parse(ip);
                 securityOperationLog.setLocation(ipRegionBean.getCountry() + ipRegionBean.getProvince() + ipRegionBean.getCity() + ipRegionBean.getIsp());
+            }else{
+                securityOperationLog.setLocation("");
             }
         }
         return securityOperationLog;
