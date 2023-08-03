@@ -110,10 +110,10 @@ public class OperationLogInterceptor extends AbstractInterceptor {
                     .browser(UserAgentUtil.parse(userAgentStr).getBrowser().toString())
                     .client(securityConfig.client())
                     .build();
-            String ip =  NetworkUtils.IP.getLocalIPv4Addr();
+            String ip =  ServletUtil.getClientIP(request);
             if(StringUtils.isNotBlank(ip)){
                 securityOperationLog.setIp(ip);
-                if(!NetUtil.isInnerIP(ip)){
+                if(NetworkUtils.IP.isIPv4(ip) && !NetUtil.isInnerIP(ip)){
                     IpRegionBean ipRegionBean = IpRegionUtil.parse(ip);
                     securityOperationLog.setLocation(ipRegionBean.getCountry()+ipRegionBean.getProvince()+ipRegionBean.getCity()+ipRegionBean.getIsp());
                 }else{

@@ -67,12 +67,12 @@ public class MxSaTokenListener implements SaTokenListener {
                 .browser(UserAgentUtil.parse(userAgentStr).getBrowser().toString())
                 .build();
 
-        String ip = NetworkUtils.IP.getLocalIPv4Addr();
-        if (StringUtils.isNotBlank(ip)) {
+        String ip =  ServletUtil.getClientIP(request);
+        if(StringUtils.isNotBlank(ip)){
             securityOperationLog.setIp(ip);
-            if (!NetUtil.isInnerIP(ip)) {
+            if(NetworkUtils.IP.isIPv4(ip) && !NetUtil.isInnerIP(ip)){
                 IpRegionBean ipRegionBean = IpRegionUtil.parse(ip);
-                securityOperationLog.setLocation(ipRegionBean.getCountry() + ipRegionBean.getProvince() + ipRegionBean.getCity() + ipRegionBean.getIsp());
+                securityOperationLog.setLocation(ipRegionBean.getCountry()+ipRegionBean.getProvince()+ipRegionBean.getCity()+ipRegionBean.getIsp());
             }else{
                 securityOperationLog.setLocation("");
             }
