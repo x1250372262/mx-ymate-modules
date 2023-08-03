@@ -6,6 +6,8 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.mx.ymate.dev.support.Ip2region.IpRegionBean;
+import com.mx.ymate.dev.support.Ip2region.IpRegionUtil;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.Security;
 import com.mx.ymate.security.base.enums.OperationType;
@@ -42,7 +44,7 @@ public class MxSaTokenListener implements SaTokenListener {
         HttpServletRequest request = WebContext.getRequest();
         String userAgentStr = request.getHeader("user-agent");
         // *========数据库日志=========*//
-        return SecurityOperationLog.builder()
+        SecurityOperationLog securityOperationLog =  SecurityOperationLog.builder()
                 .id(UUIDUtils.UUID())
                 .resourceId(securityUser.getResourceId())
                 .title(title)
@@ -59,12 +61,17 @@ public class MxSaTokenListener implements SaTokenListener {
                 .returnResult(jsonObject.toJSONString())
                 .className(SecurityLoginController.class.getName())
                 .methodName(methodName)
-                .ip(ServletUtil.getClientIP(request))
-                //位置之后再说把
-                .location("")
                 .os(UserAgentUtil.parse(userAgentStr).getOs().toString())
                 .browser(UserAgentUtil.parse(userAgentStr).getBrowser().toString())
                 .build();
+
+        String ip = ServletUtil.getClientIP(request);
+        if(StringUtils.isNotBlank(ip)){
+            securityOperationLog.setIp(ip);
+            IpRegionBean ipRegionBean = IpRegionUtil.parse(ip);
+            securityOperationLog.setLocation(ipRegionBean.getCountry()+ipRegionBean.getProvince()+ipRegionBean.getCity()+ipRegionBean.getIsp());
+        }
+        return securityOperationLog;
     }
 
 
@@ -84,7 +91,7 @@ public class MxSaTokenListener implements SaTokenListener {
                 // 触发事件
                 YMP.get().getEvents().fireEvent(operationLogEvent);
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }
@@ -105,7 +112,7 @@ public class MxSaTokenListener implements SaTokenListener {
                 // 触发事件
                 YMP.get().getEvents().fireEvent(operationLogEvent);
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }

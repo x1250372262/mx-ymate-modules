@@ -5,6 +5,8 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.mx.ymate.dev.code.Code;
+import com.mx.ymate.dev.support.Ip2region.IpRegionBean;
+import com.mx.ymate.dev.support.Ip2region.IpRegionUtil;
 import com.mx.ymate.dev.view.MxJsonView;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
@@ -13,7 +15,6 @@ import com.mx.ymate.security.annotation.OperationLog;
 import com.mx.ymate.security.base.bean.LoginUser;
 import com.mx.ymate.security.base.enums.ResourceType;
 import com.mx.ymate.security.base.model.SecurityOperationLog;
-import com.mx.ymate.security.base.model.SecurityUser;
 import com.mx.ymate.security.event.OperationLogEvent;
 import com.mx.ymate.security.handler.IUserHandler;
 import net.ymate.platform.commons.json.IJsonObjectWrapper;
@@ -27,7 +28,6 @@ import net.ymate.platform.core.beans.intercept.InterceptException;
 import net.ymate.platform.log.ILogger;
 import net.ymate.platform.log.Logs;
 import net.ymate.platform.webmvc.context.WebContext;
-import net.ymate.platform.webmvc.view.impl.JsonView;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -104,13 +104,16 @@ public class OperationLogInterceptor extends AbstractInterceptor {
                     .returnResult(JSONObject.toJSONString(ret))
                     .className(context.getTargetClass().getName())
                     .methodName(method.getName())
-                    .ip(ServletUtil.getClientIP(request))
-                    //位置之后再说
-                    .location("")
                     .os(UserAgentUtil.parse(userAgentStr).getOs().toString())
                     .browser(UserAgentUtil.parse(userAgentStr).getBrowser().toString())
                     .client(securityConfig.client())
                     .build();
+            String ip = ServletUtil.getClientIP(request);
+            if(StringUtils.isNotBlank(ip)){
+                securityOperationLog.setIp(ip);
+                IpRegionBean ipRegionBean = IpRegionUtil.parse(ip);
+                securityOperationLog.setLocation(ipRegionBean.getCountry()+ipRegionBean.getProvince()+ipRegionBean.getCity()+ipRegionBean.getIsp());
+            }
             // 保存数据库
             // 创建事件对象
             OperationLogEvent operationLogEvent = new OperationLogEvent(YMP.get(), OperationLogEvent.EVENT.CREATE_LOG);
@@ -118,11 +121,11 @@ public class OperationLogInterceptor extends AbstractInterceptor {
             operationLogEvent.addParamExtend("log", securityOperationLog);
             // 触发事件
             YMP.get().getEvents().fireEvent(operationLogEvent);
-        } catch (Exception exp) {
+        } catch (Exception e) {
             // 记录本地异常日志
             iLogger.error("==日志记录异常==");
-            iLogger.error("异常信息:{}", exp);
-            exp.printStackTrace();
+            iLogger.error("异常信息:{}", e);
+            throw new RuntimeException(e);
         }
     }
 }
