@@ -1,6 +1,7 @@
 package com.mx.ymate.security.interceptor;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.net.NetUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -111,8 +112,10 @@ public class OperationLogInterceptor extends AbstractInterceptor {
             String ip = ServletUtil.getClientIP(request);
             if(StringUtils.isNotBlank(ip)){
                 securityOperationLog.setIp(ip);
-                IpRegionBean ipRegionBean = IpRegionUtil.parse(ip);
-                securityOperationLog.setLocation(ipRegionBean.getCountry()+ipRegionBean.getProvince()+ipRegionBean.getCity()+ipRegionBean.getIsp());
+                if(!NetUtil.isInnerIP(ip)){
+                    IpRegionBean ipRegionBean = IpRegionUtil.parse(ip);
+                    securityOperationLog.setLocation(ipRegionBean.getCountry()+ipRegionBean.getProvince()+ipRegionBean.getCity()+ipRegionBean.getIsp());
+                }
             }
             // 保存数据库
             // 创建事件对象

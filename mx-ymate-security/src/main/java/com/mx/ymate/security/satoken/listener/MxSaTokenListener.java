@@ -3,6 +3,7 @@ package com.mx.ymate.security.satoken.listener;
 import cn.dev33.satoken.listener.SaTokenListener;
 import cn.dev33.satoken.stp.SaLoginModel;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.net.NetUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -68,8 +69,10 @@ public class MxSaTokenListener implements SaTokenListener {
         String ip = ServletUtil.getClientIP(request);
         if(StringUtils.isNotBlank(ip)){
             securityOperationLog.setIp(ip);
-            IpRegionBean ipRegionBean = IpRegionUtil.parse(ip);
-            securityOperationLog.setLocation(ipRegionBean.getCountry()+ipRegionBean.getProvince()+ipRegionBean.getCity()+ipRegionBean.getIsp());
+            if(!NetUtil.isInnerIP(ip)){
+                IpRegionBean ipRegionBean = IpRegionUtil.parse(ip);
+                securityOperationLog.setLocation(ipRegionBean.getCountry()+ipRegionBean.getProvince()+ipRegionBean.getCity()+ipRegionBean.getIsp());
+            }
         }
         return securityOperationLog;
     }
