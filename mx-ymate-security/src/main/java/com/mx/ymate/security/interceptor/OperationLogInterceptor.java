@@ -21,6 +21,7 @@ import com.mx.ymate.security.handler.IUserHandler;
 import net.ymate.platform.commons.json.IJsonObjectWrapper;
 import net.ymate.platform.commons.json.JsonWrapper;
 import net.ymate.platform.commons.util.DateTimeUtils;
+import net.ymate.platform.commons.util.NetworkUtils;
 import net.ymate.platform.commons.util.UUIDUtils;
 import net.ymate.platform.core.YMP;
 import net.ymate.platform.core.beans.intercept.AbstractInterceptor;
@@ -109,7 +110,7 @@ public class OperationLogInterceptor extends AbstractInterceptor {
                     .browser(UserAgentUtil.parse(userAgentStr).getBrowser().toString())
                     .client(securityConfig.client())
                     .build();
-            String ip = ServletUtil.getClientIP(request);
+            String ip =  NetworkUtils.IP.getLocalIPv4Addr();
             if(StringUtils.isNotBlank(ip)){
                 securityOperationLog.setIp(ip);
                 if(!NetUtil.isInnerIP(ip)){

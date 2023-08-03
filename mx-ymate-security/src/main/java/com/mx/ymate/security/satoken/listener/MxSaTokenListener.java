@@ -18,6 +18,7 @@ import com.mx.ymate.security.controller.SecurityLoginController;
 import com.mx.ymate.security.dao.ISecurityUserDao;
 import com.mx.ymate.security.event.OperationLogEvent;
 import net.ymate.platform.commons.util.DateTimeUtils;
+import net.ymate.platform.commons.util.NetworkUtils;
 import net.ymate.platform.commons.util.UUIDUtils;
 import net.ymate.platform.core.YMP;
 import net.ymate.platform.core.beans.annotation.Bean;
@@ -45,7 +46,7 @@ public class MxSaTokenListener implements SaTokenListener {
         HttpServletRequest request = WebContext.getRequest();
         String userAgentStr = request.getHeader("user-agent");
         // *========数据库日志=========*//
-        SecurityOperationLog securityOperationLog =  SecurityOperationLog.builder()
+        SecurityOperationLog securityOperationLog = SecurityOperationLog.builder()
                 .id(UUIDUtils.UUID())
                 .resourceId(securityUser.getResourceId())
                 .title(title)
@@ -66,12 +67,12 @@ public class MxSaTokenListener implements SaTokenListener {
                 .browser(UserAgentUtil.parse(userAgentStr).getBrowser().toString())
                 .build();
 
-        String ip = ServletUtil.getClientIP(request);
-        if(StringUtils.isNotBlank(ip)){
+        String ip = NetworkUtils.IP.getLocalIPv4Addr();
+        if (StringUtils.isNotBlank(ip)) {
             securityOperationLog.setIp(ip);
-            if(!NetUtil.isInnerIP(ip)){
+            if (!NetUtil.isInnerIP(ip)) {
                 IpRegionBean ipRegionBean = IpRegionUtil.parse(ip);
-                securityOperationLog.setLocation(ipRegionBean.getCountry()+ipRegionBean.getProvince()+ipRegionBean.getCity()+ipRegionBean.getIsp());
+                securityOperationLog.setLocation(ipRegionBean.getCountry() + ipRegionBean.getProvince() + ipRegionBean.getCity() + ipRegionBean.getIsp());
             }
         }
         return securityOperationLog;
