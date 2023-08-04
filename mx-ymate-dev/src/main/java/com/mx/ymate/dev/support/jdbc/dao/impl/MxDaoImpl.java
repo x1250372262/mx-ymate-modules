@@ -145,8 +145,18 @@ public class MxDaoImpl<MxEntity extends BaseEntity<MxEntity, String>> implements
     }
 
     @Override
+    public List<MxEntity> createAll(List<MxEntity> entityList) throws Exception {
+        return JDBC.get().openSession(session -> session.insert(entityList));
+    }
+
+    @Override
     public MxEntity update(MxEntity entity, String... fields) throws Exception {
         return JDBC.get().openSession(session -> session.update(entity, Fields.create(fields)));
+    }
+
+    @Override
+    public List<MxEntity> updateAll(List<MxEntity> entityList, String... fields) throws Exception {
+        return JDBC.get().openSession(session -> session.update(entityList, Fields.create(fields)));
     }
 
     @Override
