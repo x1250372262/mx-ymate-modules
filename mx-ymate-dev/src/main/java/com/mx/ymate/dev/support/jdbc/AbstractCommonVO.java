@@ -1,15 +1,29 @@
 package com.mx.ymate.dev.support.jdbc;
 
-public abstract class AbstractCommonVO extends AbstractBaseVO {
+import java.io.Serializable;
 
-  private Long createTime;
+public abstract class AbstractCommonVO implements Serializable {
 
-  private Long lastModifyTime;
+    private static final long serialVersionUID = 1L;
 
-  private String createUser;
+    private String id;
 
-  private String lastModifyUser;
+    private Long createTime;
 
+    private Long lastModifyTime;
+
+    private String createUser;
+
+    private String lastModifyUser;
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Long getCreateTime() {
         return createTime;
@@ -46,10 +60,11 @@ public abstract class AbstractCommonVO extends AbstractBaseVO {
     @Override
     public String toString() {
         return "AbstractCommonVO{" +
-                "createTime=" + createTime +
+                "id='" + id + '\'' +
+                ", createTime=" + createTime +
                 ", lastModifyTime=" + lastModifyTime +
                 ", createUser='" + createUser + '\'' +
                 ", lastModifyUser='" + lastModifyUser + '\'' +
-                "} " + super.toString();
+                '}';
     }
 }

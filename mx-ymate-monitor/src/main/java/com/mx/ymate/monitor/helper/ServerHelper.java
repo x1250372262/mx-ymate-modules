@@ -7,13 +7,13 @@ import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import cn.hutool.system.oshi.CpuInfo;
 import cn.hutool.system.oshi.OshiUtil;
-import com.mx.ymate.dev.support.log.MxLog;
 import com.mx.ymate.monitor.IMonitorConfig;
 import com.mx.ymate.monitor.bean.server.DiskBean;
 import com.mx.ymate.monitor.bean.server.NetworkBean;
 import com.mx.ymate.monitor.bean.server.ServerBean;
 import com.mx.ymate.monitor.mq.RedisMq;
 import net.ymate.platform.commons.util.DateTimeUtils;
+import net.ymate.platform.log.Logs;
 import oshi.SystemInfo;
 import oshi.hardware.GlobalMemory;
 import oshi.hardware.HardwareAbstractionLayer;
@@ -131,7 +131,7 @@ public class ServerHelper {
             osBean.setHost(address.getHostAddress());
             osBean.setHostName(address.getHostName());
         } catch (UnknownHostException e) {
-            MxLog.error("主机信息获取失败");
+            Logs.get().getLogger().error("主机信息获取失败");
         }
         //系统启动时间
         long now = DateTimeUtils.systemTimeUTC();
@@ -167,7 +167,7 @@ public class ServerHelper {
                 serverBean.setServerId(config.serverId());
                 serverBean.setProjectId(config.projectId());
                 serverBean.setCreateTime(System.currentTimeMillis());
-                MxLog.info("发布系统信息");
+                Logs.get().getLogger().info("发布系统信息");
                 RedisMq.pushServer(serverBean);
                 ThreadUtil.sleep(config.time(), TimeUnit.SECONDS);
             }

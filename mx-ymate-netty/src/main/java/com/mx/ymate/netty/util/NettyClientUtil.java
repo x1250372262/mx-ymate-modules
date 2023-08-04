@@ -1,11 +1,10 @@
 package com.mx.ymate.netty.util;
 
 import cn.hutool.core.util.HexUtil;
-import com.mx.ymate.dev.support.log.MxLog;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
+import net.ymate.platform.log.Logs;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -60,7 +59,7 @@ public class NettyClientUtil {
      */
     public static void sendHex(String key, String hex) {
         ByteBuf buffer = Unpooled.wrappedBuffer(HexUtil.decodeHex(hex));
-        sendBuffer(key, buffer,hex);
+        sendBuffer(key, buffer, hex);
     }
 
 
@@ -72,17 +71,17 @@ public class NettyClientUtil {
      */
     public static void sendStr(String key, String message) {
         ByteBuf buffer = Unpooled.wrappedBuffer(message.getBytes(StandardCharsets.UTF_8));
-        sendBuffer(key, buffer,message);
+        sendBuffer(key, buffer, message);
     }
 
-    public static void sendBuffer(String key, ByteBuf buffer,String raw) {
+    public static void sendBuffer(String key, ByteBuf buffer, String raw) {
         ChannelHandlerContext channelHandlerContext = NettyClientStore.getChannelHandlerContext(key);
         if (channelHandlerContext != null) {
-            MxLog.debug("key:===" + "message:" + raw);
+            Logs.get().getLogger().info("key:===" + "message:" + raw);
             try {
                 channelHandlerContext.writeAndFlush(buffer);
             } catch (Exception exception) {
-                MxLog.error("发送失败:", exception);
+                Logs.get().getLogger().error("发送失败:", exception);
             }
         }
     }

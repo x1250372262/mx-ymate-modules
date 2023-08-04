@@ -29,6 +29,10 @@
         </dependency>
         <dependency>
             <groupId>net.ymate.platform</groupId>
+            <artifactId>ymate-platform-log</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.ymate.platform</groupId>
             <artifactId>ymate-platform-validation</artifactId>
         </dependency>
         <dependency>

@@ -4,10 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
-import com.mx.ymate.dev.support.log.MxLog;
 import com.mx.ymate.netty.INettyConfig;
 import com.mx.ymate.netty.handler.HeartBeatClientHandler;
-import com.mx.ymate.netty.handler.HeartBeatServerHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -16,6 +14,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
+import net.ymate.platform.log.Logs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,13 +97,13 @@ public class NettyClient {
     }
 
     public void connect(RemoteAddress remoteAddress) throws Exception {
-        MxLog.info(StrUtil.format("和ip:{},端口:{}服务进行连接"),remoteAddress.getHost(),remoteAddress.getPort());
+        Logs.get().getLogger().info(StrUtil.format("和ip:{},端口:{}服务进行连接",remoteAddress.getHost(),remoteAddress.getPort()));
         ChannelFuture cf = BOOTSTRAP.connect(remoteAddress.getHost(), remoteAddress.getPort());
         cf.addListener((ChannelFutureListener) future -> {
             if (!future.isSuccess()) {
                 //重连交给后端线程执行
                 future.channel().eventLoop().schedule(() -> {
-                    MxLog.error("重连服务端...");
+                    Logs.get().getLogger().error("重连服务端...");
                     try {
                         connect(remoteAddress);
                     } catch (Exception e) {
@@ -112,7 +111,7 @@ public class NettyClient {
                     }
                 }, 3, TimeUnit.SECONDS);
             } else {
-                MxLog.info("服务端连接成功...");
+                Logs.get().getLogger().info("服务端连接成功...");
             }
         });
     }

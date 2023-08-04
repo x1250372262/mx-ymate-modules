@@ -15,8 +15,6 @@
  */
 package com.mx.ymate.netty;
 
-import cn.hutool.core.util.StrUtil;
-import com.mx.ymate.dev.support.log.MxLog;
 import com.mx.ymate.netty.impl.DefaultNettyConfig;
 import com.mx.ymate.netty.impl.NettyClient;
 import com.mx.ymate.netty.impl.NettyServer;
@@ -167,15 +165,15 @@ public final class Netty implements IModule, INetty {
 
     @Override
     public void startServer() throws Exception {
-        if(nettyServer == null){
+        if (nettyServer == null) {
             nettyServer = new NettyServer(config);
             nettyServer.run();
         }
     }
 
     @Override
-    public void startClient() throws Exception{
-        if(nettyClient == null){
+    public void startClient() throws Exception {
+        if (nettyClient == null) {
             nettyClient = new NettyClient(config);
             nettyClient.run();
         }
@@ -183,32 +181,32 @@ public final class Netty implements IModule, INetty {
 
     @Override
     public void startAll() throws Exception {
-        if(nettyClient == null){
+        if (nettyClient == null) {
             nettyClient = new NettyClient(config);
             nettyClient.run();
         }
-        if(nettyServer == null){
+        if (nettyServer == null) {
             nettyServer = new NettyServer(config);
             nettyServer.run();
         }
     }
 
     @Override
-    public void stopServer(){
+    public void stopServer() {
         if (nettyServer != null) {
             nettyServer.stop();
         }
     }
 
     @Override
-    public void stopClient(){
+    public void stopClient() {
         if (nettyClient != null) {
             nettyClient.stop();
         }
     }
 
     @Override
-    public void stoptAll(){
+    public void stoptAll() {
         if (nettyClient != null) {
             nettyClient.stop();
         }
@@ -222,6 +220,6 @@ public final class Netty implements IModule, INetty {
         InetSocketAddress ipSocket = (InetSocketAddress) context.channel().remoteAddress();
         int port = ipSocket.getPort();
         String host = ipSocket.getHostString();
-        nettyClient.connect(new NettyClient.RemoteAddress(host,port));
+        nettyClient.connect(new NettyClient.RemoteAddress(host, port));
     }
 }

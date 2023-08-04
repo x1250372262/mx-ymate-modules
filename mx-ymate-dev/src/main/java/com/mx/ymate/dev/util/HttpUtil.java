@@ -6,10 +6,8 @@ import com.mx.ymate.dev.result.MxResult;
 import net.ymate.platform.commons.http.HttpClientHelper;
 import net.ymate.platform.commons.http.IHttpResponse;
 import net.ymate.platform.commons.lang.BlurObject;
-import org.apache.http.Header;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.mx.ymate.dev.code.Code.SERVER_HTTP_METHOD_ERROR;
@@ -20,7 +18,7 @@ import static com.mx.ymate.dev.code.Code.SERVER_REQUEST_ERROR;
  * @create: 2022-07-13 15:43
  * @Description:
  */
-public class ServerUtil {
+public class HttpUtil {
 
     public enum HttpMethod {
 

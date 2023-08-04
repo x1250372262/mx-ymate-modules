@@ -13,7 +13,7 @@ import java.util.*;
  */
 public class ConfigUtil {
 
-    private Map<String,String> configMap;
+    private final Map<String,String> configMap;
 
 
     public ConfigUtil(Map<String, String> configMap) {
