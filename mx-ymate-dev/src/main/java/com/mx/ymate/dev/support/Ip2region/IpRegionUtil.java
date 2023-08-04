@@ -2,9 +2,15 @@ package com.mx.ymate.dev.support.Ip2region;
 
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
+import net.ymate.platform.commons.util.FileUtils;
+import net.ymate.platform.commons.util.RuntimeUtils;
+import net.ymate.platform.log.Logs;
 import org.apache.commons.lang.NullArgumentException;
 import org.apache.commons.lang3.StringUtils;
 import org.lionsoul.ip2region.xdb.Searcher;
+
+import java.io.File;
+import java.io.InputStream;
 
 public class IpRegionUtil {
 
@@ -12,10 +18,13 @@ public class IpRegionUtil {
 
     static {
         try {
-            ClassPathResource resource = new ClassPathResource("ip2region.xdb");
-            //获取真实文件路径
-            String path = resource.getAbsolutePath();
-            byte[] cBuff = Searcher.loadContentFromFile(path);
+            File file = new File(RuntimeUtils.getRootPath(),"ip2region.xdb");
+            Logs.get().getLogger().info("ip数据库" + file.getAbsolutePath());
+            if(!file.exists()){
+                InputStream inputStream = IpRegionUtil.class.getClassLoader().getResourceAsStream("ip2region.xdb");
+                FileUtils.createFileIfNotExists(file,inputStream);
+            }
+            byte[] cBuff = Searcher.loadContentFromFile(file.getAbsolutePath());
             SEARCHER = Searcher.newWithBuffer(cBuff);
         } catch (Exception e) {
             throw new RuntimeException(StrUtil.format("初始化ip2region失败,异常原因{}", e.getMessage()));
