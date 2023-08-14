@@ -33,7 +33,7 @@ public interface ISaTokenConfig extends IInitialization<ISaToken> {
 
     String TIMEOUT = "timeout";
 
-    String ACTIVITY_TIMEOUT = "activityTimeout";
+    String ACTIVE_TIMEOUT = "activeTimeout";
 
     String IS_CONCURRENT = "isConcurrent";
 
@@ -104,7 +104,7 @@ public interface ISaTokenConfig extends IInitialization<ISaToken> {
      * token临时有效期 [指定时间内无操作就视为token过期] (单位: 秒), 默认-1 代表不限制
      * (例如可以设置为1800代表30分钟内无操作就过期)
      */
-    long activityTimeout();
+    long activeTimeout();
 
     /**
      * 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)

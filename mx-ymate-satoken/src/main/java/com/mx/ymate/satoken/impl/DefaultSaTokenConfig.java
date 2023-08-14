@@ -45,7 +45,7 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
      * token临时有效期 [指定时间内无操作就视为token过期] (单位: 秒), 默认-1 代表不限制
      * (例如可以设置为1800代表30分钟内无操作就过期)
      */
-    private long activityTimeout;
+    private long activeTimeout;
 
     /**
      * 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
@@ -202,7 +202,7 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
         enabled = configReader.getBoolean(ENABLED, true);
         tokenName = configReader.getString(TOKEN_NAME, "saToken");
         timeout = configReader.getLong(TIMEOUT, 60 * 60 * 24 * 30);
-        activityTimeout = configReader.getLong(ACTIVITY_TIMEOUT, -1);
+        activeTimeout = configReader.getLong(ACTIVE_TIMEOUT, -1);
         isConcurrent = configReader.getBoolean(IS_CONCURRENT, true);
         isShare = configReader.getBoolean(IS_SHARE, true);
         maxLoginCount = configReader.getInt(MAX_LOGIN_COUNT, 12);
@@ -263,8 +263,8 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
     }
 
     @Override
-    public long activityTimeout() {
-        return this.activityTimeout;
+    public long activeTimeout() {
+        return this.activeTimeout;
     }
 
     @Override
@@ -403,7 +403,7 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
         SaTokenConfig saTokenConfig = new SaTokenConfig();
         saTokenConfig.setTokenName(this.tokenName);
         saTokenConfig.setTimeout(this.timeout);
-        saTokenConfig.setActivityTimeout(this.activityTimeout);
+        saTokenConfig.setActiveTimeout(this.activeTimeout);
         saTokenConfig.setIsConcurrent(this.isConcurrent);
         saTokenConfig.setIsShare(this.isShare);
         saTokenConfig.setMaxLoginCount(this.maxLoginCount);
@@ -455,9 +455,9 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
         }
     }
 
-    public void setActivityTimeout(long activityTimeout) {
+    public void setActiveTimeout(long activeTimeout) {
         if (!initialized) {
-            this.activityTimeout = activityTimeout;
+            this.activeTimeout = activeTimeout;
         }
     }
 
@@ -644,8 +644,8 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
             return this;
         }
 
-        public Builder activityTimeout(long activityTimeout) {
-            config.setActivityTimeout(activityTimeout);
+        public Builder activeTimeout(long activeTimeout) {
+            config.setActiveTimeout(activeTimeout);
             return this;
         }
 

@@ -57,8 +57,8 @@ public final class DefaultSaTokenConfigurable extends DefaultModuleConfigurable 
             return this;
         }
 
-        public Builder activityTimeout(long activityTimeout) {
-            configurable.addConfig(ISaTokenConfig.ACTIVITY_TIMEOUT, String.valueOf(activityTimeout));
+        public Builder activeTimeout(long activeTimeout) {
+            configurable.addConfig(ISaTokenConfig.ACTIVE_TIMEOUT, String.valueOf(activeTimeout));
             return this;
         }
 
