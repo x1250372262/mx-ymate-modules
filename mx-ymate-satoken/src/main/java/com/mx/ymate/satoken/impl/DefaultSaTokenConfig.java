@@ -419,7 +419,7 @@ public final class DefaultSaTokenConfig implements ISaTokenConfig {
         saTokenConfig.setIsPrint(this.isPrint);
         saTokenConfig.setIsLog(this.isLog);
         saTokenConfig.setLogLevel(this.logLevel);
-        saTokenConfig.setLogLeveInt(this.logLevelInt);
+        saTokenConfig.setLogLevelInt(this.logLevelInt);
         saTokenConfig.setJwtSecretKey(this.jwtSecretKey);
         saTokenConfig.setBasic(this.basic);
         saTokenConfig.setCurrDomain(this.currDomain);
