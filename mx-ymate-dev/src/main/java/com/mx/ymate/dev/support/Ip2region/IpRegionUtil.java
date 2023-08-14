@@ -1,6 +1,5 @@
 package com.mx.ymate.dev.support.Ip2region;
 
-import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
 import net.ymate.platform.commons.util.FileUtils;
 import net.ymate.platform.commons.util.RuntimeUtils;

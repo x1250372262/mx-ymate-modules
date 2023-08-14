@@ -31,10 +31,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <ymate.platform.version>2.1.2-dev</ymate.platform.version>
-        <hutool.all.version>5.8.16</hutool.all.version>
-        <redisson.version>3.17.4</redisson.version>
-        <netty-all.version>4.1.90.Final</netty-all.version>
-        <sa.token.version>1.34.0</sa.token.version>
+        <hutool.all.version>5.8.21</hutool.all.version>
+        <redisson.version>3.23.2</redisson.version>
+        <netty-all.version>4.1.96.Final</netty-all.version>
+        <sa.token.version>1.35.0.RC</sa.token.version>
         <minio.version>8.4.5</minio.version>
         <qiniu-java-sdk.version>7.11.0</qiniu-java-sdk.version>
         <cos_api.version>5.6.108</cos_api.version>

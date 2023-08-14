@@ -20,6 +20,10 @@ public interface IMxDao<MxEntity extends BaseEntity<MxEntity, String>> {
 
     MxEntity findFirst(Cond cond, String... fields) throws Exception;
 
+    MxEntity findFirst(Where where, IDBLocker dbLocker, String... fields) throws Exception;
+
+    MxEntity findFirst(Where where, String... fields) throws Exception;
+
     MxEntity findByVar(String var, String value, String... fields) throws Exception;
 
     MxEntity findByVarNotId(String var, String value, String id, String... fields) throws Exception;

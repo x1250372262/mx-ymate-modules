@@ -67,6 +67,16 @@ public class MxDaoImpl<MxEntity extends BaseEntity<MxEntity, String>> implements
 
     @Override
     public MxEntity findFirst(Cond cond, IDBLocker dbLocker, String... fields) throws Exception {
+        return findFirst(Where.create(cond), dbLocker, fields);
+    }
+
+    @Override
+    public MxEntity findFirst(Cond cond, String... fields) throws Exception {
+        return findFirst(Where.create(cond), fields);
+    }
+
+    @Override
+    public MxEntity findFirst(Where where, IDBLocker dbLocker, String... fields) throws Exception {
         return JDBC.get().openSession(session -> {
             EntitySQL<MxEntity> entitySql = EntitySQL.create(entityClass);
             if (fields != null && fields.length > 0) {
@@ -75,13 +85,13 @@ public class MxDaoImpl<MxEntity extends BaseEntity<MxEntity, String>> implements
             if (dbLocker != null) {
                 entitySql.forUpdate(dbLocker);
             }
-            return session.findFirst(entitySql, Where.create(cond));
+            return session.findFirst(entitySql, where);
         });
     }
 
     @Override
-    public MxEntity findFirst(Cond cond, String... fields) throws Exception {
-        return findFirst(cond, null, fields);
+    public MxEntity findFirst(Where where, String... fields) throws Exception {
+        return findFirst(where, null, fields);
     }
 
     @Override
