@@ -1,6 +1,7 @@
 package com.mx.ymate.netty.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.mx.ymate.netty.INettyConfig;
 import com.mx.ymate.netty.Netty;
 import com.mx.ymate.netty.handler.HeartBeatServerHandler;
@@ -13,6 +14,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import net.ymate.platform.commons.lang.BlurObject;
+import net.ymate.platform.log.Logs;
 
 import java.util.List;
 import java.util.Objects;
@@ -61,14 +63,16 @@ public class NettyServer {
         if (Objects.nonNull(config.serverPort())) {
 //            //绑定端口，同步等待成功
             serverBootstrap.bind(config.serverPort()).sync();
+            Logs.get().getLogger().info(StrUtil.format("单端口{}绑定成功",config.serverPort()));
         } else if (Objects.nonNull(config.serverStartPort()) && Objects.nonNull(config.serverEndPort())) {
             int startPort = config.serverStartPort();
             int endPort = config.serverEndPort();
             List<String> excludePorts = config.serverExcludePort();
-            for (; startPort < endPort; startPort++) {
+            for (; startPort <= endPort; startPort++) {
                 //绑定端口，同步等待成功
                 if (!excludePorts.contains(BlurObject.bind(startPort).toStringValue())) {
                     serverBootstrap.bind(startPort).sync();
+                    Logs.get().getLogger().info(StrUtil.format("多端口{}绑定成功",startPort));
                 }
             }
         }

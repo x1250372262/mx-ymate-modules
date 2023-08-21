@@ -137,7 +137,7 @@ public final class Monitor implements IModule, IMonitor {
                     ServerHelper.start(config);
                 case PROJECT:
                     ProjectHelper.start(config);
-                case ALL:
+                case ALL :
                     ServerHelper.start(config);
                     ProjectHelper.start(config);
                     break;
