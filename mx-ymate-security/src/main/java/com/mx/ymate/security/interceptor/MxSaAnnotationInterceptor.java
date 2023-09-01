@@ -90,7 +90,7 @@ public class MxSaAnnotationInterceptor extends AbstractInterceptor {
             if (annotation != null) {
                 return null;
             }
-            SaStrategy.me.checkMethodAnnotation.accept(method);
+            SaStrategy.instance.checkMethodAnnotation.accept(method);
             SecurityUser securityUser = iSecurityUserDao.findById(SaUtil.loginId());
             if (securityUser == null) {
                 throw new NotLoginException(Code.NOT_LOGIN.msg(), null, null);

@@ -38,7 +38,7 @@ public class SaAnnotationInterceptor extends AbstractInterceptor {
             if (annotation != null) {
                 return null;
             }
-            SaStrategy.me.checkMethodAnnotation.accept(method);
+            SaStrategy.instance.checkMethodAnnotation.accept(method);
         } catch (NotLoginException notLoginException) {
             return MxResult.create(Code.NOT_LOGIN);
         }
