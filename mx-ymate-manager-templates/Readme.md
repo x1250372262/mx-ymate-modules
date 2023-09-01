@@ -356,3 +356,49 @@ Table.init("GET",true);
     }
 }
 ```
+
+### 文件上传
+```html
+<div class="form-group col-md-12 mx_validator">
+    <label>附件</label><span class="required">
+										* </span>
+    <div>
+        <button class="btn btn-primary btn-w-md fileButton_v2" type="button">
+            上传文件
+        </button>
+        <input type="file" style="display: none;" tname="url" class="fileInput_v2">
+        <span class="mx_fileName"></span>
+        <div class="row mt-12 fileInputDiv_v2" style=" margin-top: 1%;">
+            <div class="col-sm-9">
+                <input type="text" name="url" class="form-control fileInputShow_v2 mx_required" mx_required_msg="附件地址不能为空"
+                       disabled="disabled" placeholder="文件地址">
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-primary btn-w-xs fileYL" type="button">预览
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+```
+```javascript
+FILE.init($("#commonDiv"), UPLOAD_FILE, "");
+
+
+columns = [
+    {
+        checkbox: true, // 显示一个勾选框
+        align: 'center' // 居中显示
+    }, {
+        field: 'url',
+        title: '文件',
+        align: 'center',
+        valign: 'middle',
+        formatter: function (value, row, index) {
+            return Table.initFile(value);
+        }
+    }
+]
+
+```
