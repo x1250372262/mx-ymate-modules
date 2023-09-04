@@ -4,7 +4,7 @@ import com.mx.ymate.security.base.model.SecurityPermission;
 import net.ymate.platform.core.persistence.IResultSet;
 
 /**
- * @Author: 徐建鹏.
+ * @Author: mengxiang.
  * @create: 2022-07-04 14:11
  * @Description:
  */

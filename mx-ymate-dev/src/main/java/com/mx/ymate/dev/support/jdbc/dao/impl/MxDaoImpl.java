@@ -14,6 +14,11 @@ import net.ymate.platform.persistence.jdbc.support.BaseEntity;
 
 import java.util.List;
 
+/**
+ * @Author: mengxiang.
+ * @create: 2023-08-03 16:58
+ * @Description: 便捷查询接口实现类
+ */
 @Bean
 public class MxDaoImpl<MxEntity extends BaseEntity<MxEntity, String>> implements IMxDao<MxEntity> {
 

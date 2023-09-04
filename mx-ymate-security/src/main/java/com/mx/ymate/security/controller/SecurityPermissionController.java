@@ -1,6 +1,5 @@
 package com.mx.ymate.security.controller;
 
-import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.mx.ymate.security.service.ISecurityPermissionService;
 import net.ymate.platform.core.beans.annotation.Inject;
 import net.ymate.platform.webmvc.annotation.Controller;
@@ -28,9 +27,8 @@ public class SecurityPermissionController {
      * @throws Exception
      */
     @RequestMapping("/select")
-    @SaCheckLogin
     public IView list() throws Exception {
-        return iPermissionService.list().toMxJsonView();
+        return iPermissionService.list().toJsonView();
     }
 
 }

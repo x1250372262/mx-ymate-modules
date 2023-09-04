@@ -9,7 +9,11 @@ import net.ymate.platform.persistence.jdbc.support.BaseEntity;
 
 import java.util.List;
 
-
+/**
+ * @Author: mengxiang.
+ * @create: 2023-08-03 16:58
+ * @Description: 便捷查询dao接口
+ */
 public interface IMxDao<MxEntity extends BaseEntity<MxEntity, String>> {
 
     MxEntity findById(String id, IDBLocker dbLocker, String... fields) throws Exception;

@@ -1,7 +1,6 @@
 @RequestMapping(value = "/mx/security",method = Type.HttpMethod.OPTIONS)
 @CrossDomain
 @Before(MxSaAnnotationInterceptor.class)
-@After(OperationLogInterceptor.class)
 package com.mx.ymate.security.controller;
 
 import com.mx.ymate.security.interceptor.MxSaAnnotationInterceptor;

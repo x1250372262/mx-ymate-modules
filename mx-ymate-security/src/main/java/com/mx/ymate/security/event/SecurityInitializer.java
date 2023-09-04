@@ -25,7 +25,7 @@ import static com.mx.ymate.dev.code.Code.NOT_LOGIN;
 import static net.ymate.platform.core.ApplicationEvent.EVENT.APPLICATION_INITIALIZED;
 
 /**
- * @Author: 徐建鹏.
+ * @Author: mengxiang.
  * @create: 2022-07-03 11:50
  * @Description:
  */

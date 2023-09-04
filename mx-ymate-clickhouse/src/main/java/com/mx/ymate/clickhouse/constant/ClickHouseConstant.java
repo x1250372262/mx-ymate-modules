@@ -1,5 +1,10 @@
 package com.mx.ymate.clickhouse.constant;
 
+/**
+ * @Author: mengxiang.
+ * @Date: 2023-06-16 14:41
+ * @Description: clickhouse常量
+ */
 public class ClickHouseConstant {
 
     /**

@@ -1,10 +1,12 @@
 package com.mx.ymate.security.service.impl;
 
-import com.mx.ymate.dev.result.MxResult;
+import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.dev.support.page.PageBean;
 import com.mx.ymate.dev.util.BeanUtil;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.Security;
+import com.mx.ymate.security.annotation.OperationLog;
+import com.mx.ymate.security.base.enums.OperationType;
 import com.mx.ymate.security.base.enums.ResourceType;
 import com.mx.ymate.security.base.model.SecurityOperationLog;
 import com.mx.ymate.security.base.vo.SecurityOperationLogListVO;
@@ -44,6 +46,7 @@ public class SecurityOperationLogServiceImpl implements ISecurityOperationLogSer
     }
 
     @Override
+    @OperationLog(operationType = OperationType.DELETE, title = "删除日志")
     public MxResult delete(String[] ids) throws Exception {
         return MxResult.result(iSecurityOperationLogDao.deleteByIds(ids));
     }

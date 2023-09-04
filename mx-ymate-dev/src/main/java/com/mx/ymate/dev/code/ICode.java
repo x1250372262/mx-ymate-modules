@@ -3,7 +3,7 @@ package com.mx.ymate.dev.code;
 /**
  * @Author: mengxiang.
  * @create: 2022-06-24 15:34
- * @Description:
+ * @Description: 错误码接口
  */
 public interface ICode {
 

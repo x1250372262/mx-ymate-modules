@@ -6,7 +6,7 @@ import net.ymate.platform.core.persistence.IResultSet;
 import net.ymate.platform.core.persistence.Page;
 
 /**
- * @Author: 徐建鹏.
+ * @Author: mengxiang.
  * @create: 2022-07-04 11:31
  * @Description:
  */

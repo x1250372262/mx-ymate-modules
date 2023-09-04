@@ -1,7 +1,7 @@
 package com.mx.ymate.security.exception;
 
 /**
- * @Author: 徐建鹏.
+ * @Author: mengxiang.
  * @create: 2022-12-16 15:28
  * @Description:
  */

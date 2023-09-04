@@ -3,7 +3,7 @@ package com.mx.ymate.upload.config;
 import net.ymate.platform.core.YMP;
 
 /**
- * @Author: 徐建鹏.
+ * @Author: mengxiang.
  * @create: 2022-11-28 17:12
  * @Description:
  */

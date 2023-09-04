@@ -15,7 +15,7 @@
  */
 package com.mx.ymate.security;
 
-import com.mx.ymate.dev.result.MxResult;
+import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.security.handler.ILoginHandler;
 import com.mx.ymate.security.handler.IUserHandler;
 import net.ymate.platform.core.beans.annotation.Ignored;

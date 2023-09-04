@@ -15,7 +15,7 @@ import net.ymate.platform.persistence.jdbc.base.impl.BeanResultSetHandler;
 import net.ymate.platform.persistence.jdbc.query.*;
 
 /**
- * @Author: 徐建鹏.
+ * @Author: mengxiang.
  * @create: 2022-07-04 11:32
  * @Description:
  */

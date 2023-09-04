@@ -24,7 +24,7 @@ public class MonitorEventRegister implements IEventRegister {
             if (context.getEventName() == APPLICATION_INITIALIZED) {
                 //初始化设监听
                 try {
-                    if (ClientEnum.isClient(config.client())) {
+                    if (ClientEnum.isServer(config.client()) && config.autoStart()) {
                         RedisMq.subscribe(config.dataSubscribeListener());
                     }
                 } catch (Exception e) {

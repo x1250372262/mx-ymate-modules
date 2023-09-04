@@ -3,14 +3,16 @@ package com.mx.ymate.security.service.impl;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import com.mx.ymate.dev.constants.Constants;
-import com.mx.ymate.dev.result.MxResult;
+import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.dev.support.page.PageBean;
 import com.mx.ymate.dev.support.page.Pages;
 import com.mx.ymate.dev.util.BeanUtil;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
+import com.mx.ymate.security.annotation.OperationLog;
 import com.mx.ymate.security.base.bean.SecurityUserBean;
+import com.mx.ymate.security.base.enums.OperationType;
 import com.mx.ymate.security.base.enums.ResourceType;
 import com.mx.ymate.security.base.model.SecurityUser;
 import com.mx.ymate.security.base.model.SecurityUserRole;
@@ -76,6 +78,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
 
     @Override
     @Transaction
+    @OperationLog(operationType = OperationType.CREATE, title = "添加人员")
     public MxResult create(String password, SecurityUserBean userBean) throws Exception {
         String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.USER), config.client());
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
@@ -113,6 +116,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
     }
 
     @Override
+    @OperationLog(operationType = OperationType.OTHER, title = "修改状态")
     public MxResult status(String id, Long lastModifyTime, Integer status) throws Exception {
         SecurityUser securityUser = iSecurityUserDao.findById(id);
         if (securityUser == null) {
@@ -129,6 +133,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
     }
 
     @Override
+    @OperationLog(operationType = OperationType.OTHER, title = "解锁")
     public MxResult unlock(String id, Long lastModifyTime) throws Exception {
         SecurityUser securityUser = iSecurityUserDao.findById(id);
         if (securityUser == null) {
@@ -149,6 +154,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
     }
 
     @Override
+    @OperationLog(operationType = OperationType.OTHER, title = "重置密码")
     public MxResult resetPassword(String id, Long lastModifyTime) throws Exception {
         SecurityUser securityUser = iSecurityUserDao.findById(id);
         if (securityUser == null) {
@@ -163,7 +169,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
         try {
             password = DigestUtils.md5Hex(Base64.encodeBase64((password + securityUser.getSalt()).getBytes(Constants.DEFAULT_CHARSET)));
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         securityUser.setPassword(password);
         securityUser.setLastModifyUser(SaUtil.loginId());
@@ -180,6 +186,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
     }
 
     @Override
+    @OperationLog(operationType = OperationType.CREATE, title = "添加人员角色")
     public MxResult roleCreate(String userId, String roleId) throws Exception {
         String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.USER), config.client());
         SecurityUserRole securityUserRole = iSecurityUserRoleDao.findByUserIdAndRoleidAndClientAndResourceId(userId, roleId, config.client(), resourceId);
@@ -202,6 +209,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
     }
 
     @Override
+    @OperationLog(operationType = OperationType.DELETE, title = "删除人员角色")
     public MxResult roleDelete(String[] ids) throws Exception {
         return MxResult.result(iSecurityUserRoleDao.deleteByIds(ids));
     }

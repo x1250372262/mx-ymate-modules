@@ -1,17 +1,20 @@
-package com.mx.ymate.dev.result;
+package com.mx.ymate.dev.support.mvc;
 
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.mx.ymate.dev.code.Code;
 import com.mx.ymate.dev.code.ICode;
+import net.ymate.platform.commons.json.IJsonObjectWrapper;
 import net.ymate.platform.commons.util.ClassUtils;
 import net.ymate.platform.core.support.ErrorCode;
+import net.ymate.platform.webmvc.AbstractWebResult;
 import net.ymate.platform.webmvc.IWebMvc;
+import net.ymate.platform.webmvc.IWebResult;
+import net.ymate.platform.webmvc.IWebResultBuilder;
 import net.ymate.platform.webmvc.base.Type;
 import net.ymate.platform.webmvc.context.WebContext;
+import net.ymate.platform.webmvc.impl.DefaultWebResultBuilder;
 import net.ymate.platform.webmvc.util.WebUtils;
 import net.ymate.platform.webmvc.view.IView;
 import net.ymate.platform.webmvc.view.impl.HttpStatusView;
@@ -20,7 +23,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -30,32 +32,32 @@ import java.util.Objects;
  * @create: 2021-07-02 16:58
  * @Description: 通用请求返回数据-操作消息提醒
  */
-public class MxResult extends MxAbstractWebResult<String> implements Serializable {
+public class MxResult extends AbstractWebResult<String> {
 
 
-    public static IMxResultBuilder builder() {
-        IMxResultBuilder builder = null;
+    public static IWebResultBuilder builder() {
+        IWebResultBuilder builder = null;
         try {
-            builder = ClassUtils.getExtensionLoader(IMxResultBuilder.class).getExtensionClass().newInstance();
+            builder = ClassUtils.getExtensionLoader(IWebResultBuilder.class).getExtensionClass().getConstructor().newInstance();
         } catch (Exception ignored) {
         }
-        return builder != null ? builder : new DefaultMxResultBuilder();
+        return builder != null ? builder : new DefaultWebResultBuilder();
     }
 
-    public static IMxResultBuilder builder(ErrorCode errorCode) {
+    public static IWebResultBuilder builder(ErrorCode errorCode) {
         return builder(WebContext.getContext().getOwner(), null, errorCode);
     }
 
-    public static IMxResultBuilder builder(String resourceName, ErrorCode errorCode) {
+    public static IWebResultBuilder builder(String resourceName, ErrorCode errorCode) {
         return builder(WebContext.getContext().getOwner(), resourceName, errorCode);
     }
 
-    public static IMxResultBuilder builder(IWebMvc owner, ErrorCode errorCode) {
+    public static IWebResultBuilder builder(IWebMvc owner, ErrorCode errorCode) {
         return builder(owner, null, errorCode);
     }
 
-    public static IMxResultBuilder builder(IWebMvc owner, String resourceName, ErrorCode errorCode) {
-        IMxResultBuilder builder = builder();
+    public static IWebResultBuilder builder(IWebMvc owner, String resourceName, ErrorCode errorCode) {
+        IWebResultBuilder builder = builder();
         String msg = null;
         if (StringUtils.isNotBlank(errorCode.i18nKey())) {
             msg = WebUtils.i18nStr(owner, resourceName, errorCode.i18nKey(), null);
@@ -169,9 +171,6 @@ public class MxResult extends MxAbstractWebResult<String> implements Serializabl
         return MxResult.fail();
     }
 
-    public String toJson() {
-        return JSONObject.toJSONString(this, SerializerFeature.PrettyFormat);
-    }
 
     public static boolean checkVersion(Object var1, Object var2) {
         return !Objects.equals(var1, var2);
@@ -191,15 +190,15 @@ public class MxResult extends MxAbstractWebResult<String> implements Serializabl
     }
 
 
-    public static IView formatView(IMxWebResult<?> result) {
+    public static IView formatView(IWebResult<?> result) {
         return formatView(null, Type.Const.PARAM_FORMAT, Type.Const.PARAM_CALLBACK, result);
     }
 
-    public static IView formatView(String path, IMxWebResult<?> result) {
+    public static IView formatView(String path, IWebResult<?> result) {
         return formatView(path, Type.Const.PARAM_FORMAT, Type.Const.PARAM_CALLBACK, result);
     }
 
-    public static IView formatView(IMxWebResult<?> result, String defaultFormat) {
+    public static IView formatView(IWebResult<?> result, String defaultFormat) {
         return formatView(null, Type.Const.PARAM_FORMAT, defaultFormat, Type.Const.PARAM_CALLBACK, result);
     }
 
@@ -210,20 +209,20 @@ public class MxResult extends MxAbstractWebResult<String> implements Serializabl
      * @param result        回应的数据对象
      * @return 根据paramFormat等参数判断返回对应的视图对象
      */
-    public static IView formatView(String path, String paramFormat, String paramCallback, IMxWebResult<?> result) {
+    public static IView formatView(String path, String paramFormat, String paramCallback, IWebResult<?> result) {
         return formatView(path, paramFormat, null, paramCallback, result);
     }
 
-    public static IView formatView(String path, String paramFormat, String defaultFormat, String paramCallback, IMxWebResult<?> result) {
+    public static IView formatView(String path, String paramFormat, String defaultFormat, String paramCallback, IWebResult<?> result) {
         IView returnView = null;
         if (result != null) {
             HttpServletRequest request = WebContext.getRequest();
             if (WebUtils.isJsonAccepted(request, paramFormat) || StringUtils.equalsIgnoreCase(defaultFormat, Type.Const.FORMAT_JSON)) {
-                returnView = result.withContentType().toMxJsonView(StringUtils.trimToNull(WebContext.getRequest().getParameter(paramCallback)));
+                returnView = result.withContentType().toJsonView(StringUtils.trimToNull(WebContext.getRequest().getParameter(paramCallback)));
             } else if (WebUtils.isXmlAccepted(request, paramFormat) || StringUtils.equalsIgnoreCase(defaultFormat, Type.Const.FORMAT_XML)) {
                 returnView = result.withContentType().toXmlView();
             } else if (WebUtils.isAjax(request)) {
-                returnView = result.withContentType().toMxJsonView(StringUtils.trimToNull(WebContext.getRequest().getParameter(paramCallback)));
+                returnView = result.withContentType().toJsonView(StringUtils.trimToNull(WebContext.getRequest().getParameter(paramCallback)));
             }
         }
         if (returnView == null) {
@@ -305,5 +304,20 @@ public class MxResult extends MxAbstractWebResult<String> implements Serializabl
         return this;
     }
 
+    @Override
+    public IJsonObjectWrapper toJsonObject() {
+        IJsonObjectWrapper jsonObj = super.toJsonObject();
+        if (jsonObj.has(Type.Const.PARAM_RET)) {
+            Object ret = jsonObj.remove(Type.Const.PARAM_RET);
+            if (ret != null) {
+                jsonObj.put("code", ret);
+            }
+        }
+        return jsonObj;
+    }
+
+    public String toJson() {
+        return toJsonObject().toString(true, true);
+    }
 
 }

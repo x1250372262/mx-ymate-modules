@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 
 /**
- * @Author: 徐建鹏.
+ * @Author: mengxiang.
  * @Date: 2019/8/23.
  * @Time: 10:28 上午.
  * @Description:
@@ -22,6 +22,12 @@ import java.io.File;
 @CrossDomain
 public class DownloadFileController {
 
+    /**
+     * 下载zip文件
+     * @param name
+     * @return
+     * @throws Exception
+     */
     @RequestMapping("/zip/{name}")
     public IView zip(@PathVariable String name) throws Exception {
         IView returnView;
@@ -37,7 +43,7 @@ public class DownloadFileController {
     }
 
     /**
-     * 创建二维码
+     * 下载普通excel
      * @param name
      * @return
      * @throws Exception

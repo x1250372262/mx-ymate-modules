@@ -3,15 +3,17 @@ package com.mx.ymate.security.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import com.mx.ymate.dev.constants.Constants;
-import com.mx.ymate.dev.result.MxResult;
+import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.dev.support.page.PageBean;
 import com.mx.ymate.dev.support.page.Pages;
 import com.mx.ymate.dev.util.BeanUtil;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
+import com.mx.ymate.security.annotation.OperationLog;
 import com.mx.ymate.security.base.bean.SecurityMenuBean;
 import com.mx.ymate.security.base.enums.MenuType;
+import com.mx.ymate.security.base.enums.OperationType;
 import com.mx.ymate.security.base.enums.ResourceType;
 import com.mx.ymate.security.base.model.SecurityMenu;
 import com.mx.ymate.security.base.model.SecurityMenuRole;
@@ -117,6 +119,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     }
 
     @Override
+    @OperationLog(operationType = OperationType.CREATE, title = "添加菜单")
     public MxResult create(SecurityMenuBean menuBean) throws Exception {
         String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.MENU), config.client());
         SecurityMenu menu = BeanUtil.copy(menuBean, SecurityMenu::new);
@@ -128,6 +131,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     }
 
     @Override
+    @OperationLog(operationType = OperationType.UPDATE, title = "修改菜单")
     public MxResult update(String id, SecurityMenuBean menuBean) throws Exception {
         SecurityMenu menu = iSecurityMenuDao.findById(id);
         if (menu == null) {
@@ -145,6 +149,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     }
 
     @Override
+    @OperationLog(operationType = OperationType.DELETE, title = "删除菜单")
     public MxResult delete(String id) throws Exception {
         SecurityMenu menu = iSecurityMenuDao.findByParentId(id, SecurityMenu.FIELDS.ID);
         if (menu != null) {
@@ -161,6 +166,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     }
 
     @Override
+    @OperationLog(operationType = OperationType.CREATE, title = "添加菜单角色")
     public MxResult roleCreate(String menuId, String roleId) throws Exception {
         String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE), config.client());
         SecurityMenuRole menuRole = iSecurityMenuRoleDao.findByMenuIdAndRoleIdAndClient(menuId, roleId, config.client());
@@ -181,6 +187,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     }
 
     @Override
+    @OperationLog(operationType = OperationType.DELETE, title = "删除菜单角色")
     public MxResult roleDelete(String[] ids) throws Exception {
         return MxResult.result(iSecurityMenuRoleDao.deleteByIds(ids));
     }

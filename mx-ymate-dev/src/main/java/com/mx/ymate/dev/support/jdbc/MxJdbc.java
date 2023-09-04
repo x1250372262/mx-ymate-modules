@@ -12,6 +12,11 @@ import net.ymate.platform.persistence.jdbc.query.Like;
 
 import java.lang.reflect.Field;
 
+/**
+ * @Author: mengxiang.
+ * @create: 2023-08-03 16:58
+ * @Description: jdbc简化操作
+ */
 public class MxJdbc {
 
     public final static String DELETE_STATUS = "delete_status";

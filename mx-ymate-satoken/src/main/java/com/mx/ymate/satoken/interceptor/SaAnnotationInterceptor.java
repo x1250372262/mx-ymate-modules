@@ -3,7 +3,7 @@ package com.mx.ymate.satoken.interceptor;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.strategy.SaStrategy;
 import com.mx.ymate.dev.code.Code;
-import com.mx.ymate.dev.result.MxResult;
+import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.satoken.annotation.NoLogin;
 import net.ymate.platform.core.beans.intercept.AbstractInterceptor;
 import net.ymate.platform.core.beans.intercept.InterceptContext;

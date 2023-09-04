@@ -5,7 +5,7 @@ import com.mx.ymate.security.base.vo.SecurityMenuNavVO;
 import net.ymate.platform.core.persistence.IResultSet;
 
 /**
- * @Author: 徐建鹏.
+ * @Author: mengxiang.
  * @create: 2022-07-04 13:03
  * @Description:
  */

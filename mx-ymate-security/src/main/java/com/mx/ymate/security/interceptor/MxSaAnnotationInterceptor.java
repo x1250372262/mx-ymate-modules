@@ -6,7 +6,7 @@ import cn.dev33.satoken.exception.NotRoleException;
 import cn.dev33.satoken.strategy.SaStrategy;
 import com.mx.ymate.dev.code.Code;
 import com.mx.ymate.dev.constants.Constants;
-import com.mx.ymate.dev.result.MxResult;
+import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.dev.util.PathMatchUtil;
 import com.mx.ymate.satoken.annotation.NoLogin;
 import com.mx.ymate.security.ISecurityConfig;
@@ -26,11 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
-/**
- * 注解式鉴权 - 拦截器
- *
- * @author kong
- */
 public class MxSaAnnotationInterceptor extends AbstractInterceptor {
 
     private final ISecurityConfig securityConfig = Security.get().getConfig();
@@ -101,11 +96,11 @@ public class MxSaAnnotationInterceptor extends AbstractInterceptor {
             securityConfig.loginHandlerClass().checkLoginCustom(securityUser);
 
         } catch (NotLoginException notLoginException) {
-            return MxResult.create(Code.NOT_LOGIN).toMxJsonView();
+            return MxResult.create(Code.NOT_LOGIN).toJsonView();
         } catch (MxLoginException mxLoginException) {
-            return MxResult.create(Code.NOT_LOGIN.code()).msg(mxLoginException.getMessage()).toMxJsonView();
+            return MxResult.create(Code.NOT_LOGIN.code()).msg(mxLoginException.getMessage()).toJsonView();
         } catch (NotPermissionException | NotRoleException notPermissionException) {
-            return MxResult.create(Code.NOT_PERMISSION).toMxJsonView();
+            return MxResult.create(Code.NOT_PERMISSION).toJsonView();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

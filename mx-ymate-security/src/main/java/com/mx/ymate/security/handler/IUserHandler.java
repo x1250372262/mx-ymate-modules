@@ -1,6 +1,6 @@
 package com.mx.ymate.security.handler;
 
-import com.mx.ymate.dev.result.MxResult;
+import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.security.base.enums.ResourceType;
 import net.ymate.platform.core.beans.annotation.Bean;
 

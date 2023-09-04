@@ -1,6 +1,6 @@
 package com.mx.ymate.security.service;
 
-import com.mx.ymate.dev.result.MxResult;
+import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.dev.support.page.PageBean;
 import com.mx.ymate.security.base.bean.SecurityMenuBean;
 

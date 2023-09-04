@@ -5,7 +5,7 @@ import net.ymate.platform.core.persistence.Fields;
 import net.ymate.platform.persistence.jdbc.query.OrderBy;
 
 /**
- * @Author: 徐建鹏.
+ * @Author: mengxiang.
  * @create: 2022-08-16 11:54
  * @Description: 排序工具类
  */

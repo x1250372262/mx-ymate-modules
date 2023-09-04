@@ -4,6 +4,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 
+/**
+ * @Author: mengxiang.
+ * @create: 2023-08-03 16:58
+ * @Description: ip地址显示结果类
+ */
 public class IpRegionBean implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -57,11 +57,6 @@ public final class DefaultMonitorConfigurable extends DefaultModuleConfigurable 
             return this;
         }
 
-        public Builder type(String type) {
-            configurable.addConfig(IMonitorConfig.TYPE, type);
-            return this;
-        }
-
         public Builder time(Integer time) {
             configurable.addConfig(IMonitorConfig.TIME, String.valueOf(time));
             return this;

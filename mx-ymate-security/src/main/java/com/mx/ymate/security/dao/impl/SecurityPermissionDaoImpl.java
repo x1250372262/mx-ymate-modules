@@ -7,7 +7,7 @@ import net.ymate.platform.persistence.jdbc.query.Cond;
 import net.ymate.platform.persistence.jdbc.query.Where;
 
 /**
- * @Author: 徐建鹏.
+ * @Author: mengxiang.
  * @create: 2022-07-04 14:12
  * @Description:
  */

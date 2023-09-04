@@ -2,7 +2,7 @@ package com.mx.ymate.security.handler;
 
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.SaTokenInfo;
-import com.mx.ymate.dev.result.MxResult;
+import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.security.base.model.SecurityUser;
 import net.ymate.platform.core.beans.annotation.Bean;
 

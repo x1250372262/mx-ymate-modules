@@ -5,7 +5,9 @@ import net.ymate.platform.persistence.jdbc.query.Cond;
 import java.lang.annotation.*;
 
 /**
- * @author mengxiang
+ * @Author: mengxiang.
+ * @create: 2023-08-03 16:58
+ * @Description: 查询条件构建
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

@@ -3,7 +3,7 @@ package com.mx.ymate.workrobot.bean;
 import java.util.List;
 
 /**
- * @Author: xujianpeng.
+ * @Author: mengxiang.
  * @Date: 2023-06-09 15:14
  * @Description:
  */

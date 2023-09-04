@@ -15,7 +15,7 @@
  */
 package com.mx.ymate.security.impl;
 
-import com.mx.ymate.dev.result.MxResult;
+import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.security.ISecurity;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.base.code.SecurityCode;

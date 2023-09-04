@@ -1,7 +1,7 @@
 package com.mx.ymate.workrobot.bean;
 
 /**
- * @Author: xujianpeng.
+ * @Author: mengxiang.
  * @Date: 2023-06-09 15:14
  * @Description:
  */

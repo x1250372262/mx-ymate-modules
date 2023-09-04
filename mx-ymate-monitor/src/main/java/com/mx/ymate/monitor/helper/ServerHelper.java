@@ -62,9 +62,9 @@ public class ServerHelper {
         List<OSFileStore> fileStores = fileSystem.getFileStores();
         List<DiskBean> list = new ArrayList<>();
         for (OSFileStore osFileStore : fileStores) {
-            double total = NumberUtil.div(osFileStore.getTotalSpace(),GB,2);
-            double free = NumberUtil.div(osFileStore.getUsableSpace(),GB,2);
-            double used = NumberUtil.sub(total, free,2).doubleValue();
+            double total = NumberUtil.div(osFileStore.getTotalSpace(), GB, 2);
+            double free = NumberUtil.div(osFileStore.getUsableSpace(), GB, 2);
+            double used = NumberUtil.sub(total, free, 2).doubleValue();
             if (used < 0) {
                 continue;
             }
@@ -138,8 +138,8 @@ public class ServerHelper {
         long startTime = OshiUtil.getOs().getSystemUptime();
         osBean.setBootTime(now - startTime);
         osBean.setRunTime(DateUtil.formatBetween(startTime * 1000));
-        double memoryTotal = NumberUtil.div(globalMemory.getTotal(), GB,2);
-        double available = NumberUtil.div(globalMemory.getAvailable(), GB,2);
+        double memoryTotal = NumberUtil.div(globalMemory.getTotal(), GB, 2);
+        double available = NumberUtil.div(globalMemory.getAvailable(), GB, 2);
         double used = memoryTotal - available;
         //系统内存总量
         osBean.setTotalMemory(memoryTotal);
@@ -148,9 +148,9 @@ public class ServerHelper {
 
         osBean.setMemoryUsage(NumberUtil.div(used, memoryTotal, 2));
         //可用虚拟总内存
-        osBean.setSwapTotalMemory(NumberUtil.div(globalMemory.getVirtualMemory().getSwapTotal(), GB,2));
+        osBean.setSwapTotalMemory(NumberUtil.div(globalMemory.getVirtualMemory().getSwapTotal(), GB, 2));
         //已用虚拟内存
-        osBean.setSwapUsedMemory(NumberUtil.div(globalMemory.getVirtualMemory().getSwapUsed(), GB,2));
+        osBean.setSwapUsedMemory(NumberUtil.div(globalMemory.getVirtualMemory().getSwapUsed(), GB, 2));
         //磁盘信息
         osBean.setDisksList(getDisksList());
         //网卡信息
@@ -159,7 +159,7 @@ public class ServerHelper {
         return osBean;
     }
 
-    public static void start(IMonitorConfig config){
+    public static void start(IMonitorConfig config) {
         runningFlag = true;
         ThreadUtil.execAsync(() -> {
             while (runningFlag) {
@@ -175,7 +175,7 @@ public class ServerHelper {
         });
     }
 
-    public static void stop(){
+    public static void stop() {
         runningFlag = false;
     }
 
@@ -224,7 +224,7 @@ public class ServerHelper {
             System.out.println("文件系统名称：" + disksInfo.getSysTypeName());
             System.out.println("文件系统类型：" + disksInfo.getTypeName());
             System.out.println("磁盘总量：" + disksInfo.getTotal() + " -> " + disksInfo.getTotal());
-            System.out.println("磁盘使用量：" + disksInfo.getUsed() + " -> " +disksInfo.getUsed());
+            System.out.println("磁盘使用量：" + disksInfo.getUsed() + " -> " + disksInfo.getUsed());
             System.out.println("磁盘剩余量：" + disksInfo.getFree() + " -> " + disksInfo.getFree());
             System.out.println("磁盘使用率：" + disksInfo.getUsage());
         }

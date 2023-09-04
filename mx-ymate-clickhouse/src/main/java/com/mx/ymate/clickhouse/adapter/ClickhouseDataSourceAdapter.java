@@ -11,9 +11,9 @@ import java.sql.Connection;
 import java.util.Properties;
 
 /**
- * @Author: xujianpeng.
+ * @Author: mengxiang.
  * @Date: 2023-06-16 14:41
- * @Description:
+ * @Description: clickhouse数据源适配器
  */
 @DataSourceAdapter("clickhouse")
 public class ClickhouseDataSourceAdapter extends AbstractDatabaseDataSourceAdapter {

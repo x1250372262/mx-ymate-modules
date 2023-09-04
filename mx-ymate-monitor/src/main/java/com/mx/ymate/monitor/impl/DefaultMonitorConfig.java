@@ -34,7 +34,6 @@ public final class DefaultMonitorConfig implements IMonitorConfig {
     private boolean enabled;
     private Boolean autoStart;
     private String client;
-    private String type;
     private Integer time;
     private String serverId;
     private String projectId;
@@ -62,9 +61,8 @@ public final class DefaultMonitorConfig implements IMonitorConfig {
         ConfigUtil configUtil = new ConfigUtil(moduleConfigurer.getConfigReader().toMap());
         enabled = configUtil.getBool(ENABLED, true);
         autoStart = configUtil.getBool(AUTO_START, true);
-        client = configUtil.getString(CLIENT, "all");
-        type = configUtil.getString(TYPE, "all");
-        time = configUtil.getInteger(TIME,30);
+        client = configUtil.getString(CLIENT, ClientEnum.ALL.type());
+        time = configUtil.getInteger(TIME,120);
         serverId = configUtil.getString(SERVER_ID);
         if(StringUtils.isBlank(serverId)){
             throw new NullArgumentException(SERVER_ID);
@@ -74,7 +72,7 @@ public final class DefaultMonitorConfig implements IMonitorConfig {
             throw new NullArgumentException(PROJECT_ID);
         }
         dataSubscribeListener = configUtil.getClassImpl(DATA_SUBSCRIBE_LISTENER,IDataSubscribeListener.class);
-        if(dataSubscribeListener == null && ClientEnum.isClient(client)){
+        if(dataSubscribeListener == null && ClientEnum.isServer(client)){
             throw new NullArgumentException(DATA_SUBSCRIBE_LISTENER);
         }
     }
@@ -102,11 +100,6 @@ public final class DefaultMonitorConfig implements IMonitorConfig {
     @Override
     public Boolean autoStart() {
         return autoStart;
-    }
-
-    @Override
-    public String type() {
-        return type;
     }
 
     @Override
@@ -153,12 +146,6 @@ public final class DefaultMonitorConfig implements IMonitorConfig {
         }
     }
 
-    public void setType(String type) {
-        if (!initialized) {
-            this.type = type;
-        }
-    }
-
     public void setTime(Integer time) {
         if (!initialized) {
             this.time = time;
@@ -197,11 +184,6 @@ public final class DefaultMonitorConfig implements IMonitorConfig {
 
         public Builder client(String client) {
             config.setClient(client);
-            return this;
-        }
-
-        public Builder type(String type) {
-            config.setType(type);
             return this;
         }
 

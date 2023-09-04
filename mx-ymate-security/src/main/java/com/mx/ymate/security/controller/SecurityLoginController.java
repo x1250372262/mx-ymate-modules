@@ -1,11 +1,8 @@
 package com.mx.ymate.security.controller;
 
-import cn.dev33.satoken.annotation.SaCheckLogin;
-import com.mx.ymate.dev.result.MxResult;
+import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.satoken.annotation.NoLogin;
-import com.mx.ymate.security.annotation.OperationLog;
 import com.mx.ymate.security.base.dto.SecurityLoginInfoDTO;
-import com.mx.ymate.security.base.enums.OperationType;
 import com.mx.ymate.security.service.ISecurityLoginService;
 import net.ymate.platform.core.beans.annotation.Inject;
 import net.ymate.platform.validation.annotation.VModel;
@@ -40,12 +37,11 @@ public class SecurityLoginController {
      */
     @RequestMapping(value = "/login", method = Type.HttpMethod.POST)
     @NoLogin
-    @OperationLog(operationType = OperationType.LOGIN, title = "管理员登录")
     public IView login(@VRequired(msg = "用户名不能为空")
                        @RequestParam String userName,
                        @VRequired(msg = "密码不能为空")
                        @RequestParam String password) throws Exception {
-        return iSecurityLoginService.login(userName, password).toMxJsonView();
+        return iSecurityLoginService.login(userName, password).toJsonView();
     }
 
     /**
@@ -56,9 +52,8 @@ public class SecurityLoginController {
      */
     @RequestMapping(value = "/logout", method = Type.HttpMethod.POST)
     @NoLogin
-    @OperationLog(operationType = OperationType.LOGIN, title = "管理员退出")
     public IView logout() throws Exception {
-        return iSecurityLoginService.logout().toMxJsonView();
+        return iSecurityLoginService.logout().toJsonView();
     }
 
     /**
@@ -68,9 +63,8 @@ public class SecurityLoginController {
      * @throws Exception
      */
     @RequestMapping(value = "/info", method = Type.HttpMethod.GET)
-    @SaCheckLogin
     public IView info() throws Exception {
-        return MxResult.ok().data(iSecurityLoginService.info()).toMxJsonView();
+        return MxResult.ok().data(iSecurityLoginService.info()).toJsonView();
     }
 
     /**
@@ -81,10 +75,8 @@ public class SecurityLoginController {
      * @throws Exception
      */
     @RequestMapping(value = "/update", method = Type.HttpMethod.POST)
-    @OperationLog(operationType = OperationType.UPDATE, title = "修改管理员信息")
-    @SaCheckLogin
     public IView update(@VModel @ModelBind SecurityLoginInfoDTO securityLoginInfoDTO) throws Exception {
-        return iSecurityLoginService.update(securityLoginInfoDTO.toBean()).toMxJsonView();
+        return iSecurityLoginService.update(securityLoginInfoDTO.toBean()).toJsonView();
     }
 
 
@@ -98,15 +90,13 @@ public class SecurityLoginController {
      * @throws Exception
      */
     @RequestMapping(value = "/password", method = Type.HttpMethod.POST)
-    @OperationLog(operationType = OperationType.UPDATE, title = "修改管理员密码")
-    @SaCheckLogin
     public IView password(@VRequired(msg = "旧密码不能为空")
                           @RequestParam String oldPassword,
                           @VRequired(msg = "新密码不能为空")
                           @RequestParam String newPassword,
                           @VRequired(msg = "确认密码不能为空")
                           @RequestParam String rePassword) throws Exception {
-        return iSecurityLoginService.password(oldPassword, newPassword, rePassword).toMxJsonView();
+        return iSecurityLoginService.password(oldPassword, newPassword, rePassword).toJsonView();
     }
 
 

@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.mx.ymate.dev.constants.Constants;
-import com.mx.ymate.dev.result.MxResult;
+import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.dev.util.BeanUtil;
 import com.mx.ymate.redis.api.RedisApi;
 import com.mx.ymate.satoken.ISaTokenConfig;
@@ -15,9 +15,11 @@ import com.mx.ymate.satoken.SaToken;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
+import com.mx.ymate.security.annotation.OperationLog;
 import com.mx.ymate.security.base.bean.LoginResult;
 import com.mx.ymate.security.base.bean.LoginUser;
 import com.mx.ymate.security.base.bean.SecurityLoginInfoBean;
+import com.mx.ymate.security.base.enums.OperationType;
 import com.mx.ymate.security.base.model.SecurityUser;
 import com.mx.ymate.security.base.vo.SecurityLoginVO;
 import com.mx.ymate.security.dao.ISecurityUserDao;
@@ -38,7 +40,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.mx.ymate.security.SaUtil.*;
+import static com.mx.ymate.security.SaUtil.PERMISSION_LIST;
+import static com.mx.ymate.security.SaUtil.USER_INFO;
 import static com.mx.ymate.security.base.code.SecurityCode.*;
 
 /**
@@ -57,6 +60,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     private final ISaTokenConfig saTokenConfig = SaToken.get().getConfig();
 
     @Override
+    @OperationLog(operationType = OperationType.LOGIN, title = "管理员登录")
     public MxResult login(String userName, String password) throws Exception {
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
         ILoginHandler loginHandler = config.loginHandlerClass();
@@ -131,6 +135,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     }
 
     @Override
+    @OperationLog(operationType = OperationType.LOGIN, title = "管理员退出")
     public MxResult logout() throws Exception {
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
         ILoginHandler loginHandler = config.loginHandlerClass();
@@ -170,6 +175,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     }
 
     @Override
+    @OperationLog(operationType = OperationType.UPDATE, title = "修改管理员信息")
     public MxResult update(SecurityLoginInfoBean securityLoginInfoBean) throws Exception {
         SecurityUser securityUser = iSecurityUserDao.findById(SaUtil.loginId());
         if (securityUser == null) {
@@ -184,6 +190,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     }
 
     @Override
+    @OperationLog(operationType = OperationType.UPDATE, title = "修改管理员密码")
     public MxResult password(String oldPassword, String newPassword, String rePassword) throws Exception {
         if (!newPassword.equals(rePassword)) {
             return MxResult.create(SECURITY_USER_PASSWORD_NOT_SAME);

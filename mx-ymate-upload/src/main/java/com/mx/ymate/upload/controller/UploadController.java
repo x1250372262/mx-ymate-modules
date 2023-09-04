@@ -15,7 +15,7 @@
  */
 package com.mx.ymate.upload.controller;
 
-import com.mx.ymate.dev.result.MxResult;
+import com.mx.ymate.dev.support.mvc.MxResult;
 import net.ymate.module.fileuploader.*;
 import net.ymate.module.fileuploader.support.FileUploadSignatureValidator;
 import net.ymate.platform.commons.util.ParamUtils;
@@ -33,8 +33,6 @@ import net.ymate.platform.webmvc.view.View;
 import net.ymate.platform.webmvc.view.impl.HttpStatusView;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.lang3.StringUtils;
-
-import java.io.File;
 
 /**
  * 文件资源
@@ -77,13 +75,14 @@ public class UploadController {
             if (StringUtils.isNotBlank(type)) {
                 IUploadResultProcessor resultProcessor = fileUploader.getUploadResultProcessor(type);
                 if (resultProcessor != null) {
+
                     return View.jsonView(resultProcessor.process(fileMeta)).withContentType();
                 }
             }
             if (StringUtils.isNotBlank(fileMeta.getFilename())) {
                 fileMeta.setFilename(WebUtils.decodeUrl(fileMeta.getFilename()));
             }
-            return MxResult.ok().data(fileMeta).withContentType().toMxJsonView();
+            return MxResult.ok().data(fileMeta).withContentType().toJsonView();
         } catch (ContentTypeNotAllowException e) {
             throw new FileUploadBase.InvalidContentTypeException(e.getMessage());
         }

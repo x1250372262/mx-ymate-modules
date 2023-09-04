@@ -1,10 +1,8 @@
 package com.mx.ymate.dev.support.qrcode;
 
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.mx.ymate.dev.result.MxResult;
+import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.dev.support.qrcode.bean.QrCodeResult;
-import net.ymate.platform.commons.util.RuntimeUtils;
-import net.ymate.platform.core.YMP;
 import net.ymate.platform.validation.validate.VRequired;
 import net.ymate.platform.webmvc.annotation.Controller;
 import net.ymate.platform.webmvc.annotation.PathVariable;
@@ -97,6 +95,6 @@ public class QrCodeController {
                 break;
         }
         QrCodeResult qrCodeResult = QrCodeFactory.init(createCode).create(content, characterSet,width, height, margin, errorCorrectionLevel,format);
-        return MxResult.ok().data(qrCodeResult).toMxJsonView();
+        return MxResult.ok().data(qrCodeResult).toJsonView();
     }
 }

@@ -3,12 +3,12 @@ package com.mx.ymate.security.interceptor;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.extra.servlet.ServletUtil;
+import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.mx.ymate.dev.code.Code;
 import com.mx.ymate.dev.support.Ip2region.IpRegionBean;
 import com.mx.ymate.dev.support.Ip2region.IpRegionUtil;
-import com.mx.ymate.dev.view.MxJsonView;
+import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
@@ -18,8 +18,6 @@ import com.mx.ymate.security.base.enums.ResourceType;
 import com.mx.ymate.security.base.model.SecurityOperationLog;
 import com.mx.ymate.security.event.OperationLogEvent;
 import com.mx.ymate.security.handler.IUserHandler;
-import net.ymate.platform.commons.json.IJsonObjectWrapper;
-import net.ymate.platform.commons.json.JsonWrapper;
 import net.ymate.platform.commons.util.DateTimeUtils;
 import net.ymate.platform.commons.util.NetworkUtils;
 import net.ymate.platform.commons.util.UUIDUtils;
@@ -35,20 +33,12 @@ import org.apache.commons.lang3.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
-/**
- * 注解式鉴权 - 拦截器
- *
- * @author kong
- */
 public class OperationLogInterceptor extends AbstractInterceptor {
 
     private final ISecurityConfig securityConfig = Security.get().getConfig();
 
     private final ILogger iLogger = Logs.get().getLogger();
 
-    /**
-     * 构建： 注解式鉴权 - 拦截器
-     */
     public OperationLogInterceptor() {
     }
 
@@ -81,13 +71,15 @@ public class OperationLogInterceptor extends AbstractInterceptor {
             if (loginUser == null) {
                 return;
             }
-            Object ret = context.getResultObject();
-            Object result = ((MxJsonView) ret).getJsonObj();
-            IJsonObjectWrapper jsonWrapper = JsonWrapper.toJson(result).getAsJsonObject();
-            String code = StringUtils.defaultString(jsonWrapper.getString("code"), "未知");
-            String msg = StringUtils.defaultString(jsonWrapper.getString("msg"), Code.SUCCESS.code().equals(code) ? Code.SUCCESS.msg() : "未知");
+            Object result = context.getResultObject();
+            if (!(result instanceof MxResult)) {
+                return;
+            }
+            MxResult mxResult = (MxResult) result;
+            String code = mxResult.code();
+            String msg = mxResult.msg();
             HttpServletRequest request = WebContext.getRequest();
-            String userAgentStr = request.getHeader("user-agent");
+            UserAgent userAgent = UserAgentUtil.parse(request.getHeader("user-agent"));
             // *========数据库日志=========*//
             IUserHandler userHandler = securityConfig.userHandlerClass();
             String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.LOG), securityConfig.client());
@@ -103,20 +95,20 @@ public class OperationLogInterceptor extends AbstractInterceptor {
                     .requestUrl(request.getRequestURI())
                     .requestParam(JSONObject.toJSONString(ServletUtil.getParams(request)))
                     .returnCode(Convert.toStr(code)).returnMessage(msg)
-                    .returnResult(JSONObject.toJSONString(ret))
+                    .returnResult(mxResult.toJson())
                     .className(context.getTargetClass().getName())
                     .methodName(method.getName())
-                    .os(UserAgentUtil.parse(userAgentStr).getOs().toString())
-                    .browser(UserAgentUtil.parse(userAgentStr).getBrowser().toString())
+                    .os(userAgent.getOs().toString())
+                    .browser(userAgent.getBrowser().toString())
                     .client(securityConfig.client())
                     .build();
-            String ip =  ServletUtil.getClientIP(request);
-            if(StringUtils.isNotBlank(ip)){
+            String ip = ServletUtil.getClientIP(request);
+            if (StringUtils.isNotBlank(ip)) {
                 securityOperationLog.setIp(ip);
-                if(NetworkUtils.IP.isIPv4(ip) && !NetUtil.isInnerIP(ip)){
+                if (NetworkUtils.IP.isIPv4(ip) && !NetUtil.isInnerIP(ip)) {
                     IpRegionBean ipRegionBean = IpRegionUtil.parse(ip);
-                    securityOperationLog.setLocation(ipRegionBean.getCountry()+ipRegionBean.getProvince()+ipRegionBean.getCity()+ipRegionBean.getIsp());
-                }else{
+                    securityOperationLog.setLocation(ipRegionBean.getCountry() + ipRegionBean.getProvince() + ipRegionBean.getCity() + ipRegionBean.getIsp());
+                } else {
                     securityOperationLog.setLocation("");
                 }
             }

@@ -3,7 +3,7 @@ package com.mx.ymate.netty.heart;
 import io.netty.channel.ChannelHandlerContext;
 
 /**
- * @Author: xujianpeng.
+ * @Author: mengxiang.
  * @Date: 2023-06-07 09:43
  * @Description:
  */

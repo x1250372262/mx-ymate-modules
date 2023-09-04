@@ -1,7 +1,6 @@
 package com.mx.ymate.dev.support.mvc;
 
 import com.mx.ymate.dev.code.Code;
-import com.mx.ymate.dev.result.MxResult;
 import net.ymate.platform.commons.util.RuntimeUtils;
 import net.ymate.platform.validation.ValidateResult;
 import net.ymate.platform.webmvc.*;
@@ -20,6 +19,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * @Author: mengxiang.
+ * @create: 2023-08-03 16:58
+ * @Description: 自定义错误处理器
+ */
 public class MxWebErrorProcessor extends AbstractResponseErrorProcessor implements IWebErrorProcessor, IWebInitialization {
 
     private static final Log LOG = LogFactory.getLog(DefaultWebErrorProcessor.class);

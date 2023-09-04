@@ -30,8 +30,6 @@ public interface IMonitorConfig extends IInitialization<IMonitor> {
     String ENABLED = "enabled";
     String TIME = "time";
     String CLIENT = "client";
-    String TYPE = "type";
-
     String AUTO_START = "autoStart";
     String SERVER_ID = "serverId";
     String PROJECT_ID = "projectId";
@@ -50,11 +48,6 @@ public interface IMonitorConfig extends IInitialization<IMonitor> {
      * @return
      */
     Boolean autoStart();
-
-    /**
-     * 上报类型 默认all  可选值 all|server|project
-     */
-    String type();
 
     /**
      * 客户端类型 默认all  可选值 all|client|server
@@ -81,6 +74,7 @@ public interface IMonitorConfig extends IInitialization<IMonitor> {
 
     /**
      * 数据订阅类
+     *
      * @return
      */
     IDataSubscribeListener dataSubscribeListener();

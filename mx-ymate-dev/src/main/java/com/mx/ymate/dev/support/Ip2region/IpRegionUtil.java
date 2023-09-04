@@ -11,6 +11,11 @@ import org.lionsoul.ip2region.xdb.Searcher;
 import java.io.File;
 import java.io.InputStream;
 
+/**
+ * @Author: mengxiang.
+ * @create: 2023-08-03 16:58
+ * @Description: 显示ip地址工具类
+ */
 public class IpRegionUtil {
 
     private final static Searcher SEARCHER;

@@ -3,7 +3,7 @@ package com.mx.ymate.workrobot.bean;
 import com.alibaba.fastjson.JSONObject;
 
 /**
- * @Author: xujianpeng.
+ * @Author: mengxiang.
  * @Date: 2023-06-09 15:26
  * @Description:
  */

@@ -2,6 +2,11 @@ package com.mx.ymate.dev.support.jdbc;
 
 import java.io.Serializable;
 
+/**
+ * @Author: mengxiang.
+ * @create: 2023-08-03 16:58
+ * @Description: 通用vo
+ */
 public abstract class AbstractCommonVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
