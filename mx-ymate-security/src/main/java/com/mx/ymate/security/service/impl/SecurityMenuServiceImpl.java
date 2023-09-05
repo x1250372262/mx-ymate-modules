@@ -61,14 +61,14 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
 
     @Override
     public MxResult nav() throws Exception {
-        List<SecurityMenuNavVO> navList = navList();
+        List<SecurityMenuNavVO> navList = navList(SaUtil.isFounder());
         return MxResult.ok().data(navList);
     }
 
     @Override
-    public List<SecurityMenuNavVO> navList() throws Exception {
+    public List<SecurityMenuNavVO> navList(boolean isFounder) throws Exception {
         String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.MENU), config.client());
-        if (SaUtil.isFounder()) {
+        if (isFounder) {
             return iSecurityMenuDao.findAllByType(null, Constants.BOOL_FALSE, config.client(), resourceId).getResultData();
         }
         //查询带权限的还有公开的 合并到一起
