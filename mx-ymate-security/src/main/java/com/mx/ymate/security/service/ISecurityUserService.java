@@ -4,6 +4,7 @@ package com.mx.ymate.security.service;
 import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.dev.support.page.PageBean;
 import com.mx.ymate.security.base.bean.SecurityUserBean;
+import com.mx.ymate.security.base.vo.SecurityUserVO;
 
 /**
  * @Author: mengxiang.
@@ -45,6 +46,8 @@ public interface ISecurityUserService {
      * @throws Exception
      */
     MxResult detail(String id) throws Exception;
+
+    SecurityUserVO detailInfo(String id) throws Exception;
 
 
     /**

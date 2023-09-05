@@ -3,6 +3,9 @@ package com.mx.ymate.security.service;
 import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.dev.support.page.PageBean;
 import com.mx.ymate.security.base.bean.SecurityMenuBean;
+import com.mx.ymate.security.base.vo.SecurityMenuNavVO;
+
+import java.util.List;
 
 /**
  * @Author: mengxiang.
@@ -18,6 +21,14 @@ public interface ISecurityMenuService {
      * @throws Exception
      */
     MxResult nav() throws Exception;
+
+    /**
+     * 左侧导航栏数据
+     *
+     * @return
+     * @throws Exception
+     */
+    List<SecurityMenuNavVO> navList() throws Exception;
 
     /**
      * 菜单列表

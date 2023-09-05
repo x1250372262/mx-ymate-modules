@@ -15,7 +15,6 @@
  */
 package com.mx.ymate.security;
 
-import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.security.handler.ILoginHandler;
 import com.mx.ymate.security.handler.IUserHandler;
 import net.ymate.platform.core.beans.annotation.Ignored;
@@ -62,12 +61,12 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
      *
      * @return
      */
-   ILoginHandler loginHandlerClass();
+    ILoginHandler loginHandlerClass();
 
     /**
      * userHandler实现类
      */
-   IUserHandler userHandlerClass();
+    IUserHandler userHandlerClass();
 
     /**
      * 验证错误N次后锁定账户  默认不锁定  -1不锁定
@@ -83,7 +82,5 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
      * 登录拦截排除的路径用|分割
      */
     String excludePathPatterns();
-
-    boolean error(MxResult mxResult);
 
 }

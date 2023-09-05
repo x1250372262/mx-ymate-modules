@@ -19,8 +19,9 @@ public class SecurityUserVO implements Serializable {
 
     private Integer gender;
 
-    private Long lastModifyTime;
+    private Integer founder;
 
+    private Long lastModifyTime;
 
     private Integer loginErrorCount;
 
@@ -100,8 +101,27 @@ public class SecurityUserVO implements Serializable {
         this.lastModifyTime = lastModifyTime;
     }
 
+    public Integer getFounder() {
+        return founder;
+    }
+
+    public void setFounder(Integer founder) {
+        this.founder = founder;
+    }
+
     @Override
     public String toString() {
-        return "SecurityUserVO{" + "id='" + id + '\'' + ", userName='" + userName + '\'' + ", photoUri='" + photoUri + '\'' + ", realName='" + realName + '\'' + ", gender=" + gender + ", lastModifyTime=" + lastModifyTime + ", loginErrorCount=" + loginErrorCount + ", loginLockStartTime=" + loginLockStartTime + ", loginLockEndTime=" + loginLockEndTime + '}';
+        return "SecurityUserVO{" +
+                "id='" + id + '\'' +
+                ", userName='" + userName + '\'' +
+                ", photoUri='" + photoUri + '\'' +
+                ", realName='" + realName + '\'' +
+                ", gender=" + gender +
+                ", founder=" + founder +
+                ", lastModifyTime=" + lastModifyTime +
+                ", loginErrorCount=" + loginErrorCount +
+                ", loginLockStartTime=" + loginLockStartTime +
+                ", loginLockEndTime=" + loginLockEndTime +
+                '}';
     }
 }

@@ -22,10 +22,14 @@ import com.mx.ymate.security.base.bean.SecurityLoginInfoBean;
 import com.mx.ymate.security.base.enums.OperationType;
 import com.mx.ymate.security.base.model.SecurityUser;
 import com.mx.ymate.security.base.vo.SecurityLoginVO;
+import com.mx.ymate.security.base.vo.SecurityMenuNavVO;
+import com.mx.ymate.security.base.vo.SecurityUserVO;
 import com.mx.ymate.security.dao.ISecurityUserDao;
 import com.mx.ymate.security.handler.ILoginHandler;
 import com.mx.ymate.security.service.ISecurityLoginService;
+import com.mx.ymate.security.service.ISecurityMenuService;
 import com.mx.ymate.security.service.ISecurityUserRoleService;
+import com.mx.ymate.security.service.ISecurityUserService;
 import net.ymate.platform.commons.json.JsonWrapper;
 import net.ymate.platform.commons.util.DateTimeUtils;
 import net.ymate.platform.core.beans.annotation.Bean;
@@ -56,6 +60,10 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     private ISecurityUserDao iSecurityUserDao;
     @Inject
     private ISecurityUserRoleService iSecurityUserRoleService;
+    @Inject
+    private ISecurityMenuService iSecurityMenuService;
+    @Inject
+    private ISecurityUserService iSecurityUserService;
     private final ISecurityConfig config = Security.get().getConfig();
     private final ISaTokenConfig saTokenConfig = SaToken.get().getConfig();
 
@@ -65,7 +73,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
         ILoginHandler loginHandler = config.loginHandlerClass();
         MxResult r = loginHandler.loginBefore(params);
-        if (config.error(r)) {
+        if (Security.error(r)) {
             return r;
         }
         SecurityUser securityUser = r.attr("securityUser");
@@ -92,7 +100,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         password = DigestUtils.md5Hex(Base64.encodeBase64((password + securityUser.getSalt()).getBytes(StandardCharsets.UTF_8)));
         if (!password.equals(securityUser.getPassword())) {
             r = loginHandler.loginFail(params, securityUser);
-            if (config.error(r)) {
+            if (Security.error(r)) {
                 return r;
             }
             //次数+1 到数之后直接冻结
@@ -108,7 +116,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
             return MxResult.create(SECURITY_LOGIN_USER_NAME_OR_PASSWORD_ERROR);
         }
         r = loginHandler.loginSuccess(params, securityUser);
-        if (config.error(r)) {
+        if (Security.error(r)) {
             return r;
         }
 
@@ -123,12 +131,16 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
                 SecurityUser.FIELDS.LOGIN_LOCK_START_TIME, SecurityUser.FIELDS.LOGIN_LOCK_END_TIME, SecurityUser.FIELDS.LOGIN_IP, SecurityUser.FIELDS.LOGIN_TIME);
         StpUtil.login(securityUser.getId());
         SaTokenInfo saTokenInfo = StpUtil.getTokenInfo();
-
         //设置用户到缓存
         cacheUser(securityUser, saTokenInfo);
         LoginResult loginResult = BeanUtil.copy(saTokenInfo, LoginResult::new);
         loginResult.setAttrs(r.attrs());
-
+        //处理菜单数据
+        List<SecurityMenuNavVO> navList = iSecurityMenuService.navList();
+        loginResult.setNavList(navList);
+        //处理用户数据
+        SecurityUserVO securityUserVO = iSecurityUserService.detailInfo(securityUser.getId());
+        loginResult.setUserInfo(securityUserVO);
         //登录完成的事件  不处理成功失败
         loginHandler.loginComplete(params, securityUser, saTokenInfo);
         return MxResult.ok().data(loginResult);
@@ -140,12 +152,12 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
         ILoginHandler loginHandler = config.loginHandlerClass();
         MxResult r = loginHandler.logoutBefore(params);
-        if (config.error(r)) {
+        if (Security.error(r)) {
             return r;
         }
         StpUtil.logout();
         r = loginHandler.logoutAfter(params);
-        if (config.error(r)) {
+        if (Security.error(r)) {
             return r;
         }
         return MxResult.ok();
@@ -186,7 +198,9 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         securityUser.setLastModifyTime(DateTimeUtils.currentTimeMillis());
         securityUser = iSecurityUserDao.update(securityUser, SecurityUser.FIELDS.REAL_NAME, SecurityUser.FIELDS.PHOTO_URI,
                 SecurityUser.FIELDS.MOBILE, SecurityUser.FIELDS.GENDER, SecurityUser.FIELDS.LAST_MODIFY_USER, SecurityUser.FIELDS.LAST_MODIFY_TIME);
-        return MxResult.result(securityUser);
+        //处理用户数据
+        SecurityUserVO securityUserVO = iSecurityUserService.detailInfo(securityUser.getId());
+        return MxResult.result(securityUser).attr("userInfo",securityUserVO);
     }
 
     @Override

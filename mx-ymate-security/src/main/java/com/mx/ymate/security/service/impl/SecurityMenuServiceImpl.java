@@ -61,19 +61,25 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
 
     @Override
     public MxResult nav() throws Exception {
+        List<SecurityMenuNavVO> navList = navList();
+        return MxResult.ok().data(navList);
+    }
+
+    @Override
+    public List<SecurityMenuNavVO> navList() throws Exception {
         String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.MENU), config.client());
         if (SaUtil.isFounder()) {
-            return MxResult.ok().data(iSecurityMenuDao.findAllByType(null, Constants.BOOL_FALSE, config.client(), resourceId).getResultData());
+            return iSecurityMenuDao.findAllByType(null, Constants.BOOL_FALSE, config.client(), resourceId).getResultData();
         }
         //查询带权限的还有公开的 合并到一起
         List<SecurityMenuNavVO> list = iSecurityMenuDao.findAll(SaUtil.loginId(), config.client(), StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE), config.client()), Constants.BOOL_FALSE).getResultData();
-        List<SecurityMenuNavVO> tempList = new ArrayList<>(list);
+        List<SecurityMenuNavVO> navList = new ArrayList<>(list);
         List<SecurityMenuNavVO> publicList = iSecurityMenuDao.findAllByType(MenuType.PUBLIC.value(), Constants.BOOL_FALSE, config.client(), resourceId).getResultData();
-        tempList.addAll(publicList);
-        if (CollUtil.isNotEmpty(tempList)) {
-            tempList = tempList.stream().sorted(Comparator.comparing(SecurityMenuNavVO::getSort)).collect(Collectors.toList());
+        navList.addAll(publicList);
+        if (CollUtil.isNotEmpty(navList)) {
+            navList = navList.stream().sorted(Comparator.comparing(SecurityMenuNavVO::getSort)).collect(Collectors.toList());
         }
-        return MxResult.ok().data(tempList);
+        return navList;
     }
 
     private List<SecurityMenuListVO> createTree(List<SecurityMenuNavVO> resultSet, List<SecurityMenuNavVO> allCategory) {

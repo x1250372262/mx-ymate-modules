@@ -15,6 +15,8 @@
  */
 package com.mx.ymate.security;
 
+import com.mx.ymate.dev.support.mvc.MxResult;
+import com.mx.ymate.security.base.code.SecurityCode;
 import com.mx.ymate.security.impl.DefaultSecurityConfig;
 import net.ymate.platform.core.*;
 import net.ymate.platform.core.module.IModule;
@@ -125,5 +127,14 @@ public final class Security implements IModule, ISecurity {
     @Override
     public ISecurityConfig getConfig() {
         return config;
+    }
+
+    /**
+     * 检查是否有问题
+     * @param mxResult
+     * @return
+     */
+    public static boolean error(MxResult mxResult) {
+        return mxResult == null || SecurityCode.SECURITY_CHECK_ERROR.code().equals(mxResult.code());
     }
 }

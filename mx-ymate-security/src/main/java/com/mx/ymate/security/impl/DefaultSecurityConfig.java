@@ -15,10 +15,8 @@
  */
 package com.mx.ymate.security.impl;
 
-import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.security.ISecurity;
 import com.mx.ymate.security.ISecurityConfig;
-import com.mx.ymate.security.base.code.SecurityCode;
 import com.mx.ymate.security.handler.ILoginHandler;
 import com.mx.ymate.security.handler.IUserHandler;
 import net.ymate.platform.commons.util.ClassUtils;
@@ -38,6 +36,16 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
      * 客户端名称
      */
     private String client;
+
+    /**
+     * 菜单缓存key
+     */
+    private String menuKey;
+
+    /**
+     * 用户缓存key
+     */
+    private String userKey;
 
     /**
      * loginHandler实现类
@@ -146,11 +154,6 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
     @Override
     public String excludePathPatterns() {
         return excludePathPatterns;
-    }
-
-    @Override
-    public boolean error(MxResult mxResult) {
-        return mxResult == null || SecurityCode.SECURITY_CHECK_ERROR.code().equals(mxResult.code());
     }
 
 

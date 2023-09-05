@@ -83,7 +83,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
         String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.USER), config.client());
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
         MxResult r = userHandler.createBefore(params);
-        if (config.error(r)) {
+        if (Security.error(r)) {
             return r;
         }
         SecurityUser securityUser = iSecurityUserDao.findByUserNameAndClientAndResourceId(userBean.getUserName(), config.client(), resourceId);
@@ -103,7 +103,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
         securityUser.setLastModifyTime(DateTimeUtils.currentTimeMillis());
         securityUser.setSalt(salt);
         r = userHandler.createAfter(params);
-        if (config.error(r)) {
+        if (Security.error(r)) {
             return r;
         }
         securityUser = iSecurityUserDao.create(securityUser);
@@ -112,7 +112,12 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
 
     @Override
     public MxResult detail(String id) throws Exception {
-        return MxResult.ok().data(BeanUtil.copy(iSecurityUserDao.findById(id), SecurityUserVO::new));
+        return MxResult.ok().data(detailInfo(id));
+    }
+
+    @Override
+    public SecurityUserVO detailInfo(String id) throws Exception {
+        return BeanUtil.copy(iSecurityUserDao.findById(id), SecurityUserVO::new);
     }
 
     @Override

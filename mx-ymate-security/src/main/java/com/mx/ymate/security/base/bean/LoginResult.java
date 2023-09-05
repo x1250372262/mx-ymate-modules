@@ -1,6 +1,10 @@
 package com.mx.ymate.security.base.bean;
 
+import com.mx.ymate.security.base.vo.SecurityMenuNavVO;
+import com.mx.ymate.security.base.vo.SecurityUserVO;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,6 +37,10 @@ public class LoginResult {
     public String tag;
 
     private Map<String, Object> attrs = new HashMap<>();
+
+    private List<SecurityMenuNavVO> navList;
+
+    private SecurityUserVO userInfo;
 
     /**
      * @return token名称
@@ -196,17 +204,39 @@ public class LoginResult {
         this.attrs = attrs;
     }
 
-    /**
-     * toString
-     */
-    @Override
-    public String toString() {
-        return "SaTokenInfo [tokenName=" + tokenName + ", tokenValue=" + tokenValue + ", isLogin=" + isLogin
-                + ", loginId=" + loginId + ", loginType=" + loginType + ", tokenTimeout=" + tokenTimeout
-                + ", sessionTimeout=" + sessionTimeout + ", tokenSessionTimeout=" + tokenSessionTimeout
-                + ", tokenActivityTimeout=" + tokenActivityTimeout + ", loginDevice=" + loginDevice + ", tag=" + tag
-                + "]";
+    public List<SecurityMenuNavVO> getNavList() {
+        return navList;
     }
 
+    public void setNavList(List<SecurityMenuNavVO> navList) {
+        this.navList = navList;
+    }
 
+    public SecurityUserVO getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(SecurityUserVO userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginResult{" +
+                "tokenName='" + tokenName + '\'' +
+                ", tokenValue='" + tokenValue + '\'' +
+                ", isLogin=" + isLogin +
+                ", loginId=" + loginId +
+                ", loginType='" + loginType + '\'' +
+                ", tokenTimeout=" + tokenTimeout +
+                ", sessionTimeout=" + sessionTimeout +
+                ", tokenSessionTimeout=" + tokenSessionTimeout +
+                ", tokenActivityTimeout=" + tokenActivityTimeout +
+                ", loginDevice='" + loginDevice + '\'' +
+                ", tag='" + tag + '\'' +
+                ", attrs=" + attrs +
+                ", navList=" + navList +
+                ", userInfo=" + userInfo +
+                '}';
+    }
 }
