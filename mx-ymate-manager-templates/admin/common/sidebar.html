@@ -223,9 +223,11 @@
     }
 
     $(function () {
-        MX.axget(MENU_NAV,null,true,null,function(e){
-            setSidebar(e.data);
-        })
+        // MX.axget(MENU_NAV, null, true, null, function (e) {
+        //     setSidebar(e.data);
+        // })
+        var data = Menu.get();
+        setSidebar(data)
     });
 
 

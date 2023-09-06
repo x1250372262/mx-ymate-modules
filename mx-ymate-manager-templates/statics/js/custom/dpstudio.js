@@ -14,7 +14,7 @@ document.write('<script type="text/javascript" src="/statics/js/jquery.min.js?v=
 document.write('<script type="text/javascript" src="/statics/js/jquery.cookie.min.js?v=' + version + '"><\/script>');
 document.write('<script type="text/javascript" src="/statics/js/apis/base.js?v=' + version + '"><\/script>');
 document.write('<script type="text/javascript" src="/statics/js/custom/md5.js?v=' + version + '"><\/script>');
-document.write('<script src="/statics/plugins/layer/layer.js?v=' + version + '"><\/script>');
+document.write('<script type="text/javascript" src="/statics/plugins/layer/layer.js?v=' + version + '"><\/script>');
 document.write('<script type="text/javascript" src="/statics/js/main.min.js?v=' + version + '"><\/script>');
 document.write('<script type="text/javascript" src="/statics/js/angular.min.js?v=' + version + '"><\/script>');
 document.write('<script type="text/javascript" src="/statics/js/popper.min.js?v=' + version + '"><\/script>');
@@ -25,10 +25,13 @@ document.write('<script type="text/javascript" src="/statics/plugins/bootstrap-t
 document.write('<script type="text/javascript" src="/statics/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js?v=' + version + '"><\/script>');
 document.write('<script type="text/javascript" src="/statics/js/perfect-scrollbar.min.js?v=' + version + '"><\/script>');
 document.write('<script type="text/javascript" src="/statics/plugins/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js?v=' + version + '"><\/script>');
-document.write('<script src="/statics/js/custom/store.js?v=' + version + '"><\/script>');
-document.write('<script src="/statics/js/custom/token.js?v=' + version + '"><\/script>');
+document.write('<script type="text/javascript" src="/statics/js/custom/store.js?v=' + version + '"><\/script>');
+document.write('<script type="text/javascript" src="/statics/js/custom/token.js?v=' + version + '"><\/script>');
+document.write('<script type="text/javascript" src="/statics/js/custom/menu.js?v=' + version + '"><\/script>');
+document.write('<script type="text/javascript" src="/statics/js/custom/user.js?v=' + version + '"><\/script>');
 document.write('<script type="text/javascript" src="/statics/js/custom/MX.js?v=' + version + '"><\/script>');
-document.write('<script src="/statics/js/custom/validator.js?v=' + version + '"><\/script>');
-document.write('<script src="/statics/js/custom/form.js?v=' + version + '"><\/script>');
-document.write('<script src="/statics/js/custom/upload_pic.js?v=' + version + '"><\/script>');
-document.write('<script src="/statics/js/custom/select.js?v=' + version + '"><\/script>');
+document.write('<script type="text/javascript" src="/statics/js/custom/validator.js?v=' + version + '"><\/script>');
+document.write('<script type="text/javascript" src="/statics/js/custom/permission.js?v=' + version + '"><\/script>');
+document.write('<script type="text/javascript" src="/statics/js/custom/form.js?v=' + version + '"><\/script>');
+document.write('<script type="text/javascript" src="/statics/js/custom/upload_pic.js?v=' + version + '"><\/script>');
+document.write('<script type="text/javascript" src="/statics/js/custom/select.js?v=' + version + '"><\/script>');

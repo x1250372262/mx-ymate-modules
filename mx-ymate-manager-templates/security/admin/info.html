@@ -104,6 +104,10 @@
       VALIDATE.validate($(".site-form"),ADMIN_INFO_UPDATE,null,null,function(e){
         if (e.code === "00000") {
           MX.successMsg("修改成功~")
+          var userInfo = e.userInfo;
+          if(userInfo!==undefined && userInfo !==null){
+            User.refresh(userInfo)
+          }
           setTimeout(function(){
             window.location.reload();
           },1000)

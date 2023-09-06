@@ -117,6 +117,8 @@
 <script type="text/javascript" src="/statics/js/custom/validator.js"></script>
 <script type="text/javascript" src="/statics/js/custom/store.js"></script>
 <script type="text/javascript" src="/statics/js/custom/token.js"></script>
+<script type="text/javascript" src="/statics/js/custom/menu.js"></script>
+<script type="text/javascript" src="/statics/js/custom/user.js"></script>
 <script type="text/javascript" src="/statics/js/apis/base.js"></script>
 <script type="text/javascript" src="/statics/js/apis/admin.js"></script>
 <script type="text/javascript">
@@ -165,6 +167,9 @@
         if(logout!==undefined&&logout!==null&&logout==="1"){
             localStorage.removeItem("menu_list");
             Token.remove()
+            Menu.remove()
+            Menu.removePermission();
+            User.remove()
         }
         hk();
 
@@ -217,6 +222,9 @@
                         success: function (result, status, xhr) {
                             $("#verCode").val("");
                             Token.remove();
+                            Menu.remove();
+                            Menu.removePermission();
+                            User.remove();
                             layer.close(loading);
                             if (result.code === "M0007") {
                                 setTimeout(function(){
@@ -234,6 +242,9 @@
                                 if(result.code === "00000"){
                                     setCookie();
                                     Token.set(result.data.tokenValue)
+                                    Menu.set(result.data.navList)
+                                    Menu.setPermission(result.data.permissionList)
+                                    User.set(result.data.userInfo)
                                     layer.msg("登录成功", {
                                         icon: "smile",
                                         skin: $(this).data('bg'),

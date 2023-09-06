@@ -164,10 +164,21 @@
 </header>
 <script type="text/javascript">
 
-    MX.axget(ADMIN_INFO,null,true,null,function(e){
-        $("#photoUri").attr("src",e.data.photoUri?e.data.photoUri:"/statics/images/no_image.gif");
-        $("#userName").html(e.data.realName!=null?e.data.realName:e.data.userName);
-    })
+    $(function () {
+        // MX.axget(ADMIN_INFO,null,true,null,function(e){
+        //     $("#photoUri").attr("src",e.data.photoUri?e.data.photoUri:"/statics/images/touxiang.png");
+        //     $("#userName").html(e.data.realName!=null?e.data.realName:e.data.userName);
+        // })
+        var userInfo = $.trim(User.get())
+        if (userInfo !== undefined && userInfo !== null && userInfo.length > 0) {
+            var arrData = (typeof userInfo == 'object') ? userInfo : JSON.parse(userInfo);
+            $("#photoUri").attr("src", arrData.photoUri ? arrData.photoUri : "/statics/images/touxiang.png");
+            $("#userName").html(arrData.realName != null ? arrData.realName : arrData.userName);
+        } else {
+            $("#photoUri").attr("src", "/statics/images/touxiang.png");
+            $("#userName").html("默认管理员");
+        }
+    });
 
     // 侧边栏
     $(document).on('click', '#logout', function() {
@@ -176,6 +187,9 @@
                 MX.successMsg("退出成功~")
                 setTimeout(function(){
                     Token.remove()
+                    Menu.remove()
+                    Menu.removePermission();
+                    User.remove()
                     window.location.href = LOGIN_VIEW + "?logout=1";
                 },1000)
             } else {

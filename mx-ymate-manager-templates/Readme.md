@@ -382,6 +382,8 @@ Table.init("GET",true);
 </div>
 
 ```
+
+### 上传文件
 ```javascript
 FILE.init($("#commonDiv"), UPLOAD_FILE, "");
 
@@ -402,3 +404,14 @@ columns = [
 ]
 
 ```
+### 权限菜单用户信息
+```html
+ <div class="container-fluid p-t-15 mx_permission"  mx_permission="MANAGER_STATION_PERMISSION">
+</div>
+```
+没有MANAGER_STATION_PERMISSION权限的 就不会显示这个div
+
+```html
+<body ng-app="" mx_permission="MANAGER_STATION_PERMISSION"></body>
+```
+没有MANAGER_STATION_PERMISSION权限的 就会提示页面没有权限访问  之后考虑直接关掉
