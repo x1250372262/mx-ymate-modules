@@ -25,6 +25,10 @@ public class SecurityMenuNavVO implements Serializable {
 
     private Integer sort;
 
+    private Integer type;
+
+    private String permission;
+
     public String getId() {
         return id;
     }
@@ -89,8 +93,35 @@ public class SecurityMenuNavVO implements Serializable {
         this.sort = sort;
     }
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
     @Override
     public String toString() {
-        return "SecurityMenuNavVO{" + "id='" + id + '\'' + ", pid='" + pid + '\'' + ", name='" + name + '\'' + ", value='" + value + '\'' + ", icon='" + icon + '\'' + ", path='" + path + '\'' + ", url='" + url + '\'' + ", sort=" + sort + '}';
+        return "SecurityMenuNavVO{" +
+                "id='" + id + '\'' +
+                ", pid='" + pid + '\'' +
+                ", name='" + name + '\'' +
+                ", value='" + value + '\'' +
+                ", icon='" + icon + '\'' +
+                ", path='" + path + '\'' +
+                ", url='" + url + '\'' +
+                ", sort=" + sort +
+                ", type=" + type +
+                ", permission='" + permission + '\'' +
+                '}';
     }
 }

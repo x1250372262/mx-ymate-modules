@@ -4,8 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import com.mx.ymate.dev.constants.Constants;
 import com.mx.ymate.dev.support.mvc.MxResult;
-import com.mx.ymate.dev.support.page.PageBean;
-import com.mx.ymate.dev.support.page.Pages;
 import com.mx.ymate.dev.util.BeanUtil;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
@@ -16,29 +14,25 @@ import com.mx.ymate.security.base.enums.MenuType;
 import com.mx.ymate.security.base.enums.OperationType;
 import com.mx.ymate.security.base.enums.ResourceType;
 import com.mx.ymate.security.base.model.SecurityMenu;
-import com.mx.ymate.security.base.model.SecurityMenuRole;
 import com.mx.ymate.security.base.vo.SecurityMenuListVO;
 import com.mx.ymate.security.base.vo.SecurityMenuNavVO;
-import com.mx.ymate.security.base.vo.SecurityMenuRoleVO;
 import com.mx.ymate.security.base.vo.SecurityMenuVO;
 import com.mx.ymate.security.dao.ISecurityMenuDao;
-import com.mx.ymate.security.dao.ISecurityMenuRoleDao;
 import com.mx.ymate.security.handler.IUserHandler;
 import com.mx.ymate.security.service.ISecurityMenuService;
-import net.ymate.platform.commons.util.DateTimeUtils;
+import com.mx.ymate.security.service.ISecurityUserRoleService;
 import net.ymate.platform.commons.util.UUIDUtils;
 import net.ymate.platform.core.beans.annotation.Bean;
 import net.ymate.platform.core.beans.annotation.Inject;
-import net.ymate.platform.core.persistence.IResultSet;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.mx.ymate.security.base.code.SecurityCode.SECURITY_MENU_HAS_CHILD_NOT_DELETE;
-import static com.mx.ymate.security.base.code.SecurityCode.SECURITY_MENU_ROLE_EXISTS;
 
 
 /**
@@ -52,7 +46,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     @Inject
     private ISecurityMenuDao iSecurityMenuDao;
     @Inject
-    private ISecurityMenuRoleDao iSecurityMenuRoleDao;
+    private ISecurityUserRoleService iSecurityUserRoleService;
 
     private final ISecurityConfig config = Security.get().getConfig();
 
@@ -61,25 +55,35 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
 
     @Override
     public MxResult nav() throws Exception {
-        List<SecurityMenuNavVO> navList = navList(SaUtil.loginId(),SaUtil.isFounder());
+        List<String> permissionList = iSecurityUserRoleService.securityUserPermissionList(SaUtil.loginId(), SaUtil.getToken());
+        List<SecurityMenuNavVO> navList = navList(SaUtil.loginId(), permissionList, SaUtil.isFounder());
         return MxResult.ok().data(navList);
     }
 
     @Override
-    public List<SecurityMenuNavVO> navList(String userId,boolean isFounder) throws Exception {
+    public List<SecurityMenuNavVO> navList(String userId, List<String> permissionList, boolean isFounder) throws Exception {
+        //取出来这个人所有的菜单
         String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.MENU), config.client());
+        List<SecurityMenuNavVO> menuAllList = iSecurityMenuDao.findAll(null, Constants.BOOL_FALSE, config.client(), resourceId).getResultData();
         if (isFounder) {
-            return iSecurityMenuDao.findAllByType(null, Constants.BOOL_FALSE, config.client(), resourceId).getResultData();
+            return menuAllList;
         }
-        //查询带权限的还有公开的 合并到一起
-        List<SecurityMenuNavVO> list = iSecurityMenuDao.findAll(userId, config.client(), StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE), config.client()), Constants.BOOL_FALSE).getResultData();
-        List<SecurityMenuNavVO> navList = new ArrayList<>(list);
-        List<SecurityMenuNavVO> publicList = iSecurityMenuDao.findAllByType(MenuType.PUBLIC.value(), Constants.BOOL_FALSE, config.client(), resourceId).getResultData();
-        navList.addAll(publicList);
-        if (CollUtil.isNotEmpty(navList)) {
-            navList = navList.stream().sorted(Comparator.comparing(SecurityMenuNavVO::getSort)).collect(Collectors.toList());
+        //不是总管理的前提下
+        //首先是公开的
+        List<SecurityMenuNavVO> permissionMenuList = menuAllList.stream().filter(m -> Objects.equals(MenuType.PUBLIC.value(), m.getType())).collect(Collectors.toList());
+        List<SecurityMenuNavVO> defaultPermissionsList = menuAllList.stream().filter(m -> Objects.equals(MenuType.DEFAULT.value(), m.getType())).collect(Collectors.toList());
+        if(permissionList.isEmpty()){
+            return permissionMenuList;
         }
-        return navList;
+        for (SecurityMenuNavVO securityMenuNavVO : defaultPermissionsList) {
+            //获取用户所有的权限
+            String permission = securityMenuNavVO.getPermission();
+            //如果菜单不需要权限  或者 用户有这个权限
+            if ((StringUtils.isBlank(permission)) || (StringUtils.isNotBlank(permission) && permissionList.contains(permission))) {
+                permissionMenuList.add(securityMenuNavVO);
+            }
+        }
+        return permissionMenuList;
     }
 
     private List<SecurityMenuListVO> createTree(List<SecurityMenuNavVO> resultSet, List<SecurityMenuNavVO> allCategory) {
@@ -111,7 +115,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     @Override
     public MxResult list() throws Exception {
         String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.MENU), config.client());
-        List<SecurityMenuNavVO> menuNavVOList = iSecurityMenuDao.findAllByType(null, null, config.client(), resourceId).getResultData();
+        List<SecurityMenuNavVO> menuNavVOList = iSecurityMenuDao.findAll(null, null, config.client(), resourceId).getResultData();
         List<SecurityMenuListVO> menuListVOList = new ArrayList<>();
         if (CollUtil.isEmpty(menuNavVOList)) {
             return MxResult.ok().data(menuListVOList);
@@ -129,9 +133,15 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     public MxResult create(SecurityMenuBean menuBean) throws Exception {
         String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.MENU), config.client());
         SecurityMenu menu = BeanUtil.copy(menuBean, SecurityMenu::new);
+        long time = System.currentTimeMillis();
+        String userId = SaUtil.loginId();
         menu.setId(UUIDUtils.UUID());
         menu.setClient(config.client());
         menu.setResourceId(resourceId);
+        menu.setCreateTime(time);
+        menu.setCreateUser(userId);
+        menu.setLastModifyTime(time);
+        menu.setLastModifyUser(userId);
         menu = iSecurityMenuDao.create(menu);
         return MxResult.result(menu);
     }
@@ -144,8 +154,11 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
             return MxResult.noData();
         }
         menu = BeanUtil.duplicate(menuBean, menu);
+        menu.setLastModifyTime(System.currentTimeMillis());
+        menu.setLastModifyUser(SaUtil.loginId());
         menu = iSecurityMenuDao.update(menu, SecurityMenu.FIELDS.PARENT_ID, SecurityMenu.FIELDS.NAME, SecurityMenu.FIELDS.ICON,
-                SecurityMenu.FIELDS.PATH, SecurityMenu.FIELDS.URL, SecurityMenu.FIELDS.SORT, SecurityMenu.FIELDS.TYPE, SecurityMenu.FIELDS.HIDE_STATUS);
+                SecurityMenu.FIELDS.PATH, SecurityMenu.FIELDS.URL, SecurityMenu.FIELDS.SORT, SecurityMenu.FIELDS.TYPE,
+                SecurityMenu.FIELDS.HIDE_STATUS, SecurityMenu.FIELDS.PERMISSION, SecurityMenu.FIELDS.LAST_MODIFY_TIME, SecurityMenu.FIELDS.LAST_MODIFY_USER);
         return MxResult.result(menu);
     }
 
@@ -164,37 +177,4 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
         return MxResult.result(iSecurityMenuDao.delete(id));
     }
 
-    @Override
-    public MxResult roleList(String menuId, String name, PageBean pageBean) throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE), config.client());
-        IResultSet<SecurityMenuRoleVO> resultData = iSecurityMenuRoleDao.findAll(menuId, resourceId, name, pageBean.toPage());
-        return MxResult.ok().data(Pages.create(resultData));
-    }
-
-    @Override
-    @OperationLog(operationType = OperationType.CREATE, title = "添加菜单角色")
-    public MxResult roleCreate(String menuId, String roleId) throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE), config.client());
-        SecurityMenuRole menuRole = iSecurityMenuRoleDao.findByMenuIdAndRoleIdAndClient(menuId, roleId, config.client());
-        if (menuRole != null) {
-            return MxResult.create(SECURITY_MENU_ROLE_EXISTS);
-        }
-        menuRole = SecurityMenuRole.builder()
-                .id(UUIDUtils.UUID())
-                .resourceId(resourceId)
-                .menuId(menuId)
-                .roleId(roleId)
-                .client(config.client())
-                .createUser(SaUtil.loginId())
-                .createTime(DateTimeUtils.currentTimeMillis())
-                .build();
-        menuRole = iSecurityMenuRoleDao.create(menuRole);
-        return MxResult.result(menuRole);
-    }
-
-    @Override
-    @OperationLog(operationType = OperationType.DELETE, title = "删除菜单角色")
-    public MxResult roleDelete(String[] ids) throws Exception {
-        return MxResult.result(iSecurityMenuRoleDao.deleteByIds(ids));
-    }
 }

@@ -25,6 +25,8 @@ public class SecurityMenuBean implements Serializable {
 
     private Integer hideStatus;
 
+    private String permission;
+
 
     public String getParentId() {
         return parentId;
@@ -90,8 +92,26 @@ public class SecurityMenuBean implements Serializable {
         this.hideStatus = hideStatus;
     }
 
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
     @Override
     public String toString() {
-        return "SecurityMenuBean{" + "parentId='" + parentId + '\'' + ", name='" + name + '\'' + ", icon='" + icon + '\'' + ", path='" + path + '\'' + ", url='" + url + '\'' + ", sort=" + sort + ", type=" + type + '}';
+        return "SecurityMenuBean{" +
+                "parentId='" + parentId + '\'' +
+                ", name='" + name + '\'' +
+                ", icon='" + icon + '\'' +
+                ", path='" + path + '\'' +
+                ", url='" + url + '\'' +
+                ", sort=" + sort +
+                ", type=" + type +
+                ", hideStatus=" + hideStatus +
+                ", permission='" + permission + '\'' +
+                '}';
     }
 }

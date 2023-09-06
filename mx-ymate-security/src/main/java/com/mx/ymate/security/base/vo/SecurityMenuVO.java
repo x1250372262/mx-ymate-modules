@@ -27,6 +27,8 @@ public class SecurityMenuVO implements Serializable {
 
     private Integer hideStatus;
 
+    private String permission;
+
     public String getId() {
         return id;
     }
@@ -99,8 +101,27 @@ public class SecurityMenuVO implements Serializable {
         this.hideStatus = hideStatus;
     }
 
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
     @Override
     public String toString() {
-        return "SecurityMenuVO{" + "id='" + id + '\'' + ", parentId='" + parentId + '\'' + ", name='" + name + '\'' + ", icon='" + icon + '\'' + ", path='" + path + '\'' + ", url='" + url + '\'' + ", sort=" + sort + ", type='" + type + '\'' + '}';
+        return "SecurityMenuVO{" +
+                "id='" + id + '\'' +
+                ", parentId='" + parentId + '\'' +
+                ", name='" + name + '\'' +
+                ", icon='" + icon + '\'' +
+                ", path='" + path + '\'' +
+                ", url='" + url + '\'' +
+                ", sort=" + sort +
+                ", type=" + type +
+                ", hideStatus=" + hideStatus +
+                ", permission='" + permission + '\'' +
+                '}';
     }
 }

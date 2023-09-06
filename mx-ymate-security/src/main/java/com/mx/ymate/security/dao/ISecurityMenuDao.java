@@ -19,17 +19,8 @@ public interface ISecurityMenuDao {
      * @param resourceId
      * @return
      */
-    IResultSet<SecurityMenuNavVO> findAllByType(Integer type, Integer hideStatus,String client, String resourceId) throws Exception;
+    IResultSet<SecurityMenuNavVO> findAll(Integer type, Integer hideStatus, String client, String resourceId) throws Exception;
 
-    /**
-     * 根据用户id和客户端获取
-     *
-     * @param userId
-     * @param client
-     * @param resourceId
-     * @return
-     */
-    IResultSet<SecurityMenuNavVO> findAll(String userId, String client, String resourceId,Integer hideStatus) throws Exception;
 
     /**
      * 添加
@@ -42,6 +33,7 @@ public interface ISecurityMenuDao {
 
     /**
      * 修改
+     *
      * @param securityMenu
      * @param fields
      * @return
@@ -61,6 +53,7 @@ public interface ISecurityMenuDao {
 
     /**
      * 根据父id查询
+     *
      * @param parentId
      * @param fields
      * @return
@@ -70,6 +63,7 @@ public interface ISecurityMenuDao {
 
     /**
      * 根据id删除
+     *
      * @param id
      * @return
      * @throws Exception

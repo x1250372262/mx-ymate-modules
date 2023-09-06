@@ -1,7 +1,6 @@
 package com.mx.ymate.security.service;
 
 import com.mx.ymate.dev.support.mvc.MxResult;
-import com.mx.ymate.dev.support.page.PageBean;
 import com.mx.ymate.security.base.bean.SecurityMenuBean;
 import com.mx.ymate.security.base.vo.SecurityMenuNavVO;
 
@@ -28,7 +27,7 @@ public interface ISecurityMenuService {
      * @return
      * @throws Exception
      */
-    List<SecurityMenuNavVO> navList(String userId,boolean isFounder) throws Exception;
+    List<SecurityMenuNavVO> navList(String userId,List<String> permissionList, boolean isFounder) throws Exception;
 
     /**
      * 菜单列表
@@ -75,33 +74,4 @@ public interface ISecurityMenuService {
      */
     MxResult delete(String id) throws Exception;
 
-    /**
-     * 菜单角色列表
-     *
-     * @param menuId
-     * @param name
-     * @param pageBean
-     * @return
-     * @throws Exception
-     */
-    MxResult roleList(String menuId, String name, PageBean pageBean) throws Exception;
-
-    /**
-     * 添加菜单角色
-     *
-     * @param menuId
-     * @param roleId
-     * @return
-     * @throws Exception
-     */
-    MxResult roleCreate(String menuId, String roleId) throws Exception;
-
-    /**
-     * 删除菜单角色
-     *
-     * @param ids
-     * @return
-     * @throws Exception
-     */
-    MxResult roleDelete(String[] ids) throws Exception;
 }

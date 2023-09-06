@@ -136,7 +136,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         LoginResult loginResult = BeanUtil.copy(saTokenInfo, LoginResult::new);
         loginResult.setAttrs(r.attrs());
         //处理菜单数据
-        List<SecurityMenuNavVO> navList = iSecurityMenuService.navList(securityUser.getId(),Objects.equals(Constants.BOOL_TRUE, securityUser.getFounder()));
+        List<SecurityMenuNavVO> navList = iSecurityMenuService.navList(securityUser.getId(), permissionList, Objects.equals(Constants.BOOL_TRUE, securityUser.getFounder()));
         loginResult.setNavList(navList);
         //处理用户数据
         SecurityUserVO securityUserVO = iSecurityUserService.detailInfo(securityUser.getId());

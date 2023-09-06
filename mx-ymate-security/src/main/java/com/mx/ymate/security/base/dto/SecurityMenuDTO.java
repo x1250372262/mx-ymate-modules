@@ -43,6 +43,9 @@ public class SecurityMenuDTO implements Serializable {
     @RequestParam
     private Integer hideStatus;
 
+    @RequestParam
+    private String permission;
+
     public SecurityMenuBean toBean() throws Exception {
         return BeanUtil.copy(this, SecurityMenuBean::new);
     }
@@ -112,8 +115,26 @@ public class SecurityMenuDTO implements Serializable {
         this.hideStatus = hideStatus;
     }
 
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
     @Override
     public String toString() {
-        return "SecurityMenuDTO{" + "parentId='" + parentId + '\'' + ", name='" + name + '\'' + ", icon='" + icon + '\'' + ", path='" + path + '\'' + ", url='" + url + '\'' + ", sort=" + sort + ", type=" + type + '}';
+        return "SecurityMenuDTO{" +
+                "parentId='" + parentId + '\'' +
+                ", name='" + name + '\'' +
+                ", icon='" + icon + '\'' +
+                ", path='" + path + '\'' +
+                ", url='" + url + '\'' +
+                ", sort=" + sort +
+                ", type=" + type +
+                ", hideStatus=" + hideStatus +
+                ", permission='" + permission + '\'' +
+                '}';
     }
 }

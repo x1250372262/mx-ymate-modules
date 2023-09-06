@@ -20,9 +20,6 @@ public class SecurityPermissionConfig {
     public static final String SECURITY_MENU_UPDATE = "SECURITY_MENU_UPDATE";
     public static final String SECURITY_MENU_DETAIL = "SECURITY_MENU_DETAIL";
     public static final String SECURITY_MENU_DELETE = "SECURITY_MENU_DELETE";
-    public static final String SECURITY_MENU_ROLE_LIST = "SECURITY_MENU_ROLE_LIST";
-    public static final String SECURITY_MENU_ROLE_CREATE = "SECURITY_MENU_ROLE_CREATE";
-    public static final String SECURITY_MENU_ROLE_DELETE = "SECURITY_MENU_ROLE_DELETE";
 
     public static final String SECURITY_ROLE_CREATE = "SECURITY_ROLE_CREATE";
     public static final String SECURITY_ROLE_UPDATE = "SECURITY_ROLE_UPDATE";
@@ -49,15 +46,14 @@ public class SecurityPermissionConfig {
     private static final List<Permission> PERMISSION_LIST = new ArrayList<>();
 
     static {
+        //安全管理
+        PERMISSION_LIST.add(new Permission(SECURITY_MANAGER.value(), PermissionEnum.SECURITY_MANAGER.value(), PermissionEnum.SECURITY_MANAGER.name()));
         //菜单管理
         PERMISSION_LIST.add(new Permission(SECURITY_MENU.value(), PermissionEnum.SECURITY_MENU_LIST.value(), PermissionEnum.SECURITY_MENU_LIST.name()));
         PERMISSION_LIST.add(new Permission(SECURITY_MENU.value(), PermissionEnum.SECURITY_MENU_CREATE.value(), PermissionEnum.SECURITY_MENU_CREATE.name()));
         PERMISSION_LIST.add(new Permission(SECURITY_MENU.value(), PermissionEnum.SECURITY_MENU_UPDATE.value(), PermissionEnum.SECURITY_MENU_UPDATE.name()));
         PERMISSION_LIST.add(new Permission(SECURITY_MENU.value(), PermissionEnum.SECURITY_MENU_DETAIL.value(), PermissionEnum.SECURITY_MENU_DETAIL.name()));
         PERMISSION_LIST.add(new Permission(SECURITY_MENU.value(), PermissionEnum.SECURITY_MENU_DELETE.value(), PermissionEnum.SECURITY_MENU_DELETE.name()));
-        PERMISSION_LIST.add(new Permission(SECURITY_MENU.value(), PermissionEnum.SECURITY_MENU_ROLE_LIST.value(), PermissionEnum.SECURITY_MENU_ROLE_LIST.name()));
-        PERMISSION_LIST.add(new Permission(SECURITY_MENU.value(), PermissionEnum.SECURITY_MENU_ROLE_CREATE.value(), PermissionEnum.SECURITY_MENU_ROLE_CREATE.name()));
-        PERMISSION_LIST.add(new Permission(SECURITY_MENU.value(), PermissionEnum.SECURITY_MENU_ROLE_DELETE.value(), PermissionEnum.SECURITY_MENU_ROLE_DELETE.name()));
         //角色管理
         PERMISSION_LIST.add(new Permission(SECURITY_ROLE.value(), PermissionEnum.SECURITY_ROLE_CREATE.value(), PermissionEnum.SECURITY_ROLE_CREATE.name()));
         PERMISSION_LIST.add(new Permission(SECURITY_ROLE.value(), PermissionEnum.SECURITY_ROLE_UPDATE.value(), PermissionEnum.SECURITY_ROLE_UPDATE.name()));
@@ -91,10 +87,11 @@ public class SecurityPermissionConfig {
     }
 
     public enum GroupEnum {
+
         /**
          * 安全模块权限分组
          */
-        SECURITY_MENU("菜单管理"), SECURITY_ROLE("角色管理"), SECURITY_USER("人员管理"), SECURITY_LOG("日志管理");
+        SECURITY_MANAGER("安全管理"), SECURITY_MENU("菜单管理"), SECURITY_ROLE("角色管理"), SECURITY_USER("人员管理"), SECURITY_LOG("日志管理");
 
         private final String value;
 
@@ -109,8 +106,10 @@ public class SecurityPermissionConfig {
 
     public enum PermissionEnum {
 
+        //安全管理
+        SECURITY_MANAGER("安全管理"),
         //菜单管理
-        SECURITY_MENU_LIST("菜单列表"), SECURITY_MENU_CREATE("添加菜单"), SECURITY_MENU_UPDATE("修改菜单"), SECURITY_MENU_DETAIL("菜单详情"), SECURITY_MENU_DELETE("删除菜单"), SECURITY_MENU_ROLE_LIST("菜单角色列表"), SECURITY_MENU_ROLE_CREATE("添加菜单角色"), SECURITY_MENU_ROLE_DELETE("删除菜单角色"),
+        SECURITY_MENU_LIST("菜单列表"), SECURITY_MENU_CREATE("添加菜单"), SECURITY_MENU_UPDATE("修改菜单"), SECURITY_MENU_DETAIL("菜单详情"), SECURITY_MENU_DELETE("删除菜单"),
         //角色管理
         SECURITY_ROLE_CREATE("添加角色"), SECURITY_ROLE_UPDATE("修改角色"), SECURITY_ROLE_LIST("角色列表"), SECURITY_ROLE_DETAIL("角色详情"), SECURITY_ROLE_DELETE("删除角色"), SECURITY_ROLE_PERMISSION_LIST("角色权限列表"), SECURITY_ROLE_PERMISSION_BIND("角色授权"),
         //人员管理

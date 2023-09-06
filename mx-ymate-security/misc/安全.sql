@@ -1,27 +1,27 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : localhost_智渔科技
+ Source Server         : localhost
  Source Server Type    : MySQL
- Source Server Version : 80029
+ Source Server Version : 80033 (8.0.33)
  Source Host           : localhost:3306
- Source Schema         : sft_tej
+ Source Schema         : mx_security
 
  Target Server Type    : MySQL
- Target Server Version : 80029
+ Target Server Version : 80033 (8.0.33)
  File Encoding         : 65001
 
- Date: 03/08/2022 11:00:04
+ Date: 06/09/2023 10:56:10
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for sft_security_menu
+-- Table structure for mx_security_menu
 -- ----------------------------
-DROP TABLE IF EXISTS `sft_security_menu`;
-CREATE TABLE `sft_security_menu` (
+DROP TABLE IF EXISTS `mx_security_menu`;
+CREATE TABLE `mx_security_menu` (
   `id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'id',
   `resource_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '资源id 默认和客户端一致',
   `client` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '客户端',
@@ -33,32 +33,20 @@ CREATE TABLE `sft_security_menu` (
   `url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT '地址',
   `sort` int NOT NULL DEFAULT '0' COMMENT '排序',
   `hide_status` smallint NOT NULL DEFAULT '0' COMMENT '是否隐藏 0否 1是',
+  `permission` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '权限码',
+  `create_time` bigint NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `create_user` varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
+  `last_modify_time` bigint NOT NULL DEFAULT '0' COMMENT '最后修改时间',
+  `last_modify_user` varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '最后修改人',
   PRIMARY KEY (`id`),
   KEY `parent_id_idx` (`parent_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='菜单表';
 
 -- ----------------------------
--- Table structure for sft_security_menu_role
+-- Table structure for mx_security_operation_log
 -- ----------------------------
-DROP TABLE IF EXISTS `sft_security_menu_role`;
-CREATE TABLE `sft_security_menu_role` (
-  `id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'id',
-  `resource_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '资源id 默认和客户端一样',
-  `client` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '客户端',
-  `menu_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '菜单id',
-  `role_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色id',
-  `create_user` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
-  `create_time` bigint NOT NULL DEFAULT '0' COMMENT '创建时间',
-  PRIMARY KEY (`id`) USING BTREE,
-  KEY `menu_id_idx` (`menu_id`),
-  KEY `role_id_idx` (`role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='菜单角色表';
-
--- ----------------------------
--- Table structure for sft_security_operation_log
--- ----------------------------
-DROP TABLE IF EXISTS `sft_security_operation_log`;
-CREATE TABLE `sft_security_operation_log` (
+DROP TABLE IF EXISTS `mx_security_operation_log`;
+CREATE TABLE `mx_security_operation_log` (
   `id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'id',
   `resource_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '资源id 默认和客户端一致',
   `client` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '客户端',
@@ -83,10 +71,10 @@ CREATE TABLE `sft_security_operation_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='操作日志表';
 
 -- ----------------------------
--- Table structure for sft_security_permission
+-- Table structure for mx_security_permission
 -- ----------------------------
-DROP TABLE IF EXISTS `sft_security_permission`;
-CREATE TABLE `sft_security_permission` (
+DROP TABLE IF EXISTS `mx_security_permission`;
+CREATE TABLE `mx_security_permission` (
   `id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'id',
   `resource_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '资源id 默认和客户端一致',
   `client` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '客户端',
@@ -101,10 +89,10 @@ CREATE TABLE `sft_security_permission` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='权限表';
 
 -- ----------------------------
--- Table structure for sft_security_role
+-- Table structure for mx_security_role
 -- ----------------------------
-DROP TABLE IF EXISTS `sft_security_role`;
-CREATE TABLE `sft_security_role` (
+DROP TABLE IF EXISTS `mx_security_role`;
+CREATE TABLE `mx_security_role` (
   `id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'id',
   `resource_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '资源id 默认和客户端一致',
   `client` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '客户端',
@@ -118,10 +106,10 @@ CREATE TABLE `sft_security_role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='角色表';
 
 -- ----------------------------
--- Table structure for sft_security_role_permission
+-- Table structure for mx_security_role_permission
 -- ----------------------------
-DROP TABLE IF EXISTS `sft_security_role_permission`;
-CREATE TABLE `sft_security_role_permission` (
+DROP TABLE IF EXISTS `mx_security_role_permission`;
+CREATE TABLE `mx_security_role_permission` (
   `id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'id',
   `resource_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '资源id 默认和客户端一致',
   `client` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '客户端',
@@ -137,10 +125,10 @@ CREATE TABLE `sft_security_role_permission` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='角色权限表';
 
 -- ----------------------------
--- Table structure for sft_security_user
+-- Table structure for mx_security_user
 -- ----------------------------
-DROP TABLE IF EXISTS `sft_security_user`;
-CREATE TABLE `sft_security_user` (
+DROP TABLE IF EXISTS `mx_security_user`;
+CREATE TABLE `mx_security_user` (
   `id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'id',
   `resource_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '资源id 默认和客户端一致',
   `client` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '客户端',
@@ -162,15 +150,15 @@ CREATE TABLE `sft_security_user` (
   `login_lock_start_time` bigint DEFAULT '0' COMMENT '锁定开始时间',
   `login_lock_end_time` bigint DEFAULT '0' COMMENT '锁定结束时间',
   `login_time` bigint DEFAULT NULL COMMENT '登录时间',
-  `login_ip` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '登录ip',
+  `login_ip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '登录ip',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='管理员表';
 
 -- ----------------------------
--- Table structure for sft_security_user_role
+-- Table structure for mx_security_user_role
 -- ----------------------------
-DROP TABLE IF EXISTS `sft_security_user_role`;
-CREATE TABLE `sft_security_user_role` (
+DROP TABLE IF EXISTS `mx_security_user_role`;
+CREATE TABLE `mx_security_user_role` (
   `id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'id',
   `resource_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '资源id 默认和客户端一致',
   `client` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '客户端',
