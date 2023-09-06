@@ -61,18 +61,18 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
 
     @Override
     public MxResult nav() throws Exception {
-        List<SecurityMenuNavVO> navList = navList(SaUtil.isFounder());
+        List<SecurityMenuNavVO> navList = navList(SaUtil.loginId(),SaUtil.isFounder());
         return MxResult.ok().data(navList);
     }
 
     @Override
-    public List<SecurityMenuNavVO> navList(boolean isFounder) throws Exception {
+    public List<SecurityMenuNavVO> navList(String userId,boolean isFounder) throws Exception {
         String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.MENU), config.client());
         if (isFounder) {
             return iSecurityMenuDao.findAllByType(null, Constants.BOOL_FALSE, config.client(), resourceId).getResultData();
         }
         //查询带权限的还有公开的 合并到一起
-        List<SecurityMenuNavVO> list = iSecurityMenuDao.findAll(SaUtil.loginId(), config.client(), StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE), config.client()), Constants.BOOL_FALSE).getResultData();
+        List<SecurityMenuNavVO> list = iSecurityMenuDao.findAll(userId, config.client(), StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE), config.client()), Constants.BOOL_FALSE).getResultData();
         List<SecurityMenuNavVO> navList = new ArrayList<>(list);
         List<SecurityMenuNavVO> publicList = iSecurityMenuDao.findAllByType(MenuType.PUBLIC.value(), Constants.BOOL_FALSE, config.client(), resourceId).getResultData();
         navList.addAll(publicList);
