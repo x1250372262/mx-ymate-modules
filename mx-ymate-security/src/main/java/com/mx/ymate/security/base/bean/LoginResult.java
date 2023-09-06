@@ -42,6 +42,8 @@ public class LoginResult {
 
     private SecurityUserVO userInfo;
 
+    private List<String> permissionList;
+
     /**
      * @return token名称
      */
@@ -220,6 +222,14 @@ public class LoginResult {
         this.userInfo = userInfo;
     }
 
+    public List<String> getPermissionList() {
+        return permissionList;
+    }
+
+    public void setPermissionList(List<String> permissionList) {
+        this.permissionList = permissionList;
+    }
+
     @Override
     public String toString() {
         return "LoginResult{" +
@@ -237,6 +247,7 @@ public class LoginResult {
                 ", attrs=" + attrs +
                 ", navList=" + navList +
                 ", userInfo=" + userInfo +
+                ", permissionList=" + permissionList +
                 '}';
     }
 }

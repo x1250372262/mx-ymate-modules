@@ -132,15 +132,17 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         StpUtil.login(securityUser.getId());
         SaTokenInfo saTokenInfo = StpUtil.getTokenInfo();
         //设置用户到缓存
-        cacheUser(securityUser, saTokenInfo);
+        List<String> permissionList = cacheUser(securityUser, saTokenInfo);
         LoginResult loginResult = BeanUtil.copy(saTokenInfo, LoginResult::new);
         loginResult.setAttrs(r.attrs());
         //处理菜单数据
-        List<SecurityMenuNavVO> navList = iSecurityMenuService.navList(Objects.equals(Constants.BOOL_TRUE,securityUser.getFounder()));
+        List<SecurityMenuNavVO> navList = iSecurityMenuService.navList(Objects.equals(Constants.BOOL_TRUE, securityUser.getFounder()));
         loginResult.setNavList(navList);
         //处理用户数据
         SecurityUserVO securityUserVO = iSecurityUserService.detailInfo(securityUser.getId());
         loginResult.setUserInfo(securityUserVO);
+        //处理权限数据
+        loginResult.setPermissionList(permissionList);
         //登录完成的事件  不处理成功失败
         loginHandler.loginComplete(params, securityUser, saTokenInfo);
         return MxResult.ok().data(loginResult);
@@ -163,7 +165,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         return MxResult.ok();
     }
 
-    public void cacheUser(SecurityUser securityUser, SaTokenInfo saTokenInfo) throws Exception {
+    public List<String> cacheUser(SecurityUser securityUser, SaTokenInfo saTokenInfo) throws Exception {
         LoginUser loginUser = BeanUtil.copy(securityUser, LoginUser::new);
         //设置用户信息到redis
         String userKey = StrUtil.format(USER_INFO, saTokenConfig.tokenName(), securityUser.getClient(), securityUser.getId());
@@ -177,7 +179,9 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         }
         List<String> permissionList = iSecurityUserRoleService.securityUserPermissionList(securityUser.getId(), saTokenInfo.getTokenValue());
         RedisApi.strSet(permissionKey, JSONObject.toJSONString(permissionList));
+        return permissionList;
     }
+
 
     @Override
     public SecurityLoginVO info() throws Exception {
@@ -200,7 +204,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
                 SecurityUser.FIELDS.MOBILE, SecurityUser.FIELDS.GENDER, SecurityUser.FIELDS.LAST_MODIFY_USER, SecurityUser.FIELDS.LAST_MODIFY_TIME);
         //处理用户数据
         SecurityUserVO securityUserVO = iSecurityUserService.detailInfo(securityUser.getId());
-        return MxResult.result(securityUser).attr("userInfo",securityUserVO);
+        return MxResult.result(securityUser).attr("userInfo", securityUserVO);
     }
 
     @Override
