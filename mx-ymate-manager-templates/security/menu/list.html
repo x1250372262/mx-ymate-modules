@@ -28,9 +28,7 @@
         <!--页面主要内容-->
         <main class="lyear-layout-content">
             <div class="container-fluid p-t-15">
-
                 <div class="row">
-
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-header">
@@ -106,6 +104,13 @@
                                                placeholder="请输入url"/>
                                     </div>
                                     <div class="form-group col-md-12">
+                                        <label for="permission">权限码</label><br>
+                                        <span style="color: red;font-size: 10px;">如果不填，则默认不需要权限控制.</span>
+                                        <input type="text" class="form-control"
+                                               id="permission" name="permission" value=""
+                                               placeholder="请输入权限码"/>
+                                    </div>
+                                    <div class="form-group col-md-12">
                                         <button type="button" id="saveMenu" class="btn btn-primary m-r-5 mx_validator_button">保 存</button>
                                     </div>
                                 </form>
@@ -136,81 +141,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!--角色选择-->
-                    <div class="col-lg-8 rightDiv" id="attr" style="display: none;">
-                        <div class="card">
-                            <div class="card-header" style="width: 100% !important;"><span
-                                    style="font-size: 16px;">角色列表<i style="color:red;font-size:12px">设置子菜单角色,父级菜单也需要设置，否则显示不出来</i></span>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-toolbar clearfix">
-                                    <form class="form-inline" id="searchForm" method="post">
-                                        <div class="mx_search">
-
-                                            <div class="fom-group m-b-5 m-r-10">
-                                                <input class="form-control" type="text" name="name"
-                                                       placeholder="请输入角色名称..">
-                                            </div>
-
-                                        </div>
-                                        <div>
-                                            <a class="btn btn-primary m-b-5 m-r-5" id="searchButton"><i
-                                                    class="mdi mdi-magnify"></i> 搜索</a>
-                                            <button class="btn btn-secondary m-b-5" id="resetButton"><i
-                                                    class="mdi mdi-delete"></i> 重置查询
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="card-toolbar clearfix">
-                                    <div class="form-inline">
-                                        <a class="btn btn-primary m-b-5 m-r-5 creates" data-toggle="modal"
-                                           data-target="#commonDiv" href="#!"><i class="mdi mdi-plus"></i> 新增</a>
-                                        <a class="btn btn-danger m-b-5 m-r-5 deletes" data-toggle="modal"
-                                           data-target=".removeDio" href="#!"><i class="mdi mdi-window-close"></i>
-                                            删除</a>
-                                    </div>
-                                </div>
-                                <table id="tableAjaxId">
-                                </table>
-                            </div>
-
-                        </div>
-                    </div>
-                    <!--角色选择添加修改-->
-                    <div class="modal fade bs-example-modal-lg" id="commonDiv" tabindex="-1" role="dialog"
-                         aria-labelledby="myLargeModalLabel" data-backdrop="static">
-                        <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">添加</h4>
-                                    <div class="float-right">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="modal-body">
-                                    <form action="" id="commonForm">
-                                        <div class="form-group col-md-12 mx_validator" >
-                                            <label for="roleId">选择角色</label>
-                                            <select class="form-control select-init mx_required" mx_required_type="select" mx_required_msg="请选择角色" id="roleId" name="roleId"
-                                                    isDefault="1">
-                                            </select>
-                                        </div>
-
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                    <button type="button" class="btn btn-primary mx_validator_button" id="submit">保存
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
 
             </div>
@@ -222,7 +152,6 @@
 <script type="text/javascript" src="/statics/js/apis/menu.js"></script>
 <script type="text/javascript" src="/statics/js/apis/role.js"></script>
 <script type="text/javascript" src="/statics/js/custom/select.js"></script>
-<script type="text/javascript" src="/statics/js/custom/table.js"></script>
 <script type="text/javascript" src="/statics/plugins/fontIconPicker/jquery.fonticonpicker.min.js"></script>
 <script type="text/javascript" src="/statics/plugins/jstree/jstree.min.js"></script>
 <script type="text/javascript">
@@ -278,20 +207,6 @@
                     $("#removeMenu").attr("dataId",dataId)
                     $(".removeMenu").modal();
                 }
-            },
-            "role": {
-                "label": "角色管理",
-                "action": function (data) {
-                    $('#tableAjaxId').bootstrapTable('destroy');
-                    var dataId = node.a_attr.data_id;
-                    $(".createsRole").attr("menuId",dataId);
-                    var listUrl = MENU_ROLE_LIST + "?menuId=" + dataId;
-                    var createUrl = MENU_ROLE_CREATE + "?menuId=" + dataId;
-                    Table.setUrl(listUrl,createUrl,null,null,MENU_ROLE_DELETE,null)
-                    Table.init();
-                    $(".rightDiv").hide();
-                    $("#attr").show();
-                }
             }
 
         }
@@ -307,35 +222,6 @@
         return items;    //注意要有返回值
     }
 
-    columns = [
-        {
-            checkbox: true, // 显示一个勾选框
-            align: 'center' // 居中显示
-        }, {
-            field: 'name', // 返回json数据中的name
-            title: '名称', // 表格表头显示文字
-            align: 'center', // 左右居中
-            valign: 'middle' // 上下居中
-        }, {
-            field: 'createTime',
-            title: '创建时间',
-            align: 'center',
-            valign: 'middle',
-            formatter: function (value, row, index) { // 单元格格式化函数
-                return MX.changeTimeToString(value);
-            }
-        }, {
-            title: "操作",
-            align: 'center',
-            valign: 'middle',
-            width: 160, // 定义列的宽度，单位为像素px
-            formatter: option
-        }
-    ]
-
-    function option(value, row, index) {
-        return '<a class="btn btn-xs btn-default deletes" data-toggle="modal" data-target=".removeDio" dataId="' + row.id + '"  title="删除" >删除</a>';
-    }
 
     //初始化树形
     function initmenuTree(){
@@ -365,9 +251,6 @@
     }
 
     $(function () {
-
-        SELECT.init($("#commonForm"),"id","name",ROLE_LIST,null,"?page=1&pageSize=-1","resultData")
-
          var font_element = $('#icon').fontIconPicker({
             theme: 'fip-bootstrap'
         });
