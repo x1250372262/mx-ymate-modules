@@ -16,12 +16,9 @@
         <module>mx-ymate-netty</module>
         <module>mx-ymate-serv</module>
         <module>mx-ymate-excel</module>
-<!--        <module>mx-ymate-apidocs</module>-->
         <module>mx-ymate-work-robot</module>
         <module>mx-ymate-clickhouse</module>
-        <module>mx-ymate-monitor</module>
         <module>mx-ymate-schedule</module>
-        <!--        <module>mx-ymate-maven-plugin</module>-->
     </modules>
     <packaging>pom</packaging>
 
