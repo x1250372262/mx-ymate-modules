@@ -175,7 +175,7 @@
             $("#photoUri").attr("src", arrData.photoUri ? arrData.photoUri : "/statics/images/touxiang.png");
             $("#userName").html(arrData.realName != null ? arrData.realName : arrData.userName);
         } else {
-            $("#photoUri").attr("src", "/statics/images/touxiang.png");
+            $("#photoUri").attr("src", "/statics/images/no_image.gif");
             $("#userName").html("默认管理员");
         }
     });

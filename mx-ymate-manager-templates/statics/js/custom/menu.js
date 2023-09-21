@@ -1,5 +1,5 @@
-var MENU_KEY = "sftManagerMenu";
-var PERMISSION_KEY = "sftManagerPermission";
+var MENU_KEY = "mxMenu";
+var PERMISSION_KEY = "mxPermission";
 var Menu = function () {
 
     return {

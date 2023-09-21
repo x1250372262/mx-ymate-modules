@@ -1,4 +1,4 @@
-var USER_KEY = "sftManagerUser";
+var USER_KEY = "mxUser";
 var User = function () {
 
     return {
