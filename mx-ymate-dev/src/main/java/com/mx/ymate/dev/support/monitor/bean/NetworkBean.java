@@ -1,4 +1,4 @@
-package com.mx.ymate.monitor.bean.server;
+package com.mx.ymate.dev.support.monitor.bean;
 
 import java.io.Serializable;
 

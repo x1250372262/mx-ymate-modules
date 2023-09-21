@@ -1,11 +1,10 @@
-package com.mx.ymate.monitor.bean.server;
+package com.mx.ymate.dev.support.monitor.bean;
 
-import com.mx.ymate.monitor.bean.AbstractBean;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class ServerBean extends AbstractBean implements Serializable {
+public class ServerBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -1,17 +1,14 @@
-package com.mx.ymate.monitor.helper;
+package com.mx.ymate.dev.support.monitor;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import cn.hutool.system.oshi.CpuInfo;
 import cn.hutool.system.oshi.OshiUtil;
-import com.mx.ymate.monitor.IMonitorConfig;
-import com.mx.ymate.monitor.bean.server.DiskBean;
-import com.mx.ymate.monitor.bean.server.NetworkBean;
-import com.mx.ymate.monitor.bean.server.ServerBean;
-import com.mx.ymate.monitor.mq.RedisMq;
+import com.mx.ymate.dev.support.monitor.bean.DiskBean;
+import com.mx.ymate.dev.support.monitor.bean.NetworkBean;
+import com.mx.ymate.dev.support.monitor.bean.ServerBean;
 import net.ymate.platform.commons.util.DateTimeUtils;
 import net.ymate.platform.log.Logs;
 import oshi.SystemInfo;
@@ -26,7 +23,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class ServerHelper {
 
@@ -38,7 +34,6 @@ public class ServerHelper {
 
     private static final int GB = 1024 * 1024 * 1024;
 
-    private static boolean runningFlag = false;
 
     private ServerHelper() {
     }
@@ -107,7 +102,7 @@ public class ServerHelper {
     }
 
 
-    public static ServerBean getSystemInfo() {
+    public static ServerBean getServerInfo() {
         ServerBean osBean = new ServerBean();
         OsInfo osInfo = SystemUtil.getOsInfo();
         CpuInfo cpuInfo = OshiUtil.getCpuInfo();
@@ -159,32 +154,11 @@ public class ServerHelper {
         return osBean;
     }
 
-    public static void start(IMonitorConfig config) {
-        runningFlag = true;
-        ThreadUtil.execAsync(() -> {
-            while (runningFlag) {
-                ServerBean serverBean = getSystemInfo();
-                serverBean.setServerId(config.serverId());
-                serverBean.setProjectId(config.projectId());
-                serverBean.setCreateTime(System.currentTimeMillis());
-                Logs.get().getLogger().info("发布系统信息");
-                RedisMq.pushServer(serverBean);
-                ThreadUtil.sleep(config.time(), TimeUnit.SECONDS);
-            }
-            return true;
-        });
-    }
-
-    public static void stop() {
-        runningFlag = false;
-    }
-
-
     public static void main(String[] args) throws Exception {
 
         //系统信息
         System.out.println("-----------系统信息-----------");
-        ServerBean osInfo = getSystemInfo();
+        ServerBean osInfo = getServerInfo();
         System.out.println("操作系统：" + osInfo.getOs());
         System.out.println("系统架构：" + osInfo.getOsArch());
         System.out.println("Java版本：" + osInfo.getJavaVersion());
