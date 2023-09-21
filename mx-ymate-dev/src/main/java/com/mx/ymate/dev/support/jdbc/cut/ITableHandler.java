@@ -6,6 +6,7 @@ public interface ITableHandler {
 
     /**
      * 是否要分表
+     *
      * @param entityMeta
      * @return
      */
@@ -13,8 +14,25 @@ public interface ITableHandler {
 
     /**
      * 构建表名
+     *
      * @param entityMeta
      * @return
      */
     String buildTableName(EntityMeta entityMeta);
+
+    /**
+     * 是否要分表
+     *
+     * @param tableName
+     * @return
+     */
+    boolean isCutTable(String tableName);
+
+    /**
+     * 构建表名
+     *
+     * @param tableName
+     * @return
+     */
+    String buildTableName(String tableName);
 }
