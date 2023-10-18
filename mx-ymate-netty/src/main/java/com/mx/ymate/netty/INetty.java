@@ -59,6 +59,10 @@ public interface INetty extends IInitialization<IApplication>, IDestroyable {
 
     void stoptAll() throws Exception;
 
+    void startWebSocketServer() throws Exception;
+
+    void stopWebSocketServer() throws Exception;
+
     void connect(ChannelHandlerContext context) throws Exception;
 
 }

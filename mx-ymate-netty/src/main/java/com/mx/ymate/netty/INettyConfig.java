@@ -51,8 +51,16 @@ public interface INettyConfig extends IInitialization<INetty> {
     String CLIENT_HANDLER_CLASS = "client.handlerClass";
     String CLIENT_DECODER_CLASS = "client.decoderClass";
 
+    String WEBSOCKET_ENABLED = "websocket.enabled";
+
+    String WEBSOCKET_PORT= "websocket.port";
+
+    String WEBSOCKET_MAPPING= "websocket.mapping";
+    String WEBSOCKET_HANDLER_CLASS = "websocket.handlerClass";
+
     String SERVER_CLIENT_SERVER = "server";
     String SERVER_CLIENT_CLIENT = "client";
+
 
     /**
      * 模块是否已启用, 默认值: true
@@ -143,5 +151,29 @@ public interface INettyConfig extends IInitialization<INetty> {
      * 编解码名称 只能指定一个
      */
     ChannelInboundHandlerAdapter clientDecoder();
+
+    /**
+     * 是否启用websocket 默认false
+     * @return
+     */
+    boolean websocketEnabled();
+
+    /**
+     * websocket端口 默认8756
+     * @return
+     */
+    int websocketPort();
+
+    /**
+     * websocket请求路径 默认websocket
+     * @return
+     */
+    String websocketMapping();
+
+    /**
+     * #处理器名称 只能指定一个
+     * @return
+     */
+    ChannelInboundHandlerAdapter websocketHandler();
 
 }

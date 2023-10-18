@@ -18,6 +18,7 @@ package com.mx.ymate.netty;
 import com.mx.ymate.netty.impl.DefaultNettyConfig;
 import com.mx.ymate.netty.impl.NettyClient;
 import com.mx.ymate.netty.impl.NettyServer;
+import com.mx.ymate.netty.impl.NettyWebsocket;
 import io.netty.channel.ChannelHandlerContext;
 import net.ymate.platform.core.*;
 import net.ymate.platform.core.module.IModule;
@@ -47,6 +48,8 @@ public final class Netty implements IModule, INetty {
 
     private NettyServer nettyServer;
     private NettyClient nettyClient;
+
+    private NettyWebsocket nettyWebsocket;
 
     public static INetty get() {
         INetty inst = instance;
@@ -99,19 +102,25 @@ public final class Netty implements IModule, INetty {
                 config.initialize(this);
             }
 
-            if (config.isEnabled() && config.autoStart()) {
+            if (config.isEnabled()) {
 
-                if (SERVER_CLIENT_SERVER.equals(config.client())) {
-                    nettyServer = new NettyServer(config);
-                    nettyServer.run();
-                } else if (SERVER_CLIENT_CLIENT.equals(config.client())) {
-                    nettyClient = new NettyClient(config);
-                    nettyClient.run();
-                } else {
-                    nettyServer = new NettyServer(config);
-                    nettyClient = new NettyClient(config);
-                    nettyServer.run();
-                    nettyClient.run();
+                if(config.autoStart()){
+                    if (SERVER_CLIENT_SERVER.equals(config.client())) {
+                        nettyServer = new NettyServer(config);
+                        nettyServer.run();
+                    } else if (SERVER_CLIENT_CLIENT.equals(config.client())) {
+                        nettyClient = new NettyClient(config);
+                        nettyClient.run();
+                    } else {
+                        nettyServer = new NettyServer(config);
+                        nettyClient = new NettyClient(config);
+                        nettyServer.run();
+                        nettyClient.run();
+                    }
+                }
+                if(config.websocketEnabled()){
+                    nettyWebsocket = new NettyWebsocket(config);
+                    nettyWebsocket.run();
                 }
             }
             initialized = true;
@@ -145,6 +154,10 @@ public final class Netty implements IModule, INetty {
                         nettyServer.stop();
                     }
 
+                }
+
+                if(nettyWebsocket!=null){
+                    nettyWebsocket.stop();
                 }
             }
             //
@@ -212,6 +225,21 @@ public final class Netty implements IModule, INetty {
         }
         if (nettyServer != null) {
             nettyServer.stop();
+        }
+    }
+
+    @Override
+    public void startWebSocketServer() throws Exception {
+        if (nettyWebsocket == null) {
+            nettyWebsocket = new NettyWebsocket(config);
+            nettyWebsocket.run();
+        }
+    }
+
+    @Override
+    public void stopWebSocketServer() throws Exception {
+        if(nettyWebsocket!=null){
+            nettyWebsocket.stop();
         }
     }
 

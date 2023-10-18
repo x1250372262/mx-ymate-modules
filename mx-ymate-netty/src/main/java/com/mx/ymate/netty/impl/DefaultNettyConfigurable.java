@@ -128,6 +128,26 @@ public final class DefaultNettyConfigurable extends DefaultModuleConfigurable {
             return this;
         }
 
+        public Builder websocketEnabled(boolean websocketEnabled) {
+            configurable.addConfig(INettyConfig.WEBSOCKET_ENABLED, String.valueOf(websocketEnabled));
+            return this;
+        }
+
+        public Builder websocketPort(int websocketPort) {
+            configurable.addConfig(INettyConfig.WEBSOCKET_PORT, String.valueOf(websocketPort));
+            return this;
+        }
+
+        public Builder websocketMapping(String websocketMapping) {
+            configurable.addConfig(INettyConfig.WEBSOCKET_MAPPING, websocketMapping);
+            return this;
+        }
+
+        public Builder websocketHandler(Class<? extends ChannelInboundHandlerAdapter> websocketHandler) {
+            configurable.addConfig(INettyConfig.WEBSOCKET_HANDLER_CLASS, String.valueOf(websocketHandler));
+            return this;
+        }
+
         public IModuleConfigurer build() {
             return configurable.toModuleConfigurer();
         }

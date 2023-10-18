@@ -59,6 +59,14 @@ public final class DefaultNettyConfig implements INettyConfig {
     private String serverDecoderClassName;
     private String clientDecoderClassName;
 
+    private boolean websocketEnabled;
+
+    private int websocketPort;
+
+    private String websocketMapping;
+
+    private ChannelInboundHandlerAdapter websocketHandler;
+
     private boolean initialized;
 
 
@@ -114,6 +122,10 @@ public final class DefaultNettyConfig implements INettyConfig {
         }
         clientDecoderClassName = configUtil.getString(CLIENT_DECODER_CLASS);
 
+        websocketEnabled = configUtil.getBool(WEBSOCKET_ENABLED, false);
+        websocketPort = configUtil.getInt(WEBSOCKET_PORT, 8756);
+        websocketMapping = configUtil.getString(WEBSOCKET_MAPPING,"websocket");
+        websocketHandler = configUtil.getClassImpl(WEBSOCKET_HANDLER_CLASS,ChannelInboundHandlerAdapter.class);
     }
 
     @Override
@@ -186,7 +198,6 @@ public final class DefaultNettyConfig implements INettyConfig {
         if (StringUtils.isNotBlank(serverDecoderClassName)) {
             serverDecoder = ClassUtils.impl(serverDecoderClassName, ChannelInboundHandlerAdapter.class, this.getClass());
         }
-
         return serverDecoder;
     }
 
@@ -216,6 +227,26 @@ public final class DefaultNettyConfig implements INettyConfig {
             clientDecoder = ClassUtils.impl(clientDecoderClassName, ChannelInboundHandlerAdapter.class, this.getClass());
         }
         return clientDecoder;
+    }
+
+    @Override
+    public boolean websocketEnabled() {
+        return websocketEnabled;
+    }
+
+    @Override
+    public int websocketPort() {
+        return websocketPort;
+    }
+
+    @Override
+    public String websocketMapping() {
+        return websocketMapping;
+    }
+
+    @Override
+    public ChannelInboundHandlerAdapter websocketHandler() {
+        return websocketHandler;
     }
 
     public void setEnabled(boolean enabled) {
@@ -315,6 +346,30 @@ public final class DefaultNettyConfig implements INettyConfig {
         }
     }
 
+    public void setWebsocketEnabled(boolean websocketEnabled) {
+        if (!initialized) {
+            this.websocketEnabled = websocketEnabled;
+        }
+    }
+
+    public void setWebsocketPort(int websocketPort) {
+        if (!initialized) {
+            this.websocketPort = websocketPort;
+        }
+    }
+
+    public void setWebsocketMapping(String websocketMapping) {
+        if (!initialized) {
+            this.websocketMapping = websocketMapping;
+        }
+    }
+
+    public void setWebsocketHandler(ChannelInboundHandlerAdapter websocketHandler) {
+        if (!initialized) {
+            this.websocketHandler = websocketHandler;
+        }
+    }
+
 
     public static final class Builder {
 
@@ -396,6 +451,26 @@ public final class DefaultNettyConfig implements INettyConfig {
 
         public Builder clientDecoderClass(ChannelInboundHandlerAdapter clientDecoderClass) {
             config.setClientDecoderClass(clientDecoderClass);
+            return this;
+        }
+
+        public Builder websocketEnabled(boolean websocketEnabled) {
+            config.setWebsocketEnabled(websocketEnabled);
+            return this;
+        }
+
+        public Builder websocketPort(int websocketPort) {
+            config.setWebsocketPort(websocketPort);
+            return this;
+        }
+
+        public Builder websocketMapping(String websocketMapping) {
+            config.setWebsocketMapping(websocketMapping);
+            return this;
+        }
+
+        public Builder websocketHandler(ChannelInboundHandlerAdapter websocketHandler) {
+            config.setWebsocketHandler(websocketHandler);
             return this;
         }
 
