@@ -57,6 +57,14 @@ public class NettyServerStore {
         KEY_MAP.remove(channelId);
     }
 
+    public static boolean containsKey(String channelId){
+        return KEY_MAP.containsKey(channelId);
+    }
+
+    public static boolean containsChannelHandlerContext(String key){
+        return CLIENT_MAP.containsKey(key);
+    }
+
     public static void clear() {
         CLIENT_MAP.clear();
         KEY_MAP.clear();
