@@ -23,7 +23,8 @@ public class RMIServer {
 
     private static Registry registry;
 
-    private static final List<String> RMI_SERVER_LIST = new ArrayList<>();;
+    private static final List<String> RMI_SERVER_LIST = new ArrayList<>();
+    ;
 
     private static final ILogger LOG = Logs.get().getLogger();
 
@@ -39,9 +40,11 @@ public class RMIServer {
     private RMIServer() {
     }
 
-    public static RMIServer init(int port) {
+    public static RMIServer init(String host, int port) {
         try {
             if (registry == null) {
+                // 指定服务端IP地址
+                System.setProperty("java.rmi.server.hostname", host);
                 registry = LocateRegistry.createRegistry(port);
             }
             LOG.info(StrUtil.format(RMI_SERVER_INIT_SUCCESS, port));
@@ -52,8 +55,8 @@ public class RMIServer {
         return new RMIServer();
     }
 
-    public static RMIServer init() {
-        return init(Registry.REGISTRY_PORT);
+    public static RMIServer init(String host) {
+        return init(host, Registry.REGISTRY_PORT);
     }
 
     public void publishServices(String packageName) {
@@ -71,8 +74,8 @@ public class RMIServer {
                 Bean bean = AnnotationUtil.getAnnotation(serviceClass, Bean.class);
                 if (bean != null) {
                     remote = (Remote) YMP.get().getBeanFactory().getBean(serviceClass);
-                }else{
-                    remote =  (Remote) serviceClass.newInstance();
+                } else {
+                    remote = (Remote) serviceClass.newInstance();
                 }
                 String bindName = StringUtils.defaultIfBlank(rmiService.name(), serviceClass.getSimpleName());
 
