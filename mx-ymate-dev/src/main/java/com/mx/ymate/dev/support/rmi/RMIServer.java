@@ -4,6 +4,8 @@ import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
+import net.ymate.platform.core.YMP;
+import net.ymate.platform.core.beans.annotation.Bean;
 import net.ymate.platform.log.ILogger;
 import net.ymate.platform.log.Logs;
 import org.apache.commons.lang3.StringUtils;
@@ -65,9 +67,16 @@ public class RMIServer {
                 if (rmiService == null) {
                     continue;
                 }
+                Remote remote;
+                Bean bean = AnnotationUtil.getAnnotation(serviceClass, Bean.class);
+                if (bean != null) {
+                    remote = (Remote) YMP.get().getBeanFactory().getBean(serviceClass);
+                }else{
+                    remote =  (Remote) serviceClass.newInstance();
+                }
                 String bindName = StringUtils.defaultIfBlank(rmiService.name(), serviceClass.getSimpleName());
 
-                registry.rebind(bindName, (Remote) serviceClass.newInstance());
+                registry.rebind(bindName, remote);
                 RMI_SERVER_LIST.add(bindName);
                 LOG.info(StrUtil.format(RMI_SERVER_START, bindName));
             }
