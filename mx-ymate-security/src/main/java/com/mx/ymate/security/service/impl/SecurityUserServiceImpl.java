@@ -102,7 +102,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
         securityUser.setLastModifyUser(SaUtil.loginId());
         securityUser.setLastModifyTime(DateTimeUtils.currentTimeMillis());
         securityUser.setSalt(salt);
-        r = userHandler.createAfter(params);
+        r = userHandler.createAfter(params,securityUser);
         if (Security.error(r)) {
             return r;
         }

@@ -2,6 +2,7 @@ package com.mx.ymate.security.handler;
 
 import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.security.base.enums.ResourceType;
+import com.mx.ymate.security.base.model.SecurityUser;
 import net.ymate.platform.core.beans.annotation.Bean;
 
 import java.util.Map;
@@ -26,10 +27,11 @@ public interface IUserHandler {
      * 添加用户之后
      *
      * @param params
+     * @param securityUser
      * @return
      * @throws Exception
      */
-    MxResult createAfter(Map<String, String> params) throws Exception;
+    MxResult createAfter(Map<String, String> params, SecurityUser securityUser) throws Exception;
 
     /**
      * 构建resourceId
@@ -50,7 +52,7 @@ public interface IUserHandler {
         }
 
         @Override
-        public MxResult createAfter(Map<String, String> params) throws Exception {
+        public MxResult createAfter(Map<String, String> params,SecurityUser securityUser) throws Exception {
             return MxResult.ok();
         }
 
