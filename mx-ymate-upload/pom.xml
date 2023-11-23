@@ -21,7 +21,8 @@
         <dependency>
             <groupId>com.mx.moudules</groupId>
             <artifactId>mx-ymate-dev</artifactId>
-            <version>1.0.0</version>
+            <version>${parent.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.ymate.module</groupId>

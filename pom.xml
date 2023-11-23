@@ -18,7 +18,6 @@
         <module>mx-ymate-excel</module>
         <module>mx-ymate-work-robot</module>
         <module>mx-ymate-clickhouse</module>
-        <module>mx-ymate-schedule</module>
     </modules>
     <packaging>pom</packaging>
 
