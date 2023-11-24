@@ -12,7 +12,7 @@ import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
-import com.mx.ymate.security.annotation.OperationLog;
+import com.mx.ymate.security.base.annotation.OperationLog;
 import com.mx.ymate.security.base.bean.LoginUser;
 import com.mx.ymate.security.base.enums.ResourceType;
 import com.mx.ymate.security.base.model.SecurityOperationLog;
@@ -32,6 +32,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+
+import static com.mx.ymate.security.base.config.SecurityConstants.LOG_EVENT_KEY;
 
 public class OperationLogInterceptor extends AbstractInterceptor {
 
@@ -116,7 +118,7 @@ public class OperationLogInterceptor extends AbstractInterceptor {
             // 创建事件对象
             OperationLogEvent operationLogEvent = new OperationLogEvent(YMP.get(), OperationLogEvent.EVENT.CREATE_LOG);
             // 为当前事件设置扩展参数
-            operationLogEvent.addParamExtend("log", securityOperationLog);
+            operationLogEvent.addParamExtend(LOG_EVENT_KEY, securityOperationLog);
             // 触发事件
             YMP.get().getEvents().fireEvent(operationLogEvent);
         } catch (Exception e) {

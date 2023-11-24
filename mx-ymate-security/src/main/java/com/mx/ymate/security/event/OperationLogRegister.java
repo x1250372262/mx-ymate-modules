@@ -6,6 +6,8 @@ import net.ymate.platform.core.event.IEventListener;
 import net.ymate.platform.core.event.IEventRegister;
 import net.ymate.platform.core.event.annotation.EventRegister;
 
+import static com.mx.ymate.security.base.config.SecurityConstants.LOG_EVENT_KEY;
+
 /**
  * @Author: mengxiang.
  * @create: 2021-09-06 17:20
@@ -21,7 +23,7 @@ public class OperationLogRegister implements IEventRegister {
         // 订阅模块事件：异步
         events.registerListener(Events.MODE.ASYNC, OperationLogEvent.class, (IEventListener<OperationLogEvent>) context -> {
             if (context.getEventName() == OperationLogEvent.EVENT.CREATE_LOG) {
-                SecurityOperationLog securityOperationLog = (SecurityOperationLog) context.getParamExtend("log");
+                SecurityOperationLog securityOperationLog = (SecurityOperationLog) context.getParamExtend(LOG_EVENT_KEY);
                 if (securityOperationLog != null) {
                     try {
                         securityOperationLog.save();
