@@ -84,7 +84,7 @@ public final class Security implements IModule, ISecurity {
                 // 注入权限
                 SaManager.setStpInterface(new RedisStp());
                 //注入MxSaTokenListener
-                SaTokenEventCenter.registerListener(YMP.get().getBeanFactory().getBean(MxSaTokenListener.class));
+                SaTokenEventCenter.registerListener(new MxSaTokenListener());
             }
             initialized = true;
         }

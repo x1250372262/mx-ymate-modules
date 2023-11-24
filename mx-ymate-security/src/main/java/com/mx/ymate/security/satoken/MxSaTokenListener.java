@@ -37,13 +37,11 @@ import static com.mx.ymate.security.base.config.SecurityConstants.LOG_EVENT_KEY;
  * @create: 2021-10-22 16:52
  * @Description:  登录退出监听
  */
-@Bean
 public class MxSaTokenListener implements SaTokenListener {
 
     private final ISecurityConfig config = Security.get().getConfig();
 
-    @Inject
-    private ISecurityUserDao iSecurityUserDao;
+    private final ISecurityUserDao iSecurityUserDao = YMP.get().getBeanFactory().getBean(ISecurityUserDao.class);
 
     private SecurityOperationLog createOperationLog(String title, JSONObject jsonObject, String methodName, String loginId) throws Exception {
         SecurityUser securityUser = iSecurityUserDao.findById(loginId);
