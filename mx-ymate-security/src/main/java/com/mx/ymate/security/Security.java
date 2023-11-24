@@ -74,18 +74,6 @@ public final class Security implements IModule, ISecurity {
             if (!config.isInitialized()) {
                 config.initialize(this);
             }
-            if (config.isEnabled()) {
-                //集成初始化
-                // 注入上下文Bean
-                SaManager.setSaTokenContext(new YmpContext());
-                SaManager.setConfig(config.toSaTokenConfig());
-                SaManager.setSaTokenDao(new RedisDao());
-                SaManager.setSaJsonTemplate(new FastJsonTemplate());
-                // 注入权限
-                SaManager.setStpInterface(new RedisStp());
-                //注入MxSaTokenListener
-                SaTokenEventCenter.registerListener(new MxSaTokenListener());
-            }
             initialized = true;
         }
     }

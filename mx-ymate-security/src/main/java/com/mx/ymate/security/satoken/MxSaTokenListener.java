@@ -12,13 +12,12 @@ import com.mx.ymate.dev.support.Ip2region.IpRegionBean;
 import com.mx.ymate.dev.support.Ip2region.IpRegionUtil;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.Security;
-import com.mx.ymate.security.base.code.SecurityCode;
 import com.mx.ymate.security.base.enums.OperationType;
 import com.mx.ymate.security.base.model.SecurityOperationLog;
 import com.mx.ymate.security.base.model.SecurityUser;
+import com.mx.ymate.security.event.OperationLogEvent;
 import com.mx.ymate.security.web.controller.SecurityLoginController;
 import com.mx.ymate.security.web.dao.ISecurityUserDao;
-import com.mx.ymate.security.event.OperationLogEvent;
 import net.ymate.platform.commons.util.DateTimeUtils;
 import net.ymate.platform.commons.util.NetworkUtils;
 import net.ymate.platform.commons.util.UUIDUtils;
@@ -35,13 +34,15 @@ import static com.mx.ymate.security.base.config.SecurityConstants.LOG_EVENT_KEY;
 /**
  * @Author: mengxiang.
  * @create: 2021-10-22 16:52
- * @Description:  登录退出监听
+ * @Description: 登录退出监听
  */
+@Bean
 public class MxSaTokenListener implements SaTokenListener {
 
     private final ISecurityConfig config = Security.get().getConfig();
 
-    private final ISecurityUserDao iSecurityUserDao = YMP.get().getBeanFactory().getBean(ISecurityUserDao.class);
+    @Inject
+    private ISecurityUserDao iSecurityUserDao;
 
     private SecurityOperationLog createOperationLog(String title, JSONObject jsonObject, String methodName, String loginId) throws Exception {
         SecurityUser securityUser = iSecurityUserDao.findById(loginId);
@@ -69,13 +70,13 @@ public class MxSaTokenListener implements SaTokenListener {
                 .browser(UserAgentUtil.parse(userAgentStr).getBrowser().toString())
                 .build();
 
-        String ip =  ServletUtil.getClientIP(request);
-        if(StringUtils.isNotBlank(ip)){
+        String ip = ServletUtil.getClientIP(request);
+        if (StringUtils.isNotBlank(ip)) {
             securityOperationLog.setIp(ip);
-            if(NetworkUtils.IP.isIPv4(ip) && !NetUtil.isInnerIP(ip)){
+            if (NetworkUtils.IP.isIPv4(ip) && !NetUtil.isInnerIP(ip)) {
                 IpRegionBean ipRegionBean = IpRegionUtil.parse(ip);
-                securityOperationLog.setLocation(ipRegionBean.getCountry()+ipRegionBean.getProvince()+ipRegionBean.getCity()+ipRegionBean.getIsp());
-            }else{
+                securityOperationLog.setLocation(ipRegionBean.getCountry() + ipRegionBean.getProvince() + ipRegionBean.getCity() + ipRegionBean.getIsp());
+            } else {
                 securityOperationLog.setLocation("");
             }
         }
