@@ -63,7 +63,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     @Override
     public List<SecurityMenuNavVO> navList(String userId, List<String> permissionList, boolean isFounder) throws Exception {
         //取出来这个人所有的菜单
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.MENU,userId), config.client());
+        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.MENU,null), config.client());
         List<SecurityMenuNavVO> menuAllList = iSecurityMenuDao.findAll(null, Constants.BOOL_FALSE, config.client(), resourceId).getResultData();
         if (isFounder) {
             return menuAllList;
@@ -114,7 +114,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
 
     @Override
     public MxResult list() throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.MENU,SaUtil.loginId()), config.client());
+        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.MENU,null), config.client());
         List<SecurityMenuNavVO> menuNavVOList = iSecurityMenuDao.findAll(null, null, config.client(), resourceId).getResultData();
         List<SecurityMenuListVO> menuListVOList = new ArrayList<>();
         if (CollUtil.isEmpty(menuNavVOList)) {
@@ -131,7 +131,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     @Override
     @OperationLog(operationType = OperationType.CREATE, title = "添加菜单")
     public MxResult create(SecurityMenuBean menuBean) throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.MENU,SaUtil.loginId()), config.client());
+        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.MENU,null), config.client());
         SecurityMenu menu = BeanUtil.copy(menuBean, SecurityMenu::new);
         long time = System.currentTimeMillis();
         String userId = SaUtil.loginId();

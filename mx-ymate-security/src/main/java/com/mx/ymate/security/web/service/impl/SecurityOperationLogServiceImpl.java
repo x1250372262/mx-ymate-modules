@@ -36,7 +36,7 @@ public class SecurityOperationLogServiceImpl implements ISecurityOperationLogSer
     @Override
     public MxResult list(String title, Long startTime, Long endTime, PageBean pageBean) throws Exception {
         IUserHandler userHandler = config.userHandlerClass();
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.LOG, SaUtil.loginId()), config.client());
+        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.LOG, null), config.client());
         IResultSet<SecurityOperationLog> resultSet = iSecurityOperationLogDao.findAll(resourceId, config.client(), title, startTime, endTime, pageBean.toPage());
         return MxResult.ok().data(BeanUtil.copyResultSet(resultSet, SecurityOperationLogListVO::new));
     }

@@ -37,7 +37,7 @@ public class SecurityPermissionServiceImpl implements ISecurityPermissionService
 
     @Override
     public MxResult list() throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.PERMISSION, SaUtil.loginId()), config.client());
+        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.PERMISSION, null), config.client());
         List<SecurityPermissionSelectVO> permissionSelectVOList = new ArrayList<>();
         IResultSet<SecurityPermission> resultSet = iPermissionDao.findAll(config.client(), resourceId);
         if (!resultSet.isResultsAvailable()) {
