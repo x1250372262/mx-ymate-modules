@@ -3,6 +3,7 @@ package com.mx.ymate.security.web.service.impl;
 import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.dev.util.BeanUtil;
 import com.mx.ymate.security.ISecurityConfig;
+import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
 import com.mx.ymate.security.base.enums.ResourceType;
 import com.mx.ymate.security.base.model.SecurityPermission;
@@ -36,7 +37,7 @@ public class SecurityPermissionServiceImpl implements ISecurityPermissionService
 
     @Override
     public MxResult list() throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.PERMISSION), config.client());
+        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.PERMISSION, SaUtil.loginId()), config.client());
         List<SecurityPermissionSelectVO> permissionSelectVOList = new ArrayList<>();
         IResultSet<SecurityPermission> resultSet = iPermissionDao.findAll(config.client(), resourceId);
         if (!resultSet.isResultsAvailable()) {

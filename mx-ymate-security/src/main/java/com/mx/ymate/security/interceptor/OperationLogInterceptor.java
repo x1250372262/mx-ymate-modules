@@ -84,7 +84,7 @@ public class OperationLogInterceptor extends AbstractInterceptor {
             UserAgent userAgent = UserAgentUtil.parse(request.getHeader("user-agent"));
             // *========数据库日志=========*//
             IUserHandler userHandler = securityConfig.userHandlerClass();
-            String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.LOG), securityConfig.client());
+            String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.LOG,loginUser.getId()), securityConfig.client());
             SecurityOperationLog securityOperationLog = SecurityOperationLog.builder()
                     .id(UUIDUtils.UUID())
                     .title(operationLog.title())

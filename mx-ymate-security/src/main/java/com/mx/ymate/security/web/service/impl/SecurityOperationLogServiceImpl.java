@@ -4,6 +4,7 @@ import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.dev.support.page.PageBean;
 import com.mx.ymate.dev.util.BeanUtil;
 import com.mx.ymate.security.ISecurityConfig;
+import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
 import com.mx.ymate.security.base.annotation.OperationLog;
 import com.mx.ymate.security.base.enums.OperationType;
@@ -35,7 +36,7 @@ public class SecurityOperationLogServiceImpl implements ISecurityOperationLogSer
     @Override
     public MxResult list(String title, Long startTime, Long endTime, PageBean pageBean) throws Exception {
         IUserHandler userHandler = config.userHandlerClass();
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.LOG), config.client());
+        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.LOG, SaUtil.loginId()), config.client());
         IResultSet<SecurityOperationLog> resultSet = iSecurityOperationLogDao.findAll(resourceId, config.client(), title, startTime, endTime, pageBean.toPage());
         return MxResult.ok().data(BeanUtil.copyResultSet(resultSet, SecurityOperationLogListVO::new));
     }

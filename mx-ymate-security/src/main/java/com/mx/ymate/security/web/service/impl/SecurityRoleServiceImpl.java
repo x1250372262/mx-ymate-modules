@@ -59,7 +59,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
 
     @Override
     public MxResult list(String name, PageBean pageBean) throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE), config.client());
+        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE,SaUtil.loginId()), config.client());
         IResultSet<SecurityRole> resultSet = iSecurityRoleDao.findAll(resourceId, config.client(), name, pageBean.toPage());
         return MxResult.ok().data(Pages.create(resultSet));
     }
@@ -67,7 +67,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
     @Override
     @OperationLog(operationType = OperationType.CREATE, title = "添加角色")
     public MxResult create(SecurityRoleBean roleBean) throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE), config.client());
+        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE,SaUtil.loginId()), config.client());
         SecurityRole role = iSecurityRoleDao.findByClientAndResourceIdAndName(resourceId, config.client(), roleBean.getName());
         if (role != null) {
             return MxResult.sameName();
@@ -87,7 +87,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
     @Override
     @OperationLog(operationType = OperationType.UPDATE, title = "修改角色")
     public MxResult update(String id, Long lastModifyTime, SecurityRoleBean roleBean) throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE), config.client());
+        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE,SaUtil.loginId()), config.client());
         SecurityRole role = iSecurityRoleDao.findByClientAndResourceIdAndNameNotId(id, resourceId, config.client(), roleBean.getName());
         if (role != null) {
             return MxResult.sameName();
@@ -126,7 +126,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
         if (role == null) {
             return MxResult.noData();
         }
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE), config.client());
+        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE,SaUtil.loginId()), config.client());
         IResultSet<SecurityRolePermission> resultSet = iSecurityRolePermissionDao.findAll(config.client(), resourceId, id);
         if (resultSet.isResultsAvailable()) {
             List<SecurityRolePermission> rolePermissionList = resultSet.getResultData();
@@ -147,7 +147,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
         if (role == null) {
             return MxResult.noData();
         }
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.PERMISSION), config.client());
+        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.PERMISSION,SaUtil.loginId()), config.client());
         iSecurityRolePermissionDao.deleteByClientAndRoleIdAndResourceId(config.client(), resourceId, id);
         List<SecurityPermission> permissionList = isecurityPermissionDao.findAll(config.client(), resourceId).getResultData();
         if (permissions != null && permissions.length > 0) {
@@ -157,7 +157,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
                 SecurityRolePermission rolePermission = SecurityRolePermission.builder()
                         .id(UUIDUtils.UUID())
                         .roleId(id)
-                        .resourceId(StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE), config.client()))
+                        .resourceId(StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE,SaUtil.loginId()), config.client()))
                         .client(config.client())
                         .permissonId(permission.getId())
                         .createTime(DateTimeUtils.currentTimeMillis())

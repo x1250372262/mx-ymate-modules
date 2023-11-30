@@ -40,7 +40,7 @@ public interface IUserHandler {
      * @return
      * @throws Exception
      */
-    String buildResourceId(ResourceType resourceType) throws Exception;
+    String buildResourceId(ResourceType resourceType,String loginId) throws Exception;
 
     @Bean
     class DefaultUserHandler implements IUserHandler {
@@ -57,7 +57,7 @@ public interface IUserHandler {
         }
 
         @Override
-        public String buildResourceId(ResourceType resourceType) throws Exception {
+        public String buildResourceId(ResourceType resourceType,String loginId) throws Exception {
             return null;
         }
     }
