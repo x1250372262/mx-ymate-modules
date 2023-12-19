@@ -2,12 +2,15 @@ package com.mx.ymate.excel.export;
 
 
 import com.alibaba.excel.EasyExcel;
-import com.mx.ymate.excel.util.FileUtil;
+import com.mx.ymate.excel.export.util.FileUtil;
 import net.ymate.platform.commons.util.DateTimeUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.*;
+import java.io.Closeable;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +71,7 @@ public class ExcelExportHelper<T> extends IExportHelper implements Closeable {
         FileUtil.fixAndMkDir(EXCEL_FILE_PATH);
         fileName = fileName + DateTimeUtils.formatTime(DateTimeUtils.currentTimeMillis(), "yyyyMMddHHmmss");
         File outFile = new File(EXCEL_FILE_PATH, fileName + ".xlsx");
-        if (resultData != null && resultData.size() > 0) {
+        if (resultData != null && !resultData.isEmpty()) {
             List<T> data = new ArrayList<>();
             for (int idx = 0; ; idx++) {
                 if (resultData.size() <= idx) {
@@ -90,7 +93,7 @@ public class ExcelExportHelper<T> extends IExportHelper implements Closeable {
         FileUtil.fixAndMkDir(EXCEL_FILE_PATH);
         FileUtil.fixAndMkDir(ZIP_FILE_PATH);
         List<File> files = new ArrayList<>();
-        if (resultData != null && resultData.size() > 0) {
+        if (resultData != null && !resultData.isEmpty()) {
             for (int idx = 0; ; idx++) {
                 if (resultData.size() <= idx) {
                     break;

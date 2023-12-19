@@ -64,7 +64,7 @@ public class MxConverter implements Converter<String> {
         String returnValue = null;
         HandlerBean handlerBean = HandlerBean.create(dConverter);
         if (handlerBean.getDataHandle() != null) {
-            if(HandlerBean.Type.IMAGE.equals(handlerBean.getType())){
+            if (HandlerBean.Type.IMAGE.equals(handlerBean.getType())) {
                 InputStream inputStream = null;
                 try {
                     URL url = new URL(value);
@@ -76,7 +76,7 @@ public class MxConverter implements Converter<String> {
                         inputStream.close();
                     }
                 }
-            }else{
+            } else {
                 returnValue = BlurObject.bind(handlerBean.getMethod().invoke(handlerBean.getDataHandle(), value)).toStringValue();
             }
         } else {

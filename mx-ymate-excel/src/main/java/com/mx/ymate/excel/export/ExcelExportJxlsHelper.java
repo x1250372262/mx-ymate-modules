@@ -2,7 +2,8 @@ package com.mx.ymate.excel.export;
 
 
 import cn.hutool.core.map.MapUtil;
-import com.mx.ymate.excel.util.FileUtil;
+import com.mx.ymate.excel.export.util.FileUtil;
+import com.mx.ymate.excel.export.util.MxExcelFormatterUtil;
 import net.ymate.platform.commons.util.DateTimeUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.jexl3.JexlBuilder;
@@ -55,7 +56,11 @@ public class ExcelExportJxlsHelper extends IExportHelper implements Closeable {
     public static ExcelExportJxlsHelper init(Class<?> funcClass, String templatePath) {
         String excelFilePath = EXCEL_FILE_PATH;
         String zipFilePath = ZIP_FILE_PATH;
-        return new ExcelExportJxlsHelper(funcClass, templatePath, excelFilePath, zipFilePath);
+        return init(funcClass, templatePath, excelFilePath, zipFilePath);
+    }
+
+    public static ExcelExportJxlsHelper init(String templatePath) {
+        return init(MxExcelFormatterUtil.class, templatePath);
     }
 
     public ExcelExportJxlsHelper addData(Map<String, Object> data) {
@@ -68,7 +73,7 @@ public class ExcelExportJxlsHelper extends IExportHelper implements Closeable {
 
 
     public ExcelExportJxlsHelper addData(Object data) {
-        return addData(MapUtil.builder("data",data).build());
+        return addData(MapUtil.builder("data", data).build());
     }
 
     public File exportZip(String fileName) throws Exception {
@@ -82,7 +87,7 @@ public class ExcelExportJxlsHelper extends IExportHelper implements Closeable {
         InputStream is = Files.newInputStream(inFile.toPath());
 
         List<File> files = new ArrayList<>();
-        if (resultData != null && resultData.size() > 0) {
+        if (resultData != null && !resultData.isEmpty()) {
             for (int idx = 0; ; idx++) {
                 if (resultData.size() <= idx) {
                     break;
@@ -109,7 +114,7 @@ public class ExcelExportJxlsHelper extends IExportHelper implements Closeable {
         }
         InputStream is = Files.newInputStream(inFile.toPath());
         File outFile = new File(EXCEL_FILE_PATH, fileName + ".xlsx");
-        if (resultData != null && resultData.size() > 0) {
+        if (resultData != null && !resultData.isEmpty()) {
             for (int idx = 0; ; idx++) {
                 if (resultData.size() <= idx) {
                     break;
@@ -119,7 +124,7 @@ public class ExcelExportJxlsHelper extends IExportHelper implements Closeable {
                     break;
                 }
                 //输出信息
-                File excelFile = new File(excelFilePath, fileName + DateTimeUtils.formatTime(DateTimeUtils.systemTimeUTC(),"yyyyMMdd-HHmmss") +".xlsx");
+                File excelFile = new File(excelFilePath, fileName + DateTimeUtils.formatTime(DateTimeUtils.systemTimeUTC(), "yyyyMMdd-HHmmss") + ".xlsx");
                 exportExcel(is, excelFile, data);
             }
         }

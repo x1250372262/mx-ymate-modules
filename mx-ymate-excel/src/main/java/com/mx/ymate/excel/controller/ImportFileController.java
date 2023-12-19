@@ -6,7 +6,10 @@ import com.mx.ymate.excel.analysis.validate.annotation.VFile;
 import net.ymate.platform.core.beans.annotation.Inject;
 import net.ymate.platform.validation.validate.VRequired;
 import net.ymate.platform.webmvc.IUploadFileWrapper;
-import net.ymate.platform.webmvc.annotation.*;
+import net.ymate.platform.webmvc.annotation.Controller;
+import net.ymate.platform.webmvc.annotation.FileUpload;
+import net.ymate.platform.webmvc.annotation.RequestMapping;
+import net.ymate.platform.webmvc.annotation.RequestParam;
 import net.ymate.platform.webmvc.base.Type;
 import net.ymate.platform.webmvc.cors.annotation.CrossDomain;
 import net.ymate.platform.webmvc.view.IView;
@@ -27,6 +30,7 @@ public class ImportFileController {
 
     /**
      * 导入文件
+     *
      * @param file
      * @return
      * @throws Exception

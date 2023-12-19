@@ -22,7 +22,7 @@ public class HandlerBean {
     private Type type;
 
     //类型
-    public enum Type{
+    public enum Type {
         //文本
         TEXT,
         //图片

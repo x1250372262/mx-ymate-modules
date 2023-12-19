@@ -6,7 +6,6 @@ import com.mx.ymate.excel.analysis.annotation.Excel;
 import com.mx.ymate.excel.analysis.annotation.ImportColumn;
 import com.mx.ymate.excel.analysis.annotation.Validate;
 import com.mx.ymate.excel.analysis.bean.*;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 
 /**
@@ -37,15 +35,6 @@ public class DefaultSheetHandler implements ISheetHandler {
      */
     private final Class<? extends IImportBean> cls;
 
-//    public DefaultSheetHandler<T> create(Class<T> cls) throws Exception {
-//        this.cls = cls;
-//        Excel excel = cls.getAnnotation(Excel.class);
-//        if (excel == null) {
-//            throw new Exception("vo对象未包含Excle注解");
-//        }
-//        this.type = excel.type();
-//        return this;
-//    }
 
     public DefaultSheetHandler(Class<? extends IImportBean> cls) throws Exception {
         this.cls = cls;

@@ -24,6 +24,7 @@ public class DownloadFileController {
 
     /**
      * 下载zip文件
+     *
      * @param name
      * @return
      * @throws Exception
@@ -34,7 +35,7 @@ public class DownloadFileController {
         // 判断资源类型
         try {
             String filePath = RuntimeUtils.getRootPath() + File.separator + "zip" + File.separator;
-            File file = new File(filePath, name+".zip");
+            File file = new File(filePath, name + ".zip");
             returnView = View.binaryView(file).useAttachment(file.getName());
         } catch (Exception e) {
             returnView = View.httpStatusView(HttpServletResponse.SC_BAD_REQUEST);
@@ -44,6 +45,7 @@ public class DownloadFileController {
 
     /**
      * 下载普通excel
+     *
      * @param name
      * @return
      * @throws Exception
@@ -54,7 +56,7 @@ public class DownloadFileController {
         // 判断资源类型
         try {
             String filePath = RuntimeUtils.getRootPath() + File.separator + "export" + File.separator;
-            File file = new File(filePath, name+".xlsx");
+            File file = new File(filePath, name + ".xlsx");
             returnView = View.binaryView(file).useAttachment(file.getName());
         } catch (Exception e) {
             returnView = View.httpStatusView(HttpServletResponse.SC_BAD_REQUEST);

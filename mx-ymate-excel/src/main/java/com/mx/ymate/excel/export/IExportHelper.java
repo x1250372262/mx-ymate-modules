@@ -22,7 +22,6 @@ public class IExportHelper {
     public static String ZIP_FILE_PATH = RuntimeUtils.getRootPath() + File.separator + "zip" + File.separator;
 
 
-
     public static final String ZIP_URL = "/mx/excel/download/zip/";
 
     public static final String EXCEL_URL = "/mx/excel/download/excel/";

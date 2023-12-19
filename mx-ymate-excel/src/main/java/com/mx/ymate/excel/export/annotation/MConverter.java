@@ -33,6 +33,7 @@ public @interface MConverter {
 
     /**
      * 类型
+     *
      * @return
      */
     HandlerBean.Type type() default HandlerBean.Type.TEXT;
