@@ -1,11 +1,12 @@
 package com.mx.ymate.netty.impl;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mx.ymate.netty.INettyConfig;
-import com.mx.ymate.netty.handler.HeartBeatServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -14,12 +15,11 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.timeout.IdleStateHandler;
-import net.ymate.platform.commons.lang.BlurObject;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
 import net.ymate.platform.log.Logs;
 
-import java.util.List;
-import java.util.Objects;
+import java.io.File;
 
 /**
  * @Author: mengxiang.
@@ -41,23 +41,31 @@ public class NettyWebsocket {
         if (config.websocketHandler() == null) {
             throw new Exception("请指定websocket handler处理类");
         }
+        SslContext sslContext = null;
+        if (config.websocketSslEnabled()) {
+            sslContext = SslContextBuilder.forServer(new File(config.websocketSslCertPath()), new File(config.websocketSslKeyPath())).build();
+        }
         ServerBootstrap serverBootstrap = new ServerBootstrap();
+        SslContext finalSslContext = sslContext;
         serverBootstrap.group(BOSS_GROUP, WORK_GROUP)
                 .channel(NioServerSocketChannel.class)
                 .option(ChannelOption.SO_BACKLOG, 100)
                 .childOption(ChannelOption.SO_REUSEADDR, true)
                 .handler(new LoggingHandler(LogLevel.INFO)).childHandler(new ChannelInitializer<SocketChannel>() {
-            @Override
-            protected void initChannel(SocketChannel ch) throws Exception {
-                ChannelPipeline channelPipeline = ch.pipeline();
-                channelPipeline.addLast(new HttpServerCodec());
-                channelPipeline.addLast(new HttpObjectAggregator(8192));
-                channelPipeline.addLast(new WebSocketServerProtocolHandler("/" + config.websocketMapping()));
-                channelPipeline.addLast(config.websocketHandler());
-            }
-        });
-        serverBootstrap.bind(config.websocketPort()).sync();
-        Logs.get().getLogger().info(StrUtil.format("端口{}websocket启动成功",config.websocketPort()));
+                    @Override
+                    protected void initChannel(SocketChannel ch) throws Exception {
+                        ChannelPipeline channelPipeline = ch.pipeline();
+                        if (finalSslContext != null) {
+                            channelPipeline.addLast(finalSslContext.newHandler(ch.alloc()));
+                        }
+                        channelPipeline.addLast(new HttpServerCodec());
+                        channelPipeline.addLast(new HttpObjectAggregator(8192));
+                        channelPipeline.addLast(new WebSocketServerProtocolHandler("/" + config.websocketMapping()));
+                        channelPipeline.addLast(config.websocketHandler());
+                    }
+                });
+        serverBootstrap.bind(config.websocketDomain(),config.websocketPort()).sync();
+        Logs.get().getLogger().info(StrUtil.format("端口{}websocket启动成功", config.websocketPort()));
 
     }
 

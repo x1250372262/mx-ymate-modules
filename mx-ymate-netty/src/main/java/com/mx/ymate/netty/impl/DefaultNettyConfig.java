@@ -61,11 +61,19 @@ public final class DefaultNettyConfig implements INettyConfig {
 
     private boolean websocketEnabled;
 
+    private String websocketDomain;
+
     private int websocketPort;
 
     private String websocketMapping;
 
     private ChannelInboundHandlerAdapter websocketHandler;
+
+    private boolean websocketSslEnabled;
+
+    private String websocketSslCertPath;
+
+    private String websocketSslKeyPath;
 
     private boolean initialized;
 
@@ -94,8 +102,8 @@ public final class DefaultNettyConfig implements INettyConfig {
         serverStartPort = configUtil.getInteger(SERVER_START_PORT);
         serverEndPort = configUtil.getInteger(SERVER_END_PORT);
         serverHeartBeatTime = configUtil.getInteger(SERVER_HEART_BEAT_TIME);
-        heartServer = configUtil.getClassImpl(SERVER_HEART_BEAT_CLASS,IHeartServer.class);
-        if(heartServer == null){
+        heartServer = configUtil.getClassImpl(SERVER_HEART_BEAT_CLASS, IHeartServer.class);
+        if (heartServer == null) {
             heartServer = new HeartServerImpl();
         }
         serverExcludePort = ObjectUtil.defaultIfNull(configUtil.getList(SERVER_EXCLUDE_PORT), new ArrayList<>());
@@ -110,8 +118,8 @@ public final class DefaultNettyConfig implements INettyConfig {
 
         clientRemoteAddress = ObjectUtil.defaultIfNull(configUtil.getList(CLIENT_REMOTE_ADDRESS), new ArrayList<>());
         clientHeartBeatTime = configUtil.getInteger(CLIENT_HEART_BEAT_TIME);
-        heartClient = configUtil.getClassImpl(CLIENT_HEART_BEAT_CLASS,IHeartClient.class);
-        if(heartClient == null){
+        heartClient = configUtil.getClassImpl(CLIENT_HEART_BEAT_CLASS, IHeartClient.class);
+        if (heartClient == null) {
             heartClient = new HeartClientImpl();
         }
         List<String> clientHandlerClassNameList = ObjectUtil.defaultIfNull(configUtil.getList(CLIENT_HANDLER_CLASS), new ArrayList<>());
@@ -123,9 +131,13 @@ public final class DefaultNettyConfig implements INettyConfig {
         clientDecoderClassName = configUtil.getString(CLIENT_DECODER_CLASS);
 
         websocketEnabled = configUtil.getBool(WEBSOCKET_ENABLED, false);
+        websocketDomain = configUtil.getString(WEBSOCKET_DOMAIN);
         websocketPort = configUtil.getInt(WEBSOCKET_PORT, 8756);
-        websocketMapping = configUtil.getString(WEBSOCKET_MAPPING,"websocket");
-        websocketHandler = configUtil.getClassImpl(WEBSOCKET_HANDLER_CLASS,ChannelInboundHandlerAdapter.class);
+        websocketMapping = configUtil.getString(WEBSOCKET_MAPPING, "websocket");
+        websocketHandler = configUtil.getClassImpl(WEBSOCKET_HANDLER_CLASS, ChannelInboundHandlerAdapter.class);
+        websocketSslEnabled = configUtil.getBool(WEBSOCKET_SSL_ENABLED, false);
+        websocketSslCertPath = configUtil.getString(WEBSOCKET_SSL_CERT_PATH);
+        websocketSslKeyPath = configUtil.getString(WEBSOCKET_SSL_KEY_PATH);
     }
 
     @Override
@@ -235,6 +247,11 @@ public final class DefaultNettyConfig implements INettyConfig {
     }
 
     @Override
+    public String websocketDomain() {
+        return websocketDomain;
+    }
+
+    @Override
     public int websocketPort() {
         return websocketPort;
     }
@@ -248,6 +265,22 @@ public final class DefaultNettyConfig implements INettyConfig {
     public ChannelInboundHandlerAdapter websocketHandler() {
         return websocketHandler;
     }
+
+    @Override
+    public boolean websocketSslEnabled() {
+        return websocketSslEnabled;
+    }
+
+    @Override
+    public String websocketSslCertPath() {
+        return websocketSslCertPath;
+    }
+
+    @Override
+    public String websocketSslKeyPath() {
+        return websocketSslKeyPath;
+    }
+
 
     public void setEnabled(boolean enabled) {
         if (!initialized) {
@@ -352,6 +385,12 @@ public final class DefaultNettyConfig implements INettyConfig {
         }
     }
 
+    public void setWebsocketDomain(String websocketDomain) {
+        if (!initialized) {
+            this.websocketDomain = websocketDomain;
+        }
+    }
+
     public void setWebsocketPort(int websocketPort) {
         if (!initialized) {
             this.websocketPort = websocketPort;
@@ -370,6 +409,23 @@ public final class DefaultNettyConfig implements INettyConfig {
         }
     }
 
+    public void setWebsocketSslEnabled(boolean websocketSslEnabled) {
+        if (!initialized) {
+            this.websocketSslEnabled = websocketSslEnabled;
+        }
+    }
+
+    public void setWebsocketSslCertPath(String websocketSslCertPath) {
+        if (!initialized) {
+            this.websocketSslCertPath = websocketSslCertPath;
+        }
+    }
+
+    public void setWebsocketSslKeyPath(String websocketSslKeyPath) {
+        if (!initialized) {
+            this.websocketSslKeyPath = websocketSslKeyPath;
+        }
+    }
 
     public static final class Builder {
 
@@ -459,6 +515,11 @@ public final class DefaultNettyConfig implements INettyConfig {
             return this;
         }
 
+        public Builder websocketDomain(boolean websocketDomain) {
+            config.setWebsocketDomain(websocketDomain);
+            return this;
+        }
+
         public Builder websocketPort(int websocketPort) {
             config.setWebsocketPort(websocketPort);
             return this;
@@ -473,6 +534,23 @@ public final class DefaultNettyConfig implements INettyConfig {
             config.setWebsocketHandler(websocketHandler);
             return this;
         }
+
+        public Builder websocketSslEnabled(boolean websocketSslEnabled) {
+            config.setWebsocketSslEnabled(websocketSslEnabled);
+            return this;
+        }
+
+        public Builder websocketSslCertPath(String websocketSslCertPath) {
+            config.setWebsocketSslCertPath(websocketSslCertPath);
+            return this;
+        }
+
+
+        public Builder websocketSslKeyPath(String websocketSslKeyPath) {
+            config.setWebsocketSslKeyPath(websocketSslKeyPath);
+            return this;
+        }
+
 
         public DefaultNettyConfig build() {
             return config;

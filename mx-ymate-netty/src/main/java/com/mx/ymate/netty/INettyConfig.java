@@ -52,11 +52,16 @@ public interface INettyConfig extends IInitialization<INetty> {
     String CLIENT_DECODER_CLASS = "client.decoderClass";
 
     String WEBSOCKET_ENABLED = "websocket.enabled";
+    String WEBSOCKET_DOMAIN = "websocket.domain";
 
-    String WEBSOCKET_PORT= "websocket.port";
+    String WEBSOCKET_PORT = "websocket.port";
 
-    String WEBSOCKET_MAPPING= "websocket.mapping";
+    String WEBSOCKET_MAPPING = "websocket.mapping";
     String WEBSOCKET_HANDLER_CLASS = "websocket.handlerClass";
+
+    String WEBSOCKET_SSL_ENABLED = "websocket.sslEnabled";
+    String WEBSOCKET_SSL_CERT_PATH = "websocket.sslCertPath";
+    String WEBSOCKET_SSL_KEY_PATH = "websocket.sslKeyPath";
 
     String SERVER_CLIENT_SERVER = "server";
     String SERVER_CLIENT_CLIENT = "client";
@@ -71,6 +76,7 @@ public interface INettyConfig extends IInitialization<INetty> {
 
     /**
      * 是否自动启动
+     *
      * @return
      */
     Boolean autoStart();
@@ -104,6 +110,7 @@ public interface INettyConfig extends IInitialization<INetty> {
 
     /**
      * 心跳实现类 当serverHeartBeatTime不等于0的时候有效
+     *
      * @return
      */
     IHeartServer heartServer();
@@ -137,6 +144,7 @@ public interface INettyConfig extends IInitialization<INetty> {
 
     /**
      * 心跳实现类 当clientHeartBeatTime不等于0的时候有效
+     *
      * @return
      */
     IHeartClient heartClient();
@@ -154,26 +162,57 @@ public interface INettyConfig extends IInitialization<INetty> {
 
     /**
      * 是否启用websocket 默认false
+     *
      * @return
      */
     boolean websocketEnabled();
 
     /**
+     *websocket域名 默认空
+     *
+     * @return
+     */
+    String websocketDomain();
+
+    /**
      * websocket端口 默认8756
+     *
      * @return
      */
     int websocketPort();
 
     /**
      * websocket请求路径 默认websocket
+     *
      * @return
      */
     String websocketMapping();
 
     /**
      * #处理器名称 只能指定一个
+     *
      * @return
      */
     ChannelInboundHandlerAdapter websocketHandler();
 
+    /**
+     * 是否开启ssl 默认false
+     *
+     * @return
+     */
+    boolean websocketSslEnabled();
+
+    /**
+     * 证书目录
+     *
+     * @return
+     */
+    String websocketSslCertPath();
+
+    /**
+     * key 目录
+     *
+     * @return
+     */
+    String websocketSslKeyPath();
 }
