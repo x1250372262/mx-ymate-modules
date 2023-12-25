@@ -515,7 +515,7 @@ public final class DefaultNettyConfig implements INettyConfig {
             return this;
         }
 
-        public Builder websocketDomain(boolean websocketDomain) {
+        public Builder websocketDomain(String websocketDomain) {
             config.setWebsocketDomain(websocketDomain);
             return this;
         }
