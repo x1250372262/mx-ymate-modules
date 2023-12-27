@@ -15,11 +15,7 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslContextBuilder;
 import net.ymate.platform.log.Logs;
-
-import java.io.File;
 
 /**
  * @Author: mengxiang.
@@ -41,12 +37,7 @@ public class NettyWebsocket {
         if (config.websocketHandler() == null) {
             throw new Exception("请指定websocket handler处理类");
         }
-        SslContext sslContext = null;
-        if (config.websocketSslEnabled()) {
-            sslContext = SslContextBuilder.forServer(new File(config.websocketSslCertPath()), new File(config.websocketSslKeyPath())).build();
-        }
         ServerBootstrap serverBootstrap = new ServerBootstrap();
-        SslContext finalSslContext = sslContext;
         serverBootstrap.group(BOSS_GROUP, WORK_GROUP)
                 .channel(NioServerSocketChannel.class)
                 .option(ChannelOption.SO_BACKLOG, 100)
@@ -55,16 +46,13 @@ public class NettyWebsocket {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline channelPipeline = ch.pipeline();
-                        if (finalSslContext != null) {
-                            channelPipeline.addLast(finalSslContext.newHandler(ch.alloc()));
-                        }
                         channelPipeline.addLast(new HttpServerCodec());
                         channelPipeline.addLast(new HttpObjectAggregator(8192));
                         channelPipeline.addLast(new WebSocketServerProtocolHandler("/" + config.websocketMapping()));
                         channelPipeline.addLast(config.websocketHandler());
                     }
                 });
-        serverBootstrap.bind(config.websocketDomain(),config.websocketPort()).sync();
+        serverBootstrap.bind(config.websocketPort()).sync();
         Logs.get().getLogger().info(StrUtil.format("端口{}websocket启动成功", config.websocketPort()));
 
     }
