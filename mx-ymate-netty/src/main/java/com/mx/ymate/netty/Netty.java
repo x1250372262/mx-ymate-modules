@@ -104,7 +104,7 @@ public final class Netty implements IModule, INetty {
 
             if (config.isEnabled()) {
 
-                if(config.autoStart()){
+                if (config.autoStart()) {
                     if (SERVER_CLIENT_SERVER.equals(config.client())) {
                         nettyServer = new NettyServer(config);
                         nettyServer.run();
@@ -118,7 +118,7 @@ public final class Netty implements IModule, INetty {
                         nettyClient.run();
                     }
                 }
-                if(config.websocketEnabled()){
+                if (config.websocketEnabled()) {
                     nettyWebsocket = new NettyWebsocket(config);
                     nettyWebsocket.run();
                 }
@@ -156,7 +156,7 @@ public final class Netty implements IModule, INetty {
 
                 }
 
-                if(nettyWebsocket!=null){
+                if (nettyWebsocket != null) {
                     nettyWebsocket.stop();
                 }
             }
@@ -238,7 +238,7 @@ public final class Netty implements IModule, INetty {
 
     @Override
     public void stopWebSocketServer() throws Exception {
-        if(nettyWebsocket!=null){
+        if (nettyWebsocket != null) {
             nettyWebsocket.stop();
         }
     }

@@ -10,9 +10,9 @@ import java.io.File;
  */
 public class QrCodeResult {
 
-   private File qrCodeFile;
+    private File qrCodeFile;
 
-   private String qrCodeUrl;
+    private String qrCodeUrl;
 
     public File getQrCodeFile() {
         return qrCodeFile;

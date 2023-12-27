@@ -2,12 +2,16 @@ package com.mx.ymate.workrobot.bean;
 
 import com.alibaba.fastjson.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * @Author: mengxiang.
  * @Date: 2023-06-09 15:26
  * @Description:
  */
-public class WechatWorkResult {
+public class WechatWorkResult implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String errCode;
 
@@ -44,5 +48,13 @@ public class WechatWorkResult {
 
     public void setErrMessage(String errMessage) {
         this.errMessage = errMessage;
+    }
+
+    @Override
+    public String toString() {
+        return "WechatWorkResult{" +
+                "errCode='" + errCode + '\'' +
+                ", errMessage='" + errMessage + '\'' +
+                '}';
     }
 }

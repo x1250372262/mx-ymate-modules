@@ -22,7 +22,7 @@ public class HeartServerImpl implements IHeartServer {
         IdleStateEvent event = (IdleStateEvent) evt;
         if (event.state() == IdleState.READER_IDLE) {
             InetSocketAddress ipSocket = (InetSocketAddress) ctx.channel().remoteAddress();
-            Logs.get().getLogger().debug(StrUtil.format("ip:{},端口:{}客户端长时间未发送消息",ipSocket.getHostString(),ipSocket.getPort()));
+            Logs.get().getLogger().debug(StrUtil.format("ip:{},端口:{}客户端长时间未发送消息", ipSocket.getHostString(), ipSocket.getPort()));
             ctx.channel().close();
         }
     }

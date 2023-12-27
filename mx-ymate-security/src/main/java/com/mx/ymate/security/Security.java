@@ -1,11 +1,8 @@
 package com.mx.ymate.security;
 
-import cn.dev33.satoken.SaManager;
-import cn.dev33.satoken.listener.SaTokenEventCenter;
 import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.security.base.code.SecurityCode;
 import com.mx.ymate.security.impl.DefaultSecurityConfig;
-import com.mx.ymate.security.satoken.*;
 import net.ymate.platform.core.*;
 import net.ymate.platform.core.module.IModule;
 import net.ymate.platform.core.module.IModuleConfigurer;

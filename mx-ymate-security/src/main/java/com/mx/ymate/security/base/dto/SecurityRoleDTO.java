@@ -14,6 +14,7 @@ import java.io.Serializable;
  */
 public class SecurityRoleDTO implements Serializable {
 
+    private static final long serialVersionUID = 1L;
 
     @VRequired(msg = "名称不能为空")
     @RequestParam

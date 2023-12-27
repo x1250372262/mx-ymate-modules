@@ -8,7 +8,7 @@ public class SecurityJdbc {
 
 
     public static Join securityJoin(String prefix, String tableAlias, String fieldName) {
-        return MxJdbc.innerJoin(prefix, SecurityUser.TABLE_NAME,"su",SecurityUser.FIELDS.ID,tableAlias,fieldName);
+        return MxJdbc.innerJoin(prefix, SecurityUser.TABLE_NAME, "su", SecurityUser.FIELDS.ID, tableAlias, fieldName);
     }
 
 }

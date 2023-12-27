@@ -43,7 +43,7 @@ public class QrCodeController {
                       @PathVariable(value = "format") String format,
                       @RequestParam(defaultValue = "false") boolean attach) throws Exception {
         String filePath = QrCodeFactory.filePath;
-        if(StringUtils.isBlank(filePath)){
+        if (StringUtils.isBlank(filePath)) {
             throw new NullArgumentException("mx.qrcode.file_path");
         }
         File qrCodeFile = new File(filePath.concat(File.separator).concat(timeStr), fileName.concat(".").concat(StringUtils.defaultIfBlank(format, "png")));
@@ -59,6 +59,7 @@ public class QrCodeController {
 
     /**
      * 创建二维码
+     *
      * @param content
      * @param characterSet
      * @param width
@@ -94,7 +95,7 @@ public class QrCodeController {
                 errorCorrectionLevel = ErrorCorrectionLevel.L;
                 break;
         }
-        QrCodeResult qrCodeResult = QrCodeFactory.init(createCode).create(content, characterSet,width, height, margin, errorCorrectionLevel,format);
+        QrCodeResult qrCodeResult = QrCodeFactory.init(createCode).create(content, characterSet, width, height, margin, errorCorrectionLevel, format);
         return MxResult.ok().data(qrCodeResult).toJsonView();
     }
 }

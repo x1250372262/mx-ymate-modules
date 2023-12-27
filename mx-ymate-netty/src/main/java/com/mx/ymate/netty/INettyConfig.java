@@ -53,9 +53,9 @@ public interface INettyConfig extends IInitialization<INetty> {
 
     String WEBSOCKET_ENABLED = "websocket.enabled";
 
-    String WEBSOCKET_PORT= "websocket.port";
+    String WEBSOCKET_PORT = "websocket.port";
 
-    String WEBSOCKET_MAPPING= "websocket.mapping";
+    String WEBSOCKET_MAPPING = "websocket.mapping";
     String WEBSOCKET_HANDLER_CLASS = "websocket.handlerClass";
 
     String SERVER_CLIENT_SERVER = "server";
@@ -71,6 +71,7 @@ public interface INettyConfig extends IInitialization<INetty> {
 
     /**
      * 是否自动启动
+     *
      * @return
      */
     Boolean autoStart();
@@ -104,6 +105,7 @@ public interface INettyConfig extends IInitialization<INetty> {
 
     /**
      * 心跳实现类 当serverHeartBeatTime不等于0的时候有效
+     *
      * @return
      */
     IHeartServer heartServer();
@@ -137,6 +139,7 @@ public interface INettyConfig extends IInitialization<INetty> {
 
     /**
      * 心跳实现类 当clientHeartBeatTime不等于0的时候有效
+     *
      * @return
      */
     IHeartClient heartClient();
@@ -154,24 +157,28 @@ public interface INettyConfig extends IInitialization<INetty> {
 
     /**
      * 是否启用websocket 默认false
+     *
      * @return
      */
     boolean websocketEnabled();
 
     /**
      * websocket端口 默认8756
+     *
      * @return
      */
     int websocketPort();
 
     /**
      * websocket请求路径 默认websocket
+     *
      * @return
      */
     String websocketMapping();
 
     /**
      * #处理器名称 只能指定一个
+     *
      * @return
      */
     ChannelInboundHandlerAdapter websocketHandler();

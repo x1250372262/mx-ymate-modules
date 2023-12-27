@@ -30,9 +30,9 @@ public class Sorts {
         for (int i = 0; i < fieldArray.length; i++) {
             String order = sortBean.isOrder() ? orderArray[i] : orderArray[0];
             if (DESC.equals(order)) {
-                orderBy.desc(Fields.field(prefixArray[i], ClassUtils.fieldNameToPropertyName(fieldArray[i],0)));
+                orderBy.desc(Fields.field(prefixArray[i], ClassUtils.fieldNameToPropertyName(fieldArray[i], 0)));
             } else {
-                orderBy.asc(Fields.field(prefixArray[i], ClassUtils.fieldNameToPropertyName(fieldArray[i],0)));
+                orderBy.asc(Fields.field(prefixArray[i], ClassUtils.fieldNameToPropertyName(fieldArray[i], 0)));
             }
         }
         return orderBy;

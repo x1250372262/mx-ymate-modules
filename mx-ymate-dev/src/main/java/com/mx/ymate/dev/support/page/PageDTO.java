@@ -17,7 +17,7 @@ public class PageDTO implements Serializable {
     @RequestParam(defaultValue = "1")
     private Integer page;
 
-    @RequestParam(defaultValue="10")
+    @RequestParam(defaultValue = "10")
     private Integer pageSize;
 
     public PageDTO() {

@@ -13,7 +13,6 @@
         <module>mx-ymate-redis</module>
         <module>mx-ymate-upload</module>
         <module>mx-ymate-netty</module>
-        <module>mx-ymate-serv</module>
         <module>mx-ymate-excel</module>
         <module>mx-ymate-work-robot</module>
         <module>mx-ymate-clickhouse</module>

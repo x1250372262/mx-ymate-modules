@@ -15,18 +15,12 @@
  */
 package com.mx.ymate.upload;
 
-import net.ymate.module.fileuploader.*;
-import net.ymate.platform.commons.json.JsonWrapper;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import net.ymate.module.fileuploader.AbstractResourcesProcessor;
+import net.ymate.module.fileuploader.IFileWrapper;
+import net.ymate.module.fileuploader.ResourceType;
+import net.ymate.module.fileuploader.UploadFileMeta;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author 刘镇 (suninformation@163.com) on 2019-01-03 19:08

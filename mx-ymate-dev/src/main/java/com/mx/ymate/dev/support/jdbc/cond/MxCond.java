@@ -32,12 +32,14 @@ public @interface MxCond {
 
     /**
      * 表里字段
+     *
      * @return
      */
     String tableField();
 
     /**
      * 是否检查空值
+     *
      * @return
      */
     boolean checkEmpty() default true;

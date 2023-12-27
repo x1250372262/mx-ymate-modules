@@ -17,7 +17,7 @@ public class MinioConfig {
 
     private String bucket;
 
-    public MinioConfig(){
+    public MinioConfig() {
         this.url = YMP.get().getParam("module.fileuploader.minio.url");
         this.accessKey = YMP.get().getParam("module.fileuploader.minio.access_key");
         this.secretKey = YMP.get().getParam("module.fileuploader.minio.secret_key");

@@ -22,12 +22,12 @@ public class PageBean {
         this.pageSize = pageSize;
     }
 
-    public Page toPage(){
-        return Page.createIfNeed(page,pageSize);
+    public Page toPage() {
+        return Page.createIfNeed(page, pageSize);
     }
 
-    public static PageBean create(){
-        return new PageBean(0,0);
+    public static PageBean create() {
+        return new PageBean(0, 0);
     }
 
     public Integer getPage() {

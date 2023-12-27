@@ -38,8 +38,8 @@ public class Pages<T> implements Serializable {
      */
     private List<T> resultData;
 
-    public static <T> Pages<T> create(IResultSet<T> resultSet){
-        return new Pages<>(resultSet.getPageNumber(),resultSet.getPageSize(),resultSet.getPageCount(),resultSet.getRecordCount(),resultSet.getResultData());
+    public static <T> Pages<T> create(IResultSet<T> resultSet) {
+        return new Pages<>(resultSet.getPageNumber(), resultSet.getPageSize(), resultSet.getPageCount(), resultSet.getRecordCount(), resultSet.getResultData());
     }
 
     public Pages() {

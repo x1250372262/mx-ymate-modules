@@ -58,7 +58,7 @@ public class HttpUtil {
         return result;
     }
 
-    private static MxResult create(JSONObject jsonObject){
+    private static MxResult create(JSONObject jsonObject) {
         MxResult mxResult = MxResult.create();
         Object code = jsonObject.remove("code");
         if (code != null) {
@@ -83,6 +83,7 @@ public class HttpUtil {
     public static MxResult post(String url, Map<String, String> params) throws Exception {
         return request(url, HttpMethod.POST, params);
     }
+
     public static MxResult get(String url) throws Exception {
         return get(url, MapUtil.empty());
     }

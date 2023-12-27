@@ -29,13 +29,13 @@ public class MxJdbc {
         return Cond.create().eqOne();
     }
 
-    public static Cond createByBean(Object obj,boolean eqOne) throws IllegalAccessException {
+    public static Cond createByBean(Object obj, boolean eqOne) throws IllegalAccessException {
         Cond cond = Cond.create();
-        if(eqOne){
+        if (eqOne) {
             cond.eqOne();
         }
         Class<?> clazz = obj.getClass();
-        for(Field field :  ClassUtils.getFields(clazz,false)) {
+        for (Field field : ClassUtils.getFields(clazz, false)) {
             MxCond mxCond = field.getAnnotation(MxCond.class);
             if (mxCond == null) {
                 continue;
@@ -46,27 +46,26 @@ public class MxJdbc {
             field.setAccessible(true);
             Object value = field.get(obj);
             Object oldValue = value;
-            if(Cond.OPT.LIKE.equals(opt)){
+            if (Cond.OPT.LIKE.equals(opt)) {
                 value = Like.create(BlurObject.bind(value).toStringValue()).contains();
             }
-            if(mxCond.checkEmpty()){
+            if (mxCond.checkEmpty()) {
                 Object finalValue = value;
-                cond.exprNotEmpty(oldValue, c->c.and().optWrap(Fields.field(prefix, tableField),opt).param(finalValue));
-            }else{
-                cond.and().optWrap(Fields.field(prefix, tableField),opt).param(value);
+                cond.exprNotEmpty(oldValue, c -> c.and().optWrap(Fields.field(prefix, tableField), opt).param(finalValue));
+            } else {
+                cond.and().optWrap(Fields.field(prefix, tableField), opt).param(value);
             }
         }
         return cond;
     }
 
-    public static Cond deleteStatus(){
+    public static Cond deleteStatus() {
         return deleteStatus(null);
     }
 
-    public static Cond deleteStatus(String alias){
-        return Cond.create().eqWrap(alias,DELETE_STATUS).param(Constants.BOOL_FALSE);
+    public static Cond deleteStatus(String alias) {
+        return Cond.create().eqWrap(alias, DELETE_STATUS).param(Constants.BOOL_FALSE);
     }
-
 
 
     public static Join innerJoin(String prefix, String joinTableName, String joinTableAlias, String joinFieldName, String tableAlias, String fieldName) {

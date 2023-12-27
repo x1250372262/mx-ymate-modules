@@ -27,7 +27,7 @@ public interface ISecurityMenuService {
      * @return
      * @throws Exception
      */
-    List<SecurityMenuNavVO> navList(String userId,List<String> permissionList, boolean isFounder) throws Exception;
+    List<SecurityMenuNavVO> navList(String userId, List<String> permissionList, boolean isFounder) throws Exception;
 
     /**
      * 菜单列表

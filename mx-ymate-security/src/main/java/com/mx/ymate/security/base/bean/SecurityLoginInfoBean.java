@@ -9,6 +9,8 @@ import java.io.Serializable;
  */
 public class SecurityLoginInfoBean implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * 真实姓名
      */

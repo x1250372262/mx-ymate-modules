@@ -212,8 +212,8 @@ public class BeanUtil {
     /**
      * 复制bean
      *
-     * @param sources  要复制的
-     * @param target   目标对象
+     * @param sources 要复制的
+     * @param target  目标对象
      * @return 目标对象
      */
     public static <S, T> IResultSet<T> copyResultSet(IResultSet<S> sources, Supplier<T> target) {

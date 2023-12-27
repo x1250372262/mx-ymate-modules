@@ -1,11 +1,15 @@
 package com.mx.ymate.workrobot.bean;
 
+import java.io.Serializable;
+
 /**
  * @Author: mengxiang.
  * @Date: 2023-06-09 15:14
  * @Description:
  */
-public class WechatNewsItem {
+public class WechatNewsItem implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String title;
 
@@ -45,5 +49,15 @@ public class WechatNewsItem {
 
     public void setPicurl(String picurl) {
         this.picurl = picurl;
+    }
+
+    @Override
+    public String toString() {
+        return "WechatNewsItem{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", url='" + url + '\'' +
+                ", picurl='" + picurl + '\'' +
+                '}';
     }
 }

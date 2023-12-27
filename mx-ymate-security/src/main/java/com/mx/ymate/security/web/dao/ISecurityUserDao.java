@@ -53,6 +53,7 @@ public interface ISecurityUserDao {
 
     /**
      * 查询所有
+     *
      * @param userName
      * @param realName
      * @param disableStatus
@@ -66,6 +67,7 @@ public interface ISecurityUserDao {
 
     /**
      * 根据条件查询
+     *
      * @param userName
      * @param client
      * @param resourceId

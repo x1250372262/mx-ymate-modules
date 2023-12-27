@@ -6,6 +6,7 @@ package com.mx.ymate.security.base.enums;
  * @Description: 操作日志类型枚举
  */
 public enum OperationType {
+
     /**
      * 未知
      */

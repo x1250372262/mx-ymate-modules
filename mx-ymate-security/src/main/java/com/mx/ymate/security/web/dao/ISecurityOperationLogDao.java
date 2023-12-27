@@ -13,6 +13,7 @@ public interface ISecurityOperationLogDao {
 
     /**
      * 添加
+     *
      * @param securityOperationLog
      * @return
      * @throws Exception
@@ -21,6 +22,7 @@ public interface ISecurityOperationLogDao {
 
     /**
      * 查询所有
+     *
      * @param resourceId
      * @param client
      * @param title
@@ -34,15 +36,17 @@ public interface ISecurityOperationLogDao {
 
     /**
      * 根据id查询
+     *
      * @param id
      * @param fields
      * @return
      * @throws Exception
      */
-    SecurityOperationLog findById(String id,String...fields) throws Exception;
+    SecurityOperationLog findById(String id, String... fields) throws Exception;
 
     /**
      * 批量删除
+     *
      * @param ids
      * @return
      * @throws Exception

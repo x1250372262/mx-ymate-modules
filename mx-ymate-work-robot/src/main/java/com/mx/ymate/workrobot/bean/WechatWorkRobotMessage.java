@@ -1,5 +1,6 @@
 package com.mx.ymate.workrobot.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,9 @@ import java.util.List;
  * @Date: 2023-06-09 14:52
  * @Description:
  */
-public class WechatWorkRobotMessage {
+public class WechatWorkRobotMessage implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final static String TYPE_TEXT = "text";
     private final static String TYPE_NEWS = "news";
@@ -121,5 +124,15 @@ public class WechatWorkRobotMessage {
 
     public void setNews(WechatNews news) {
         this.news = news;
+    }
+
+    @Override
+    public String toString() {
+        return "WechatWorkRobotMessage{" +
+                "webhook='" + webhook + '\'' +
+                ", msgtype='" + msgtype + '\'' +
+                ", text=" + text +
+                ", news=" + news +
+                '}';
     }
 }

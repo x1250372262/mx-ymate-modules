@@ -21,7 +21,7 @@ public class SecurityInitializer implements IEventRegister {
         events.registerListener(Events.MODE.ASYNC, ApplicationEvent.class, (IEventListener<ApplicationEvent>) context -> {
             if (context.getEventName() == ApplicationEvent.EVENT.APPLICATION_INITIALIZED) {
                 ISecurityConfig config = Security.get().getConfig();
-                if(config != null && config.isEnabled() && config.isInitialized()){
+                if (config != null && config.isEnabled() && config.isInitialized()) {
                     //集成初始化
                     // 注入上下文Bean
                     SaManager.setSaTokenContext(new YmpContext());

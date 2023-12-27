@@ -1,11 +1,15 @@
 package com.mx.ymate.security.base.bean;
 
+import java.io.Serializable;
+
 /**
  * @Author: mengxiang.
  * @create: 2021-10-18 10:04
  * @Description:
  */
-public class Permission {
+public class Permission implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String groupName;
 

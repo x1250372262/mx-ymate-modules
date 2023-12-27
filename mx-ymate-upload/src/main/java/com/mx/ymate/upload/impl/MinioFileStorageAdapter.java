@@ -16,22 +16,17 @@
 package com.mx.ymate.upload.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.mx.ymate.upload.config.MinioConfig;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
-import io.minio.credentials.AssumeRoleBaseProvider;
 import net.ymate.module.fileuploader.*;
 import net.ymate.platform.commons.util.DateTimeUtils;
 import net.ymate.platform.commons.util.FileUtils;
-import net.ymate.platform.commons.util.RuntimeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -49,10 +44,10 @@ public class MinioFileStorageAdapter extends AbstractFileStorageAdapter {
 
     @Override
     protected void doInitialize() throws Exception {
-        if(minioConfig == null){
+        if (minioConfig == null) {
             minioConfig = new MinioConfig();
         }
-        if(minioClient == null){
+        if (minioClient == null) {
             // 使用MinIO服务的URL，端口，Access key和Secret key创建一个MinioClient对象
             minioClient = MinioClient.builder().endpoint(minioConfig.getUrl()).credentials(minioConfig.getAccessKey(), minioConfig.getSecretKey()).build();
         }
@@ -60,7 +55,7 @@ public class MinioFileStorageAdapter extends AbstractFileStorageAdapter {
 
     @Override
     public boolean isExists(UploadFileMeta fileMeta) {
-       return false;
+        return false;
     }
 
     private String getFilePath(String type, String filename) {
@@ -86,7 +81,7 @@ public class MinioFileStorageAdapter extends AbstractFileStorageAdapter {
         // 路径格式 例如 image/20210/01/01/hash.png
         String extension = StringUtils.trimToNull(file.getSuffix());
         String filename = StringUtils.join(new Object[]{hash, extension}, FileUtils.POINT_CHAR);
-        String newFileName = getFilePath(resourceType.name(),filename);
+        String newFileName = getFilePath(resourceType.name(), filename);
         // 重新生成一个文件名
         InputStream inputStram = file.getInputStream();
         minioClient.putObject(PutObjectArgs.builder().bucket(minioConfig.getBucket())

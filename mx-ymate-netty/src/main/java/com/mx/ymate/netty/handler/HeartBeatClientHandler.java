@@ -15,7 +15,7 @@ import net.ymate.platform.log.Logs;
  */
 public class HeartBeatClientHandler extends ChannelInboundHandlerAdapter {
 
-    private final INettyConfig nettyConfig ;
+    private final INettyConfig nettyConfig;
 
     public HeartBeatClientHandler() {
         nettyConfig = Netty.get().getConfig();
@@ -24,7 +24,7 @@ public class HeartBeatClientHandler extends ChannelInboundHandlerAdapter {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             IHeartClient iHeartClient = nettyConfig.heartClient();
-            iHeartClient.handle(ctx,evt);
+            iHeartClient.handle(ctx, evt);
         } else {
             super.userEventTriggered(ctx, evt);
         }

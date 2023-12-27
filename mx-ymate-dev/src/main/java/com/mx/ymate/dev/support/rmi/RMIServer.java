@@ -24,7 +24,6 @@ public class RMIServer {
     private static Registry registry;
 
     private static final List<String> RMI_SERVER_LIST = new ArrayList<>();
-    ;
 
     private static final ILogger LOG = Logs.get().getLogger();
 

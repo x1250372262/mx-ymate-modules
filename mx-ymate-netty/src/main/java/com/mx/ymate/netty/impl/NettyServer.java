@@ -3,7 +3,6 @@ package com.mx.ymate.netty.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mx.ymate.netty.INettyConfig;
-import com.mx.ymate.netty.Netty;
 import com.mx.ymate.netty.handler.HeartBeatServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -18,7 +17,6 @@ import net.ymate.platform.log.Logs;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: mengxiang.
@@ -49,7 +47,7 @@ public class NettyServer {
             protected void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline channelPipeline = ch.pipeline();
                 if (Objects.nonNull(config.serverHeartBeatTime())) {
-                    channelPipeline.addLast(new IdleStateHandler(config.serverHeartBeatTime(),0,0));
+                    channelPipeline.addLast(new IdleStateHandler(config.serverHeartBeatTime(), 0, 0));
                 }
                 channelPipeline.addLast(config.serverDecoder());
                 for (ChannelInboundHandlerAdapter clazz : config.serverHandler()) {
@@ -63,7 +61,7 @@ public class NettyServer {
         if (Objects.nonNull(config.serverPort())) {
 //            //绑定端口，同步等待成功
             serverBootstrap.bind(config.serverPort()).sync();
-            Logs.get().getLogger().info(StrUtil.format("单端口{}绑定成功",config.serverPort()));
+            Logs.get().getLogger().info(StrUtil.format("单端口{}绑定成功", config.serverPort()));
         } else if (Objects.nonNull(config.serverStartPort()) && Objects.nonNull(config.serverEndPort())) {
             int startPort = config.serverStartPort();
             int endPort = config.serverEndPort();
@@ -72,7 +70,7 @@ public class NettyServer {
                 //绑定端口，同步等待成功
                 if (!excludePorts.contains(BlurObject.bind(startPort).toStringValue())) {
                     serverBootstrap.bind(startPort).sync();
-                    Logs.get().getLogger().info(StrUtil.format("多端口{}绑定成功",startPort));
+                    Logs.get().getLogger().info(StrUtil.format("多端口{}绑定成功", startPort));
                 }
             }
         }

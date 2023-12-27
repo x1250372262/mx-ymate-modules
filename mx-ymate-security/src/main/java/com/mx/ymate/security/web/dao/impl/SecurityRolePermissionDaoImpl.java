@@ -31,7 +31,7 @@ public class SecurityRolePermissionDaoImpl implements ISecurityRolePermissionDao
     }
 
     @Override
-    public void deleteByClientAndRoleIdAndResourceId(String client, String resourceId, String roleId) throws Exception{
+    public void deleteByClientAndRoleIdAndResourceId(String client, String resourceId, String roleId) throws Exception {
         SecurityRolePermission.builder().client(client).resourceId(resourceId).roleId(roleId).build().delete();
     }
 }

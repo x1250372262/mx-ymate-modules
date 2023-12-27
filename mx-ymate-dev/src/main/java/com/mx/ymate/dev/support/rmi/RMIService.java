@@ -9,6 +9,7 @@ public @interface RMIService {
 
     /**
      * 名称
+     *
      * @return
      */
     String name();

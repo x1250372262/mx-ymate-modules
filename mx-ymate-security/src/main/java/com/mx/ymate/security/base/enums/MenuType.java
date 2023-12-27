@@ -6,6 +6,7 @@ package com.mx.ymate.security.base.enums;
  * @Description: 菜单类型枚举
  */
 public enum MenuType {
+
     /**
      * 默认
      */

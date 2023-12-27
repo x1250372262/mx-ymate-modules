@@ -40,7 +40,7 @@ public interface IUserHandler {
      * @return
      * @throws Exception
      */
-    String buildResourceId(ResourceType resourceType,String loginId) throws Exception;
+    String buildResourceId(ResourceType resourceType, String loginId) throws Exception;
 
     @Bean
     class DefaultUserHandler implements IUserHandler {
@@ -52,12 +52,12 @@ public interface IUserHandler {
         }
 
         @Override
-        public MxResult createAfter(Map<String, String> params,SecurityUser securityUser) throws Exception {
+        public MxResult createAfter(Map<String, String> params, SecurityUser securityUser) throws Exception {
             return MxResult.ok();
         }
 
         @Override
-        public String buildResourceId(ResourceType resourceType,String loginId) throws Exception {
+        public String buildResourceId(ResourceType resourceType, String loginId) throws Exception {
             return null;
         }
     }

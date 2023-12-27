@@ -22,11 +22,11 @@ public class IpRegionUtil {
 
     static {
         try {
-            File file = new File(RuntimeUtils.getRootPath(),"ip2region.xdb");
+            File file = new File(RuntimeUtils.getRootPath(), "ip2region.xdb");
             Logs.get().getLogger().info("ip数据库" + file.getAbsolutePath());
-            if(!file.exists()){
+            if (!file.exists()) {
                 InputStream inputStream = IpRegionUtil.class.getClassLoader().getResourceAsStream("ip2region.xdb");
-                FileUtils.createFileIfNotExists(file,inputStream);
+                FileUtils.createFileIfNotExists(file, inputStream);
             }
             byte[] cBuff = Searcher.loadContentFromFile(file.getAbsolutePath());
             SEARCHER = Searcher.newWithBuffer(cBuff);

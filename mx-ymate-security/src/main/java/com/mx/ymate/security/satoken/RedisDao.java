@@ -6,7 +6,6 @@ import cn.hutool.core.util.StrUtil;
 import com.mx.ymate.redis.api.RedisApi;
 import net.ymate.platform.commons.serialize.ISerializer;
 import net.ymate.platform.commons.serialize.SerializerManager;
-import net.ymate.platform.core.beans.annotation.Bean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -240,12 +239,12 @@ public class RedisDao implements SaTokenDao {
 
     /**
      * 搜索数据
-     * @param prefix 前缀
-     * @param keyword 关键字
-     * @param start 开始处索引
-     * @param size 获取数量  (-1代表从start处一直取到末尾)
-     * @param sortType 排序类型（true=正序，false=反序）
      *
+     * @param prefix   前缀
+     * @param keyword  关键字
+     * @param start    开始处索引
+     * @param size     获取数量  (-1代表从start处一直取到末尾)
+     * @param sortType 排序类型（true=正序，false=反序）
      * @return
      */
     @Override
@@ -259,7 +258,6 @@ public class RedisDao implements SaTokenDao {
             throw new RuntimeException(e);
         }
     }
-
 
 
     protected byte[] keyToBytes(Object key) {

@@ -26,6 +26,7 @@ public interface ISecurityUserRoleDao {
 
     /**
      * 添加
+     *
      * @param securityUserRole
      * @return
      * @throws Exception
@@ -34,6 +35,7 @@ public interface ISecurityUserRoleDao {
 
     /**
      * 批量删除
+     *
      * @param ids
      * @return
      * @throws Exception
@@ -74,7 +76,7 @@ public interface ISecurityUserRoleDao {
      * @return
      * @throws Exception
      */
-    SecurityUserRole findByUserIdAndRoleidAndClientAndResourceId(String userId,String roleId, String client, String resourceId) throws Exception;
+    SecurityUserRole findByUserIdAndRoleidAndClientAndResourceId(String userId, String roleId, String client, String resourceId) throws Exception;
 
 
 }

@@ -1,4 +1,5 @@
 package com.mx.ymate.security.web.dao.impl;
+
 import com.mx.ymate.security.base.model.SecurityPermission;
 import com.mx.ymate.security.web.dao.ISecurityPermissionDao;
 import net.ymate.platform.core.beans.annotation.Bean;

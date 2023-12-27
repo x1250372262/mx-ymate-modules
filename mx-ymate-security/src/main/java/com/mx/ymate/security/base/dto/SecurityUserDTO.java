@@ -14,6 +14,7 @@ import java.io.Serializable;
  */
 public class SecurityUserDTO implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     /**
      * 用户名
      */

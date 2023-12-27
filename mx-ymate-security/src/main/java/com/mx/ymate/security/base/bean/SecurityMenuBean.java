@@ -9,6 +9,7 @@ import java.io.Serializable;
  */
 public class SecurityMenuBean implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private String parentId;
 
     private String name;

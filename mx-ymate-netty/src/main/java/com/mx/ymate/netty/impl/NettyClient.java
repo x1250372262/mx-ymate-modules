@@ -97,7 +97,7 @@ public class NettyClient {
     }
 
     public void connect(RemoteAddress remoteAddress) throws Exception {
-        Logs.get().getLogger().info(StrUtil.format("和ip:{},端口:{}服务进行连接",remoteAddress.getHost(),remoteAddress.getPort()));
+        Logs.get().getLogger().info(StrUtil.format("和ip:{},端口:{}服务进行连接", remoteAddress.getHost(), remoteAddress.getPort()));
         ChannelFuture cf = BOOTSTRAP.connect(remoteAddress.getHost(), remoteAddress.getPort());
         cf.addListener((ChannelFutureListener) future -> {
             if (!future.isSuccess()) {

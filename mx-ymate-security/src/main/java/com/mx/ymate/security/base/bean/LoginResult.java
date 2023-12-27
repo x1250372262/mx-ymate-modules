@@ -3,6 +3,7 @@ package com.mx.ymate.security.base.bean;
 import com.mx.ymate.security.base.vo.SecurityMenuNavVO;
 import com.mx.ymate.security.base.vo.SecurityUserVO;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,9 @@ import java.util.Map;
  * @create: 2022-04-20 00:00
  * @Description: 登录结果
  */
-public class LoginResult {
+public class LoginResult implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     public String tokenName;
 

@@ -1,13 +1,11 @@
 package com.mx.ymate.security.base.vo;
 
-import java.io.Serializable;
-
 /**
  * @Author: mengxiang.
  * @create: 2021-09-24 16:00
  * @Description:
  */
-public class SecurityUserListVO extends SecurityUserVO implements Serializable {
+public class SecurityUserListVO extends SecurityUserVO {
 
     private String roleName;
 

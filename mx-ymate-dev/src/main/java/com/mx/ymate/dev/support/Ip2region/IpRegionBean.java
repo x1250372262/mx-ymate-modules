@@ -22,24 +22,24 @@ public class IpRegionBean implements Serializable {
     private String isp;
 
     public IpRegionBean(String country, String province, String city, String isp) {
-        if(StringUtils.isNotBlank(country) && !"0".equals(country)){
+        if (StringUtils.isNotBlank(country) && !"0".equals(country)) {
             this.country = country;
-        }else{
+        } else {
             this.country = "未知";
         }
-        if(StringUtils.isNotBlank(province) && !"0".equals(province)){
+        if (StringUtils.isNotBlank(province) && !"0".equals(province)) {
             this.province = province;
-        }else{
+        } else {
             this.province = "未知";
         }
-        if(StringUtils.isNotBlank(city) && !"0".equals(city)){
+        if (StringUtils.isNotBlank(city) && !"0".equals(city)) {
             this.city = city;
-        }else{
+        } else {
             this.city = "未知";
         }
-        if(StringUtils.isNotBlank(isp) && !"0".equals(isp)){
+        if (StringUtils.isNotBlank(isp) && !"0".equals(isp)) {
             this.isp = isp;
-        }else{
+        } else {
             this.isp = "未知";
         }
     }
@@ -49,9 +49,9 @@ public class IpRegionBean implements Serializable {
     }
 
     public void setCountry(String country) {
-        if(StringUtils.isNotBlank(country) && !"0".equals(country)){
+        if (StringUtils.isNotBlank(country) && !"0".equals(country)) {
             this.country = country;
-        }else{
+        } else {
             this.country = "未知";
         }
     }
@@ -61,9 +61,9 @@ public class IpRegionBean implements Serializable {
     }
 
     public void setProvince(String province) {
-        if(StringUtils.isNotBlank(province) && !"0".equals(province)){
+        if (StringUtils.isNotBlank(province) && !"0".equals(province)) {
             this.province = province;
-        }else{
+        } else {
             this.province = "未知";
         }
     }
@@ -73,9 +73,9 @@ public class IpRegionBean implements Serializable {
     }
 
     public void setCity(String city) {
-        if(StringUtils.isNotBlank(city) && !"0".equals(city)){
+        if (StringUtils.isNotBlank(city) && !"0".equals(city)) {
             this.city = city;
-        }else{
+        } else {
             this.city = "未知";
         }
     }
@@ -85,9 +85,9 @@ public class IpRegionBean implements Serializable {
     }
 
     public void setIsp(String isp) {
-        if(StringUtils.isNotBlank(isp) && !"0".equals(isp)){
+        if (StringUtils.isNotBlank(isp) && !"0".equals(isp)) {
             this.isp = isp;
-        }else{
+        } else {
             this.isp = "未知";
         }
     }

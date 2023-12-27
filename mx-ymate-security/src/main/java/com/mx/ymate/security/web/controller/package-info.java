@@ -1,4 +1,4 @@
-@RequestMapping(value = "/mx/security",method = Type.HttpMethod.OPTIONS)
+@RequestMapping(value = "/mx/security", method = Type.HttpMethod.OPTIONS)
 @CrossDomain
 @Before(SecurityUserInterceptor.class)
 package com.mx.ymate.security.web.controller;

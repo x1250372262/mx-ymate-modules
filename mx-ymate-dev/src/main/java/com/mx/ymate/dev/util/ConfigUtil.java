@@ -4,7 +4,10 @@ import net.ymate.platform.commons.lang.BlurObject;
 import net.ymate.platform.commons.util.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: mengxiang.
@@ -13,7 +16,7 @@ import java.util.*;
  */
 public class ConfigUtil {
 
-    private final Map<String,String> configMap;
+    private final Map<String, String> configMap;
 
 
     public ConfigUtil(Map<String, String> configMap) {
@@ -138,7 +141,7 @@ public class ConfigUtil {
     public double getDoubleValue(String key, double defaultValue) {
         return getObject(key, defaultValue).toDoubleValue();
     }
-    
+
 
     public <T> T getClassImpl(String key, Class<T> interfaceClass) {
         return ClassUtils.impl(getString(key), interfaceClass, getClass());

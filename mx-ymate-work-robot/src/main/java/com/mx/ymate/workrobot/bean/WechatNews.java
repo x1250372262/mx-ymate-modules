@@ -1,5 +1,6 @@
 package com.mx.ymate.workrobot.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,9 @@ import java.util.List;
  * @Date: 2023-06-09 15:14
  * @Description:
  */
-public class WechatNews {
+public class WechatNews implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private List<WechatNewsItem> articles;
 
@@ -17,5 +20,12 @@ public class WechatNews {
 
     public void setArticles(List<WechatNewsItem> articles) {
         this.articles = articles;
+    }
+
+    @Override
+    public String toString() {
+        return "WechatNews{" +
+                "articles=" + articles +
+                '}';
     }
 }
