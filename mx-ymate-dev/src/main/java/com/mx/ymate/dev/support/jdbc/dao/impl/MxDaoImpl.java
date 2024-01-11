@@ -1,5 +1,6 @@
 package com.mx.ymate.dev.support.jdbc.dao.impl;
 
+import cn.hutool.core.util.ClassUtil;
 import com.mx.ymate.dev.support.jdbc.dao.IMxDao;
 import net.ymate.platform.commons.util.ClassUtils;
 import net.ymate.platform.core.beans.annotation.Bean;
@@ -22,6 +23,11 @@ import java.util.List;
 @Bean
 public class MxDaoImpl<MxEntity extends BaseEntity<MxEntity, String>> implements IMxDao<MxEntity> {
 
+    /**
+     * 循环的最大层级
+     */
+    private final static int MAX_LEVEL = 5;
+
 
     private final Class<MxEntity> entityClass;
 
@@ -30,25 +36,18 @@ public class MxDaoImpl<MxEntity extends BaseEntity<MxEntity, String>> implements
         entityClass = (Class<MxEntity>) getEntityClass(getClass());
         Entity entity = entityClass.getAnnotation(Entity.class);
         if (entity == null) {
-            throw new RuntimeException("Dao最多支持两层继承");
+            throw new RuntimeException("Dao最多支持" + MAX_LEVEL + "层继承");
         }
     }
 
     private static Class<?> getEntityClass(Class<?> clazz) {
-        final String name = clazz.getName();
-        if (name.contains("$$EnhancerBy") || name.contains("_$$_")) {
-            Class<?> resultClass = ClassUtils.getParameterizedTypes(clazz.getSuperclass()).get(0);
-            Entity entity = resultClass.getAnnotation(Entity.class);
-            if (entity != null) {
-                return resultClass;
+        Class<?> resultClass = clazz;
+        for (int i = 0; i < MAX_LEVEL; i++) {
+            if(!ClassUtil.isAssignable(BaseEntity.class, resultClass)){
+                resultClass = ClassUtils.getParameterizedTypes(resultClass).get(0);
             }
-            Bean bean = resultClass.getAnnotation(Bean.class);
-            if (bean == null) {
-                throw new RuntimeException("Dao异常，请检查代码");
-            }
-            return ClassUtils.getParameterizedTypes(resultClass).get(0);
         }
-        return clazz;
+        return resultClass;
     }
 
     @Override
