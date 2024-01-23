@@ -99,12 +99,12 @@ public class MxDaoImpl<MxEntity extends BaseEntity<MxEntity, String>> implements
     }
 
     @Override
-    public MxEntity findByVar(String var, String value, String... fields) throws Exception {
+    public MxEntity findByVar(String var, Object value, String... fields) throws Exception {
         return findFirst(Cond.create().eqWrap(var).param(value), fields);
     }
 
     @Override
-    public MxEntity findByVarNotId(String var, String value, String id, String... fields) throws Exception {
+    public MxEntity findByVarNotId(String var, Object value, String id, String... fields) throws Exception {
         return findFirst(Cond.create().eqWrap(var).param(value).and().notEqWrap("id").param(id), fields);
     }
 
@@ -151,6 +151,11 @@ public class MxDaoImpl<MxEntity extends BaseEntity<MxEntity, String>> implements
             }
             return session.find(entitySql);
         });
+    }
+
+    @Override
+    public IResultSet<MxEntity> findAllByVar(String var, Object value, String... fields) throws Exception {
+        return find(Cond.create().eqWrap(var).param(value),fields);
     }
 
     @Override

@@ -28,9 +28,9 @@ public interface IMxDao<MxEntity extends BaseEntity<MxEntity, String>> {
 
     MxEntity findFirst(Where where, String... fields) throws Exception;
 
-    MxEntity findByVar(String var, String value, String... fields) throws Exception;
+    MxEntity findByVar(String var, Object value, String... fields) throws Exception;
 
-    MxEntity findByVarNotId(String var, String value, String id, String... fields) throws Exception;
+    MxEntity findByVarNotId(String var, Object value, String id, String... fields) throws Exception;
 
     IResultSet<MxEntity> find(Where where, IDBLocker dbLocker, Page page, String... fields) throws Exception;
 
@@ -43,6 +43,8 @@ public interface IMxDao<MxEntity extends BaseEntity<MxEntity, String>> {
     IResultSet<MxEntity> find(Cond cond, Page page, String... fields) throws Exception;
 
     IResultSet<MxEntity> find(String... fields) throws Exception;
+
+    IResultSet<MxEntity> findAllByVar(String var, Object value, String... fields) throws Exception;
 
     MxEntity create(MxEntity mxEntity) throws Exception;
 
