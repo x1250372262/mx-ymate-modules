@@ -249,6 +249,9 @@ var SELECT = function () {
             params = $.trim(params) ? params : null;
             init(dom, id, value, $.trim(url), styles, params, returnKey);
         },
+        initBase: function (dom, url) {
+            init(dom, "id", "name", $.trim(url), null, null, null);
+        },
         initById: function (domId, id, value, url, styles, params, returnKey) {
             id = $.trim(id) ? id : "id";
             value = $.trim(value) ? value : "name";

@@ -1,6 +1,7 @@
 package com.mx.ymate.netty.util;
 
 import cn.hutool.core.util.HexUtil;
+import com.alibaba.fastjson.JSONObject;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -109,6 +110,19 @@ public class NettyUtil {
     public static void sendStr(String key, String message) {
         ByteBuf buffer = Unpooled.wrappedBuffer(message.getBytes(StandardCharsets.UTF_8));
         sendBuffer(key, buffer, message);
+    }
+
+    public static void send(String key,Object message){
+        ChannelHandlerContext context = getContent(key);
+        if (context == null) {
+            return;
+        }
+        Logs.get().getLogger().info("发送数据:key:" + key + "原始数据:" + JSONObject.toJSONString(message));
+        try {
+            context.writeAndFlush(message);
+        } catch (Exception exception) {
+            Logs.get().getLogger().error("发送失败:", exception);
+        }
     }
 
     public static void sendBuffer(String key, ByteBuf buffer, String raw) {
