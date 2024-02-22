@@ -3,8 +3,6 @@ package com.mx.ymate.security.interceptor;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.exception.NotRoleException;
-import cn.dev33.satoken.stp.StpUtil;
-import cn.dev33.satoken.strategy.SaStrategy;
 import com.mx.ymate.dev.code.Code;
 import com.mx.ymate.dev.constants.Constants;
 import com.mx.ymate.dev.support.mvc.MxResult;
