@@ -5,6 +5,7 @@ import ${servicePackageName}.I${modelName}Service;
 import net.ymate.platform.core.beans.annotation.Inject;
 import net.ymate.platform.validation.validate.VRequired;
 import net.ymate.platform.webmvc.annotation.Controller;
+import net.ymate.platform.webmvc.annotation.ModelBind;
 import net.ymate.platform.webmvc.annotation.PathVariable;
 import net.ymate.platform.webmvc.annotation.RequestMapping;
 import net.ymate.platform.webmvc.annotation.RequestParam;
@@ -88,7 +89,8 @@ public class ${modelName}Controller {
     * @return
     * @throws Exception
     */
-    public IView list(PageDTO pageDTO) throws Exception {
+    @RequestMapping("/list")
+    public IView list(@ModelBind PageDTO pageDTO) throws Exception {
         return i${modelName}Service.list(pageDTO.toBean()).toJsonView();
     }
 
