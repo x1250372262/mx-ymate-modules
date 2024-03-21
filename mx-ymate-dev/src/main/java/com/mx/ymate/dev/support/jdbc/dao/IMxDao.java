@@ -42,6 +42,8 @@ public interface IMxDao<MxEntity extends BaseEntity<MxEntity, String>> {
 
     IResultSet<MxEntity> find(Cond cond, Page page, String... fields) throws Exception;
 
+    IResultSet<MxEntity> find(Page page, String... fields) throws Exception;
+
     IResultSet<MxEntity> find(String... fields) throws Exception;
 
     IResultSet<MxEntity> findAllByVar(String var, Object value, String... fields) throws Exception;

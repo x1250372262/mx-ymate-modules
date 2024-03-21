@@ -43,7 +43,7 @@ public class MxDaoImpl<MxEntity extends BaseEntity<MxEntity, String>> implements
     private static Class<?> getEntityClass(Class<?> clazz) {
         Class<?> resultClass = clazz;
         for (int i = 0; i < MAX_LEVEL; i++) {
-            if(!ClassUtil.isAssignable(BaseEntity.class, resultClass)){
+            if (!ClassUtil.isAssignable(BaseEntity.class, resultClass)) {
                 resultClass = ClassUtils.getParameterizedTypes(resultClass).get(0);
             }
         }
@@ -143,6 +143,11 @@ public class MxDaoImpl<MxEntity extends BaseEntity<MxEntity, String>> implements
     }
 
     @Override
+    public IResultSet<MxEntity> find(Page page, String... fields) throws Exception {
+        return find(Where.create(), page, fields);
+    }
+
+    @Override
     public IResultSet<MxEntity> find(String... fields) throws Exception {
         return JDBC.get().openSession(session -> {
             EntitySQL<MxEntity> entitySql = EntitySQL.create(entityClass);
@@ -155,7 +160,7 @@ public class MxDaoImpl<MxEntity extends BaseEntity<MxEntity, String>> implements
 
     @Override
     public IResultSet<MxEntity> findAllByVar(String var, Object value, String... fields) throws Exception {
-        return find(Cond.create().eqWrap(var).param(value),fields);
+        return find(Cond.create().eqWrap(var).param(value), fields);
     }
 
     @Override
