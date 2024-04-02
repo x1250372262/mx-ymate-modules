@@ -18,6 +18,7 @@
         <module>mx-ymate-clickhouse</module>
         <module>mx-ymate-monitor</module>
         <module>mx-ymate-maven-plugin</module>
+        <module>mx-ymate-mqtt</module>
     </modules>
     <packaging>pom</packaging>
 
