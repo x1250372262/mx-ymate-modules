@@ -12,6 +12,7 @@ logs/
 bin/
 lib/
 target/
+mx-ymate-manager-templates-v2/
 src/main/resources/rebel.xml
 
 # Package Files #
