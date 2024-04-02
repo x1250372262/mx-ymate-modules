@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <title></title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <script src="/statics/js/custom/dpstudio.js?_V=1"></script>
+    <link rel="stylesheet" href="/statics/plugins/jquery-terminal/jquery.terminal.min.css" />
+    <link href="/statics/plugins/jstree/style.min.css" rel="stylesheet">
+    <style>
+        #file {
+            /*height: 500px; !* 设置一个固定高度 *!*/
+            overflow-y: auto; /* 当内容超过容器高度时显示垂直滚动条 */
+            overflow-x: auto; /* 隐藏水平滚动条（通常不需要） */
+        }
+        .table-hover tbody tr{
+          cursor: pointer;
+        }
+        .server-info{
+            font-size: 12px;
+            color: red;
+        }
+    </style>
+</head>
+
+<body ng-app="">
+<div class="lyear-layout-web">
+    <div class="lyear-layout-container">
+        <!--左侧导航-->
+        <ng-include src="'/admin/common/sidebar.html'"></ng-include>
+        <!--End 左侧导航-->
+        <!--头部信息-->
+        <ng-include src="'/admin/common/header.html'"></ng-include>
+        <!--End 头部信息-->
+
+        <!--页面主要内容-->
+        <main class="lyear-layout-content">
+            <div class="container-fluid p-t-15">
+               <div class="row">
+                   <div class="col-md-12">
+                       <div class="card">
+                           <div class="card-header"><div class="card-title">终端 <strong class="server-info"></strong></div></div>
+                           <div class="card-body">
+                               <div id="terminal"></div>
+                           </div>
+                       </div>
+                   </div>
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header"><div class="card-title">文件 <strong class="server-info"></strong></div></div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-2"><div id="file"></div></div>
+                                    <div class="col-lg-10">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>文件名称</th>
+                                                    <th>大小</th>
+                                                    <th>类型</th>
+                                                    <th>修改时间</th>
+                                                    <th>权限</th>
+                                                    <th>用户组</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td>index.html</td>
+                                                    <td>10kb</td>
+                                                    <td>文件</td>
+                                                    <td>2014/02/26 09:32:00</td>
+                                                    <td>-rw-----</td>
+                                                    <td>0/0 </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 自定义右键菜单 -->
+            <div id="contextMenu" class="dropdown-menu" style="display: none;">
+                <a class="dropdown-item" href="#">编辑</a>
+                <a class="dropdown-item" href="#">删除</a>
+            </div>
+        </main>
+        <!--End 页面主要内容-->
+    </div>
+</div>
+<script src="/statics/plugins/jquery-terminal/jquery.terminal.min.js"></script>
+<script type="text/javascript" src="/statics/plugins/jstree/jstree.min.js"></script>
+<script type="text/javascript" src="/statics/js/apis/server.js"></script>
+<script type="text/javascript" src="/statics/js/custom/websocket.js"></script>
+<script type="text/javascript">
+
+    var height = $(window).height() - 300;
+    //终端高度
+    var terminalHeight = height/2;
+    //文件树高度
+    var fileHeight = height - terminalHeight;
+
+    $(function(){
+        initPage();
+        initTree(fileHeight);
+        // initTerminal(terminalHeight);
+
+        //右键菜单
+        $('.table-hover tbody tr').on('contextmenu', function(event) {
+            event.preventDefault(); // 阻止默认右键菜单行为
+
+            // 获取当前被右键点击的行元素
+            var targetRow = $(this);
+
+            // 显示右键菜单
+            $('#contextMenu').show().css({
+                position: 'fixed',
+                left: event.pageX,
+                top: event.pageY,
+                "min-width": "4rem"
+            });
+
+            // 给右键菜单项绑定事件处理函数
+            $('.dropdown-item', '#contextMenu').click(function(e) {
+                e.preventDefault();
+
+                switch ($(this).text()) {
+                    case "编辑":
+                        console.log("编辑行:", targetRow.text());
+                        break;
+                    case "删除":
+                        console.log("删除行:", targetRow.text());
+                        break;
+                }
+
+                // 关闭右键菜单
+                $('#contextMenu').hide();
+            });
+        });
+
+        // 阻止菜单在鼠标离开时依然显示
+        $(document).click(function() {
+            $('#contextMenu').hide();
+        });
+
+    });
+
+    function initPage(){
+        var id = $.trim(MX.getQueryVariable("id"));
+        if(!id){
+            MX.failMsg("请重新进入页面尝试")
+            return false;
+        }
+        MX.axget(SERVER_DETAIL + "/" + id,null,true,null,function(e){
+            if (e.code === "00000") {
+                var data = e.data;
+                if(!data){
+                    MX.failMsg("请重新进入页面尝试")
+                    return false;
+                }
+                document.title = "已连接"+data.name+"("+data.ip+")主机";
+               $(".server-info").html("("+data.name+"-"+data.ip+")");
+
+                //建立连接
+                WS.connect(SERVER_SSH, function (e) {
+                    var startData = {};
+                    startData.token = Token.get();
+                    startData.id = id;
+                    startData.operate = "connect";
+                    startData.command = ""
+                    operate = "connect";
+                    WS.send(JSON.stringify(startData));
+                    onData(id);
+                });
+
+            }else{
+                MX.failMsg("请重新进入页面尝试")
+                return false;
+            }
+        })
+    }
+
+    function onData(id){
+        WS.onData(function (e) {
+            var data = JSON.parse(e.data);
+            if (data.code !== "00000") {
+                MX.failMsg(data.msg);
+            }else{
+                if(operate === "connect"){
+                    initTerminal(data.data,id);
+                }
+            }
+        })
+    }
+
+    function initTree(fileHeight){
+        var fileTreeDom = $('#file');
+        fileTreeDom.css("height",fileHeight)
+        fileTreeDom.jstree({
+            'core' : {
+                'themes' : {
+                    'responsive': false
+                },
+                'data' : [
+                    {
+                        "text" : "Project",
+                        "state" : {"opened" : true },
+                        "icon" : "mdi mdi-folder-outline",
+                        "children" : [
+                            {
+                                "text" : "Assets",
+                                "state" : { "opened" : true },
+                                "icon" : "mdi mdi-folder-outline",
+                                "children" : [
+                                    { "text" : "CSS", "state" : { "opened" : true }, "icon" : "mdi mdi-file-outline" },
+                                    { "text" : "JS", "icon" : "mdi mdi-file-outline" },
+                                    { "text" : "Fonts", "icon" : "mdi mdi-file-outline" },
+                                    { "text" : "Images", "icon" : "mdi mdi-file-outline" },
+                                    {
+                                        "text" : "Plugins",
+                                        "state" : { "opened" : true },
+                                        "icon" : "mdi mdi-folder-outline",
+                                        "children" : [
+                                            { "text" : "jQuery", "icon" : "mdi mdi-file-outline" },
+                                            { "text" : "Bootstrap", "state" : { "selected" : true, "opened" : true }, "icon" : "mdi mdi-file-outline" }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "text" : "Icons",
+                                "icon" : "mdi mdi-opacity"
+                            },
+                            {
+                                "text" : "Events",
+                                "icon" : "mdi mdi-calendar"
+                            },
+                            {
+                                "text" : "UI Kits",
+                                "state" : { "opened" : true },
+                                "icon" : "mdi mdi-package-variant-closed",
+                                "children" : [
+                                    { "text" : "Buttons", "icon" : "mdi mdi-file-outline" },
+                                    { "text" : "Badges", "icon" : "mdi mdi-file-outline" }
+                                ]
+                            },
+                            {
+                                "text" : "Forms",
+                                "icon" : "mdi mdi-file-document"
+                            },
+                            {
+                                "text" : "Charts",
+                                "icon" : "mdi mdi-chart-pie"
+                            },
+                            {
+                                "text" : "Pages",
+                                "state" : { "opened" : true },
+                                "icon" : "mdi mdi-book-open-variant",
+                                "children" : [
+                                    { "text" : "Coming Soon", "icon" : "mdi mdi-file-outline" },
+                                    { "text" : "Maintenance", "icon" : "mdi mdi-file-outline" }
+                                ]
+                            },
+                            {
+                                "text" : "Tables",
+                                "icon" : "mdi mdi-table"
+                            },
+                        ]
+                    },
+                    {
+                        "text" : "Documents",
+                        "state" : { "opened" : true },
+                        "icon" : "mdi mdi-folder-outline"
+                    }
+                ]
+            },
+            'plugins' : ['types']
+        });
+    }
+    var terminal;
+    var operate = "";
+    function initTerminal(data,id) {
+        if(terminal === undefined || terminal === null){
+            terminal =  $('#terminal').terminal(function(command, term) {
+                if (command === 'help') {
+                    term.echo('可用命令: help, clear');
+                } else if (command === 'clear') {
+                    term.clear();
+                } else {
+                    var startData = {};
+                    startData.token = Token.get();
+                    startData.id = id;
+                    startData.operate = "command";
+                    startData.command = command + "\r"
+                    operate = "command"
+                    WS.send(JSON.stringify(startData));
+                }
+            }, {
+                greetings: 'Connecting to server..',
+                name: 'my-terminal',
+                height:  terminalHeight,
+            });
+        }
+        if($.trim(data).endsWith("#")){
+            terminal.set_prompt(data);
+        }else{
+            terminal.echo(data)
+        }
+
+
+
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <title>后台首页</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <script src="/statics/js/custom/dpstudio.js?_V=1"></script>
+    <link rel="stylesheet" type="text/css" href="/statics/css/home.css?v=1">
+</head>
+
+<body ng-app="">
+<div class="lyear-layout-web">
+    <div class="lyear-layout-container">
+        <!--左侧导航-->
+        <ng-include src="'/admin/common/sidebar.html'" onload="topSelect = 'home'"></ng-include>
+        <!--End 左侧导航-->
+        <!--头部信息-->
+        <ng-include src="'/admin/common/header.html'"></ng-include>
+        <!--End 头部信息-->
+
+        <!--页面主要内容-->
+        <main class="lyear-layout-content">
+            <div class="container-fluid p-t-15">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>系统说明</h4>
+                            </div>
+                            <div class="card-body">
+                                <p>服务器运维面板</p>
+                                <p>1.可以在线执行linux命令以及上传下载文件</p>
+                                <p>2.可以在线部署文件</p>
+                                <p>3.可以单独或者批量部署linux服务器 </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="pull-right"></div>
+                <div>
+                    <strong>Copyright</strong> 梦祥网络 2024
+                </div>
+            </div>
+        </main>
+        <!--End 页面主要内容-->
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        MX.axget(ADMIN_INFO,null,true,null,function(e){
+            $("#photoUri").attr("src",e.data.photoUri?e.data.photoUri:"/statics/images/touxiang.png");
+            $("#userName").html(e.data.realName!=null?e.data.realName:e.data.userName);
+        })
+
+        MX.axget(ADMIN_INFO,null,true,null,function(e){
+            $("#photoUri").attr("src",e.data.photoUri?e.data.photoUri:"/statics/images/touxiang.png");
+            $("#userName").html(e.data.realName!=null?e.data.realName:e.data.userName);
+        })
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<title>修改个人信息</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<script src="/statics/js/custom/dpstudio.js?_V=1"></script>
+<script type="text/javascript" src="/statics/js/apis/admin.js?v=1"></script>
+</head>
+
+<body ng-app="">
+<div class="lyear-layout-web">
+  <div class="lyear-layout-container">
+    <!--左侧导航-->
+    <ng-include src="'/admin/common/sidebar.html'" onload="topSelect = 'home'"></ng-include>
+    <!--End 左侧导航-->
+    <!--头部信息-->
+    <ng-include src="'/admin/common/header.html'"></ng-include>
+    <!--End 头部信息-->
+
+    <!--页面主要内容-->
+    <main class="lyear-layout-content">
+      <div class="container-fluid p-t-15">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <form method="post" action="" class="site-form">
+                  <div class="form-group col-md-12">
+                    <label>头像</label>
+                    <div class="form-controls">
+
+                      <ul class="list-inline row lyear-uploads-pic mb-0">
+                        <li class="col-6 col-md-4 col-lg-2">
+                          <figure class="thumbnail">
+                            <img name="photoUri" src="/statics/images/no_image.gif">
+                            <figcaption>
+                              <input type="file" filter=".png,.jpg,.jpeg,.bmp,.gif" class="fileInput" style="display: none;" name="file"/>
+                              <input type="hidden" name="photoUri" class="fileresult">
+                              <a class="btn btn-round btn-square btn-primary picUpload" href="#!">上传</a>
+                              <a class="btn btn-round btn-square btn-danger picDelete" href="#!">移除</a>
+                            </figcaption>
+                          </figure>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-12">
+                    <label for="user_name">用户名</label>
+                    <input type="text" class="form-control" id="user_name" name="userName" disabled="disabled" />
+                  </div>
+                  <div class="form-group col-md-12 mx_validator">
+                    <label for="real_name">真实姓名</label>
+                    <input type="text" class="form-control mx_required" mx_required_msg="真实姓名不能为空" id="real_name" name="realName"  placeholder="输入真实姓名" />
+                  </div>
+                  <div class="form-group col-md-12 mx_validator">
+                    <label for="mobile">手机号</label>
+                    <input type="text" class="form-control mx_required" id="mobile" mx_required_msg="手机号不能为空"  name="mobile"  placeholder="请输入正确的手机号" />
+                  </div>
+
+                  <div class="form-group col-md-12 mx_validator">
+                    <label>性别</label>
+                    <div class="clearfix mx_required" mx_required_type="radio" mx_required_msg="请选择男女">
+                      <div class="custom-control custom-radio custom-control-inline ">
+                        <input type="radio"  name="gender" id="nan"
+                               class="custom-control-input" value="1">
+                        <label class="custom-control-label" for="nan">男</label>
+                      </div>
+                      <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" name="gender" id="nv"
+                               class="custom-control-input" value="2" >
+                        <label class="custom-control-label" for="nv">女</label>
+                      </div>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-primary mx_validator_button" id="submit">保存</button>
+                </form>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+    <!--End 页面主要内容-->
+  </div>
+</div>
+
+
+
+<script type="text/javascript">
+  $(function () {
+    //拉取数据
+    MX.axget(ADMIN_INFO,null,true,null,function(e){
+      FORM.setValues($(".card-body"), e.data);
+    })
+
+    $("#submit").click(function () {
+      VALIDATE.validate($(".site-form"),ADMIN_INFO_UPDATE,null,null,function(e){
+        if (e.code === "00000") {
+          MX.successMsg("修改成功~")
+          var userInfo = e.userInfo;
+          if(userInfo!==undefined && userInfo !==null){
+            User.refresh(userInfo)
+          }
+          setTimeout(function(){
+            window.location.reload();
+          },1000)
+        } else {
+          $(".mx_validator_button").attr("disabled",false)
+          MX.failMsg(e.msg != null ? e.msg : "修改失败")
+        }
+      })
+    });
+  });
+
+</script>
+</body>
+</html>
