@@ -6,6 +6,7 @@
 - [mx-ymate-dev](mx-ymate-dev)  核心模块，其他模块都依赖它。提供一些常用工具类，通用返回结果等等；
 - [mx-ymate-excel](mx-ymate-excel) 整合excel 提供基本的导入导出功能
 - [mx-ymate-manager-templates](mx-ymate-manager-templates) 后台管理页面模板 不是vue 更符合后端开发人员使用。
+- [mx-ymate-monitor](mx-ymate-monitor) 服务器监控模块
 - [mx-ymate-netty](mx-ymate-netty) netty模块 内置心跳检测，可同时当服务端和客户端.
 - [mx-ymate-redis](mx-ymate-redis) 整合redis  提供便利的api操作。
 - [mx-ymate-security](mx-ymate-security) 基于sa-token 权限验证 需要数据库的支持，支持扩展自己的用户体系。

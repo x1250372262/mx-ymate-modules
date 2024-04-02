@@ -6,4 +6,4 @@ net.ymate.platform.persistence.jdbc.dialect.impl.OracleDialect
 net.ymate.platform.persistence.jdbc.dialect.impl.PostgreSQLDialect
 net.ymate.platform.persistence.jdbc.dialect.impl.SQLiteDialect
 net.ymate.platform.persistence.jdbc.dialect.impl.SQLServerDialect
- com.mx.ymate.clickhouse.dialet.ClickhouseDialect
+com.mx.ymate.clickhouse.dialet.ClickhouseDialect

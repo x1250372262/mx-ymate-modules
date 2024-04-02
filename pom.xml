@@ -53,6 +53,7 @@
         <ip2region.version>2.7.0</ip2region.version>
         <lz4-java.version>1.8.0</lz4-java.version>
         <jsch.version>0.1.54</jsch.version>
+        <caffeine.version>2.9.3</caffeine.version>
     </properties>
 
     <dependencyManagement>
@@ -260,6 +261,11 @@
                 <groupId>com.jcraft</groupId>
                 <artifactId>jsch</artifactId>
                 <version>${jsch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.lionsoul</groupId>

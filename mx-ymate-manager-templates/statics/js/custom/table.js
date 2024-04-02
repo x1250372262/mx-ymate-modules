@@ -55,11 +55,15 @@ var Table = function () {
                     var value = $(this).val();
                     if ($.trim(value)) {
                         if ($(this).attr("class") && $(this).attr("class").indexOf("times") > 0) {
+                            if($(this).attr("class").indexOf("end") > 0){
+                                value = value + " 23:59:59";
+                            }
                             queryParams[$(this).attr('name')] = new Date(value.replace(/-/g, "/")).getTime();
-
                         } else if ($(this).attr("class") && $(this).attr("class").indexOf("dates") > 0) {
+                            if($(this).attr("class").indexOf("end") > 0){
+                                value = value + " 23:59:59";
+                            }
                             queryParams[$(this).attr('name')] = new Date(value.replace(/-/g, "/")).getTime();
-
                         } else {
                             queryParams[$(this).attr('name')] = value;
                         }
