@@ -131,9 +131,6 @@ public final class DefaultNettyConfig implements INettyConfig {
     @Override
     public void initialize(INetty owner) throws Exception {
         if (!initialized) {
-            if (enabled) {
-                // TODO What to do?
-            }
             initialized = true;
         }
     }
