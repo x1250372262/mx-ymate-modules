@@ -537,7 +537,7 @@ class Table {
             onColumnSwitch: function (field, checked) {
                 let onColumnSwitchFunc = tableThis.getOnColumnSwitch();
                 if (onColumnSwitchFunc !== undefined && onColumnSwitchFunc !== null) {
-                    onColumnSwitchFunc();
+                    onColumnSwitchFunc(field, checked);
                 }
             }
 
