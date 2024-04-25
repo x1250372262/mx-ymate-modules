@@ -8,7 +8,6 @@ $(function () {
             return false;
         }
     }
-    console.log(111)
     $(".mx_permission").each(function () {
         var ths = $(this);
         var permissionStr = $.trim(ths.attr("mx_permission"));

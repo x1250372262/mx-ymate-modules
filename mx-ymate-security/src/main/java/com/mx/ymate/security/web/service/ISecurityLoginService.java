@@ -22,6 +22,32 @@ public interface ISecurityLoginService {
      */
     MxResult login(String userName, String password) throws Exception;
 
+    /**
+     * 解锁
+     * @param id
+     * @param password
+     * @return
+     * @throws Exception
+     */
+    MxResult unlock(String id, String password) throws Exception;
+
+    /**
+     * 锁定
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    MxResult lock(String id) throws Exception;
+
+    /**
+     * 检查是否加锁
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    MxResult checkLock(String id) throws Exception;
+
 
     /**
      * 退出登录

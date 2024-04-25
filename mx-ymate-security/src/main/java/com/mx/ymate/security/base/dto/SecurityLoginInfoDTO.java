@@ -31,7 +31,7 @@ public class SecurityLoginInfoDTO implements Serializable {
     /**
      * 手机号
      */
-    @VRequired(msg = "头像不能为空")
+    @VRequired(msg = "手机号不能为空")
     @RequestParam
     private String mobile;
 

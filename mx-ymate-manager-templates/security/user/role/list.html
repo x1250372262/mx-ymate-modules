@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-touch-fullscreen" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <script src="/statics/js/custom/dpstudio.js?_V=2"></script>
+    <script src="/statics/js/custom/lib.js?_V=2"></script>
 
 
 </head>
@@ -68,13 +68,11 @@
                             </header>
                             <div class="card-body">
 
-                                <div class="card-toolbar clearfix">
                                     <div class="form-inline">
                                         <a class="btn btn-primary m-b-5 m-r-5 creates" data-toggle="modal" data-target="#commonDiv" href="#!"><i class="mdi mdi-plus"></i> 新增</a>
                                         <a class="btn btn-danger m-b-5 m-r-5 deletes" data-toggle="modal" data-target=".removeDio" href="#!"><i class="mdi mdi-window-close"></i> 删除</a>
                                     </div>
 
-                                </div>
 
                                 <table id="tableAjaxId"></table>
                             </div>
@@ -93,14 +91,22 @@
 <script type="text/javascript" src="/statics/js/apis/user.js"></script>
 <script type="text/javascript" src="/statics/js/apis/role.js"></script>
 <script type="text/javascript" src="/statics/js/custom/table.js?_v=1"></script>
+<script type="text/javascript" src="/statics/js/custom/select.js?_v=1"></script>
 <script type="text/javascript">
     var id = $.trim(MX.getQueryVariable("id"));
     $(function () {
         var listUrl = USER_ROLE_LIST + "?userId=" + id;
         var createUrl = USER_ROLE_CREATE + "?userId=" + id;
-        Table.setUrl(listUrl,createUrl,null,null,USER_ROLE_DELETE,null);
-        Table.init();
-        SELECT.init($("#commonForm"),"id","name",ROLE_LIST,null,"?page=1&pageSize=-1","resultData")
+        Table.builder()
+            .listUrl(listUrl)
+            .createUrl(createUrl)
+            .deleteUrl(USER_ROLE_DELETE)
+            .init();
+
+        Select.builder()
+            .url(ROLE_LIST)
+            .parameter("?page=1&pageSize=-1")
+            .returnKey("resultData").initByUrl()
     });
 
     columns = [
@@ -118,7 +124,7 @@
             align: 'center',
             valign: 'middle',
             formatter: function (value, row, index) { // 单元格格式化函数
-                return MX.changeTimeToString(new Date(value));
+                return DateUtil.changeDateToString(new Date(value));
             }
         }, {
             title: "操作",

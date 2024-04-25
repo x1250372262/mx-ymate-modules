@@ -1,15 +1,12 @@
 
-var TOKEN_KEY = "mxToken";
-var HEADER_PARAM_NAME = "mxToken";
+var TOKEN_KEY = "sftManagerToken";
+var HEADER_PARAM_NAME = "sftManagerToken";
 var Token = function () {
 
     return {
         expires: function () {
-            var token = Store.get(TOKEN_KEY);
-            if (!token) {
-                return false;
-            }
-            return true;
+            return Store.get(TOKEN_KEY);
+
         },
         get: function () {
             return Store.get(TOKEN_KEY);

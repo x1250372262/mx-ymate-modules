@@ -4,22 +4,24 @@
     <!-- logo -->
     <div id="logo" class="sidebar-header">
         <a href="/admin/home.html">
-           后台管理系统
+            后台管理系统
         </a>
     </div>
-    <div class="lyear-layout-sidebar-info lyear-scroll">
+    <div class="lyear-layout-sidebar-info lyear-scroll" style="overflow-y: auto">
         <nav class="sidebar-main">
         </nav>
 
         <div class="sidebar-footer">
-            <p class="copyright">Copyright &copy; 2022. <a target="_blank" href="#">梦祥网络</a> All rights reserved.</p>
+            <p class="copyright">Copyright &copy; 2022. <a target="_blank" href="#">梦祥网络</a> All rights reserved.
+            </p>
         </div>
     </div>
 </aside>
 <!--End 左侧导航-->
 
 <!--删除弹窗-->
-<div class="modal fade bs-example-modal-lg removeDio" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" data-backdrop="static">
+<div class="modal fade bs-example-modal-lg removeDio" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+     data-backdrop="static">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -45,7 +47,8 @@
 <div class="modal fade text-center picbig">
     <div class="modal-dialog modal-lg" style="display: inline-block; width: auto;">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">×</span></button>
         </div>
         <div class="modal-content">
             <img id="showImage" src="">
@@ -54,11 +57,12 @@
 </div>
 
 <!--启用-->
-<div class="modal fade bs-example-modal-lg enabledDio" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" data-backdrop="static">
+<div class="modal fade bs-example-modal-lg enabledDio" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+     data-backdrop="static">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" >批量启用</h6>
+                <h6 class="modal-title">批量启用</h6>
                 <div class="float-right">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -77,11 +81,12 @@
 </div>
 
 <!--禁用-->
-<div class="modal fade bs-example-modal-lg disabledDio" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" data-backdrop="static">
+<div class="modal fade bs-example-modal-lg disabledDio" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+     data-backdrop="static">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" >批量禁用</h6>
+                <h6 class="modal-title">批量禁用</h6>
                 <div class="float-right">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -98,7 +103,7 @@
         </div>
     </div>
 </div>
-
+<script type="text/javascript" src="/statics/js/custom/logMenu.js"></script>
 <script type="text/javascript">
 
     /**
@@ -122,47 +127,47 @@
         $('.sidebar-main').append(html);
 
         var href = window.location.pathname;
-        $('.sidebar-main a').each(function(){
+        $('.sidebar-main a').each(function () {
             var aHref = $(this).attr("path");
             var mode = 0;
-            if(aHref===""){
+            if (aHref === "") {
                 aHref = $(this).attr("href");
                 mode = 1;
             }
-            if(aHref.indexOf("?")>=0){
-                aHref = aHref.substr(0,aHref.lastIndexOf("?"));
+            if (aHref.indexOf("?") >= 0) {
+                aHref = aHref.substr(0, aHref.lastIndexOf("?"));
             }
-            if(mode===1){
-                if(aHref===href){
+            if (mode === 1) {
+                if (aHref === href) {
                     $(this).parents(".cc").addClass("active");
                     $(this).parents(".aa").addClass("open");
-                    $(this).parents(".bb").css("display","block");
+                    $(this).parents(".bb").css("display", "block");
                 }
-            }else{
-                if(href.indexOf(aHref)>=0){
+            } else {
+                if (href.indexOf(aHref) >= 0) {
                     $(this).parents(".cc").addClass("active");
                     $(this).parents(".aa").addClass("open");
-                    $(this).parents(".bb").css("display","block");
+                    $(this).parents(".bb").css("display", "block");
                 }
             }
 
         });
     }
+    //创建菜单
     var createMenu = function (data, is_frist, depth) {
         var menu_body = is_frist ? '<ul class="nav nav-drawer">' : '<ul class="nav nav-subnav bb">';
         for (var i = 0; i < data.length; i++) {
             var icon_div = data[i].pid === "0" ? '<i class="mdi ' + data[i].icon + '"></i>' : '';
             var menuName = data[i].pid === "0" ? '<span>' + data[i].value + '</span>' : data[i].value;
             if (data[i].children && data[i].children.length > 0) {
-                menu_body += '<li class="aa nav-item nav-item-has-subnav "><a href="javascript:void(0)" path="'+data[i].path+'">' + icon_div + menuName + '</a>';
+                menu_body += '<li class="aa nav-item nav-item-has-subnav "><a href="javascript:void(0)" path="' + data[i].path + '">' + icon_div + menuName + '</a>';
                 if (depth === 0) {
                     menu_body += createMenu(data[i].children, false, 1);
                 } else {
-                    menu_body += createMenu1(data[i].children, false, 2);
+                    menu_body += createMenuChild(data[i].children, false, 2);
                 }
             } else {
-                menu_body += '<li class="nav-item cc"><a href="' + data[i].url + '" path="'+data[i].path+'">' + icon_div + menuName + '</a>';
-
+                menu_body += '<li class="nav-item cc"><a class="multitabs" href="' + data[i].url + '" path="' + data[i].path + '">' + icon_div + menuName + '</a>';
             }
             menu_body += '</li>';
         }
@@ -170,19 +175,30 @@
         menu_body += '</ul>';
         return menu_body;
     };
-
-    var createMenu1 = function (data, is_frist, depth) {
+    //创建子菜单
+    var createMenuChild = function (data, is_frist, depth) {
         var menu_body = is_frist ? '<ul class="nav nav-drawer">' : '<ul class="nav nav-subnav bb">';
         for (var i = 0; i < data.length; i++) {
             var icon_div = data[i].pid === "0" ? '<i class="mdi ' + data[i].icon + '"></i>' : '';
             var menuName = data[i].pid === "0" ? '<span>' + data[i].value + '</span>' : data[i].value;
-            menu_body += '<li class="nav-item cc"><a href="' + data[i].url + '" path="'+data[i].path+'">' + icon_div + menuName + '</a>';
+            menu_body += '<li class="nav-item cc"><a class="multitabs" href="' + data[i].url + '" path="' + data[i].path + '">' + icon_div + menuName + '</a>';
             menu_body += '</li>';
         }
 
         menu_body += '</ul>';
         return menu_body;
     };
+
+    //点击菜单
+    $(".sidebar-main").on("click", ".multitabs", function () {
+        var menu = {
+            show: true,
+            title: $(this).text(),
+            url: $(this).attr('href')
+        };
+        LogMenu.addMenu(menu);
+    });
+
 
     /**
      * 树状的算法
@@ -223,13 +239,11 @@
     }
 
     $(function () {
-        // MX.axget(MENU_NAV, null, true, null, function (e) {
-        //     setSidebar(e.data);
-        // })
+        //初始化日志菜单
+        LogMenu.init();
         var data = Menu.get();
         setSidebar(data)
     });
-
 
 
 </script>

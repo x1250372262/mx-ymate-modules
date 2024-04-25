@@ -8,7 +8,7 @@ var MMP = function () {
         getValues:function(dom){
             var data = [];
             $(dom).each(function () {
-               var d = FORM.getValues($(this));
+               var d = Form.getValues($(this));
                 data.push(d);
             })
             return JSON.stringify(data);
@@ -23,7 +23,7 @@ var MMP = function () {
                     var html = TEMPLATE_HTML;
                     html = html.replace("rowValueUpdate","rowValueUpdate"+index)
                     $("#rowTemplate").append(html);
-                     FORM.setValues($(".rowValueUpdate"+index+""),item);
+                     Form.setValues($(".rowValueUpdate"+index+""),item);
                 });
 
             }

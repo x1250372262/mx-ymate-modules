@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-touch-fullscreen" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <script src="/statics/js/custom/dpstudio.js?_V=1"></script>
+    <script src="/statics/js/custom/lib.js?_V=1"></script>
     <link rel="stylesheet" type="text/css" href="/statics/plugins/jquery-multi-select/css/multi-select.css"/>
     <link rel="stylesheet" type="text/css" href="/statics/plugins/select2/select2.css"/>
     <style>
@@ -18,11 +18,6 @@
 
         .ms-container .ms-selection li.ms-elem-selection {
             cursor: pointer;
-        }
-
-        .layui-layer-content{
-            padding: 10px;
-            text-indent: 28px;
         }
     </style>
 </head>
@@ -124,39 +119,29 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <header class="card-header">
-                                <div class="card-title"></div>
+                                <div class="card-title">角色管理</div>
                             </header>
                             <div class="card-body">
-                                <div class="card-toolbar clearfix">
-                                    <form class="form-inline" id="searchForm" method="post">
-                                        <div class="mx_search">
-
-                                            <div class="fom-group m-b-5 m-r-10">
-                                                <input class="form-control" type="text" name="name"
-                                                       placeholder="请输入名称..">
-                                            </div>
-
-
+                                <div class="d-flex justify-content-between">
+                                        <form class="form-inline d-flex" id="searchForm" method="post">
+                                                <div class="fom-group m-b-5 m-r-10">
+                                                    <input class="form-control" type="text" name="name"
+                                                           placeholder="请输入名称..">
+                                                </div>
+                                                <a class="btn btn-primary m-b-5 m-r-5" id="searchButton"><i
+                                                        class="mdi mdi-magnify"></i> 搜索</a>
+                                                <button class="btn btn-secondary m-b-5" id="resetButton"><i
+                                                        class="mdi mdi-delete"></i> 重置查询
+                                                </button>
+                                        </form>
+                                        <div class="form-inline">
+                                            <a class="btn btn-primary m-b-5 m-r-5 creates" data-toggle="modal"
+                                               data-target="#commonDiv" href="#!"><i class="mdi mdi-plus"></i> 新增</a>
+                                            <a class="btn btn-danger m-b-5 m-r-5 deletes" data-toggle="modal"
+                                               data-target=".removeDio" href="#!"><i class="mdi mdi-window-close"></i>
+                                                删除</a>
                                         </div>
-                                        <div>
-                                            <a class="btn btn-primary m-b-5 m-r-5" id="searchButton"><i
-                                                    class="mdi mdi-magnify"></i> 搜索</a>
-                                            <button class="btn btn-secondary m-b-5" id="resetButton"><i
-                                                    class="mdi mdi-delete"></i> 重置查询
-                                            </button>
-                                        </div>
-                                    </form>
                                 </div>
-                                <div class="card-toolbar clearfix">
-                                    <div class="form-inline">
-                                        <a class="btn btn-primary m-b-5 m-r-5 creates" data-toggle="modal"
-                                           data-target="#commonDiv" href="#!"><i class="mdi mdi-plus"></i> 新增</a>
-                                        <a class="btn btn-danger m-b-5 m-r-5 deletes" data-toggle="modal"
-                                           data-target=".removeDio" href="#!"><i class="mdi mdi-window-close"></i>
-                                            删除</a>
-                                    </div>
-                                </div>
-
                                 <table id="tableAjaxId">
                                 </table>
                             </div>
@@ -179,35 +164,41 @@
     var handleSelectInit = function () {
         var ths = $("#my_multi_select2");
         var str = "";
-        MX.axget(PERMISSION_SELECT, null, true, null, function (e) {
-            if (e.code === "00000") {
-                //权限列表
-                $.each(e.data, function (i, group) {
-                    str += "<optgroup label='" + group.groupName + "'>";
-                    $.each(group.permissionVOList, function (j, permission) {
-                        str += "<option value='" + permission.code + "'>" + permission.name + "</option>"
+        Request.builder()
+            .url(PERMISSION_SELECT)
+            .callback(function (e) {
+                if (e.code === "00000") {
+                    //权限列表
+                    $.each(e.data, function (i, group) {
+                        str += "<optgroup label='" + group.groupName + "'>";
+                        $.each(group.permissionVOList, function (j, permission) {
+                            str += "<option value='" + permission.code + "'>" + permission.name + "</option>"
+                        });
+                        str += "</optgroup>";
                     });
-                    str += "</optgroup>";
-                });
-                if (str !== "") {
-                    ths.append(str);
-                }
-                //$('#my_multi_select1').multiSelect();
-                ths.multiSelect({
-                    selectableOptgroup: true,
-                    afterSelect: function (values) {
-                        ths.parent().find("span.repermition").remove();
+                    if (str !== "") {
+                        ths.append(str);
                     }
-                });
+                    ths.multiSelect({
+                        selectableOptgroup: true,
+                        afterSelect: function (values) {
+                            ths.parent().find("span.repermition").remove();
+                        }
+                    });
 
-            }
-        })
-
+                }
+            }).get();
     }
 
     $(function () {
-        Table.setUrl(ROLE_LIST, ROLE_CREATE, ROLE_UPDATE, ROLE_DETAIL, ROLE_DELETE, null);
-        Table.init();
+        Table.builder()
+            .listUrl(ROLE_LIST)
+            .createUrl(ROLE_CREATE)
+            .updateUrl(ROLE_UPDATE)
+            .detailUrl(ROLE_DETAIL)
+            .deleteUrl(ROLE_DELETE)
+            .init();
+
         handleSelectInit();
         $("#submitPermission").click(function () {
             var permissionFormDom = $("#permissionForm");
@@ -218,17 +209,21 @@
                     data[$(this).attr("name")] = $(this).val();
                 }
             });
-            MX.axpost(permissionFormDom.attr("action"), data, true, null, function (e) {
-                if (e.code === "00000") {
-                    MX.successMsg("操作成功~")
-                    setTimeout(function () {
-                        $("#tableAjaxId").bootstrapTable('refresh');
-                        $("#permissionDiv").find(".close").trigger("click");
-                    }, 1000)
-                } else {
-                    MX.failMsg(e.msg != null ? e.msg : "操作失败")
-                }
-            })
+            Request.builder()
+                .url(ROLE_PERMISSION_BIND)
+                .data(data)
+                .callback(function (e) {
+                    if (e.code === "00000") {
+                        LayerUtil.successMsg("操作成功~")
+                        setTimeout(function () {
+                            $("#tableAjaxId").bootstrapTable('refresh');
+                            $("#permissionDiv").find(".close").trigger("click");
+                        }, 1000)
+                    } else {
+                        LayerUtil.failMsg(e.msg != null ? e.msg : "操作失败")
+                    }
+                }).post();
+
         });
 
         $("#tableAjaxId").on("click", ".permission", function () {
@@ -237,19 +232,23 @@
             var id = $(this).attr("dataId");
             var dom = $(this).attr("data-target");
             $(dom).find("h6").text("编辑权限-" + $(this).attr("dataName"));
-            $(dom).find("form").attr("action", ROLE_PERMISSION_BIND);
-            MX.axget(ROLE_PERMISSION_LIST, {"id": id}, true, null, function (e) {
-                var data = e.data;
-                my_multi_select2Dom.multiSelect("deselect_all");
-                permissionFormDom.find("input[name=id]").val(id);
-                permissionFormDom.find("select").each(function () {//select2
-                    if (data[$(this).attr("name")]) {
-                        my_multi_select2Dom.multiSelect("select", data[$(this).attr("name")]);
-                        my_multi_select2Dom.val(data[$(this).attr("name")]);
-                    }
-                });
 
-            });
+            Request.builder()
+                .url(ROLE_PERMISSION_LIST)
+                .data({"id": id})
+                .callback(function (e) {
+                    if (e.code === "00000") {
+                        var data = e.data;
+                        my_multi_select2Dom.multiSelect("deselect_all");
+                        permissionFormDom.find("input[name=id]").val(id);
+                        permissionFormDom.find("select").each(function () {//select2
+                            if (data[$(this).attr("name")]) {
+                                my_multi_select2Dom.multiSelect("select", data[$(this).attr("name")]);
+                                my_multi_select2Dom.val(data[$(this).attr("name")]);
+                            }
+                        });
+                    }
+                }).get();
         });
     });
 
@@ -276,13 +275,13 @@
             align: 'center',
             valign: 'middle',
             formatter: function (value, row, index) { // 单元格格式化函数
-                return MX.changeTimeToString(value);
+                return DateUtil.changeDateToString(value);
             }
         }, {
             title: "操作",
             align: 'center',
             valign: 'middle',
-            width: 160, // 定义列的宽度，单位为像素px
+            width: 200, // 定义列的宽度，单位为像素px
             formatter: option
         }
     ]

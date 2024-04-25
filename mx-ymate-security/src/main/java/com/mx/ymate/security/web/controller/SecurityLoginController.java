@@ -1,6 +1,7 @@
 package com.mx.ymate.security.web.controller;
 
 import com.mx.ymate.dev.support.mvc.MxResult;
+import com.mx.ymate.security.base.annotation.NoCheck;
 import com.mx.ymate.security.base.annotation.NoLogin;
 import com.mx.ymate.security.base.dto.SecurityLoginInfoDTO;
 import com.mx.ymate.security.web.service.ISecurityLoginService;
@@ -42,6 +43,51 @@ public class SecurityLoginController {
                        @VRequired(msg = "密码不能为空")
                        @RequestParam String password) throws Exception {
         return iSecurityLoginService.login(userName, password).toJsonView();
+    }
+
+    /**
+     * 管理员解锁
+     *
+     * @param id
+     * @param password
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/unlock", method = Type.HttpMethod.POST)
+    @NoCheck
+    public IView unlock(@VRequired(msg = "用户ID不能为空")
+                        @RequestParam String id,
+                        @VRequired(msg = "密码不能为空")
+                        @RequestParam String password) throws Exception {
+        return iSecurityLoginService.unlock(id, password).toJsonView();
+    }
+
+    /**
+     * 管理员锁定
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/lock", method = Type.HttpMethod.POST)
+    @NoCheck
+    public IView lock(@VRequired(msg = "用户ID不能为空")
+                      @RequestParam String id) throws Exception {
+        return iSecurityLoginService.lock(id).toJsonView();
+    }
+
+    /**
+     * 检查是否加锁
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/check/lock", method = Type.HttpMethod.POST)
+    @NoCheck
+    public IView checkLock(@VRequired(msg = "用户ID不能为空")
+                           @RequestParam String id) throws Exception {
+        return iSecurityLoginService.checkLock(id).toJsonView();
     }
 
     /**

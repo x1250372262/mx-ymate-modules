@@ -22,10 +22,10 @@ editorConfig.MENU_CONF['uploadImage'] = {
             success: function (e) {
                 layer.close(loading);
                 if (e.code === "00000") {
-                    MX.successMsg("上传成功")
+                    LayerUtil.successMsg("上传成功")
                     insertFn(e.data.url, file.name, "")
                 } else {
-                    MX.failMsg(e.msg?e.msg:"上传失败")
+                    LayerUtil.failMsg(e.msg?e.msg:"上传失败")
                 }
             }
         });
@@ -50,10 +50,10 @@ editorConfig.MENU_CONF['uploadVideo'] = {
             success: function (e) {
                 layer.close(loading);
                 if (e.code === "00000") {
-                    MX.successMsg("上传成功")
+                    LayerUtil.successMsg("上传成功")
                     insertFn(e.data.url, e.data.url)
                 } else {
-                    MX.failMsg(e.msg?e.msg:"上传失败")
+                    LayerUtil.failMsg(e.msg?e.msg:"上传失败")
                 }
             }
         });

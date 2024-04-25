@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-touch-fullscreen" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <script src="/statics/js/custom/dpstudio.js?_V=1"></script>
+    <script src="/statics/js/custom/lib.js?_V=1"></script>
 </head>
 
 <body ng-app="">
@@ -74,10 +74,8 @@
                                 <div class="card-title"></div>
                             </header>
                             <div class="card-body">
-                                <div class="card-toolbar clearfix">
-                                    <form class="form-inline" id="searchForm" method="post">
-                                        <div class="mx_search">
-
+                                <div class="d-flex justify-content-between">
+                                    <form class="form-inline d-flex" id="searchForm" method="post">
                                             <div class="fom-group m-b-5 m-r-10">
                                                 <input class="form-control" type="text" name="name"
                                                        placeholder="请输入名称..">
@@ -90,17 +88,12 @@
                                                 </select>
                                             </div>
 
-                                        </div>
-                                        <div>
                                             <a class="btn btn-primary m-b-5 m-r-5" id="searchButton"><i
                                                     class="mdi mdi-magnify"></i> 搜索</a>
                                             <button class="btn btn-secondary m-b-5" id="resetButton"><i
                                                     class="mdi mdi-delete"></i> 重置查询
                                             </button>
-                                        </div>
                                     </form>
-                                </div>
-                                <div class="card-toolbar clearfix">
                                     <div class="form-inline">
                                         <a class="btn btn-primary m-b-5 m-r-5 creates" data-toggle="modal"
                                            data-target="#commonDiv" href="#!"><i class="mdi mdi-plus"></i> 新增</a>
@@ -162,7 +155,7 @@
             align: 'center',
             valign: 'middle',
             formatter: function (value, row, index) { // 单元格格式化函数
-                return MX.changeTimeToString(value);
+                return DateUtil.changeDateToString(value);
             }
         }, {
             title: "操作",

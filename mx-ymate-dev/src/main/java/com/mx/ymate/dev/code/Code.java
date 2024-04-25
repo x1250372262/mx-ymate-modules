@@ -22,7 +22,8 @@ public enum Code implements ICode {
     NOT_REPEAT_REQUEST("M0008", "{}秒内请勿重复请求"),
     NOT_SUPPORT_REQUEST("M0009", "不支持{}请求"),
     SERVER_HTTP_METHOD_ERROR("M0010", "请求方式错误"),
-    SERVER_REQUEST_ERROR("M0011", "请求失败");
+    SERVER_REQUEST_ERROR("M0011", "请求失败"),
+    LOCKED("M0012", "账户处于挂机锁屏模式，请先解锁。");
 
     private final String code;
     private final String msg;

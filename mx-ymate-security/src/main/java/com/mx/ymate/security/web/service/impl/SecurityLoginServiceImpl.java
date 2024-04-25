@@ -7,6 +7,7 @@ import cn.hutool.extra.servlet.ServletUtil;
 import com.mx.ymate.dev.constants.Constants;
 import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.dev.util.BeanUtil;
+import com.mx.ymate.redis.api.RedisApi;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
@@ -31,6 +32,7 @@ import net.ymate.platform.core.beans.annotation.Inject;
 import net.ymate.platform.webmvc.context.WebContext;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -136,6 +138,32 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         //登录完成的事件  不处理成功失败
         loginHandler.loginComplete(params, securityUser, saTokenInfo);
         return MxResult.ok().data(loginResult);
+    }
+
+    @Override
+    public MxResult unlock(String id, String password) throws Exception {
+        SecurityUser securityUser = iSecurityUserDao.findById(id, SecurityUser.FIELDS.PASSWORD, SecurityUser.FIELDS.SALT);
+        password = DigestUtils.md5Hex(Base64.encodeBase64((password + securityUser.getSalt()).getBytes(StandardCharsets.UTF_8)));
+        if (password.equals(securityUser.getPassword())) {
+           SaUtil.unlock(id);
+            return MxResult.ok();
+        }
+        return MxResult.fail();
+    }
+
+    @Override
+    public MxResult lock(String id) throws Exception {
+        SaUtil.lock(id);
+        return MxResult.ok();
+    }
+
+    @Override
+    public MxResult checkLock(String id) throws Exception {
+        boolean isLock = SaUtil.checkLock(id);
+        if(isLock){
+            return MxResult.ok();
+        }
+        return MxResult.fail();
     }
 
     @Override

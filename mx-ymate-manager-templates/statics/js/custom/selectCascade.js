@@ -1,4 +1,7 @@
-class Select {
+var CASECAD_DATA = {
+
+}
+class SelectCascade {
     constructor() {
         this.domParam = $(".select-init");
         this.idParam = "id";
@@ -11,6 +14,7 @@ class Select {
         this.stylesParam = "";
         this.parameterParam = "";
         this.returnKeyParam = "";
+        this.handlerDataFunParam = null;
     }
 
     dom(dom) {
@@ -104,8 +108,17 @@ class Select {
         return this.returnKeyParam;
     }
 
+    handlerDataFun(handlerDataFun) {
+        this.handlerDataFunParam = handlerDataFun;
+        return this;
+    }
+
+    getHandlerDataFun() {
+        return this.handlerDataFunParam;
+    }
+
     static builder() {
-        return new Select();
+        return new SelectCascade();
     }
 
 
@@ -118,6 +131,7 @@ class Select {
         let returnKey = selectThis.getReturnKey();
         let id = selectThis.getId();
         let value = selectThis.getValue();
+        let handlerDataFun = selectThis.getHandlerDataFun();
         if (!$.trim(url)) {
             LayerUtil.failMsg("url不存在")
             return false;
@@ -125,12 +139,12 @@ class Select {
         if (parameter !== null) {
             url = url + parameter;
         }
-        var isDefault = dom.attr("isDefault");
-        var defaultOptionText = dom.attr("defaultOptionText");
+        let isDefault = dom.attr("isDefault");
+        let defaultOptionText = dom.attr("defaultOptionText");
         if (!$.trim(defaultOptionText)) {
             defaultOptionText = "请选择";
         }
-        var html = "";
+        let html = "";
         if ($.trim(isDefault) && isDefault === "1") {
             if (styles != null) {
                 html = "<option value='' style='" + styles + "'>" + defaultOptionText + "</option>"
@@ -145,7 +159,7 @@ class Select {
             .method(selectThis.getMethod())
             .callback(function (result) {
                 if (result.code === "00000") {
-                    var data = result.data;
+                    let data = result.data;
                     if ($.trim(returnKey)) {
                         data = result.data[returnKey];
                     }
@@ -158,6 +172,10 @@ class Select {
 
                     });
                     dom.html(html);
+                    if(handlerDataFun!==undefined && handlerDataFun!==null){
+                        handlerDataFun(data,CASECAD_DATA);
+                    }
+                    CASECAD_DATA = result.data;
                 }
             }).do();
     }
@@ -169,16 +187,17 @@ class Select {
         let styles = selectThis.getStyles();
         let id = selectThis.getId();
         let value = selectThis.getValue();
+        let handlerDataFun = selectThis.getHandlerDataFun();
         if (data === undefined || data === null || data.length === 0) {
             LayerUtil.failMsg("数据不能为空")
             return false;
         }
-        var isDefault = dom.attr("isDefault");
-        var defaultOptionText = dom.attr("defaultOptionText");
+        let isDefault = dom.attr("isDefault");
+        let defaultOptionText = dom.attr("defaultOptionText");
         if (!$.trim(defaultOptionText)) {
             defaultOptionText = "请选择";
         }
-        var html = "";
+        let html = "";
         if ($.trim(isDefault) && isDefault === "1") {
             if (styles != null) {
                 html = "<option value='' style='" + styles + "'>" + defaultOptionText + "</option>"
@@ -196,11 +215,41 @@ class Select {
 
         });
         dom.html(html);
+        if(handlerDataFun!==undefined && handlerDataFun!==null){
+            handlerDataFun(data,CASECAD_DATA);
+        }
+        CASECAD_DATA = data;
     }
 
 
 }
 
+$(function(){
+    $(document).on("change",".select-cascade",function(){
+        let cascadeId = $.trim($(this).attr("cascadeId"));
+        let cascadeKey = $.trim($(this).attr("cascadeKey"));
+        let cascadePid = $.trim($(this).attr("cascadePid"));
+        if(!cascadePid){
+            cascadePid = "pid";
+        }
+
+        let value =  $.trim($(this).val());
+        if(!value || !cascadeKey || !cascadeId){
+            LayerUtil.failMsg("value、cascadeKey、cascadeId都不能为空")
+            return false;
+        }
+        let data = CASECAD_DATA[cascadeKey];
+        let result = [];
+        $.each(data,function(index,item){
+            if(value===item[cascadePid]){
+                result.push(item);
+            }
+        })
+        Select.builder()
+            .dom($("#"+cascadeId))
+            .data(result).initByData();
+    })
+});
 
 
 

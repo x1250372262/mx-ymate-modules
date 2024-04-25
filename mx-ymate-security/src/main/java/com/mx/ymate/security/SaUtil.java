@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.mx.ymate.dev.constants.Constants;
+import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.redis.api.RedisApi;
 import com.mx.ymate.security.base.bean.LoginUser;
 import com.mx.ymate.security.base.config.SecurityConstants;
@@ -84,6 +85,19 @@ public class SaUtil {
 
     public static LoginUser user() throws Exception {
         return user(loginId());
+    }
+
+    public static void lock(String loginId) throws Exception{
+        RedisApi.strSet(loginId,loginId);
+    }
+
+    public static void unlock(String loginId) throws Exception{
+        RedisApi.strDelete(loginId);
+    }
+
+    public static boolean checkLock(String loginId) throws Exception{
+        String data = RedisApi.strGet(loginId);
+        return StringUtils.isNotBlank(data);
     }
 
     public static List<String> permissionList(Object loginId) throws Exception {

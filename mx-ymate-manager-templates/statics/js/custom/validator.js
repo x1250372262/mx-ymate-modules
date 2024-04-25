@@ -1,28 +1,136 @@
-var VALIDATE = function () {
+
+const VALIDATE_CLASS = {
+    MX_VALIDATOR: ".mx_validator",
+    MX_VALIDATOR_BUTTON: ".mx_validator_button",
+    MX_REQUIRED_TYPE: "mx_required_type",
+    MX_REQUIRED: ".mx_required",
+    MX_REQUIRED_MSG: "mx_required_msg",
+    MX_CUSTOM: ".mx_custom",
+    HAS_ERROR: ".has-error",
+    HELP_BLOCK: ".help-block"
+}
+
+const REQUIRED_TYPE = {
+    DEFAULT:"",
+    RADIO:"radio",
+    CHECKBOX:"checkbox",
+    SELECT:"select",
+    WANG_EDITOR:"wangEditor",
+}
+
+const mxValidator = VALIDATE_CLASS.MX_VALIDATOR;
+const mxValidatorButton = VALIDATE_CLASS.MX_VALIDATOR_BUTTON;
+const mxRequiredType = VALIDATE_CLASS.MX_REQUIRED_TYPE;
+const mxRequired = VALIDATE_CLASS.MX_REQUIRED;
+const mxRequiredMsg = VALIDATE_CLASS.MX_REQUIRED_MSG;
+const mxCustom = VALIDATE_CLASS.MX_CUSTOM;
+const hasError = VALIDATE_CLASS.HAS_ERROR;
+const helpBlock = VALIDATE_CLASS.HELP_BLOCK;
+
+class Validator {
+
+    constructor() {
+        this.domParam = "";
+        this.urlParam = {};
+        //请求方式
+        this.methodParam = REQUEST_METHOD.POST;
+        this.isTokenParam = true;
+        this.customValidateParam = null;
+        this.customSubmitParam = null;
+        this.submitCallbackParam = {};
+    }
+
+    static builder() {
+        return new Validator();
+    }
+
+    dom(dom) {
+        this.domParam = dom;
+        return this;
+    }
+
+    getDom(){
+        return this.domParam;
+    }
+
+    url(url) {
+        this.urlParam = url;
+        return this;
+    }
+
+    getUrl(){
+        return this.urlParam;
+    }
+
+    method(method) {
+        this.methodParam = method;
+        return this;
+    }
+
+    getMethod(){
+        return this.methodParam;
+    }
+
+
+    isToken(isToken) {
+        this.isTokenParam = isToken;
+        return this;
+    }
+
+    getIsToken(){
+        return this.isTokenParam;
+    }
+
+    customValidate(customValidate) {
+        this.customValidateParam = customValidate;
+        return this;
+    }
+
+    getCustomValidate(){
+        return this.customValidateParam;
+    }
+
+    customSubmit(customSubmit) {
+        this.customSubmitParam = customSubmit;
+        return this;
+    }
+
+    getCustomSubmit(){
+        return this.customSubmitParam;
+    }
+
+    submitCallback(submitCallback) {
+        this.submitCallbackParam = submitCallback;
+        return this;
+    }
+
+    getSubmitCallback(){
+        return this.submitCallbackParam;
+    }
 
     //验证非空
-    var requiredCheck = function (requiredDom) {
-        var result = {
+    requiredCheck(requiredDom) {
+        let result = {
             "retBool": false,
             "msg": ""
         };
-        var required = false;
-        var type = $.trim(requiredDom.attr("mx_required_type"));
-        if (type === "radio") {
-            var radioValue = requiredDom.find("input:radio:checked").val();
+        let required = false;
+        let type = $.trim(requiredDom.attr(mxRequiredType));
+        if (type === REQUIRED_TYPE.RADIO) {
+            let radioValue = requiredDom.find("input:radio:checked").val();
             if (radioValue == null) {
                 required = true;
             }
-        } else if (type === "checkbox") {
-            var checkboxValue = requiredDom.find("input:checkbox:checked").val();
+        } else if (type === REQUIRED_TYPE.CHECKBOX) {
+            let checkboxValue = requiredDom.find("input:checkbox:checked").val();
             if (checkboxValue == null) {
                 required = true;
             }
-        } else if (type === "select") {
+        } else if (type === REQUIRED_TYPE.SELECT) {
             if (!$.trim(requiredDom.val())) {
                 required = true;
             }
-        } else if (type === "wangEditor") {
+        } else if (type === REQUIRED_TYPE.WANG_EDITOR) {
             if (!$.trim(editors[requiredDom.attr("id")].getText())) {
                 required = true;
             }
@@ -31,17 +139,17 @@ var VALIDATE = function () {
                 required = true;
             }
         }
-        var msg = $.trim(requiredDom.attr("mx_required_msg"));
+        let msg = $.trim(requiredDom.attr(mxRequiredMsg));
         if (!msg) {
-            msg = "此项不能为空";
+            msg = ERROR_MSG.NO_BLANK;
         }
         result.retBool = required;
         result.msg = msg;
         return result;
     }
     //验证自定义
-    var validatorCheck = function (validatorDom, customValidationFunc) {
-        var result = {
+     validatorCheck(validatorDom, customValidationFunc) {
+         let result = {
             "retBool": false,
             "msg": ""
         };
@@ -50,48 +158,48 @@ var VALIDATE = function () {
         }
         return result;
     }
-    var validate = function (dom, url, token, customValidationFunc, successCallback, submitCallback) {
 
-        var canExec = true;
-        if (dom.find(".mx_validator").length > 0) {
-            dom.find(".mx_validator_button").attr("disabled", true)
-            var resultArray = [];
-            var resultDom = {}
-            dom.find(".mx_validator").each(function () {
-                var parentThis = $(this);
-                $(this).find(".mx_required").each(function () {
-
-                    var result = {};
-                    var requiredResult = requiredCheck($(this));
+    do() {
+        let ths = this;
+        let canExec = true;
+        let dom = ths.getDom();
+        if (dom.find(mxValidator).length > 0) {
+            dom.find(mxValidatorButton).attr("disabled", true)
+            let resultArray = [];
+            let resultDom = {}
+            dom.find(mxValidator).each(function () {
+                let parentThis = $(this);
+                $(this).find(mxRequired).each(function () {
+                    let result = {};
+                    let requiredResult = ths.requiredCheck($(this));
                     result.domKey = $(this);
                     result.parentThis = parentThis;
                     result.validatorBool = requiredResult.retBool;
                     result.validatorMsg = requiredResult.msg;
-                    result.isWwangEditor = $(this).attr("mx_required_type")==="wangEditor";
+                    result.isWwangEditor = $(this).attr(mxRequiredType)==="wangEditor";
                     resultArray.push(result)
                     resultDom[$(this).attr("name")] = requiredResult.retBool;
 
                 });
-                $(this).find(".mx_custom").each(function () {
-                    var bool = resultDom[$(this).attr("name")];
+                $(this).find(mxCustom).each(function () {
+                    let bool = resultDom[$(this).attr("name")];
                     // console.log(resultDom)
                     if (!bool) {
-                        var result = {};
-                        var validatorResult = validatorCheck($(this), customValidationFunc);
+                        let result = {};
+                        let validatorResult = ths.validatorCheck($(this), ths.getCustomValidate());
                         result.domKey = $(this);
                         result.parentThis = parentThis;
                         result.validatorBool = validatorResult.retBool;
                         result.validatorMsg = validatorResult.msg;
-                        result.isWwangEditor = $(this).attr("mx_required_type")==="wangEditor";
+                        result.isWwangEditor = $(this).attr(mxRequiredType)==="wangEditor";
                         resultArray.push(result)
                     }
 
                 });
             });
             $.each(resultArray, function (index, item) {
-                // console.log(item)
-                var pd = item.parentThis;
-                var dk = item.domKey;
+                let pd = item.parentThis;
+                let dk = item.domKey;
                 if(item.isWwangEditor){
                     pd = pd.parent();
                     dk = dk.parent();
@@ -100,55 +208,55 @@ var VALIDATE = function () {
                     if (canExec) {
                         canExec = false;
                     }
-                    if (!pd.hasClass("has-error")) {
-                        pd.addClass("has-error");
+                    if (!pd.hasClass(hasError)) {
+                        pd.addClass(hasError);
                     }
-                    if (dk.next(".help-block").length <= 0) {
+                    if (dk.next(helpBlock).length <= 0) {
                         dk.parent().append("<small class=\"help-block\">" + item.validatorMsg + "</small>");
                     } else {
-                        dk.parent().find(".help-block").html(item.validatorMsg);
+                        dk.parent().find(helpBlock).html(item.validatorMsg);
                     }
-                    dom.find(".mx_validator_button").attr("disabled", false)
+                    dom.find(mxValidatorButton).attr("disabled", false)
                 } else {
-                    if (pd.hasClass("has-error")) {
-                        pd.removeClass("has-error");
+                    if (pd.hasClass(hasError)) {
+                        pd.removeClass(hasError);
                     }
-                    if (dk.parent().find(".help-block").length > 0) {
-                        dk.parent().find(".help-block").remove();
+                    if (dk.parent().find(helpBlock).length > 0) {
+                        dk.parent().find(helpBlock).remove();
                     }
                 }
             });
 
         }
+        let customSubmit = ths.getCustomSubmit();
         if (canExec) {
-            if (successCallback) {
-                successCallback(canExec);
+            if (customSubmit) {
+                customSubmit(canExec);
             } else {
-                var data = FORM.getValues(dom);
+                let data = Form.getValues(dom);
+                let url = ths.getUrl();
                 if (!url) {
                     url = dom.attr("action");
                 }
-                MX.axpost(url, data, token, null, function (e) {
-                    submitCallback(e);
-                })
+                let subCallBack = ths.getSubmitCallback();
+                let loading = LayerUtil.loading()
+                Request.builder()
+                    .url(url)
+                    .data(data)
+                    .method(ths.getMethod())
+                    .isToken(ths.getIsToken())
+                    .callback(function(e){
+                        layer.close(loading);
+                        subCallBack(e);
+                    }).do();
             }
         } else {
-            if (successCallback) {
-                successCallback(canExec);
+            if (customSubmit) {
+                customSubmit(canExec);
             }
         }
-
     }
 
-    return {
-        validate: function (dom, url, customValidationFunc, successCallback, submitCallback) {
-            validate(dom, url, true, customValidationFunc, successCallback, submitCallback);
-        },
-        validateNoToken: function (dom, url, customValidationFunc, successCallback, submitCallback) {
-            validate(dom, url, false, customValidationFunc, successCallback, submitCallback);
-        }
-    };
-
-}();
 
 
+}

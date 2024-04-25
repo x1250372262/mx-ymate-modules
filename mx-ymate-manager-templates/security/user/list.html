@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-touch-fullscreen" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <script src="/statics/js/custom/dpstudio.js?_V=1"></script>
+    <script src="/statics/js/custom/lib.js?_V=1"></script>
 </head>
 
 <body ng-app="">
@@ -133,7 +133,7 @@
                                 </div>
                             </div>
                             <div class="modal-body">
-                                是否确定重置密码?默认为用户名
+                                是否确定重置密码?默认为123456
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -190,9 +190,8 @@
                                 <div class="card-title">人员管理</div>
                             </header>
                             <div class="card-body">
-                                <div class="card-toolbar clearfix">
-                                    <form class="form-inline" id="searchForm" method="post">
-                                        <div class="mx_search">
+                                <div class="d-flex justify-content-between">
+                                    <form class="form-inline d-flex" id="searchForm" method="post">
                                             <div class="form-group m-b-5 m-r-10">
                                                 <input class="form-control" type="text" name="userName"
                                                        placeholder="请输入用户名..">
@@ -208,19 +207,13 @@
                                                     <option value="1">禁用</option>
                                                 </select>
                                             </div>
-                                        </div>
-
-                                        <div>
                                             <a class="btn btn-primary m-b-5 m-r-5" id="searchButton"><i
                                                     class="mdi mdi-magnify"></i> 搜索</a>
                                             <button class="btn btn-secondary m-b-5" id="resetButton"><i
                                                     class="mdi mdi-delete"></i> 重置查询
                                             </button>
-                                        </div>
                                     </form>
-                                </div>
 
-                                <div class="card-toolbar clearfix">
                                     <div class="form-inline">
                                         <a class="btn btn-primary m-b-5 m-r-5 creates" data-toggle="modal"
                                            data-target="#commonDiv" href="#!"><i class="mdi mdi-plus"></i> 新增</a>
@@ -250,58 +243,72 @@
 
     var tableDom = $("#tableAjaxId");
     $(function () {
-        Table.setUrl(USER_LIST,USER_CREATE,null,USER_DETAIL,USER_DELETE,USER_STATUS)
-        Table.init();
+
+        Table.builder()
+            .listUrl(USER_LIST)
+            .createUrl(USER_CREATE)
+            .detailUrl(USER_DETAIL)
+            .deleteUrl(USER_DELETE)
+            .statusUrl(USER_STATUS)
+            .init();
+
         //重置密码
         tableDom.on("click", ".reset1", function () {
             $("#passwordDataId").val($(this).attr("dataId"))
             $("#passwordDataId").attr("lastModifyTime",$(this).attr("lastModifyTime"))
         })
+
         $("#resetPass").on("click", function () {
             var id = $("#passwordDataId").val();
             var lastModifyTime = $("#passwordDataId").attr("lastModifyTime");
             var url = USER_RESET_PASSWORD + "/" + id;
-            MX.axpost(url, {"lastModifyTime": lastModifyTime}, true, null, function (e) {
-                if (e.code === "00000"){
-                    MX.successMsg('操作成功~');
-                    setTimeout(function () {
-                        tableDom.bootstrapTable('refresh');
-                        $("#resetDio").find(".close").trigger("click");
-                    }, 1000)
-                } else {
-                    MX.failMsg(e.msg != null ? e.msg : "操作失败");
-                }
-            })
+            Request.builder()
+                .url(url)
+                .data({"lastModifyTime": lastModifyTime})
+                .callback(function (e) {
+                    if (e.code === "00000"){
+                        LayerUtil.successMsg('操作成功~');
+                        setTimeout(function () {
+                            tableDom.bootstrapTable('refresh');
+                            $("#resetDio").find(".close").trigger("click");
+                        }, 1000)
+                    } else {
+                        LayerUtil.failMsg(e.msg != null ? e.msg : "操作失败");
+                    }
+                }).post();
         });
         //解除冻结
         $("#tableAjaxId").on("click", ".lock", function () {
             var id = $(this).attr("dataId");
             var url = USER_DETAIL + "/" + id;
-            MX.axget(url, null, true, null, function (e) {
-                if (e.code === "00000") {
-                   FORM.setValues($("#lockDio"),e.data);
-                } else {
-                    MX.failMsg(e.msg != null ? e.msg : "操作失败");
-                }
-            })
-
-
+            Request.builder()
+                .url(url)
+                .callback(function (e) {
+                    if (e.code === "00000") {
+                        Form.setValues($("#lockDio"),e.data);
+                    } else {
+                        LayerUtil.failMsg(e.msg != null ? e.msg : "操作失败");
+                    }
+                }).get();
         })
         $("#lock").on("click", function () {
             var id = $("#lockDio").find("input[name=id]").val();
             var lastModifyTime = $("#lockDio").find("input[name=lastModifyTime]").val();
             var url = USER_UNLOCK + "/" + id;
-            MX.axpost(url, {"lastModifyTime":lastModifyTime}, true, null, function (e) {
-                if (e.code === "00000") {
-                    MX.successMsg('操作成功~');
-                    setTimeout(function () {
-                        tableDom.bootstrapTable('refresh');
-                        $("#lockDio").find(".close").trigger("click");
-                    }, 1000)
-                } else {
-                    MX.failMsg(e.msg != null ? e.msg : "操作失败");
-                }
-            })
+            Request.builder()
+                .url(url)
+                .data({"lastModifyTime": lastModifyTime})
+                .callback(function (e) {
+                    if (e.code === "00000"){
+                        LayerUtil.successMsg('操作成功~');
+                        setTimeout(function () {
+                            tableDom.bootstrapTable('refresh');
+                            $("#lockDio").find(".close").trigger("click");
+                        }, 1000)
+                    } else {
+                        LayerUtil.failMsg(e.msg != null ? e.msg : "操作失败");
+                    }
+                }).post();
 
         });
 
@@ -362,7 +369,7 @@
             align: 'center',
             valign: 'middle',
             formatter: function (value, row, index) { // 单元格格式化函数
-                return MX.changeTimeToString(new Date(value));
+                return DateUtil.changeDateToString(new Date(value));
             }
         }, {
             title: "操作",

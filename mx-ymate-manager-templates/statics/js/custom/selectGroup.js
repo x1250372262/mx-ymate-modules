@@ -1,4 +1,4 @@
-class Select {
+class SelectGroup {
     constructor() {
         this.domParam = $(".select-init");
         this.idParam = "id";
@@ -11,6 +11,8 @@ class Select {
         this.stylesParam = "";
         this.parameterParam = "";
         this.returnKeyParam = "";
+        this.childListParam = "";
+        this.groupNameParam = "";
     }
 
     dom(dom) {
@@ -104,8 +106,26 @@ class Select {
         return this.returnKeyParam;
     }
 
+    childList(childList) {
+        this.childListParam = childList;
+        return this;
+    }
+
+    getChildList() {
+        return this.childListParam;
+    }
+
+    groupName(groupName) {
+        this.groupNameParam = groupName;
+        return this;
+    }
+
+    getGroupName() {
+        return this.groupNameParam;
+    }
+
     static builder() {
-        return new Select();
+        return new SelectGroup();
     }
 
 
@@ -118,6 +138,8 @@ class Select {
         let returnKey = selectThis.getReturnKey();
         let id = selectThis.getId();
         let value = selectThis.getValue();
+        let childList = selectThis.getChildList();
+        let groupName = selectThis.getGroupName();
         if (!$.trim(url)) {
             LayerUtil.failMsg("url不存在")
             return false;
@@ -150,11 +172,15 @@ class Select {
                         data = result.data[returnKey];
                     }
                     $.each(data, function (index, item) {
-                        if (styles != null) {
-                            html += "<option style='" + styles + "' value='" + item[id] + "'>" + item[value] + "</option>"
-                        } else {
-                            html += "<option value='" + item[id] + "'>" + item[value] + "</option>"
-                        }
+                        html += "<optgroup label='" + item[groupName] + "'>";
+                        $.each(item[childList], function (index1, item1) {
+                            if (styles != null) {
+                                html += "<option style='" + styles + "' value='" + item1[id] + "'>" + item1[value] + "</option>"
+                            } else {
+                                html += "<option value='" + item1[id] + "'>" + item1[value] + "</option>"
+                            }
+                        });
+                        html += "</optgroup>";
 
                     });
                     dom.html(html);
@@ -169,6 +195,8 @@ class Select {
         let styles = selectThis.getStyles();
         let id = selectThis.getId();
         let value = selectThis.getValue();
+        let childList = selectThis.getChildList();
+        let groupName = selectThis.getGroupName();
         if (data === undefined || data === null || data.length === 0) {
             LayerUtil.failMsg("数据不能为空")
             return false;
@@ -188,11 +216,15 @@ class Select {
 
         }
         $.each(data, function (index, item) {
-            if (styles != null) {
-                html += "<option style='" + styles + "' value='" + item[id] + "'>" + item[value] + "</option>"
-            } else {
-                html += "<option value='" + item[id] + "'>" + item[value] + "</option>"
-            }
+            html += "<optgroup label='" + item[groupName] + "'>";
+            $.each(item[childList], function (index1, item1) {
+                if (styles != null) {
+                    html += "<option style='" + styles + "' value='" + item1[id] + "'>" + item1[value] + "</option>"
+                } else {
+                    html += "<option value='" + item1[id] + "'>" + item1[value] + "</option>"
+                }
+            });
+            html += "</optgroup>";
 
         });
         dom.html(html);

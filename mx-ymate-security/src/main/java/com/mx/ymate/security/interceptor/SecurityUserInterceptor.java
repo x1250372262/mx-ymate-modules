@@ -10,8 +10,10 @@ import com.mx.ymate.dev.util.PathMatchUtil;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
+import com.mx.ymate.security.base.annotation.NoCheck;
 import com.mx.ymate.security.base.annotation.NoLogin;
 import com.mx.ymate.security.base.code.SecurityCode;
+import com.mx.ymate.security.base.exception.MxLockException;
 import com.mx.ymate.security.base.exception.MxLoginException;
 import com.mx.ymate.security.base.model.SecurityUser;
 import com.mx.ymate.security.web.dao.ISecurityUserDao;
@@ -99,12 +101,26 @@ public class SecurityUserInterceptor extends AbstractInterceptor {
             }
             securityConfig.loginHandlerClass().checkLoginCustom(securityUser);
 
+            //有NoCheck注解就不验证
+            NoCheck noCheck = method.getAnnotation(NoCheck.class);
+            if (noCheck != null) {
+                return null;
+            }
+            noCheck = method.getDeclaringClass().getAnnotation(NoCheck.class);
+            if (noCheck != null) {
+                return null;
+            }
+            if (SaUtil.checkLock(securityUser.getId())) {
+                throw new MxLockException(SecurityCode.SECURITY_LOGIN_USER_LOCK_SCREEN.msg());
+            }
         } catch (NotLoginException notLoginException) {
             return MxResult.create(Code.NOT_LOGIN).toJsonView();
         } catch (MxLoginException mxLoginException) {
             return MxResult.create(Code.NOT_LOGIN.code()).msg(mxLoginException.getMessage()).toJsonView();
         } catch (NotPermissionException | NotRoleException notPermissionException) {
             return MxResult.create(Code.NOT_PERMISSION).toJsonView();
+        } catch (MxLockException lockException) {
+            return MxResult.create(Code.LOCKED).toJsonView();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

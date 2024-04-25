@@ -23,7 +23,8 @@ public enum SecurityCode implements ICode {
     SECURITY_USER_NEW_PASSWORD_NOT_SAME_OLD_PASSWORD("MS007", "新密码不能和原密码相同"),
     SECURITY_USER_ROLE_EXISTS("MS008", "该角色已经添加过了"),
     SECURITY_MENU_HAS_CHILD_NOT_DELETE("MS009", "有子菜单不能删除!"),
-    SECURITY_MENU_ROLE_EXISTS("MS010", "该角色已经添加过了!");
+    SECURITY_MENU_ROLE_EXISTS("MS010", "该角色已经添加过了!"),
+    SECURITY_LOGIN_USER_LOCK_SCREEN("MS011", "屏幕被锁定，请先解锁");
 
 
     private final String code;

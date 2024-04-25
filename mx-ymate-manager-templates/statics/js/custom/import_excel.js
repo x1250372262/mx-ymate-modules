@@ -19,22 +19,22 @@ var EXCEL_IMPORT = function () {
         dom.find(".fileInputExcel").change(function () {
             var fileName = $(this).val();
             if (checkFileExt(suffix, fileName) === 1) {
-                MX.failMsg("文件格式错误,只允许添加xlsx和xls格式的文件");
+                LayerUtil.failMsg("文件格式错误,只允许添加xlsx和xls格式的文件");
                 $(this).val("");
                 return false;
             }
         });
 
         dom.find(".uploadExcelButton").click(function () {
-            MX.load();
+            LayerUtil.loading();
             var files = dom.find(".fileInputExcel").prop('files');
             if (!$.trim(files)) {
                 layer.closeAll();
-                MX.failMsg("请选择文件");
+                LayerUtil.failMsg("请选择文件");
                 return false;
             }
             var data = new FormData();
-            var otherData = FORM.getValues(dom);
+            var otherData = Form.getValues(dom);
             $.each(otherData, function (item) {
                 data.append(item, otherData[item]);
             });
@@ -43,7 +43,7 @@ var EXCEL_IMPORT = function () {
             headers["X-Requested-With"] = "XMLHttpRequest"
             // debugger;
             if (!Token.expires()) {
-                MX.failMsg("请登录后进行操作")
+                LayerUtil.failMsg("请登录后进行操作")
                 setTimeout(function () {
                     window.location.href = LOGIN_VIEW;
                 }, 1000)
@@ -64,11 +64,11 @@ var EXCEL_IMPORT = function () {
                     layer.closeAll();
                     if (e.code === "M0007") {
                         $.each(e.data, function (item) {
-                            MX.failMsg(e.data[item] != null ? e.data[item] : "参数异常")
+                            LayerUtil.failMsg(e.data[item] != null ? e.data[item] : "参数异常")
                             return false;
                         });
                     } else if (e.code === "M0004") {
-                        MX.failMsg("请登录后进行操作")
+                        LayerUtil.failMsg("请登录后进行操作")
                         setTimeout(function () {
                             window.location.href = LOGIN_VIEW;
                         }, 1000)
@@ -76,7 +76,7 @@ var EXCEL_IMPORT = function () {
                         if(success !==undefined && success!==null){
                             success(e);
                         }else {
-                            MX.successMsg("操作成功")
+                            LayerUtil.successMsg("操作成功")
 
                             if(showErrorMsg){
                                 var html = "";
@@ -110,7 +110,7 @@ var EXCEL_IMPORT = function () {
                         if(fail !==undefined && fail!==null){
                             fail(e);
                         }else{
-                            MX.failMsg(e.msg ? e.msg : "操作失败")
+                            LayerUtil.failMsg(e.msg ? e.msg : "操作失败")
                         }
                     }
 
