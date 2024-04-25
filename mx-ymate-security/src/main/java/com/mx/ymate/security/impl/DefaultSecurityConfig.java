@@ -46,6 +46,11 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
     private boolean openLog;
 
     /**
+     * 否检查挂机锁定 默认false
+     */
+    private boolean checkLock;
+
+    /**
      * 登录拦截排除的路径用|分割
      */
     private String excludePathPatterns;
@@ -249,6 +254,7 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
         userHandlerClass = ClassUtils.impl(userHandlerClassName, IUserHandler.class, this.getClass());
         errorCount = configReader.getInt(ERROR_COUNT, -1);
         openLog = configReader.getBoolean(OPEN_LOG, false);
+        checkLock = configReader.getBoolean(CHECK_LOCK, false);
         excludePathPatterns = configReader.getString(EXCLUDE_PATH_PATTERNS, excludePathPatterns);
         saTokenName = configReader.getString(SATOKEN_NAME, "saToken");
         saTokenTimeout = configReader.getLong(SATOKEN_TIMEOUT, 60 * 60 * 24 * 30);
@@ -326,6 +332,11 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
     @Override
     public boolean openLog() {
         return openLog;
+    }
+
+    @Override
+    public boolean checkLock() {
+        return checkLock;
     }
 
     @Override
@@ -594,6 +605,11 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
     public void setOpenLog(boolean openLog) {
         if (!initialized) {
             this.openLog = openLog;
+        }
+    }
+    public void setCheckLock(boolean checkLock) {
+        if (!initialized) {
+            this.checkLock = checkLock;
         }
     }
 

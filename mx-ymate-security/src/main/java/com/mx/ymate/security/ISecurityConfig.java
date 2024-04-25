@@ -27,6 +27,8 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
 
     String EXCLUDE_PATH_PATTERNS = "excludePathPatterns";
 
+    String CHECK_LOCK = "checkLock";
+
     String SATOKEN_NAME = "satoken.name";
 
     String SATOKEN_TIMEOUT = "satoken.timeout";
@@ -128,6 +130,11 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
      * 是否开启日志记录 默认false
      */
     boolean openLog();
+
+    /**
+     * 是否检查挂机锁定 默认false
+     */
+    boolean checkLock();
 
     /**
      * 登录拦截排除的路径用|分割
