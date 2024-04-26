@@ -33,10 +33,12 @@ public enum Code implements ICode {
         this.msg = msg;
     }
 
+    @Override
     public String code() {
         return code;
     }
 
+    @Override
     public String msg() {
         return msg;
     }

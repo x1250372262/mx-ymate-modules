@@ -21,6 +21,7 @@ public class HeartBeatClientHandler extends ChannelInboundHandlerAdapter {
         nettyConfig = Netty.get().getConfig();
     }
 
+    @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             IHeartClient iHeartClient = nettyConfig.heartClient();
@@ -31,10 +32,12 @@ public class HeartBeatClientHandler extends ChannelInboundHandlerAdapter {
 
     }
 
+    @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         Logs.get().getLogger().info("===" + msg + "===");
     }
 
+    @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         Logs.get().getLogger().error("netty异常", cause);
 //        ctx.close();

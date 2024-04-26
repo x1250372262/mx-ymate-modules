@@ -30,9 +30,10 @@ public class PathMatchUtil {
                 ii = i;
                 jj = j;
                 j++;
-            } else if (j < p.length() // 检测p串是否结束
-                    && (s.charAt(i) == p.charAt(j)   // 检测两串当前位置的值是否相等
-                    || p.charAt(j) == '?')) { // 检测p串中j位置是否是单值通配符？
+                // 检测p串是否结束  检测两串当前位置的值是否相等 检测p串中j位置是否是单值通配符？
+            } else if (j < p.length()
+                    && (s.charAt(i) == p.charAt(j)
+                    || p.charAt(j) == '?')) {
                 // 如果此时p串还在有效位置上，那么两串当前位置相等或者p串中是单值通配符，表明此时匹配通过，两串均向前移动一步
                 i++;
                 j++;

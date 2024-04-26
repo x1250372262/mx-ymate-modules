@@ -32,10 +32,12 @@ public class SecurityOperationLogVO extends SecurityOperationLogListVO {
         this.requestParam = requestParam;
     }
 
+    @Override
     public String getReturnCode() {
         return returnCode;
     }
 
+    @Override
     public void setReturnCode(String returnCode) {
         this.returnCode = returnCode;
     }

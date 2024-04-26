@@ -148,7 +148,8 @@ public class ExcelExportJxlsHelper extends IExportHelper implements Closeable {
         //设置静默模式，不报警告
         //函数强制，自定义功能
         Map<String, Object> funcs = new HashMap<>();
-        funcs.put("utils", funClass.newInstance());    //添加自定义功能
+        //添加自定义功能
+        funcs.put("utils", funClass.newInstance());
         JexlEngine customJexlEngine = new JexlBuilder().namespaces(funcs).create();
         evaluator.setJexlEngine(customJexlEngine);
         //必须要这个，否者表格函数统计会错乱
