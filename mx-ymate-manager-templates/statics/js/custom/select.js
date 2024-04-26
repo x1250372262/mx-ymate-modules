@@ -1,107 +1,107 @@
 class Select {
     constructor() {
-        this.domParam = $(".select-init");
-        this.idParam = "id";
-        this.valueParam = "name";
-        this.isTokenParam = true;
+        this._dom = $(".select-init");
+        this._id = "id";
+        this._value = "name";
+        this._isToken = true;
         //请求方式
-        this.methodParam = REQUEST_METHOD.GET;
-        this.dataParam = []
-        this.urlParam = "";
-        this.stylesParam = "";
-        this.parameterParam = "";
-        this.returnKeyParam = "";
+        this._method = REQUEST_METHOD.GET;
+        this._data = []
+        this._url = "";
+        this._styles = "";
+        this._parameter = "";
+        this._returnKey = "";
     }
 
     dom(dom) {
-        this.domParam = dom;
+        this._dom = dom;
         return this;
     }
 
     getDom() {
-        return this.domParam;
+        return this._dom;
     }
 
     id(id) {
-        this.idParam = id;
+        this._id = id;
         return this;
     }
 
     getId() {
-        return this.idParam;
+        return this._id;
     }
 
     value(value) {
-        this.valueParam = value;
+        this._value = value;
         return this;
     }
 
     getValue() {
-        return this.valueParam;
+        return this._value;
     }
 
     isToken(isToken) {
-        this.isTokenParam = isToken;
+        this._isToken = isToken;
         return this;
     }
 
     getIsToken() {
-        return this.isTokenParam;
+        return this._isToken;
     }
 
     method(method) {
-        this.methodParam = method;
+        this._method = method;
         return this;
     }
 
     getMethod() {
-        return this.methodParam;
+        return this._method;
     }
 
 
     data(data) {
-        this.dataParam = data;
+        this._data = data;
         return this;
     }
 
     getData() {
-        return this.dataParam;
+        return this._data;
     }
 
     url(url) {
-        this.urlParam = url;
+        this._url = url;
         return this;
     }
 
     getUrl() {
-        return this.urlParam;
+        return this._url;
     }
 
     styles(styles) {
-        this.stylesParam = styles;
+        this._styles = styles;
         return this;
     }
 
     getStyles() {
-        return this.stylesParam;
+        return this._styles;
     }
 
     parameter(parameter) {
-        this.parameterParam = parameter;
+        this._parameter = parameter;
         return this;
     }
 
     getParameter() {
-        return this.parameterParam;
+        return this._parameter;
     }
 
     returnKey(returnKey) {
-        this.returnKeyParam = returnKey;
+        this._returnKey = returnKey;
         return this;
     }
 
     getReturnKey() {
-        return this.returnKeyParam;
+        return this._returnKey;
     }
 
     static builder() {

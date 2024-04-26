@@ -30,14 +30,14 @@ const helpBlock = VALIDATE_CLASS.HELP_BLOCK;
 class Validator {
 
     constructor() {
-        this.domParam = "";
-        this.urlParam = {};
+        this._dom = "";
+        this._url = {};
         //请求方式
-        this.methodParam = REQUEST_METHOD.POST;
-        this.isTokenParam = true;
-        this.customValidateParam = null;
-        this.customSubmitParam = null;
-        this.submitCallbackParam = {};
+        this._method = REQUEST_METHOD.POST;
+        this._isToken = true;
+        this._customValidate = null;
+        this._customSubmit = null;
+        this._submitCallback = {};
     }
 
     static builder() {
@@ -45,67 +45,67 @@ class Validator {
     }
 
     dom(dom) {
-        this.domParam = dom;
+        this._dom = dom;
         return this;
     }
 
     getDom(){
-        return this.domParam;
+        return this._dom;
     }
 
     url(url) {
-        this.urlParam = url;
+        this._url = url;
         return this;
     }
 
     getUrl(){
-        return this.urlParam;
+        return this._url;
     }
 
     method(method) {
-        this.methodParam = method;
+        this._method = method;
         return this;
     }
 
     getMethod(){
-        return this.methodParam;
+        return this._method;
     }
 
 
     isToken(isToken) {
-        this.isTokenParam = isToken;
+        this._isToken = isToken;
         return this;
     }
 
     getIsToken(){
-        return this.isTokenParam;
+        return this._isToken;
     }
 
     customValidate(customValidate) {
-        this.customValidateParam = customValidate;
+        this._customValidate = customValidate;
         return this;
     }
 
     getCustomValidate(){
-        return this.customValidateParam;
+        return this._customValidate;
     }
 
     customSubmit(customSubmit) {
-        this.customSubmitParam = customSubmit;
+        this._customSubmit = customSubmit;
         return this;
     }
 
     getCustomSubmit(){
-        return this.customSubmitParam;
+        return this._customSubmit;
     }
 
     submitCallback(submitCallback) {
-        this.submitCallbackParam = submitCallback;
+        this._submitCallback = submitCallback;
         return this;
     }
 
     getSubmitCallback(){
-        return this.submitCallbackParam;
+        return this._submitCallback;
     }
 
     //验证非空

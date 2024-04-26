@@ -1,5 +1,5 @@
-// baseUrl = "https://test.mapi.dlsf-tech.com";    //测试
-baseUrl = "http://localhost:8082";   //本地
+baseUrl = "https://test.mapi.dlsf-tech.com";    //测试
+// baseUrl = "http://localhost:8082";   //本地
 // baseUrl = "http://10.10.10.109:8082";   //本地
 prefix = "/sft/manager/v1";
 

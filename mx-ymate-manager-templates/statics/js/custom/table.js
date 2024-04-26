@@ -6,79 +6,79 @@ const PAGE_TYPE = {
 class Table {
     constructor() {
         //表格dom
-        this.domParam = $("#tableAjaxId");
+        this._dom = $("#tableAjaxId");
         //搜索表单dom
-        this.searchDomParam = $("#searchForm");
+        this._searchDom = $("#searchForm");
         //搜索按钮
-        this.searchButtonParam = $("#searchButton");
+        this._searchButton = $("#searchButton");
         //重置查询按钮
-        this.resetButtonParam = $("#resetButton");
+        this._resetButton = $("#resetButton");
         //添加保存按钮dom
-        this.submitDomParam = $("#submit");
+        this._submitDom = $("#submit");
         //添加按钮dom
-        this.createDomParam = $(".creates");
+        this._createDom = $(".creates");
         //导出按钮dom
-        this.exportDomParam = $("#exportFile");
+        this._exportDom = $("#exportFile");
         //添加弹窗id
-        this.formDivDom = $("#commonDiv");
+        this._formDivDom = $("#commonDiv");
         //添加弹窗form id
-        this.formDom = $("#commonForm");
+        this._formDom = $("#commonForm");
         //list接口地址
-        this.listUrlParam = "";
+        this._listUrl = "";
         //添加接口地址
-        this.createUrlParam = "";
+        this._createUrl = "";
         //修改接口地址
-        this.updateUrlParam = "";
+        this._updateUrl = "";
         //详情接口地址
-        this.detailUrlParam = "";
+        this._detailUrl = "";
         //删除接口地址
-        this.deleteUrlParam = "";
+        this._deleteUrl = "";
         //状态接口地址
-        this.statusUrlParam = "";
+        this._statusUrl = "";
         //导出接口地址
-        this.exportUrlParam = "";
+        this._exportUrl = "";
         //是否需要token
-        this.isTokenParam = true;
+        this._isToken = true;
         //token失败的回调方法
-        this.tokenCallBackParam = null;
+        this._tokenCallBack = null;
         //自定义校验
-        this.customValidateParam = null;
+        this._customValidate = null;
         //请求方式
-        this.methodParam = REQUEST_METHOD.GET;
+        this._method = REQUEST_METHOD.GET;
         //请求头
-        this.headersParam = {};
+        this._headers = {};
         // 设置为 false 禁用 AJAX 数据缓存， 默认为true
-        this.cacheParam = false;
+        this._cache = false;
         //表格显示条纹，默认为false
-        this.stripedParam = true;
+        this._striped = true;
         // 是否显示所有的列
-        this.showColumnsParam = true;
+        this._showColumns = true;
         // 是否显示刷新按钮
-        this.showRefreshParam = true;
+        this._showRefresh = true;
         // 是否显示详细视图和列表视图的切换按钮(clickToSelect同时设置为true时点击会报错)
-        this.showToggleParam = true;
+        this._showToggle = true;
         // 在表格底部显示分页组件，默认false
-        this.paginationParam = true;
+        this._pagination = true;
         // 设置页面可以显示的数据条数
-        this.pageListParam = [10, 20, 50, 100, 300];
+        this._pageList = [10, 20, 50, 100, 300];
         // 页面数据条数
-        this.pageSizeParam = 10;
+        this._pageSize = 10;
         // 首页页码
-        this.pageNumberParam = 1;
+        this._pageNumber = 1;
         // 设置为服务器端分页
-        this.sidePaginationParam = PAGE_TYPE.SERVER;
+        this._sidePagination = PAGE_TYPE.SERVER;
         //显示的列
-        this.columnsParam = [];
+        this._columns = [];
         //查询参数函数
-        this.queryParamsParam = null;
+        this._queryParams = null;
         //加载服务器数据之前的处理程序，可以用来格式化数据。
-        this.responseHandlerParam = null;
+        this._responseHandler = null;
         // 远程数据加载成功时函数
-        this.onLoadSuccessParam = null;
+        this._onLoadSuccess = null;
         //远程数据加载失败时函数
-        this.onLoadErrorParam = null;
+        this._onLoadError = null;
         //当切换列的时候触发。
-        this.onColumnSwitchParam = null;
+        this._onColumnSwitch = null;
         //是否初始化表格
         this.isInitTable = false;
     }
@@ -88,338 +88,338 @@ class Table {
     }
 
     dom(dom) {
-        this.domParam = dom;
+        this._dom = dom;
         return this;
     }
 
     getDom() {
-        return this.domParam;
+        return this._dom;
     }
 
     searchDom(searchDom) {
-        this.searchDomParam = searchDom;
+        this._searchDom = searchDom;
         return this;
     }
 
     getSearchDom() {
-        return this.searchDomParam;
+        return this._searchDom;
     }
 
     searchButton(searchButton) {
-        this.searchButtonParam = searchButton;
+        this._searchButton = searchButton;
         return this;
     }
 
     getSearchButton() {
-        return this.searchButtonParam;
+        return this._searchButton;
     }
 
     resetButton(resetButton) {
-        this.resetButtonParam = resetButton;
+        this._resetButton = resetButton;
         return this;
     }
 
     getResetButton() {
-        return this.resetButtonParam;
+        return this._resetButton;
     }
 
     submitDom(submitDom) {
-        this.submitDomParam = submitDom;
+        this._submitDom = submitDom;
         return this;
     }
 
     getSubmitDom() {
-        return this.submitDomParam;
+        return this._submitDom;
     }
 
     createDom(createDom) {
-        this.createDomParam = createDom;
+        this._createDom = createDom;
         return this;
     }
 
     getCreateDom() {
-        return this.createDomParam;
+        return this._createDom;
     }
 
     exportDom(exportDom) {
-        this.exportDomParam = exportDom;
+        this._exportDom = exportDom;
         return this;
     }
 
     getExportDom() {
-        return this.exportDomParam;
+        return this._exportDom;
     }
 
     formDiv(formDiv) {
-        this.formDivDom = formDiv;
+        this._formDivDom = formDiv;
         return this;
     }
 
     getFormDiv() {
-        return this.formDivDom;
+        return this._formDivDom;
     }
 
     form(form) {
-        this.formDom = form;
+        this._formDom = form;
         return this;
     }
 
     getForm() {
-        return this.formDom;
+        return this._formDom;
     }
 
     listUrl(listUrl) {
-        this.listUrlParam = listUrl;
+        this._listUrl = listUrl;
         return this;
     }
 
     getListUrl() {
-        return this.listUrlParam;
+        return this._listUrl;
     }
 
     createUrl(createUrl) {
-        this.createUrlParam = createUrl;
+        this._createUrl = createUrl;
         return this;
     }
 
     getCreateUrl() {
-        return this.createUrlParam;
+        return this._createUrl;
     }
 
     updateUrl(updateUrl) {
-        this.updateUrlParam = updateUrl;
+        this._updateUrl = updateUrl;
         return this;
     }
 
     getUpdateUrl() {
-        return this.updateUrlParam;
+        return this._updateUrl;
     }
 
 
     detailUrl(detailUrl) {
-        this.detailUrlParam = detailUrl;
+        this._detailUrl = detailUrl;
         return this;
     }
 
     getDetailUrl() {
-        return this.detailUrlParam;
+        return this._detailUrl;
     }
 
     deleteUrl(deleteUrl) {
-        this.deleteUrlParam = deleteUrl;
+        this._deleteUrl = deleteUrl;
         return this;
     }
 
     getDeleteUrl() {
-        return this.deleteUrlParam;
+        return this._deleteUrl;
     }
 
     statusUrl(statusUrl) {
-        this.statusUrlParam = statusUrl;
+        this._statusUrl = statusUrl;
         return this;
     }
 
     getStatusUrl() {
-        return this.statusUrlParam;
+        return this._statusUrl;
     }
 
     exportUrl(exportUrl) {
-        this.exportUrlParam = exportUrl;
+        this._exportUrl = exportUrl;
         return this;
     }
 
     getExportUrl() {
-        return this.exportUrlParam;
+        return this._exportUrl;
     }
 
     isToken(isToken) {
-        this.isTokenParam = isToken;
+        this._isToken = isToken;
         return this;
     }
 
     getIsToken() {
-        return this.isTokenParam;
+        return this._isToken;
     }
 
     tokenCallBack(tokenCallBack) {
-        this.tokenCallBackParam = tokenCallBack;
+        this._tokenCallBack = tokenCallBack;
         return this;
     }
 
     getTokenCallBack() {
-        return this.tokenCallBackParam;
+        return this._tokenCallBack;
     }
 
     customValidate(customValidate) {
-        this.customValidateParam = customValidate;
+        this._customValidate = customValidate;
         return this;
     }
 
     getCustomValidate() {
-        return this.customValidateParam;
+        return this._customValidate;
     }
 
     method(method) {
-        this.methodParam = method;
+        this._method = method;
         return this;
     }
 
     getMethod() {
-        return this.methodParam;
+        return this._method;
     }
 
     headers(headers) {
-        this.headersParam = headers;
+        this._headers = headers;
         return this;
     }
 
     getHeaders() {
-        return this.headersParam;
+        return this._headers;
     }
 
     cache(cache) {
-        this.cacheParam = cache;
+        this._cache = cache;
         return this;
     }
 
     getCache() {
-        return this.cacheParam;
+        return this._cache;
     }
 
     striped(striped) {
-        this.stripedParam = striped;
+        this._striped = striped;
         return this;
     }
 
     getStriped() {
-        return this.stripedParam;
+        return this._striped;
     }
 
     showColumns(showColumns) {
-        this.showColumnsParam = showColumns;
+        this._showColumns = showColumns;
         return this;
     }
 
     getShowColumns() {
-        return this.showColumnsParam;
+        return this._showColumns;
     }
 
     showRefresh(showRefresh) {
-        this.showRefreshParam = showRefresh;
+        this._showRefresh = showRefresh;
         return this;
     }
 
     getShowRefresh() {
-        return this.showRefreshParam;
+        return this._showRefresh;
     }
 
     showToggle(showToggle) {
-        this.showToggleParam = showToggle;
+        this._showToggle = showToggle;
         return this;
     }
 
     getShowToggle() {
-        return this.showToggleParam;
+        return this._showToggle;
     }
 
 
     pagination(pagination) {
-        this.paginationParam = pagination;
+        this._pagination = pagination;
         return this;
     }
 
     getPagination() {
-        return this.paginationParam;
+        return this._pagination;
     }
 
     pageList(pageList) {
-        this.pageListParam = pageList;
+        this._pageList = pageList;
         return this;
     }
 
     getPageList() {
-        return this.pageListParam;
+        return this._pageList;
     }
 
     pageSize(pageSize) {
-        this.pageSizeParam = pageSize;
+        this._pageSize = pageSize;
         return this;
     }
 
     getPageSize() {
-        return this.pageSizeParam;
+        return this._pageSize;
     }
 
     pageNumber(pageNumber) {
-        this.pageNumberParam = pageNumber;
+        this._pageNumber = pageNumber;
         return this;
     }
 
     getPageNumber() {
-        return this.pageNumberParam;
+        return this._pageNumber;
     }
 
     sidePagination(sidePagination) {
-        this.sidePaginationParam = sidePagination;
+        this._sidePagination = sidePagination;
         return this;
     }
 
     getSidePagination() {
-        return this.sidePaginationParam;
+        return this._sidePagination;
     }
 
     columns(columns) {
-        this.columnsParam = columns;
+        this._columns = columns;
         return this;
     }
 
     getColumns() {
-        return this.columnsParam;
+        return this._columns;
     }
 
     queryParams(queryParams) {
-        this.queryParamsParam = queryParams;
+        this._queryParams = queryParams;
         return this;
     }
 
     getQueryParams() {
-        return this.queryParamsParam;
+        return this._queryParams;
     }
 
     responseHandler(responseHandler) {
-        this.responseHandlerParam = responseHandler;
+        this._responseHandler = responseHandler;
         return this;
     }
 
     getResponseHandler() {
-        return this.responseHandlerParam;
+        return this._responseHandler;
     }
 
     onLoadSuccess(onLoadSuccess) {
-        this.onLoadSuccessParam = onLoadSuccess;
+        this._onLoadSuccess = onLoadSuccess;
         return this;
     }
 
     getOnLoadSuccess() {
-        return this.onLoadSuccessParam;
+        return this._onLoadSuccess;
     }
 
     onLoadError(onLoadError) {
-        this.onLoadErrorParam = onLoadError;
+        this._onLoadError = onLoadError;
         return this;
     }
 
     getOnLoadError() {
-        return this.onLoadErrorParam;
+        return this._onLoadError;
     }
 
     onColumnSwitch(onColumnSwitch) {
-        this.onColumnSwitchParam = onColumnSwitch;
+        this._onColumnSwitch = onColumnSwitch;
         return this;
     }
 
     getOnColumnSwitch() {
-        return this.onColumnSwitchParam;
+        return this._onColumnSwitch;
     }
 
     init() {

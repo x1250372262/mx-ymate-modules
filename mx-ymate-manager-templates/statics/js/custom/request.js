@@ -1,21 +1,20 @@
-
 class Request {
 
     constructor() {
         //接口地址
-        this.urlParam = "";
+        this._url = "";
         //请求参数
-        this.dataParam = {};
+        this._data = {};
         //请求方式
-        this.methodParam = REQUEST_METHOD.GET;
+        this._method = REQUEST_METHOD.GET;
         //是否需要token
-        this.isTokenParam = true;
+        this._isToken = true;
         //token失败的回调方法
-        this.tokenCallBackParam = null;
+        this._tokenCallBack = null;
         //回调方法
-        this.callbackParam = null;
+        this._callback = null;
         //请求头
-        this.headersParam = {};
+        this._headers = {};
     }
 
     static builder() {
@@ -23,68 +22,68 @@ class Request {
     }
 
     url(url) {
-        this.urlParam = url;
+        this._url = url;
         return this;
     }
 
-    getUrl(){
-        return this.urlParam;
+    getUrl() {
+        return this._url;
     }
 
     method(method) {
-        this.methodParam = method;
+        this._method = method;
         return this;
     }
 
-    getMethod(){
-        return this.methodParam;
+    getMethod() {
+        return this._method;
     }
 
     data(data) {
         data.date = new Date().getTime();
         data.format = "json";
-        this.dataParam = data;
+        this._data = data;
         return this;
     }
 
-    getData(){
-        return this.dataParam;
+    getData() {
+        return this._data;
     }
 
     isToken(isToken) {
-        this.isTokenParam = isToken;
+        this._isToken = isToken;
         return this;
     }
 
-    getIsToken(){
-        return this.isTokenParam;
+    getIsToken() {
+        return this._isToken;
     }
 
     tokenCallBack(tokenCallBack) {
-        this.tokenCallBackParam = tokenCallBack;
+        this._tokenCallBack = tokenCallBack;
         return this;
     }
 
-    getTokenCallBack(){
-        return this.tokenCallBackParam;
+    getTokenCallBack() {
+        return this._tokenCallBack;
     }
 
     callback(callback) {
-        this.callbackParam = callback;
+        this._callback = callback;
         return this;
     }
 
-    getCallback(){
-        return this.callbackParam;
+    getCallback() {
+        return this._callback;
     }
 
     headers(headers) {
-        this.headersParam = headers;
+        this._headers = headers;
         return this;
     }
 
-    getHeaders(){
-        return this.headersParam;
+    getHeaders() {
+        return this._headers;
     }
 
     do() {
@@ -142,12 +141,12 @@ class Request {
     }
 
     post() {
-        this.methodParam = REQUEST_METHOD.POST;
+        this.method(REQUEST_METHOD.POST)
         this.do();
     }
 
     get() {
-        this.methodParam = REQUEST_METHOD.GET;
+        this.method(REQUEST_METHOD.GET)
         this.do();
     }
 
