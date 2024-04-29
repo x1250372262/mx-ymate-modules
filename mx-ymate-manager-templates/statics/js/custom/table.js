@@ -503,14 +503,14 @@ class Table {
                         }, 1000)
                     } else if (res.code === "00000") {
                         if (!tableThis.isInitTable) {
-                            tableThis.initDetail();
-                            tableThis.initDelete();
-                            tableThis.initSearch();
-                            tableThis.initUpdate();
-                            tableThis.initCreate();
-                            tableThis.initSubmit();
-                            tableThis.initStatus();
-                            tableThis.initExport();
+                            tableThis.#initDetail();
+                            tableThis.#initDelete();
+                            tableThis.#initSearch();
+                            tableThis.#initUpdate();
+                            tableThis.#initCreate();
+                            tableThis.#initSubmit();
+                            tableThis.#initStatus();
+                            tableThis.#initExport();
                             tableThis.isInitTable = true;
                         }
                         return {
@@ -545,7 +545,7 @@ class Table {
     }
 
     //点击详情按钮
-    initDetail() {
+    #initDetail() {
         let tableThis = this;
         let tableDom = tableThis.getDom();
         tableDom.on("click", ".detail", function () {
@@ -571,7 +571,7 @@ class Table {
     }
 
     //点击修改按钮
-    initUpdate() {
+    #initUpdate() {
         let tableThis = this;
         let tableDom = tableThis.getDom();
         tableDom.on("click", ".edits", function () {
@@ -605,7 +605,7 @@ class Table {
     }
 
     //点击添加按钮
-    initCreate() {
+    #initCreate() {
         let tableThis = this;
         let createDom = tableThis.getCreateDom();
         createDom.on("click", function () {
@@ -622,7 +622,7 @@ class Table {
     }
 
     //点击提交按钮
-    initSubmit() {
+    #initSubmit() {
         let tableThis = this;
         let tableDom = tableThis.getDom();
         let submitDom = tableThis.getSubmitDom();
@@ -653,7 +653,7 @@ class Table {
     }
 
     //删除
-    initDelete() {
+    #initDelete() {
         let tableThis = this;
         let tableDom = tableThis.getDom();
         //单个
@@ -710,7 +710,7 @@ class Table {
     }
 
     //搜索
-    initSearch() {
+    #initSearch() {
         let tableThis = this;
         let tableDom = tableThis.getDom();
         let searchDom = tableThis.getSearchDom();
@@ -730,7 +730,7 @@ class Table {
     }
 
     //修改状态
-    initStatus() {
+    #initStatus() {
         let tableThis = this;
         let tableDom = tableThis.getDom();
         tableDom.on("click", ".mx_status", function () {
@@ -762,7 +762,7 @@ class Table {
     }
 
     //导出
-    initExport(){
+    #initExport(){
         let tableThis = this;
         let tableDom = tableThis.getDom();
         let exportDom = tableThis.getExportDom();

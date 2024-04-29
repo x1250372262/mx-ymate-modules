@@ -1,6 +1,7 @@
 package com.mx.ymate.maven.plugin;
 
 import cn.hutool.setting.dialect.Props;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -67,11 +68,11 @@ public abstract class BaseGeneratorMojo extends AbstractMojo {
     }
 
     public String createPageHtmlFileName(String modelName) {
-        return modelName + PAGE_HTML_FILE_SUFFIX;
+        return StringUtils.uncapitalize(modelName) + PAGE_HTML_FILE_SUFFIX;
     }
 
     public String createPageJsFileName(String modelName) {
-        return modelName + PAGE_JS_FILE_SUFFIX;
+        return StringUtils.uncapitalize(modelName) + PAGE_JS_FILE_SUFFIX;
     }
 
 

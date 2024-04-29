@@ -220,8 +220,8 @@
         const userInfo = $.trim(User.get())
         if (userInfo !== undefined && userInfo !== null && userInfo.length > 0) {
             let arrData = (typeof userInfo == 'object') ? userInfo : JSON.parse(userInfo);
-            $("#photoUri").attr("src", arrData.photoUri ? arrData.photoUri : "/statics/images/touxiang.png");
-            $("#lockPhotoUri").attr("src", arrData.photoUri ? arrData.photoUri : "/statics/images/touxiang.png");
+            $("#photoUri").attr("src", arrData.photoUri ? arrData.photoUri : "/statics/images/no_image.gif");
+            $("#lockPhotoUri").attr("src", arrData.photoUri ? arrData.photoUri : "/statics/images/no_image.gif");
             $("#userName").html(arrData.realName != null ? arrData.realName : arrData.userName);
             $("#lockUserName").html(arrData.realName != null ? arrData.realName : arrData.userName);
             $("#id").val(arrData.id);

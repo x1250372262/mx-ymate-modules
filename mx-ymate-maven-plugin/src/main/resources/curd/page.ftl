@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-touch-fullscreen" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <script src="/statics/js/custom/dpstudio.js?_V=1"></script>
+    <script src="/statics/js/custom/lib.js?_V=1"></script>
 </head>
 
 <body ng-app="">
@@ -66,12 +66,12 @@
                                             <ul class="list-inline row lyear-uploads-pic mb-0">
                                                 <li class="col-6 col-md-4 col-lg-2">
                                                     <figure class="thumbnail">
-                                                        <img name="{field.name}" src="/statics/images/no_image.gif">
+                                                        <img name="${field.name}" src="/statics/images/no_image.gif">
                                                         <figcaption>
                                                             <input type="file" filter=".png,.jpg,.jpeg,.bmp,.gif"
                                                                    class="fileInput" style="display: none;"
                                                                    name="file"/>
-                                                            <input type="hidden" id="{field.name}" name="${field.name}" class="fileresult">
+                                                            <input type="hidden" id="${field.name}" name="${field.name}" class="fileresult">
                                                             <a class="btn btn-round btn-square btn-primary picUpload"
                                                                href="#!">上传</a>
                                                             <a class="btn btn-round btn-square btn-danger picDelete"
@@ -116,9 +116,8 @@
                                 <div class="card-title">${modelName}</div>
                             </header>
                             <div class="card-body">
-                                <div class="card-toolbar clearfix">
-                                    <form class="form-inline" id="searchForm" method="post">
-                                        <div class="mx_search">
+                                <div class="d-flex justify-content-between">
+                                    <form class="form-inline d-flex" id="searchForm" method="post">
 
 <#--                                            <div class="fom-group m-b-5 m-r-10">-->
 <#--                                                <input class="form-control" type="text" name="name"-->
@@ -137,17 +136,12 @@
                                              </div>
                                             </#list>
 
-                                        </div>
-                                        <div>
-                                            <a class="btn btn-primary m-b-5 m-r-5" id="searchButton"><i
-                                                        class="mdi mdi-magnify"></i> 搜索</a>
-                                            <button class="btn btn-secondary m-b-5" id="resetButton"><i
-                                                        class="mdi mdi-delete"></i> 重置查询
-                                            </button>
-                                        </div>
+                                        <a class="btn btn-primary m-b-5 m-r-5" id="searchButton"><i
+                                                    class="mdi mdi-magnify"></i> 搜索</a>
+                                        <button class="btn btn-secondary m-b-5" id="resetButton"><i
+                                                    class="mdi mdi-delete"></i> 重置查询
+                                        </button>
                                     </form>
-                                </div>
-                                <div class="card-toolbar clearfix">
                                     <div class="form-inline">
                                         <a class="btn btn-primary m-b-5 m-r-5 creates" data-toggle="modal"
                                            data-target="#commonDiv" href="#!"><i class="mdi mdi-plus"></i> 新增</a>
@@ -156,7 +150,6 @@
                                             删除</a>
                                     </div>
                                 </div>
-
                                 <table id="tableAjaxId">
                                 </table>
                             </div>
@@ -176,8 +169,13 @@
 
 
     $(function () {
-        Table.setUrl(${modelNameUp}_LIST, ${modelNameUp}_CREATE, ${modelNameUp}_UPDATE, ${modelNameUp}_DETAIL, ${modelNameUp}_DELETE, null);
-        Table.init();
+        Table.builder()
+            .listUrl(${modelNameUp}_LIST)
+            .createUrl(${modelNameUp}_CREATE)
+            .updateUrl( ${modelNameUp}_UPDATE)
+            .detailUrl( ${modelNameUp}_DETAIL)
+            .deleteUrl(${modelNameUp}_DELETE)
+            .init();
     });
 
     columns = [
@@ -193,7 +191,7 @@
             align: 'center',
             valign: 'middle',
             formatter: function (value, row, index) { // 单元格格式化函数
-                return MX.changeTimeToString(value);
+                return DateUtil.changeDateToString(value);
             }
         },
         <#elseif field.name == 'thumb' || field.name == 'logo' || field.name == 'photoUri'>
@@ -213,7 +211,7 @@
             align: 'center', // 左右居中
             valign: 'middle', // 上下居中
             formatter: function (value, row, index) { // 单元格格式化函数
-                return MX.addPriceZero(MX.getPrice(value,100));
+                return PriceUtil.addPriceZero(PriceUtil.getPrice(value,100));
             }
         },
         <#elseif field.name != 'id'>

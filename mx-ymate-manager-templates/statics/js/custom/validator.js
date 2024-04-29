@@ -148,8 +148,8 @@ class Validator {
         return result;
     }
     //验证自定义
-     validatorCheck(validatorDom, customValidationFunc) {
-         let result = {
+    validatorCheck(validatorDom, customValidationFunc) {
+        let result = {
             "retBool": false,
             "msg": ""
         };
@@ -177,6 +177,7 @@ class Validator {
                     result.validatorBool = requiredResult.retBool;
                     result.validatorMsg = requiredResult.msg;
                     result.isWwangEditor = $(this).attr(mxRequiredType)==="wangEditor";
+                    result.isPic = $(this).attr(mxRequiredType)==="pic";
                     resultArray.push(result)
                     resultDom[$(this).attr("name")] = requiredResult.retBool;
 
@@ -192,6 +193,7 @@ class Validator {
                         result.validatorBool = validatorResult.retBool;
                         result.validatorMsg = validatorResult.msg;
                         result.isWwangEditor = $(this).attr(mxRequiredType)==="wangEditor";
+                        result.isPic = $(this).attr(mxRequiredType)==="pic";
                         resultArray.push(result)
                     }
 
@@ -203,6 +205,9 @@ class Validator {
                 if(item.isWwangEditor){
                     pd = pd.parent();
                     dk = dk.parent();
+                }else if(item.isPic){
+                    pd = pd.parents("ul");
+                    dk = dk.parents("ul");
                 }
                 if (item.validatorBool) {
                     if (canExec) {

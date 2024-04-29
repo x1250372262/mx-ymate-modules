@@ -41,9 +41,10 @@ public class ${modelName}Controller {
 
     /**
     * 修改
-    *
-    * @param id
-    * @param sftId 总平台就是sft 公司就是数据的父id
+    @param id
+    <#list dtoFieldList as field>
+    * @param ${field.name} ${field.comment}
+    </#list>
     * @return
     * @throws Exception
     */

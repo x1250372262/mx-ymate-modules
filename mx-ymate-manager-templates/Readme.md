@@ -315,8 +315,7 @@ function check(validatorDom){
 ### 图片上传
 ```html
 <div class="form-group col-md-12 mx_validator">
-    <label>活动封面图</label><span class="required">
-* </span>
+    <label for="thumb">图片</label><span class="required">* </span>
     <div class="form-controls">
 
         <ul class="list-inline row lyear-uploads-pic mb-0">
@@ -327,9 +326,8 @@ function check(validatorDom){
                         <input type="file" filter=".png,.jpg,.jpeg,.bmp,.gif"
                                class="fileInput" style="display: none;"
                                name="file"/>
-                        <input type="hidden" name="thumb" mx_required_type="pic"
-                               class="fileresult mx_required"
-                               mx_required_msg="活动封面图不能为空">
+                        <input type="hidden" id="thumb" name="thumb"
+                               class="fileresult mx_required"  mx_required_msg="图片不能为空" mx_required_type="pic">
                         <a class="btn btn-round btn-square btn-primary picUpload"
                            href="#!">上传</a>
                         <a class="btn btn-round btn-square btn-danger picDelete"

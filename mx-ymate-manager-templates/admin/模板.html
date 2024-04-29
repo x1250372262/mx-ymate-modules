@@ -71,7 +71,7 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <header class="card-header">
-                                <div class="card-title"></div>
+                                <div class="card-title">字典管理</div>
                             </header>
                             <div class="card-body">
                                 <div class="d-flex justify-content-between">
@@ -122,8 +122,13 @@
 
 
     $(function () {
-        Table.setUrl(DICT_LIST, DICT_CREATE, DICT_UPDATE, DICT_DETAIL, DICT_DELETE, null);
-        Table.init();
+        Table.builder()
+            .listUrl(DICT_LIST)
+            .createUrl(DICT_CREATE)
+            .updateUrl(DICT_UPDATE)
+            .detailUrl(DICT_DETAIL)
+            .deleteUrl(DICT_DELETE)
+            .init();
     });
 
     columns = [
