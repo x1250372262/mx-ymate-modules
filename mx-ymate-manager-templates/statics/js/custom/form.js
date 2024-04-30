@@ -18,13 +18,13 @@ class Form {
                 if ($(this).hasClass("amount") > 0) {
                     result = PriceUtil.getPrice(data[$(this).attr("name")], 100);
                 } else if ($(this).hasClass("dates") || $(this).hasClass("times")) {
-                  let format = $(this).attr("format");
-                  if(format !== undefined && format !== null && format !==""){
-                      result = DateUtil.changeDateToString(data[$(this).attr("name")],format);
-                  }else{
-                      result = DateUtil.changeDateToString(data[$(this).attr("name")]);
-                  }
-                }  else {
+                    let format = $(this).attr("format");
+                    if (format !== undefined && format !== null && format !== "") {
+                        result = DateUtil.changeDateToString(data[$(this).attr("name")], format);
+                    } else {
+                        result = DateUtil.changeDateToString(data[$(this).attr("name")]);
+                    }
+                } else {
                     result = data[$(this).attr("name")];
                 }
                 $(this).val(result);
@@ -61,13 +61,17 @@ class Form {
                     LayerUtil.failMsg("value、cascadeKey、cascadeId都不能为空")
                     return false;
                 }
-                SELECT.selectData(cascadeKey, cascadeId, cascadePid, dataValue)
+                SelectCascade.selectData(cascadeKey, cascadeId, cascadePid, dataValue)
             }
         });
         //wang编辑器 重置内部html内容
         if (dom.find(".wangContent").length > 0) {
             dom.find(".wangContent").each(function () {
-                editors[$(this).attr("id")].setHtml(data[$(this).attr("name")] != null && data[$(this).attr("name")] ? data[$(this).attr("name")] : "")
+                let editor = editors[$(this).attr("id")]
+                editor.destroy();
+                editor = WangEditor.init($(this).parent())
+                let content = data[$(this).attr("name")] != null && data[$(this).attr("name")] ? data[$(this).attr("name")] : "";
+                editor.setHtml(content)
             });
         }
         //input标签
@@ -113,8 +117,7 @@ class Form {
         //wang编辑器 重置内部html内容
         if ($(dom).find(".wangContent").length > 0) {
             $(dom).find(".wangContent").each(function () {
-                // editors[$(this).attr("id")].dangerouslyInsertHtml("")
-                editors[$(this).attr("id")].setHtml('<p></p>')
+                editors[$(this).attr("id")].clear();
             });
         }
 
@@ -157,7 +160,7 @@ class Form {
         }
     }
 
-    static getValues(dom,callback) {
+    static getValues(dom, callback) {
         let data = {};
         dom.find("input[type='text'],input[type='hidden'],input[type='number'],input[type='password'],textarea").each(function () {
             if (!$(this).hasClass(Filter.NO_GET)) {
@@ -222,7 +225,7 @@ class Form {
         return data;
     }
 
-    static setHtml (dom, data, callback) {
+    static setHtml(dom, data, callback) {
         dom.find(".mx_html").each(function () {//
             if (!$(this).hasClass(Filter.NO_SET)) {
                 let result;
@@ -230,12 +233,12 @@ class Form {
                     result = PriceUtil.getPrice(data[$(this).attr("name")], 100);
                 } else if ($(this).hasClass("dates") || $(this).hasClass("times")) {
                     let format = $(this).attr("format");
-                    if(format !== undefined && format !== null && format !==""){
-                        result = DateUtil.changeDateToString(data[$(this).attr("name")],format);
-                    }else{
+                    if (format !== undefined && format !== null && format !== "") {
+                        result = DateUtil.changeDateToString(data[$(this).attr("name")], format);
+                    } else {
                         result = DateUtil.changeDateToString(data[$(this).attr("name")]);
                     }
-                }  else {
+                } else {
                     result = data[$(this).attr("name")];
                 }
                 $(this).html(result);

@@ -190,12 +190,18 @@
     };
 
     //点击菜单
-    $(".sidebar-main").on("click", ".multitabs", function () {
-        var menu = {
+    $(document).on("click", ".multitabs", function () {
+        let url = $.trim($(this).attr('href'));
+        let title = $.trim($(this).text());
+        if (!url || !title) {
+            return false;
+        }
+        let menu = {
             show: true,
-            title: $(this).text(),
-            url: $(this).attr('href')
-        };
+            key: title + url,
+            title: title,
+            url: url
+        }
         LogMenu.addMenu(menu);
     });
 

@@ -1,4 +1,5 @@
 const LOG_MENU_LIST = "log_menu_list";
+const DEFAULT_INDEX_KEY = "mxIndex";
 const DEFAULT_INDEX_NAME = "首页";
 const DEFAULT_INDEX_URL = "/admin/home.html";
 
@@ -25,6 +26,7 @@ class LogMenu {
             this.menuListParam = [
                 {
                     show: true,
+                    key: DEFAULT_INDEX_KEY,
                     title: DEFAULT_INDEX_NAME,
                     url: DEFAULT_INDEX_URL
                 }
@@ -42,8 +44,9 @@ class LogMenu {
         let menuList = JSON.parse(Store.get(LOG_MENU_LIST));
         let isAdd = false;
         menuList.map((item, index) => {
-            if (item.title === menu.title) {
+            if (item.key === menu.key) {
                 item.show = true
+                item.url = menu.url;
                 isAdd = true;
             } else {
                 item.show = false
@@ -70,20 +73,20 @@ class LogMenu {
         if (menuList != null && menuList.length > 0) {
             let html = '';
             $.each(menuList, function (index, item) {
-                if (item.title === DEFAULT_INDEX_NAME) {
-                    html += `<div><div class="suspension1 item ${item.show ? 'historySelect' : ''}"><a class="hrefA text"  style="color: #000" href="${item.url}" style="text-align: center">${item.title}</a></div></div>`;
+                if (item.key === DEFAULT_INDEX_KEY) {
+                    html += `<div><div class="suspension1 item ${item.show ? 'historySelect' : ''}" menuKey="${item.key}"><a class="hrefA text"  style="color: #000" href="${item.url}" style="text-align: center">${item.title}</a></div></div>`;
                 } else {
-                    html += `<div> <div class="suspension1 item ${item.show ? 'historySelect' : ''}"><a class="hrefA text" style="color: #000" href="${item.url}">${item.title}</a><div class="ms-2 f-18 removeLabel">×</div></div></div>`;
+                    html += `<div> <div class="suspension1 item ${item.show ? 'historySelect' : ''}" menuKey="${item.key}"><a class="hrefA text" style="color: #000" href="${item.url}">${item.title}</a><div class="ms-2 f-18 removeLabel">×</div></div></div>`;
                 }
             });
             $("#logMenu").html(html);
         }
     }
 
-    static selectMenu(text) {
+    static selectMenu(key) {
         let menuList = this.menuListParam;
         menuList.map((item, index) => {
-            item.show = item.title === text;
+            item.show = item.key === key;
         });
         this.setMenuList(menuList);
     }
@@ -91,9 +94,9 @@ class LogMenu {
     static deleteMenu(dom) {
         let menuList = this.menuListParam;
         menuList.map((item, index) => {
-            if (item.title === dom.text()) {
+            if (item.key === dom.attr("menuKey")) {
                 menuList.splice(index, 1);
-                if (dom.parent().hasClass('historySelect')) {
+                if (dom.hasClass('historySelect')) {
                     menuList[index - 1].show = true
                     window.location.href = menuList[index - 1].url
                 } else {
@@ -122,11 +125,11 @@ $(function () {
     });
     // 删除
     LOG_MENU_DOM.on("click", ".removeLabel", function () {
-        LogMenu.deleteMenu($(this).prev())
+        LogMenu.deleteMenu($(this).prev().parent())
     });
     //点击
     LOG_MENU_DOM.on("click", ".hrefA", function () {
-        LogMenu.selectMenu($(this).text());
+        LogMenu.selectMenu($(this).parent().attr("menuKey"));
     })
     // 重新加载
     RIGHT_MENU_DOM.on('click', '.newAgain', function () {
@@ -134,18 +137,19 @@ $(function () {
     })
     // 关闭标签页
     RIGHT_MENU_DOM.on('click', '.closeTabs', function () {
-        LogMenu.deleteMenu(rightMenu.find(".text"))
+        LogMenu.deleteMenu(rightMenu)
     })
     // 关闭左
     RIGHT_MENU_DOM.on('click', '.closeLeft', function () {
         let menuList = LogMenu.getMenuList();
-        let text = rightMenu.find(".text").text();
+        let menuKey = rightMenu.attr("menuKey");
         let index = menuList.findIndex(function (item) {
-            return item.title === text;
+            return item.key === menuKey;
         });
         menuList = menuList.splice(index, menuList.length - 1);
         menuList.unshift({
             show: false,
+            key: DEFAULT_INDEX_KEY,
             title: DEFAULT_INDEX_NAME,
             url: DEFAULT_INDEX_URL
         })
@@ -155,9 +159,9 @@ $(function () {
     // 关闭右
     RIGHT_MENU_DOM.on('click', '.closeRight', function () {
         let menuList = LogMenu.getMenuList();
-        let text = rightMenu.find(".text").text();
+        let menuKey = rightMenu.attr("menuKey");
         let index = menuList.findIndex(function (item) {
-            return item.title === text;
+            return item.key === menuKey;
         });
         menuList = menuList.splice(0, index + 1);
         LogMenu.setMenuList(menuList);
@@ -168,6 +172,7 @@ $(function () {
         LogMenu.setMenuList([
             {
                 show: true,
+                key: DEFAULT_INDEX_KEY,
                 title: DEFAULT_INDEX_NAME,
                 url: DEFAULT_INDEX_URL
             }
@@ -177,14 +182,15 @@ $(function () {
     //关闭其他标签
     RIGHT_MENU_DOM.on('click', '.mt-close-other-tabs', function () {
         let menuList = LogMenu.getMenuList();
-        let text = rightMenu.find(".text").text();
+        let menuKey = rightMenu.attr("menuKey");
         let item = menuList.find(function (item) {
-            return item.title === text;
+            return item.key === menuKey;
         });
         menuList = [];
-        if(item.title!==DEFAULT_INDEX_NAME){
+        if(item.key!==DEFAULT_INDEX_KEY){
             menuList.push({
                 show: false,
+                key: DEFAULT_INDEX_KEY,
                 title: DEFAULT_INDEX_NAME,
                 url: DEFAULT_INDEX_URL
             });
@@ -205,7 +211,7 @@ $(function () {
         let endLeft = false;
         let home = false
         rightMenu = $(this);
-        if (rightMenu.text() === DEFAULT_INDEX_NAME) {
+        if (rightMenu.attr("menuKey") === DEFAULT_INDEX_KEY) {
             home = true
         }
         let menuList = LogMenu.getMenuList();
