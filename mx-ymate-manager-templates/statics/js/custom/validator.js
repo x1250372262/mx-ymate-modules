@@ -109,7 +109,7 @@ class Validator {
     }
 
     //验证非空
-    requiredCheck(requiredDom) {
+    #requiredCheck(requiredDom) {
         let result = {
             "retBool": false,
             "msg": ""
@@ -148,7 +148,7 @@ class Validator {
         return result;
     }
     //验证自定义
-    validatorCheck(validatorDom, customValidationFunc) {
+    #validatorCheck(validatorDom, customValidationFunc) {
         let result = {
             "retBool": false,
             "msg": ""
@@ -171,7 +171,7 @@ class Validator {
                 let parentThis = $(this);
                 $(this).find(mxRequired).each(function () {
                     let result = {};
-                    let requiredResult = ths.requiredCheck($(this));
+                    let requiredResult = ths.#requiredCheck($(this));
                     result.domKey = $(this);
                     result.parentThis = parentThis;
                     result.validatorBool = requiredResult.retBool;
@@ -187,7 +187,7 @@ class Validator {
                     // console.log(resultDom)
                     if (!bool) {
                         let result = {};
-                        let validatorResult = ths.validatorCheck($(this), ths.getCustomValidate());
+                        let validatorResult = ths.#validatorCheck($(this), ths.getCustomValidate());
                         result.domKey = $(this);
                         result.parentThis = parentThis;
                         result.validatorBool = validatorResult.retBool;
