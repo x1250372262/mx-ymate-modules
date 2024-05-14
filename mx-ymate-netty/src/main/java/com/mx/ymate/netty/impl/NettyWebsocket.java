@@ -2,6 +2,8 @@ package com.mx.ymate.netty.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.mx.ymate.netty.INettyConfig;
+import com.mx.ymate.netty.handler.MappingHandler;
+import com.mx.ymate.netty.handler.MxWebsocketHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -29,14 +31,12 @@ public class NettyWebsocket {
     private final EventLoopGroup BOSS_GROUP = new NioEventLoopGroup();
     private final EventLoopGroup WORK_GROUP = new NioEventLoopGroup();
 
+
     public NettyWebsocket(INettyConfig config) {
         this.config = config;
     }
 
     public void run() throws Exception {
-        if (config.websocketHandler() == null) {
-            throw new Exception("请指定websocket handler处理类");
-        }
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap.group(BOSS_GROUP, WORK_GROUP)
                 .channel(NioServerSocketChannel.class)
@@ -47,9 +47,10 @@ public class NettyWebsocket {
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline channelPipeline = ch.pipeline();
                         channelPipeline.addLast(new HttpServerCodec());
-                        channelPipeline.addLast(new HttpObjectAggregator(8192));
+                        channelPipeline.addLast(new HttpObjectAggregator(65536));
+                        channelPipeline.addLast(new MappingHandler());
                         channelPipeline.addLast(new WebSocketServerProtocolHandler("/" + config.websocketMapping()));
-                        channelPipeline.addLast(config.websocketHandler());
+                        channelPipeline.addLast(new MxWebsocketHandler());
                     }
                 });
         serverBootstrap.bind(config.websocketPort()).sync();

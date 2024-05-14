@@ -56,7 +56,7 @@ public interface INettyConfig extends IInitialization<INetty> {
     String WEBSOCKET_PORT = "websocket.port";
 
     String WEBSOCKET_MAPPING = "websocket.mapping";
-    String WEBSOCKET_HANDLER_CLASS = "websocket.handlerClass";
+    String WEBSOCKET_PACKAGE = "websocket.package";
 
     String SERVER_CLIENT_SERVER = "server";
     String SERVER_CLIENT_CLIENT = "client";
@@ -177,10 +177,10 @@ public interface INettyConfig extends IInitialization<INetty> {
     String websocketMapping();
 
     /**
-     * #处理器名称 只能指定一个
-     *
+     * websocket 处理器所在包
      * @return
      */
-    ChannelInboundHandlerAdapter websocketHandler();
+    String websocketPackage();
+
 
 }

@@ -64,8 +64,8 @@ public final class DefaultNettyConfig implements INettyConfig {
     private int websocketPort;
 
     private String websocketMapping;
+    private String websocketPackage;
 
-    private ChannelInboundHandlerAdapter websocketHandler;
 
     private boolean initialized;
 
@@ -125,7 +125,7 @@ public final class DefaultNettyConfig implements INettyConfig {
         websocketEnabled = configUtil.getBool(WEBSOCKET_ENABLED, false);
         websocketPort = configUtil.getInt(WEBSOCKET_PORT, 8756);
         websocketMapping = configUtil.getString(WEBSOCKET_MAPPING,"websocket");
-        websocketHandler = configUtil.getClassImpl(WEBSOCKET_HANDLER_CLASS,ChannelInboundHandlerAdapter.class);
+        websocketPackage = configUtil.getString(WEBSOCKET_PACKAGE);
     }
 
     @Override
@@ -243,8 +243,8 @@ public final class DefaultNettyConfig implements INettyConfig {
     }
 
     @Override
-    public ChannelInboundHandlerAdapter websocketHandler() {
-        return websocketHandler;
+    public String websocketPackage() {
+        return websocketPackage;
     }
 
     public void setEnabled(boolean enabled) {
@@ -362,9 +362,9 @@ public final class DefaultNettyConfig implements INettyConfig {
         }
     }
 
-    public void setWebsocketHandler(ChannelInboundHandlerAdapter websocketHandler) {
+    public void setWebsocketPackage(String websocketPackage) {
         if (!initialized) {
-            this.websocketHandler = websocketHandler;
+            this.websocketPackage = websocketPackage;
         }
     }
 
@@ -467,8 +467,8 @@ public final class DefaultNettyConfig implements INettyConfig {
             return this;
         }
 
-        public Builder websocketHandler(ChannelInboundHandlerAdapter websocketHandler) {
-            config.setWebsocketHandler(websocketHandler);
+        public Builder websocketPackage(String websocketPackage) {
+            config.setWebsocketPackage(websocketPackage);
             return this;
         }
 
