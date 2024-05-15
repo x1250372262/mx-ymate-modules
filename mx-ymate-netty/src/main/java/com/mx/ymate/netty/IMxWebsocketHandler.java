@@ -10,11 +10,44 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
  */
 public interface IMxWebsocketHandler {
 
+
     /**
-     * 处理数据方法
-     * @param ctx
-     * @param msg
-     * @throws Exception
+     * 连接打开
+     *
+     * @param ctx 会话
      */
-    void handle(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception;
+    void onOpen(ChannelHandlerContext ctx) throws Exception;
+
+    /**
+     * 连接收到消息
+     *
+     * @param ctx 会话
+     * @param msg 消息
+     */
+    void onMessage(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception;
+
+    /**
+     * 连接关闭
+     *
+     * @param ctx 会话
+     */
+    void onClose(ChannelHandlerContext ctx) throws Exception;
+
+    /**
+     * 连接发生错误
+     *
+     * @param ctx 会话
+     * @param t   异常
+     */
+    void onError(ChannelHandlerContext ctx, Throwable t) throws Exception;
+
+    /**
+     * 发送消息
+     *
+     * @param ctx     会话
+     * @param message 消息
+     */
+    default void sendMessage(ChannelHandlerContext ctx, String message) throws Exception {
+        ctx.writeAndFlush(new TextWebSocketFrame(message));
+    }
 }

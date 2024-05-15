@@ -3,7 +3,7 @@ package com.mx.ymate.netty.impl;
 import cn.hutool.core.util.StrUtil;
 import com.mx.ymate.netty.INettyConfig;
 import com.mx.ymate.netty.handler.MappingHandler;
-import com.mx.ymate.netty.handler.MxWebsocketHandler;
+//import com.mx.ymate.netty.handler.MxWebsocketHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -49,8 +49,7 @@ public class NettyWebsocket {
                         channelPipeline.addLast(new HttpServerCodec());
                         channelPipeline.addLast(new HttpObjectAggregator(65536));
                         channelPipeline.addLast(new MappingHandler());
-                        channelPipeline.addLast(new WebSocketServerProtocolHandler("/" + config.websocketMapping()));
-                        channelPipeline.addLast(new MxWebsocketHandler());
+                        channelPipeline.addLast(new WebSocketServerProtocolHandler(config.websocketMapping(), true));
                     }
                 });
         serverBootstrap.bind(config.websocketPort()).sync();

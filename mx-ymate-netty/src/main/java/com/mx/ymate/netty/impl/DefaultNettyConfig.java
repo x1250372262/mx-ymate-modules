@@ -124,7 +124,10 @@ public final class DefaultNettyConfig implements INettyConfig {
 
         websocketEnabled = configUtil.getBool(WEBSOCKET_ENABLED, false);
         websocketPort = configUtil.getInt(WEBSOCKET_PORT, 8756);
-        websocketMapping = configUtil.getString(WEBSOCKET_MAPPING,"websocket");
+        websocketMapping = configUtil.getString(WEBSOCKET_MAPPING,"/websocket");
+        if(!websocketMapping.startsWith("/")){
+            websocketMapping = "/" + websocketMapping;
+        }
         websocketPackage = configUtil.getString(WEBSOCKET_PACKAGE);
     }
 
