@@ -79,6 +79,18 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
     boolean subscribe(String topic, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout) throws Exception;
 
     /**
+     * 批量订阅
+     *
+     * @param topics
+     * @param qosEnum
+     * @param mqttMessageListener
+     * @param timeout
+     * @return
+     * @throws Exception
+     */
+    void subscribe(String[] topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout) throws Exception;
+
+    /**
      * 订阅
      *
      * @param topic
@@ -88,6 +100,17 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      * @throws Exception
      */
     boolean subscribe(String topic, QosEnum qosEnum, IMqttMessageListener mqttMessageListener) throws Exception;
+
+    /**
+     * 批量订阅
+     *
+     * @param topics
+     * @param qosEnum
+     * @param mqttMessageListener
+     * @return
+     * @throws Exception
+     */
+    void subscribe(String[] topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener) throws Exception;
 
     /**
      * 取消订阅

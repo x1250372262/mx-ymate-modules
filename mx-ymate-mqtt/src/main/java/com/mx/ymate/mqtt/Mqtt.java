@@ -221,6 +221,19 @@ public final class Mqtt implements IModule, IMqtt {
     }
 
     @Override
+    public void subscribe(String[] topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout) throws Exception {
+        for (String topic : topics) {
+            IMqttToken token = mqttAsyncClient.subscribe(topic, qosEnum.getValue(), mqttMessageListener);
+            token.waitForCompletion(timeout);
+        }
+    }
+
+    @Override
+    public void subscribe(String[] topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener) throws Exception {
+        subscribe(topics, qosEnum, mqttMessageListener, -1);
+    }
+
+    @Override
     public boolean subscribe(String topic, QosEnum qosEnum, IMqttMessageListener mqttMessageListener) throws Exception {
         return subscribe(topic, qosEnum, mqttMessageListener, -1);
     }
@@ -256,7 +269,7 @@ public final class Mqtt implements IModule, IMqtt {
 
     @Override
     public boolean publish(String topic, String payload, QosEnum qos) throws Exception {
-        return publish(topic,payload.getBytes(),qos,false);
+        return publish(topic, payload.getBytes(), qos, false);
     }
 
 
