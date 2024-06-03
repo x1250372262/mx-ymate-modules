@@ -195,7 +195,8 @@ public final class Mqtt implements IModule, IMqtt {
             options.setSSLProperties(sslProperties);
         }
         try {
-            mqttAsyncClient.connect(options);
+            IMqttToken token = mqttAsyncClient.connect(options);
+            token.waitForCompletion();
         } catch (MqttException e) {
             LOG.error("MQTT服务连接失败", e);
             return;
