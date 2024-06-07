@@ -19,6 +19,7 @@
         <module>mx-ymate-monitor</module>
         <module>mx-ymate-maven-plugin</module>
         <module>mx-ymate-mqtt</module>
+        <module>mx-ymate-sms</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -55,6 +56,7 @@
         <jsch.version>0.1.54</jsch.version>
         <caffeine.version>2.9.3</caffeine.version>
         <eclipse-paho.version>1.2.5</eclipse-paho.version>
+        <tencentcloud-sdk-java.version>3.1.507</tencentcloud-sdk-java.version>
     </properties>
 
     <dependencyManagement>
@@ -267,6 +269,12 @@
                 <groupId>org.eclipse.paho</groupId>
                 <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
                 <version>${eclipse-paho.version}</version>
+            </dependency>
+            <!--腾讯云短信-->
+            <dependency>
+                <groupId>com.tencentcloudapi</groupId>
+                <artifactId>tencentcloud-sdk-java</artifactId>
+                <version>${tencentcloud-sdk-java.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -15,6 +15,8 @@ class Request {
         this._callback = null;
         //请求头
         this._headers = {};
+        //同步异步
+        this._async = true;
     }
 
     static builder() {
@@ -86,6 +88,15 @@ class Request {
         return this._headers;
     }
 
+    async(async){
+        this._async = async;
+        return this;
+    }
+
+    getAsync(){
+        return this._async;
+    }
+
     do() {
         let headers = this.getHeaders();
         headers["X-Requested-With"] = "XMLHttpRequest"
@@ -109,7 +120,7 @@ class Request {
         $.ajax({
             type: ths.getMethod(),
             data: ths.getData(),
-            async: false,
+            async: ths.getAsync(),
             headers: headers,
             url: this.getUrl(),
             dataType: "json",

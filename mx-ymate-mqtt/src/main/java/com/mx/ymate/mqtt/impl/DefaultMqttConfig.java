@@ -18,6 +18,9 @@ package com.mx.ymate.mqtt.impl;
 import cn.hutool.setting.dialect.PropsUtil;
 import com.mx.ymate.mqtt.IMqtt;
 import com.mx.ymate.mqtt.IMqttConfig;
+import net.ymate.platform.commons.lang.BlurObject;
+import net.ymate.platform.commons.util.DateTimeUtils;
+import net.ymate.platform.commons.util.UUIDUtils;
 import net.ymate.platform.core.configuration.IConfigReader;
 import net.ymate.platform.core.module.IModuleConfigurer;
 import net.ymate.platform.log.Logs;
@@ -107,6 +110,14 @@ public final class DefaultMqttConfig implements IMqttConfig {
         autoConnect = configReader.getBoolean(AUTO_CONNECT, true);
         url = configReader.getString(URL);
         clientId = configReader.getString(CLIENT_ID);
+        if (clientId.contains("{time}")) {
+            clientId = clientId.replace("{time}", BlurObject.bind(DateTimeUtils.currentTimeMillis()).toStringValue());
+        } else if (clientId.contains("{uuid}")) {
+            clientId = clientId.replace("{uuid}", UUIDUtils.UUID());
+        }
+        if (StringUtils.isBlank(clientId)) {
+            clientId = "mqttClientId-" + UUIDUtils.UUID();
+        }
         userName = configReader.getString(USER_NAME);
         password = configReader.getString(PASSWORD);
         cleanSession = configReader.getBoolean(CLEAN_SESSION, CLEAN_SESSION_DEFAULT);

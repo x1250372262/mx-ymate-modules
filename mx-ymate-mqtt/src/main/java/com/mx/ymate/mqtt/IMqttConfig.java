@@ -70,7 +70,7 @@ public interface IMqttConfig extends IInitialization<IMqtt> {
     String url();
 
     /**
-     * 客户端id
+     * 客户端id {time}代表增加默认时间戳 {uuid}代表增加随机uuid  没有则取本身
      */
     String clientId();
 
