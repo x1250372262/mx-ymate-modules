@@ -42,6 +42,11 @@ public class Pages<T> implements Serializable {
         return new Pages<>(resultSet.getPageNumber(), resultSet.getPageSize(), resultSet.getPageCount(), resultSet.getRecordCount(), resultSet.getResultData());
     }
 
+    public static <T> Pages<T> create(List<T> list) {
+        long size = list.size();
+        return new Pages<>(1,size,1, size, list);
+    }
+
     public Pages() {
     }
 
