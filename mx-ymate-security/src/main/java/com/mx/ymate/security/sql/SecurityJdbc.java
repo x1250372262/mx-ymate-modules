@@ -11,4 +11,15 @@ public class SecurityJdbc {
         return MxJdbc.innerJoin(prefix, SecurityUser.TABLE_NAME, "su", SecurityUser.FIELDS.ID, tableAlias, fieldName);
     }
 
+    public static Join securityLeftJoin(String prefix, String tableAlias, String fieldName) {
+        return MxJdbc.leftJoin(prefix, SecurityUser.TABLE_NAME, "su", SecurityUser.FIELDS.ID, tableAlias, fieldName);
+    }
+
+    public static Join securityInnerJoin(String prefix, String tableAlias, String fieldName) {
+        return MxJdbc.innerJoin(prefix, SecurityUser.TABLE_NAME, "su", SecurityUser.FIELDS.ID, tableAlias, fieldName);
+    }
+
+    public static Join securityRightJoin(String prefix, String tableAlias, String fieldName) {
+        return MxJdbc.rightJoin(prefix, SecurityUser.TABLE_NAME, "su", SecurityUser.FIELDS.ID, tableAlias, fieldName);
+    }
 }
