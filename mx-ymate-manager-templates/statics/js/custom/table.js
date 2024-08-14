@@ -23,6 +23,8 @@ class Table {
         this._formDivDom = $("#commonDiv");
         //添加弹窗form id
         this._formDom = $("#commonForm");
+        //数据 和 list接口地址二选一 优先接口地址
+        this._data = [];
         //list接口地址
         this._listUrl = "";
         //添加接口地址
@@ -166,6 +168,15 @@ class Table {
 
     getForm() {
         return this._formDom;
+    }
+
+    data(data) {
+        this._data = data;
+        return this;
+    }
+
+    getData() {
+        return this._data;
     }
 
     listUrl(listUrl) {
@@ -448,6 +459,7 @@ class Table {
             col = columns;
         }
         tableDom.bootstrapTable({
+            data: tableThis.getData(),
             url: tableThis.getListUrl(),
             method: tableThis.getMethod(),
             cache: tableThis.getCache(),
@@ -542,6 +554,7 @@ class Table {
             }
 
         })
+        return tableThis;
     }
 
     //点击详情按钮

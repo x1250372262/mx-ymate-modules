@@ -26,6 +26,7 @@ import net.ymate.platform.core.module.IModuleConfigurer;
 import net.ymate.platform.log.Logs;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.C;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 
 import java.io.FileInputStream;
@@ -56,6 +57,8 @@ public final class DefaultMqttConfig implements IMqttConfig {
     private String userName;
 
     private String password;
+
+    private MqttCallback callback;
 
     private boolean cleanSession;
 
@@ -120,6 +123,10 @@ public final class DefaultMqttConfig implements IMqttConfig {
         }
         userName = configReader.getString(USER_NAME);
         password = configReader.getString(PASSWORD);
+        callback = configReader.getClassImpl(CALLBACK, MqttCallback.class);
+        if(callback == null){
+            callback = new MxMqttCallback();
+        }
         cleanSession = configReader.getBoolean(CLEAN_SESSION, CLEAN_SESSION_DEFAULT);
         manualAcks = configReader.getBoolean(MANUAL_ACKS, false);
         connectionTimeout = configReader.getInt(CONNECTION_TIMEOUT, CONNECTION_TIMEOUT_DEFAULT);
@@ -188,6 +195,11 @@ public final class DefaultMqttConfig implements IMqttConfig {
     @Override
     public String password() {
         return password;
+    }
+
+    @Override
+    public MqttCallback callback() {
+        return callback;
     }
 
     @Override
@@ -292,6 +304,12 @@ public final class DefaultMqttConfig implements IMqttConfig {
     public void setPassword(String password) {
         if (!initialized) {
             this.password = password;
+        }
+    }
+
+    public void setCallback(MqttCallback callback) {
+        if (!initialized) {
+            this.callback = callback;
         }
     }
 

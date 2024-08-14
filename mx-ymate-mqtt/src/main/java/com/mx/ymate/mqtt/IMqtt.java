@@ -74,9 +74,8 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      * @param mqttMessageListener
      * @param timeout
      * @return
-     * @throws Exception
      */
-    boolean subscribe(String topic, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout) throws Exception;
+    boolean subscribe(String topic, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout);
 
     /**
      * 批量订阅
@@ -86,9 +85,8 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      * @param mqttMessageListener
      * @param timeout
      * @return
-     * @throws Exception
      */
-    void subscribe(String[] topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout) throws Exception;
+    void subscribe(String[] topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout);
 
     /**
      * 订阅
@@ -97,9 +95,8 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      * @param qosEnum
      * @param mqttMessageListener
      * @return
-     * @throws Exception
      */
-    boolean subscribe(String topic, QosEnum qosEnum, IMqttMessageListener mqttMessageListener) throws Exception;
+    boolean subscribe(String topic, QosEnum qosEnum, IMqttMessageListener mqttMessageListener);
 
     /**
      * 批量订阅
@@ -108,9 +105,8 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      * @param qosEnum
      * @param mqttMessageListener
      * @return
-     * @throws Exception
      */
-    void subscribe(String[] topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener) throws Exception;
+    void subscribe(String[] topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener);
 
     /**
      * 取消订阅
@@ -118,7 +114,7 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      * @param topic
      * @return
      */
-    boolean unSubscribe(String topic) throws Exception;
+    boolean unSubscribe(String topic);
 
     /**
      * 发布主题
@@ -129,9 +125,8 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      * @param retained
      * @param timeout
      * @return
-     * @throws Exception
      */
-    boolean publish(String topic, byte[] payload, QosEnum qos, boolean retained, long timeout) throws Exception;
+    boolean publish(String topic, byte[] payload, QosEnum qos, boolean retained, long timeout);
 
     /**
      * 发布主题
@@ -141,9 +136,8 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      * @param qos
      * @param retained
      * @return
-     * @throws Exception
      */
-    boolean publish(String topic, byte[] payload, QosEnum qos, boolean retained) throws Exception;
+    boolean publish(String topic, byte[] payload, QosEnum qos, boolean retained);
 
     /**
      * 发布主题
@@ -154,9 +148,8 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      * @param retained
      * @param timeout
      * @return
-     * @throws Exception
      */
-    boolean publish(String topic, String payload, QosEnum qos, boolean retained, long timeout) throws Exception;
+    boolean publish(String topic, String payload, QosEnum qos, boolean retained, long timeout);
 
     /**
      * 发布主题
@@ -166,9 +159,8 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      * @param qos
      * @param retained
      * @return
-     * @throws Exception
      */
-    boolean publish(String topic, String payload, QosEnum qos, boolean retained) throws Exception;
+    boolean publish(String topic, String payload, QosEnum qos, boolean retained);
 
     /**
      * 发布主题
@@ -177,9 +169,8 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      * @param payload
      * @param qos
      * @return
-     * @throws Exception
      */
-    boolean publish(String topic, String payload, QosEnum qos) throws Exception;
+    boolean publish(String topic, String payload, QosEnum qos);
 
 
 
@@ -187,8 +178,7 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      * 告诉 MQTT 我已经收到这条消息
      *
      * @param message
-     * @throws Exception
      */
-    void ack(MqttMessage message) throws Exception;
+    void ack(MqttMessage message);
 
 }

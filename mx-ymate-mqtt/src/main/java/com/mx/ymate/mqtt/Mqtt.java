@@ -17,6 +17,7 @@ package com.mx.ymate.mqtt;
 
 import com.mx.ymate.mqtt.enums.QosEnum;
 import com.mx.ymate.mqtt.impl.DefaultMqttConfig;
+import net.ymate.platform.commons.util.RuntimeUtils;
 import net.ymate.platform.core.IApplication;
 import net.ymate.platform.core.IApplicationConfigureFactory;
 import net.ymate.platform.core.IApplicationConfigurer;
@@ -201,6 +202,7 @@ public final class Mqtt implements IModule, IMqtt {
             LOG.error("MQTT服务连接失败", e);
             return;
         }
+        mqttAsyncClient.setCallback(config.callback());
         LOG.info("MQTT服务连接成功");
     }
 
@@ -215,69 +217,104 @@ public final class Mqtt implements IModule, IMqtt {
     }
 
     @Override
-    public boolean subscribe(String topic, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout) throws Exception {
-        IMqttToken token = mqttAsyncClient.subscribe(topic, qosEnum.getValue(), mqttMessageListener);
-        token.waitForCompletion(timeout);
-        return false;
-    }
-
-    @Override
-    public void subscribe(String[] topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout) throws Exception {
-        for (String topic : topics) {
+    public boolean subscribe(String topic, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout) {
+        try {
             IMqttToken token = mqttAsyncClient.subscribe(topic, qosEnum.getValue(), mqttMessageListener);
             token.waitForCompletion(timeout);
+            boolean isSuccess = token.isComplete();
+            LOG.info("主题: " + topic + "订阅" + (isSuccess ? "成功" : "失败"));
+            return isSuccess;
+        } catch (MqttException e) {
+            LOG.error("主题: " + topic + "订阅失败", e);
+            throw RuntimeUtils.wrapRuntimeThrow(e);
         }
     }
 
     @Override
-    public void subscribe(String[] topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener) throws Exception {
+    public void subscribe(String[] topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout) {
+        for (String topic : topics) {
+            try {
+                IMqttToken token = mqttAsyncClient.subscribe(topic, qosEnum.getValue(), mqttMessageListener);
+                token.waitForCompletion(timeout);
+                boolean isSuccess = token.isComplete();
+                LOG.info("主题: " + topic + "订阅" + (isSuccess ? "成功" : "失败"));
+            } catch (MqttException e) {
+                LOG.error("主题: " + topic + "订阅失败", e);
+                throw RuntimeUtils.wrapRuntimeThrow(e);
+            }
+        }
+    }
+
+    @Override
+    public void subscribe(String[] topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener) {
         subscribe(topics, qosEnum, mqttMessageListener, -1);
     }
 
     @Override
-    public boolean subscribe(String topic, QosEnum qosEnum, IMqttMessageListener mqttMessageListener) throws Exception {
+    public boolean subscribe(String topic, QosEnum qosEnum, IMqttMessageListener mqttMessageListener) {
         return subscribe(topic, qosEnum, mqttMessageListener, -1);
     }
 
     @Override
-    public boolean unSubscribe(String topic) throws Exception {
-        IMqttToken token = mqttAsyncClient.unsubscribe(topic);
-        token.waitForCompletion();
-        return token.isComplete();
+    public boolean unSubscribe(String topic) {
+        try {
+            IMqttToken token = mqttAsyncClient.unsubscribe(topic);
+            token.waitForCompletion();
+            boolean isSuccess = token.isComplete();
+            LOG.info("主题: " + topic + "取消订阅" + (isSuccess ? "成功" : "失败"));
+            return isSuccess;
+        } catch (MqttException e) {
+            LOG.error("主题: " + topic + "取消订阅失败", e);
+            throw RuntimeUtils.wrapRuntimeThrow(e);
+        }
     }
 
     @Override
-    public boolean publish(String topic, byte[] payload, QosEnum qos, boolean retained, long timeout) throws Exception {
-        IMqttToken token = mqttAsyncClient.publish(topic, payload, qos.getValue(), retained);
-        token.waitForCompletion(timeout);
-        return token.isComplete();
+    public boolean publish(String topic, byte[] payload, QosEnum qos, boolean retained, long timeout) {
+        try {
+            IMqttToken token = mqttAsyncClient.publish(topic, payload, qos.getValue(), retained);
+            token.waitForCompletion(timeout);
+            boolean isSuccess = token.isComplete();
+            LOG.info("主题: " + topic + "发布数据" + (isSuccess ? "成功" : "失败"));
+            return isSuccess;
+        } catch (MqttException e) {
+            LOG.error("主题: " + topic + "发布数据失败", e);
+            throw RuntimeUtils.wrapRuntimeThrow(e);
+        }
     }
 
     @Override
-    public boolean publish(String topic, byte[] payload, QosEnum qos, boolean retained) throws Exception {
+    public boolean publish(String topic, byte[] payload, QosEnum qos, boolean retained) {
         return publish(topic, payload, qos, retained, -1);
     }
 
     @Override
-    public boolean publish(String topic, String payload, QosEnum qos, boolean retained, long timeout) throws Exception {
+    public boolean publish(String topic, String payload, QosEnum qos, boolean retained, long timeout) {
         return publish(topic, payload.getBytes(), qos, retained, timeout);
     }
 
     @Override
-    public boolean publish(String topic, String payload, QosEnum qos, boolean retained) throws Exception {
+    public boolean publish(String topic, String payload, QosEnum qos, boolean retained) {
         return publish(topic, payload.getBytes(), qos, retained);
     }
 
     @Override
-    public boolean publish(String topic, String payload, QosEnum qos) throws Exception {
+    public boolean publish(String topic, String payload, QosEnum qos) {
         return publish(topic, payload.getBytes(), qos, false);
     }
 
 
     @Override
-    public void ack(MqttMessage message) throws Exception {
-        if (config.manualAcks() && message.getQos() == QosEnum.QOS_AT_LEAST_ONCE.getValue()) {
-            mqttAsyncClient.messageArrivedComplete(message.getId(), message.getQos());
+    public void ack(MqttMessage message) {
+
+        try {
+            if (config.manualAcks() && message.getQos() == QosEnum.QOS_AT_LEAST_ONCE.getValue()) {
+                mqttAsyncClient.messageArrivedComplete(message.getId(), message.getQos());
+            }
+            LOG.info("消息确认成功");
+        } catch (MqttException e) {
+            LOG.info("消息确认失败");
+            throw RuntimeUtils.wrapRuntimeThrow(e);
         }
     }
 }

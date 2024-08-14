@@ -35,6 +35,7 @@ public interface IMqttConfig extends IInitialization<IMqtt> {
     String CLIENT_ID = "clientId";
     String USER_NAME = "userName";
     String PASSWORD = "password";
+    String CALLBACK = "callback";
     String CLEAN_SESSION = "cleanSession";
     String MANUAL_ACKS = "manualAcks";
     String CONNECTION_TIMEOUT = "connectionTimeout";
@@ -83,6 +84,12 @@ public interface IMqttConfig extends IInitialization<IMqtt> {
      * 密码默认不设置
      */
     String password();
+
+    /**
+     * 回调类
+     * @return
+     */
+    MqttCallback callback();
 
     /**
      * 是否清理session，false时可接收离线消息 true忽略离线消息 默认true
