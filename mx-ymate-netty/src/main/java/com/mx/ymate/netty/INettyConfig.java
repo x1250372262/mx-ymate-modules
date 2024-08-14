@@ -47,6 +47,7 @@ public interface INettyConfig extends IInitialization<INetty> {
     String CLIENT_REMOTE_ADDRESS = "client.remoteAddress";
     String CLIENT_HEART_BEAT_TIME = "client.heartBeatTime";
 
+    String CLIENT_NUM = "client.num";
     String CLIENT_HEART_BEAT_CLASS = "client.heartBeatClass";
     String CLIENT_HANDLER_CLASS = "client.handlerClass";
     String CLIENT_DECODER_CLASS = "client.decoderClass";
@@ -125,6 +126,11 @@ public interface INettyConfig extends IInitialization<INetty> {
      */
     ChannelInboundHandlerAdapter serverDecoder();
 
+
+    /**
+     * 客户端数量
+     */
+    Integer clientNum();
 
     /**
      * 远程连接地址 ip:port  多个用逗号分割

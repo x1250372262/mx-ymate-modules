@@ -50,6 +50,7 @@ public final class DefaultNettyConfig implements INettyConfig {
     private List<String> serverExcludePort;
     private List<ChannelInboundHandlerAdapter> serverHandler = new ArrayList<>();
     private ChannelInboundHandlerAdapter serverDecoder;
+    private Integer clientNum;
     private List<String> clientRemoteAddress;
     private Integer clientHeartBeatTime;
 
@@ -107,7 +108,7 @@ public final class DefaultNettyConfig implements INettyConfig {
         }
 
         serverDecoderClassName = configUtil.getString(SERVER_DECODER_CLASS);
-
+        clientNum = configUtil.getInteger(CLIENT_NUM,1);
         clientRemoteAddress = ObjectUtil.defaultIfNull(configUtil.getList(CLIENT_REMOTE_ADDRESS), new ArrayList<>());
         clientHeartBeatTime = configUtil.getInteger(CLIENT_HEART_BEAT_TIME);
         heartClient = configUtil.getClassImpl(CLIENT_HEART_BEAT_CLASS,IHeartClient.class);
@@ -200,6 +201,11 @@ public final class DefaultNettyConfig implements INettyConfig {
         }
 
         return serverDecoder;
+    }
+
+    @Override
+    public Integer clientNum() {
+        return clientNum;
     }
 
     @Override
@@ -316,6 +322,13 @@ public final class DefaultNettyConfig implements INettyConfig {
         }
     }
 
+    public void setClientNum(Integer clientNum) {
+        if (!initialized) {
+            this.clientNum = clientNum;
+        }
+    }
+
+
     public void setClientRemoteAddress(List<String> clientRemoteAddress) {
         if (!initialized) {
             this.clientRemoteAddress = clientRemoteAddress;
@@ -430,6 +443,10 @@ public final class DefaultNettyConfig implements INettyConfig {
         }
 
 
+        public Builder clientNum(Integer clientNum) {
+            config.setClientNum(clientNum);
+            return this;
+        }
         public Builder clientRemoteAddress(List<String> clientRemoteAddress) {
             config.setClientRemoteAddress(clientRemoteAddress);
             return this;

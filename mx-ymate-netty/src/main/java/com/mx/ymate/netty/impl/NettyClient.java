@@ -117,16 +117,22 @@ public class NettyClient {
     }
 
     private void connect() {
-        //启动客户端去连接服务器端
-        for (RemoteAddress remoteAddress : REMOTE_ADDRESS_LIST) {
-            ThreadUtil.execAsync(() -> {
-                try {
-                    connect(remoteAddress);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            });
+        int clientNum = config.clientNum();
+        if(clientNum <= 0){
+            return;
         }
+       for(int clientIndex = 0; clientIndex < clientNum; clientIndex++){
+           //启动客户端去连接服务器端
+           for (RemoteAddress remoteAddress : REMOTE_ADDRESS_LIST) {
+               ThreadUtil.execAsync(() -> {
+                   try {
+                       connect(remoteAddress);
+                   } catch (Exception e) {
+                       throw new RuntimeException(e);
+                   }
+               });
+           }
+       }
     }
 
 
