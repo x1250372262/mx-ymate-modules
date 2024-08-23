@@ -57,6 +57,7 @@ public class HeartBeatServerHandler extends ChannelInboundHandlerAdapter {
             ip = ipSocket.getHostString();
             port = BlurObject.bind(ipSocket.getPort()).toString();
         }
+        cause.printStackTrace();
         Logs.get().getLogger().error(StrUtil.format(MESSAGE, ip, port), cause);
 //        ctx.close();
     }
