@@ -42,7 +42,13 @@ public class NettyServer {
             throw new Exception("请指定handler处理类");
         }
         ServerBootstrap serverBootstrap = new ServerBootstrap();
-        serverBootstrap.group(BOSS_GROUP, WORK_GROUP).channel(NioServerSocketChannel.class).option(ChannelOption.SO_BACKLOG, 100).childOption(ChannelOption.SO_REUSEADDR, true).handler(new LoggingHandler(LogLevel.INFO)).childHandler(new ChannelInitializer<SocketChannel>() {
+        serverBootstrap.group(BOSS_GROUP, WORK_GROUP)
+                .channel(NioServerSocketChannel.class)
+                .option(ChannelOption.SO_BACKLOG, 100)
+                .option(ChannelOption.SO_RCVBUF, 1024 * 1024)
+                .option(ChannelOption.TCP_NODELAY, true)
+                .childOption(ChannelOption.SO_REUSEADDR, true)
+                .handler(new LoggingHandler(LogLevel.INFO)).childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline channelPipeline = ch.pipeline();
