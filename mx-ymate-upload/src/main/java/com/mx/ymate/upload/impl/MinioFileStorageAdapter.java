@@ -112,6 +112,11 @@ public class MinioFileStorageAdapter extends AbstractFileStorageAdapter {
     }
 
     @Override
+    public boolean deleteFile(UploadFileMeta fileMeta) {
+        return false;
+    }
+
+    @Override
     public File getThumbStoragePath() {
         return null;
     }
