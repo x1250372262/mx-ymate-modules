@@ -110,7 +110,7 @@ var EXCEL_IMPORT = function () {
                         if(fail !==undefined && fail!==null){
                             fail(e);
                         }else{
-                            LayerUtil.failMsg(e.msg ? e.msg : "操作失败")
+                            LayerUtil.failMsg(e.msg ? e.msg : ERROR_MSG.FAIL)
                         }
                     }
 

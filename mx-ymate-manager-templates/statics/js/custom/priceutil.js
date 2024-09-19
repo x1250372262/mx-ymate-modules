@@ -30,7 +30,7 @@ class PriceUtil {
         return (r1 / r2) * Math.pow(10, t2 - t1);
     }
 
-    static addPriceZero(arg1, arg2){
+    static addPriceZero(price){
         if (String(price).indexOf(".") > 0) {
             //有小数
             if (String(price).indexOf(".") === String(price).length - 3) {
