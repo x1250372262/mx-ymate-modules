@@ -27,8 +27,8 @@ public class QrCodeFactory {
     private final String defaultCharset = "UTF-8";
     private final ErrorCorrectionLevel defaultLevel = ErrorCorrectionLevel.L;
     private final boolean createCode;
-    public final static String filePath = YMP.get().getParam("mx.qrcode.file_path");
-    private final String webUrl = YMP.get().getParam("mx.qrcode.web_url");
+    public final static String FILE_PATH = YMP.get().getParam("mx.qrcode.file_path");
+    private final String WEB_URL = YMP.get().getParam("mx.qrcode.web_url");
 
     private File logoFile;
     private int logoImageSize;
@@ -39,13 +39,13 @@ public class QrCodeFactory {
     private boolean isAddLogo = false;
 
     private QrCodeFactory(boolean createCode) {
-        if (StringUtils.isBlank(filePath)) {
+        if (StringUtils.isBlank(FILE_PATH)) {
             throw new NullArgumentException("mx.qrcode.file_path");
         }
         this.createCode = createCode;
     }
 
-    public QrCodeFactory setLog(File logoFile, int logoImageSize, int borderWidth, Color borderColor, Color backgroundColor) {
+    public QrCodeFactory setLogo(File logoFile, int logoImageSize, int borderWidth, Color borderColor, Color backgroundColor) {
         this.logoFile = logoFile;
         this.logoImageSize = logoImageSize;
         this.borderWidth = borderWidth;
@@ -81,7 +81,7 @@ public class QrCodeFactory {
                 .concat(level.name()).concat(format);
         fileName = DigestUtils.md5Hex(fileName);
         String timeStr = DateTimeUtils.formatTime(System.currentTimeMillis(), "yyyyMMdd");
-        File qrCodeDictionary = new File(this.filePath, timeStr);
+        File qrCodeDictionary = new File(FILE_PATH, timeStr);
         if (!qrCodeDictionary.exists()) {
             FileUtil.mkdir(qrCodeDictionary);
         }
@@ -104,8 +104,8 @@ public class QrCodeFactory {
         QrCodeResult qrCodeResult = new QrCodeResult();
         qrCodeResult.setQrCodeFile(qrCodeFile);
         String qrCodeUrl;
-        if (StringUtils.isNotBlank(webUrl)) {
-            qrCodeUrl = webUrl + "/" + timeStr + "/" + qrCodeFile.getName();
+        if (StringUtils.isNotBlank(WEB_URL)) {
+            qrCodeUrl = WEB_URL + "/" + timeStr + "/" + qrCodeFile.getName();
         } else {
             qrCodeUrl = WebUtils.baseUrl(WebContext.getRequest()).concat("mx/qrcode/show/" + timeStr + "/" + fileName + "/" + format);
         }
