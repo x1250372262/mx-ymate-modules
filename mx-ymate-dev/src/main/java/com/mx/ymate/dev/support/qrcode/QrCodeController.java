@@ -42,7 +42,7 @@ public class QrCodeController {
                       @PathVariable(value = "timeStr") String timeStr,
                       @PathVariable(value = "format") String format,
                       @RequestParam(defaultValue = "false") boolean attach) throws Exception {
-        String filePath = QrCodeFactory.filePath;
+        String filePath = QrCodeFactory.FILE_PATH;
         if (StringUtils.isBlank(filePath)) {
             throw new NullArgumentException("mx.qrcode.file_path");
         }
