@@ -5,6 +5,7 @@ import net.ymate.platform.core.persistence.IResultSet;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: mengxiang.
@@ -38,6 +39,11 @@ public class Pages<T> implements Serializable {
      */
     private List<T> resultData;
 
+    /**
+     * 附件属性
+     */
+    private Map<String,Object> attrData;
+
     public static <T> Pages<T> create(IResultSet<T> resultSet) {
         return new Pages<>(resultSet.getPageNumber(), resultSet.getPageSize(), resultSet.getPageCount(), resultSet.getRecordCount(), resultSet.getResultData());
     }
@@ -45,6 +51,25 @@ public class Pages<T> implements Serializable {
     public static <T> Pages<T> create(List<T> list) {
         long size = list.size();
         return new Pages<>(1,size,1, size, list);
+    }
+
+    public Pages<T> attr(String key,Object value){
+        attrData.put(key,value);
+        return this;
+    }
+
+    public Object attr(String key){
+        return attrData.get(key);
+    }
+
+    public Pages<T> attrs(Map<String,Object> attrs){
+        attrData.putAll(attrs);
+        return this;
+    }
+
+    public Pages<T> census(Map<String,Object> censusData){
+        attrData.put("census",censusData);
+        return this;
     }
 
     public Pages() {
@@ -103,5 +128,13 @@ public class Pages<T> implements Serializable {
 
     public void setResultData(List<T> resultData) {
         this.resultData = resultData;
+    }
+
+    public Map<String, Object> getAttrData() {
+        return attrData;
+    }
+
+    public void setAttrData(Map<String, Object> attrData) {
+        this.attrData = attrData;
     }
 }

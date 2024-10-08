@@ -7,6 +7,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import net.ymate.platform.log.Logs;
 
+import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,7 +20,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NettyUtil {
 
 
-    //客户端连接缓存
+    /**
+     * 客户端连接缓存
+     */
     private static final Map<String, ChannelHandlerContext> CLIENT_MAP;
 
     /**
@@ -137,5 +140,7 @@ public class NettyUtil {
             Logs.get().getLogger().error("发送失败:", exception);
         }
     }
+
+
 
 }

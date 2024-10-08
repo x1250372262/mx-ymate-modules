@@ -12,6 +12,11 @@ import net.ymate.platform.core.event.IEventListener;
 import net.ymate.platform.core.event.IEventRegister;
 import net.ymate.platform.core.event.annotation.EventRegister;
 
+/**
+ * @Author: mengxiang.
+ * @create: 2021-09-06 17:20
+ * @Description:
+ */
 @EventRegister
 public class SecurityInitializer implements IEventRegister {
     @Override
