@@ -56,7 +56,8 @@
         <jsch.version>0.1.54</jsch.version>
         <caffeine.version>2.9.3</caffeine.version>
         <eclipse-paho.version>1.2.5</eclipse-paho.version>
-        <tencentcloud-sdk-java.version>3.1.507</tencentcloud-sdk-java.version>
+        <tencentcloud-sdk-java.version>4.0.11</tencentcloud-sdk-java.version>
+        <aliyun-sms.version>3.0.0</aliyun-sms.version>
     </properties>
 
     <dependencyManagement>
@@ -275,6 +276,12 @@
                 <groupId>com.tencentcloudapi</groupId>
                 <artifactId>tencentcloud-sdk-java</artifactId>
                 <version>${tencentcloud-sdk-java.version}</version>
+            </dependency>
+            <!--阿里云短信-->
+            <dependency>
+                <groupId>com.aliyun</groupId>
+                <artifactId>dysmsapi20170525</artifactId>
+                <version>${aliyun-sms.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

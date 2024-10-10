@@ -23,10 +23,21 @@
             <version>${parent.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>net.ymate.platform</groupId>
+            <artifactId>ymate-platform-starter-web</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <!--腾讯云短信-->
         <dependency>
             <groupId>com.tencentcloudapi</groupId>
             <artifactId>tencentcloud-sdk-java</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!--阿里云短信-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>dysmsapi20170525</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>

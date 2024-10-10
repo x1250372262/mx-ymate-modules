@@ -12,6 +12,7 @@
 - [mx-ymate-netty](mx-ymate-netty) netty模块 内置心跳检测，可同时当服务端和客户端.
 - [mx-ymate-redis](mx-ymate-redis) 整合redis  提供便利的api操作。
 - [mx-ymate-security](mx-ymate-security) 基于sa-token 权限验证 需要数据库的支持，支持扩展自己的用户体系。
+- [mx-ymate-sms](mx-ymate-sms) 短信模块，支持网建、腾讯、阿里。也可以自己扩展。
 - [mx-ymate-upload](mx-ymate-upload) 上传文件模块，支持本地、七牛、minio、腾讯、阿里。也可以自己扩展。
 - [mx-ymate-work-robot](mx-ymate-work-robot) 微信企业号机器人
 - [打包文件](打包文件) 直接打成war包 命令行直接部署。
