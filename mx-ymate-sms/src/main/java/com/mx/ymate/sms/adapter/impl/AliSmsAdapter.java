@@ -96,7 +96,7 @@ public class AliSmsAdapter implements ISmsAdapter {
         SendBatchSmsRequest sendReq = new SendBatchSmsRequest()
                 .setPhoneNumberJson(JSON.toJSONString(mobileList))
                 .setSignNameJson(JSON.toJSONString(signList))
-                .setTemplateCode(aliTemplateCode)
+                .setTemplateCode(templateId)
                 .setTemplateParamJson(JSON.toJSONString(templateParamList));
         SendBatchSmsResponse sendResp = client.sendBatchSms(sendReq);
         String code = sendResp.body.code;
