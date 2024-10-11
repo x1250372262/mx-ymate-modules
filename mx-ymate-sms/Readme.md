@@ -1,4 +1,7 @@
 ### 使用示例
+
+#### 模板只适用于腾讯和阿里 网建短信通过api接口直接发送 只需要配置secret_id和secret_key即可 发送的内容在代码直接传即可
+#### 模板支持key=templateId|key1=templateId1 这种方式 也支持直接放入模板id 有模板key的情况下，调用send的时候直接传模板key即可
 ```java
 package com.mx.play.manager;
 
@@ -54,7 +57,7 @@ public class DemoController {
      */
     @RequestMapping("/tx")
     public IView tx(@RequestParam String mobile) throws Exception {
-        MxResult mxResult = Sms.get().send("tx",mobile, new String[]{"123123", "15"});
+        MxResult mxResult = Sms.get().sendByChannel("tx",mobile, new String[]{"123123", "15"});
         return mxResult.toJsonView();
     }
 
@@ -68,7 +71,7 @@ public class DemoController {
     @RequestMapping("/tx")
     public IView tx(@RequestParam String mobile,@RequestParam String mobile1) throws Exception {
         List<String> mobileList = ListUtil.toList(mobile,mobile1);
-        MxResult mxResult = Sms.get().send("tx",mobileList, new String[]{"123123", "15"});
+        MxResult mxResult = Sms.get().sendByChannel("tx",mobileList, new String[]{"123123", "15"});
         return mxResult.toJsonView();
     }
 
@@ -84,7 +87,7 @@ public class DemoController {
         jsonObject.put("workshopName", "测试车间");
         jsonObject.put("stationName", "投饵机一号");
         jsonObject.put("time", DateTimeUtils.formatTime(DateTimeUtils.systemTimeUTC(), DateTimeUtils.YYYY_MM_DD_HH_MM_SS));
-        MxResult mxResult = Sms.get().send("ali",mobile, jsonObject.toJSONString());
+        MxResult mxResult = Sms.get().sendByChannel("ali",mobile, jsonObject.toJSONString());
         return mxResult.toJsonView();
     }
 
@@ -102,12 +105,12 @@ public class DemoController {
         jsonObject.put("stationName", "投饵机一号");
         jsonObject.put("time", DateTimeUtils.formatTime(DateTimeUtils.systemTimeUTC(), DateTimeUtils.YYYY_MM_DD_HH_MM_SS));
         List<String> mobileList = ListUtil.toList(mobile,mobile1);
-        MxResult mxResult = Sms.get().send("ali",mobileList, jsonObject.toJSONString());
+        MxResult mxResult = Sms.get().sendByChannel("ali",mobileList, jsonObject.toJSONString());
         return mxResult.toJsonView();
     }
 }
 ```
-Sms.get().send("ali",mobileList, jsonObject.toJSONString());
+Sms.get().sendByChannel("ali",mobileList, jsonObject.toJSONString());
 
 上面代码中ali对应的就是通道 可以同时支持很多通道 但是一个通道只能支持一种服务商
 
@@ -127,44 +130,44 @@ ymp.configs.module.sms.devMode=true
 #短信服务商 网建=smschinese|腾讯=tx|阿里=ali 不能为空 可以自己指定 实现com.mx.ymate.sms.adapter.ISmsAdapter 接口
 ymp.configs.module.sms.default.type=smschinese
 #SecretID
-ymp.configs.module.sms.default.secret_id=jshopin_youban
+ymp.configs.module.sms.default.secret_id=
 #SecretKey
-ymp.configs.module.sms.default.secret_key=320dba9689f998e6aedb
+ymp.configs.module.sms.default.secret_key=
 
 #短信服务商 网建=smschinese|腾讯=tx|阿里=ali 不能为空 可以自己指定 实现com.mx.ymate.sms.adapter.ISmsAdapter 接口
 ymp.configs.module.sms.tx.type=tx
 #SecretID
-ymp.configs.module.sms.tx.secret_id=AKIDyysgLtKdmlbIpDSSk6TlvBRcxIull9eD
+ymp.configs.module.sms.tx.secret_id=
 #SecretKey
-ymp.configs.module.sms.tx.secret_key=mRzPpDqQRJ3e6NVVL0UenrobEoMrIevB
+ymp.configs.module.sms.tx.secret_key=
 #-------------------------------------
 # 腾讯配置
 #-------------------------------------
 #应用id
-ymp.configs.module.sms.tx.tx_app_id=1400920069
+ymp.configs.module.sms.tx.tx_app_id=
 #地域
-ymp.configs.module.sms.tx.tx_region=ap-beijing
+ymp.configs.module.sms.tx.tx_region=
 # 短信签名内容
-ymp.configs.module.sms.tx.tx_sign_name=大连优伴信息
-#模板id
-ymp.configs.module.sms.tx.tx_template_id=2201933
+ymp.configs.module.sms.tx.tx_sign_name=
+#模板id 格式 key=templateId|key1=templateId1 或者 直接模板id 也可以
+ymp.configs.module.sms.tx.tx_template_id=
 
 
 #短信服务商 网建=smschinese|腾讯=tx|阿里=ali 不能为空 可以自己指定 实现com.mx.ymate.sms.adapter.ISmsAdapter 接口
 ymp.configs.module.sms.ali.type=ali
 #SecretID
-ymp.configs.module.sms.ali.secret_id=LTAI5tLVaCiWd7JK6ZfWUfd2
+ymp.configs.module.sms.ali.secret_id=
 #SecretKey
-ymp.configs.module.sms.ali.secret_key=MYB7RIoceWyQ7yE24hXMGNpW1BYqsg
+ymp.configs.module.sms.ali.secret_key=
 #-------------------------------------
 # 阿里配置
 #-------------------------------------
 #短信签名内容
-ymp.configs.module.sms.ali.ali_sign=智渔科技
-#模板id
-ymp.configs.module.sms.ali.ali_template_code=SMS_468025027
+ymp.configs.module.sms.ali.ali_sign=
+#模板id 格式 key=templateId|key1=templateId1 或者 直接模板id 也可以
+ymp.configs.module.sms.ali.ali_template_code=
 #endpoint
-ymp.configs.module.sms.ali.ali_endpoint=dysmsapi.aliyuncs.com
+ymp.configs.module.sms.ali.ali_endpoint=
 ```
 
 如果只要一种通道就直接配置default就可以  阿里腾讯配置default也支持
