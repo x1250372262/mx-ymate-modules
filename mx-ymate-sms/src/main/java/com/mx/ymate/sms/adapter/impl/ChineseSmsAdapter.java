@@ -44,6 +44,16 @@ public class ChineseSmsAdapter implements ISmsAdapter {
     }
 
     @Override
+    public MxResult send(String mobile, String templateKey, Object params) throws Exception {
+        return null;
+    }
+
+    @Override
+    public MxResult send(List<String> mobileList, String templateKey, Object params) throws Exception {
+        return null;
+    }
+
+    @Override
     public MxResult send(String mobile, Object params) throws Exception {
         if (params == null || StringUtils.isBlank(mobile)) {
             return MxResult.create(PARAMS_NOT_EMPTY);
