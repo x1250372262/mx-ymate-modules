@@ -33,6 +33,8 @@ public interface ISmsConfig extends IInitialization<ISms> {
     String TYPE_TX = "tx";
     String TYPE_ALI = "ali";
 
+    String DEFAULT_CHANNEL = "default";
+
 
     /**
      * 模块是否已启用, 默认值: true

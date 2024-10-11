@@ -12,10 +12,7 @@ import com.mx.ymate.sms.adapter.ISmsAdapter;
 import net.ymate.platform.log.Logs;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static com.mx.ymate.sms.code.SmsCode.*;
 
@@ -27,17 +24,14 @@ import static com.mx.ymate.sms.code.SmsCode.*;
  */
 public class AliSmsAdapter implements ISmsAdapter {
 
-    private String secretId;
-
-    private String secretKey;
 
     private String aliSign;
 
     private String aliTemplateCode;
 
-    private String aliEndpoint;
-
     private Client client;
+
+    private Map<String, String> templateIdMap;
 
     public AliSmsAdapter() {
     }
@@ -47,11 +41,24 @@ public class AliSmsAdapter implements ISmsAdapter {
                 || StringUtils.isBlank(aliSign) || StringUtils.isBlank(aliTemplateCode) || StringUtils.isBlank(aliEndpoint)) {
             throw new RuntimeException(CHANEL_ERROR.msg());
         }
-        this.secretId = secretId;
-        this.secretKey = secretKey;
+        String[] templateIds = StringUtils.split(aliTemplateCode, "|");
+        if (templateIds == null || templateIds.length == 0) {
+            throw new RuntimeException(CHANEL_ERROR.msg());
+        }
         this.aliSign = aliSign;
         this.aliTemplateCode = aliTemplateCode;
-        this.aliEndpoint = aliEndpoint;
+        templateIdMap = new HashMap<>();
+        for (String templateId : templateIds) {
+            String[] arr = StringUtils.split(templateId, "=");
+            if (arr == null || arr.length == 0) {
+                continue;
+            }
+            if (arr.length == 2) {
+                templateIdMap.put(arr[0], arr[1]);
+            } else {
+                templateIdMap.put(MX_TEMPLATE_ID, templateId);
+            }
+        }
         Config config = new Config()
                 .setAccessKeyId(secretId)
                 .setAccessKeySecret(secretKey)
@@ -65,17 +72,24 @@ public class AliSmsAdapter implements ISmsAdapter {
     }
 
     @Override
-    public MxResult send(String mobile, Object params) throws Exception {
+    public MxResult send(String mobile, String templateKey, Object params) throws Exception {
         if (params == null || StringUtils.isBlank(mobile)) {
             return MxResult.create(PARAMS_NOT_EMPTY);
         }
-        return send(ListUtil.toList(mobile), params);
+        return send(ListUtil.toList(mobile), templateKey, params);
     }
 
     @Override
-    public MxResult send(List<String> mobileList, Object params) throws Exception {
+    public MxResult send(List<String> mobileList, String templateKey, Object params) throws Exception {
         if (params == null || CollUtil.isEmpty(mobileList)) {
             return MxResult.create(PARAMS_NOT_EMPTY);
+        }
+        if (StringUtils.isBlank(templateKey)) {
+            templateKey = MX_TEMPLATE_ID;
+        }
+        String templateId = templateIdMap.get(templateKey);
+        if (StringUtils.isBlank(templateId)) {
+            return MxResult.create(TEMPLATE_ID_ERROR);
         }
         List<String> signList = new ArrayList<>(Collections.nCopies(mobileList.size(), aliSign));
         List<String> templateParamList = new ArrayList<>(Collections.nCopies(mobileList.size(), (String) params));
@@ -95,44 +109,14 @@ public class AliSmsAdapter implements ISmsAdapter {
         return MxResult.create(SEND_ERROR).msg(sendResp.body.message);
     }
 
-    public String getSecretId() {
-        return secretId;
+    @Override
+    public MxResult send(String mobile, Object params) throws Exception {
+        return send(mobile, null, params);
     }
 
-    public void setSecretId(String secretId) {
-        this.secretId = secretId;
-    }
-
-    public String getSecretKey() {
-        return secretKey;
-    }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
-
-    public String getAliSign() {
-        return aliSign;
-    }
-
-    public void setAliSign(String aliSign) {
-        this.aliSign = aliSign;
-    }
-
-    public String getAliTemplateCode() {
-        return aliTemplateCode;
-    }
-
-    public void setAliTemplateCode(String aliTemplateCode) {
-        this.aliTemplateCode = aliTemplateCode;
-    }
-
-    public String getAliEndpoint() {
-        return aliEndpoint;
-    }
-
-    public void setAliEndpoint(String aliEndpoint) {
-        this.aliEndpoint = aliEndpoint;
+    @Override
+    public MxResult send(List<String> mobileList, Object params) throws Exception {
+        return send(mobileList, null, params);
     }
 
 

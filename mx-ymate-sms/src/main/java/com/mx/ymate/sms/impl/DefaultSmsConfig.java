@@ -42,7 +42,7 @@ public final class DefaultSmsConfig implements ISmsConfig {
     private DefaultSmsConfig(IModuleConfigurer moduleConfigurer) {
         IConfigReader configReader = moduleConfigurer.getConfigReader();
         enabled = configReader.getBoolean(ENABLED, true);
-        String[] channelList = StringUtils.split(configReader.getString(CHANNEL, "default"), "|");
+        String[] channelList = StringUtils.split(configReader.getString(CHANNEL, DEFAULT_CHANNEL), "|");
         for (String channel : channelList) {
             if (SMS_ADAPTER_MAP.containsKey(channel)) {
                 continue;

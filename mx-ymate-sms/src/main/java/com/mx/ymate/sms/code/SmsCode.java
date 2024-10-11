@@ -14,7 +14,8 @@ public enum SmsCode implements ICode {
      */
     SEND_ERROR("SMS00", "短信发送失败"),
     PARAMS_NOT_EMPTY("SMS01", "参数不能为空"),
-    CHANEL_ERROR("SMS02", "请检查配置文件是否正确");
+    CHANEL_ERROR("SMS02", "请检查配置文件是否正确"),
+    TEMPLATE_ID_ERROR("SMS03", "请检查模板id是否配置正确");
 
 
     private final String code;

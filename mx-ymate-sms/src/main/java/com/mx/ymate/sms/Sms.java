@@ -8,8 +8,10 @@ import net.ymate.platform.core.module.IModule;
 import net.ymate.platform.core.module.IModuleConfigurer;
 import net.ymate.platform.core.module.impl.DefaultModuleConfigurer;
 
+import java.net.InetSocketAddress;
 import java.util.List;
 
+import static com.mx.ymate.sms.ISmsConfig.DEFAULT_CHANNEL;
 import static com.mx.ymate.sms.code.SmsCode.CHANEL_ERROR;
 
 /**
@@ -101,7 +103,7 @@ public final class Sms implements IModule, ISms {
     }
 
     @Override
-    public MxResult send(String channel, String mobile, Object params) throws Exception {
+    public MxResult sendByChannel(String channel, String mobile, Object params) throws Exception {
         ISmsAdapter smsAdapter = config.smsAdapter(channel);
         if (smsAdapter == null) {
             return MxResult.create(CHANEL_ERROR);
@@ -110,7 +112,7 @@ public final class Sms implements IModule, ISms {
     }
 
     @Override
-    public MxResult send(String channel, List<String> mobileList, Object params) throws Exception {
+    public MxResult sendByChannel(String channel, List<String> mobileList, Object params) throws Exception {
         ISmsAdapter smsAdapter = config.smsAdapter(channel);
         if (smsAdapter == null) {
             return MxResult.create(CHANEL_ERROR);
@@ -119,13 +121,43 @@ public final class Sms implements IModule, ISms {
     }
 
     @Override
+    public MxResult sendByChannel(String channel, String mobile, String templateKey, Object params) throws Exception {
+        ISmsAdapter smsAdapter = config.smsAdapter(channel);
+        if (smsAdapter == null) {
+            return MxResult.create(CHANEL_ERROR);
+        }
+        return smsAdapter.send(mobile, templateKey, params);
+    }
+
+    @Override
+    public MxResult sendByChannel(String channel, List<String> mobileList, String templateKey, Object params) throws Exception {
+        ISmsAdapter smsAdapter = config.smsAdapter(channel);
+        if (smsAdapter == null) {
+            return MxResult.create(CHANEL_ERROR);
+        }
+        return smsAdapter.send(mobileList, templateKey, params);
+    }
+
+
+    @Override
     public MxResult send(String mobile, Object params) throws Exception {
-        return send("default", mobile, params);
+        return sendByChannel(DEFAULT_CHANNEL, mobile, params);
     }
 
     @Override
     public MxResult send(List<String> mobileList, Object params) throws Exception {
-        return send("default", mobileList, params);
+        return sendByChannel(DEFAULT_CHANNEL, mobileList, params);
+    }
+
+
+    @Override
+    public MxResult send(String mobile, String templateKey, Object params) throws Exception {
+        return sendByChannel(DEFAULT_CHANNEL, mobile, templateKey, params);
+    }
+
+    @Override
+    public MxResult send(List<String> mobileList, String templateKey, Object params) throws Exception {
+        return sendByChannel(DEFAULT_CHANNEL, mobileList, templateKey, params);
     }
 
 }

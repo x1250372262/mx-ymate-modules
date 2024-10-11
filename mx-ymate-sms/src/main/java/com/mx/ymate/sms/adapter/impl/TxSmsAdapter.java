@@ -12,7 +12,9 @@ import com.tencentcloudapi.sms.v20190711.models.SendSmsResponse;
 import com.tencentcloudapi.sms.v20190711.models.SendStatus;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.mx.ymate.sms.code.SmsCode.*;
@@ -25,19 +27,13 @@ import static com.mx.ymate.sms.code.SmsCode.*;
  */
 public class TxSmsAdapter implements ISmsAdapter {
 
-    private String secretId;
-
-    private String secretKey;
-
     private String txAppId;
-
-    private String txRegion;
 
     private String txSignName;
 
-    private String txTemplateId;
-
     private SmsClient client;
+
+    private Map<String, String> templateIdMap;
 
 
     public TxSmsAdapter() {
@@ -49,12 +45,24 @@ public class TxSmsAdapter implements ISmsAdapter {
                 || StringUtils.isBlank(txSignName) || StringUtils.isBlank(txTemplateId)) {
             throw new RuntimeException(CHANEL_ERROR.msg());
         }
-        this.secretId = secretId;
-        this.secretKey = secretKey;
+        String[] templateIds = StringUtils.split(txTemplateId, "|");
+        if (templateIds == null || templateIds.length == 0) {
+            throw new RuntimeException(CHANEL_ERROR.msg());
+        }
         this.txAppId = txAppId;
-        this.txRegion = txRegion;
         this.txSignName = txSignName;
-        this.txTemplateId = txTemplateId;
+        templateIdMap = new HashMap<>();
+        for (String templateId : templateIds) {
+            String[] arr = StringUtils.split(templateId, "=");
+            if (arr == null || arr.length == 0) {
+                continue;
+            }
+            if (arr.length == 2) {
+                templateIdMap.put(arr[0], arr[1]);
+            } else {
+                templateIdMap.put(MX_TEMPLATE_ID, templateId);
+            }
+        }
         ClientProfile clientProfile = new ClientProfile();
         clientProfile.setSignMethod("HmacSHA256");
         Credential credential = new Credential(secretId, secretKey);
@@ -62,22 +70,29 @@ public class TxSmsAdapter implements ISmsAdapter {
     }
 
     @Override
-    public MxResult send(String mobile, Object params) throws Exception {
+    public MxResult send(String mobile, String templateKey, Object params) throws Exception {
         if (params == null || StringUtils.isBlank(mobile)) {
             return MxResult.create(PARAMS_NOT_EMPTY);
         }
-        return send(ListUtil.toList(mobile), params);
+        return send(ListUtil.toList(mobile), templateKey, params);
     }
 
     @Override
-    public MxResult send(List<String> mobileList, Object params) throws Exception {
+    public MxResult send(List<String> mobileList, String templateKey, Object params) throws Exception {
         if (params == null || CollUtil.isEmpty(mobileList)) {
             return MxResult.create(PARAMS_NOT_EMPTY);
+        }
+        if (StringUtils.isBlank(templateKey)) {
+            templateKey = MX_TEMPLATE_ID;
+        }
+        String templateId = templateIdMap.get(templateKey);
+        if (StringUtils.isBlank(templateId)) {
+            return MxResult.create(TEMPLATE_ID_ERROR);
         }
         SendSmsRequest smsRequest = new SendSmsRequest();
         smsRequest.setSmsSdkAppid(txAppId);
         smsRequest.setSign(txSignName);
-        smsRequest.setTemplateID(txTemplateId);
+        smsRequest.setTemplateID(templateId);
         smsRequest.setTemplateParamSet((String[]) params);
         String[] mobileArr = mobileList.toArray(new String[0]);
         smsRequest.setPhoneNumberSet(mobileArr);
@@ -93,53 +108,14 @@ public class TxSmsAdapter implements ISmsAdapter {
         return MxResult.create(SEND_ERROR).msg(sendStatus.getMessage());
     }
 
-    public String getSecretId() {
-        return secretId;
+
+    @Override
+    public MxResult send(String mobile, Object params) throws Exception {
+        return send(mobile,null,params);
     }
 
-    public void setSecretId(String secretId) {
-        this.secretId = secretId;
+    @Override
+    public MxResult send(List<String> mobileList, Object params) throws Exception {
+        return send(mobileList,null,params);
     }
-
-    public String getSecretKey() {
-        return secretKey;
-    }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
-
-    public String getTxAppId() {
-        return txAppId;
-    }
-
-    public void setTxAppId(String txAppId) {
-        this.txAppId = txAppId;
-    }
-
-    public String getTxRegion() {
-        return txRegion;
-    }
-
-    public void setTxRegion(String txRegion) {
-        this.txRegion = txRegion;
-    }
-
-    public String getTxSignName() {
-        return txSignName;
-    }
-
-    public void setTxSignName(String txSignName) {
-        this.txSignName = txSignName;
-    }
-
-    public String getTxTemplateId() {
-        return txTemplateId;
-    }
-
-    public void setTxTemplateId(String txTemplateId) {
-        this.txTemplateId = txTemplateId;
-    }
-
-
 }
