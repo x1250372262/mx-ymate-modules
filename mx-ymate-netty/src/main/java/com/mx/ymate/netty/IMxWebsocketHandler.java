@@ -13,39 +13,39 @@ public interface IMxWebsocketHandler {
 
     /**
      * 连接打开
-     *
-     * @param ctx 会话
+     * @param ctx
+     * @throws Exception
      */
     void onOpen(ChannelHandlerContext ctx) throws Exception;
 
     /**
      * 连接收到消息
-     *
-     * @param ctx 会话
-     * @param msg 消息
+     * @param ctx
+     * @param msg
+     * @throws Exception
      */
     void onMessage(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception;
 
     /**
      * 连接关闭
-     *
-     * @param ctx 会话
+     * @param ctx
+     * @throws Exception
      */
     void onClose(ChannelHandlerContext ctx) throws Exception;
 
     /**
      * 连接发生错误
-     *
-     * @param ctx 会话
-     * @param t   异常
+     * @param ctx
+     * @param t
+     * @throws Exception
      */
     void onError(ChannelHandlerContext ctx, Throwable t) throws Exception;
 
     /**
      * 发送消息
-     *
-     * @param ctx     会话
-     * @param message 消息
+     * @param ctx
+     * @param message
+     * @throws Exception
      */
     default void sendMessage(ChannelHandlerContext ctx, String message) throws Exception {
         ctx.writeAndFlush(new TextWebSocketFrame(message));

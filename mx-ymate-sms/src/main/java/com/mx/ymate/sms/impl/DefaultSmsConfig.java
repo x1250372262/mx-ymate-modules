@@ -10,7 +10,6 @@ import net.ymate.platform.commons.util.ClassUtils;
 import net.ymate.platform.core.configuration.IConfigReader;
 import net.ymate.platform.core.configuration.impl.MapSafeConfigReader;
 import net.ymate.platform.core.module.IModuleConfigurer;
-import org.apache.commons.lang.NullArgumentException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;

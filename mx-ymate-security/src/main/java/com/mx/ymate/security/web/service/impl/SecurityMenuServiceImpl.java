@@ -79,7 +79,8 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
             //获取用户所有的权限
             String permission = securityMenuNavVO.getPermission();
             //如果菜单不需要权限  或者 用户有这个权限
-            if ((StringUtils.isBlank(permission)) || (StringUtils.isNotBlank(permission) && permissionList.contains(permission))) {
+            boolean flag = (StringUtils.isBlank(permission)) || (StringUtils.isNotBlank(permission) && permissionList.contains(permission));
+            if (flag) {
                 permissionMenuList.add(securityMenuNavVO);
             }
         }

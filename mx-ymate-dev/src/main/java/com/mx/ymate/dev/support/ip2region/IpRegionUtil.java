@@ -1,4 +1,4 @@
-package com.mx.ymate.dev.support.Ip2region;
+package com.mx.ymate.dev.support.ip2region;
 
 import cn.hutool.core.util.StrUtil;
 import net.ymate.platform.commons.util.FileUtils;

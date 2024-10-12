@@ -4,6 +4,11 @@ import com.mx.ymate.dev.support.jdbc.MxJdbc;
 import com.mx.ymate.security.base.model.SecurityUser;
 import net.ymate.platform.persistence.jdbc.query.Join;
 
+/**
+ * @Author: mengxiang.
+ * @Date: 2024-10-11 17:00
+ * @Description:
+ */
 public class SecurityJdbc {
 
 

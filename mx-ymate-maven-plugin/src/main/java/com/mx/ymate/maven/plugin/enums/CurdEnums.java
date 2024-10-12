@@ -1,7 +1,11 @@
 package com.mx.ymate.maven.plugin.enums;
 
 
-
+/**
+ * @Author: mengxiang.
+ * @create: 2021-09-30 09:21
+ * @Description:
+ */
 public class CurdEnums {
 
     /**

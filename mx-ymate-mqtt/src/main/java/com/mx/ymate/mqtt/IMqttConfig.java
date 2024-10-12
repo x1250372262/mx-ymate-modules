@@ -51,6 +51,9 @@ public interface IMqttConfig extends IInitialization<IMqtt> {
     String WILL_QOS = "will.qos";
     String WILL_RETAINED = "will.retained";
 
+    String EX_TIME = "{time}";
+    String EX_UUID = "{uuid}";
+
 
     /**
      * 模块是否已启用, 默认值: true
@@ -61,27 +64,32 @@ public interface IMqttConfig extends IInitialization<IMqtt> {
 
     /**
      * 是否自动连接服务 默认true
+     *
      * @return
      */
     boolean autoConnect();
 
     /**
      * 连接地址
+     * @return
      */
     String url();
 
     /**
      * 客户端id {time}代表增加默认时间戳 {uuid}代表增加随机uuid  没有则取本身
+     * @return
      */
     String clientId();
 
     /**
      * 用户名默认不设置
+     * @return
      */
     String userName();
 
     /**
      * 密码默认不设置
+     * @return
      */
     String password();
 
@@ -93,76 +101,91 @@ public interface IMqttConfig extends IInitialization<IMqtt> {
 
     /**
      * 是否清理session，false时可接收离线消息 true忽略离线消息 默认true
+     * @return
      */
     boolean cleanSession();
 
     /**
      * 是否手动确认消息 默认false
+     * @return
      */
     boolean manualAcks();
 
     /**
      * 超时时间 默认60s
+     * @return
      */
     int connectionTimeout();
 
     /**
      * 心跳时间间隔 默认60s 值为0将禁用客户端中的保活处理
+     * @return
      */
     int keepAliveInterval();
 
     /**
      * 设置“最大空中流量”。请在高流量环境中增加此值。默认值为10
+     * @return
      */
     int maxInflight();
 
     /**
      * 版本 默认3.1.1
+     * @return
      */
     String version();
 
     /**
      * 是否自动重连 默认false
+     * @return
      */
     boolean automaticReconnection();
 
     /**
      * 重新连接之间等待的最长时间
+     * @return
      */
     int reconnectDelay();
 
     /**
      * SSL配置文件地址
+     * @return
      */
     Properties sslProperties();
 
     /**
      * 消息保存方式 如果不设置，默认保存在内存中，设置了则保存着指定的目录下
+     * @return
      */
     String storageDir();
 
     /**
      * 要发布到的主题
+     * @return
      */
     String willTopic();
 
     /**
      * 消息的字节有效负载
+     * @return
      */
     String willPayload();
 
     /**
      * qos–在（0、1或2）发布消息的服务质量
+     * @return
      */
     int willQos();
 
     /**
      * 是否应保留消息
+     * @return
      */
     boolean willRetained();
 
     /**
      * 是否有遗嘱消息
+     * @return
      */
     boolean isHasWill();
 }

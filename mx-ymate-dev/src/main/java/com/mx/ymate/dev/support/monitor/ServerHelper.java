@@ -24,13 +24,18 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @Author: mengxiang.
+ * @Date: 2024-10-11 17:00
+ * @Description:
+ */
 public class ServerHelper {
 
-    private static final HardwareAbstractionLayer abstractionLayer;
+    private static final HardwareAbstractionLayer ABSTRACTION_LAYER;
 
-    private static final OperatingSystem operatingSystem;
+    private static final OperatingSystem OPERATING_SYSTEM;
 
-    private static final GlobalMemory globalMemory;
+    private static final GlobalMemory GLOBAL_MEMORY;
 
     private static final int GB = 1024 * 1024 * 1024;
 
@@ -41,9 +46,9 @@ public class ServerHelper {
 
     static {
         SystemInfo systemInfo = new SystemInfo();
-        abstractionLayer = systemInfo.getHardware();
-        operatingSystem = systemInfo.getOperatingSystem();
-        globalMemory = abstractionLayer.getMemory();
+        ABSTRACTION_LAYER = systemInfo.getHardware();
+        OPERATING_SYSTEM = systemInfo.getOperatingSystem();
+        GLOBAL_MEMORY = ABSTRACTION_LAYER.getMemory();
     }
 
 
@@ -53,7 +58,7 @@ public class ServerHelper {
      * @return
      */
     public static List<DiskBean> getDisksList() {
-        FileSystem fileSystem = operatingSystem.getFileSystem();
+        FileSystem fileSystem = OPERATING_SYSTEM.getFileSystem();
         List<OSFileStore> fileStores = fileSystem.getFileStores();
         List<DiskBean> list = new ArrayList<>();
         for (OSFileStore osFileStore : fileStores) {
@@ -86,14 +91,14 @@ public class ServerHelper {
      */
     public static List<NetworkBean> getNetworkInfo() {
         List<NetworkBean> list = new ArrayList<>();
-        for (NetworkIF networkIF : abstractionLayer.getNetworkIFs()) {
-            if (!networkIF.isKnownVmMacAddr() && networkIF.getMacaddr() != null && networkIF.getIPv4addr().length > 0
-                    && networkIF.getIPv6addr().length > 0) {
+        for (NetworkIF networkIf : ABSTRACTION_LAYER.getNetworkIFs()) {
+            if (!networkIf.isKnownVmMacAddr() && networkIf.getMacaddr() != null && networkIf.getIPv4addr().length > 0
+                    && networkIf.getIPv6addr().length > 0) {
                 NetworkBean networkBean = new NetworkBean();
-                networkBean.setIpv4Address(networkIF.getIPv4addr()[0]);
-                networkBean.setIpv6Address(networkIF.getIPv6addr()[0]);
-                networkBean.setMacAddress(networkIF.getMacaddr());
-                networkBean.setNetworkName(networkIF.getName());
+                networkBean.setIpv4Address(networkIf.getIPv4addr()[0]);
+                networkBean.setIpv6Address(networkIf.getIPv6addr()[0]);
+                networkBean.setMacAddress(networkIf.getMacaddr());
+                networkBean.setNetworkName(networkIf.getName());
                 list.add(networkBean);
             }
 
@@ -133,8 +138,8 @@ public class ServerHelper {
         long startTime = OshiUtil.getOs().getSystemUptime();
         osBean.setBootTime(now - startTime);
         osBean.setRunTime(DateUtil.formatBetween(startTime * 1000));
-        double memoryTotal = NumberUtil.div(globalMemory.getTotal(), GB, 2);
-        double available = NumberUtil.div(globalMemory.getAvailable(), GB, 2);
+        double memoryTotal = NumberUtil.div(GLOBAL_MEMORY.getTotal(), GB, 2);
+        double available = NumberUtil.div(GLOBAL_MEMORY.getAvailable(), GB, 2);
         double used = memoryTotal - available;
         //系统内存总量
         osBean.setTotalMemory(memoryTotal);
@@ -143,9 +148,9 @@ public class ServerHelper {
 
         osBean.setMemoryUsage(NumberUtil.div(used, memoryTotal, 2));
         //可用虚拟总内存
-        osBean.setSwapTotalMemory(NumberUtil.div(globalMemory.getVirtualMemory().getSwapTotal(), GB, 2));
+        osBean.setSwapTotalMemory(NumberUtil.div(GLOBAL_MEMORY.getVirtualMemory().getSwapTotal(), GB, 2));
         //已用虚拟内存
-        osBean.setSwapUsedMemory(NumberUtil.div(globalMemory.getVirtualMemory().getSwapUsed(), GB, 2));
+        osBean.setSwapUsedMemory(NumberUtil.div(GLOBAL_MEMORY.getVirtualMemory().getSwapUsed(), GB, 2));
         //磁盘信息
         osBean.setDisksList(getDisksList());
         //网卡信息

@@ -20,7 +20,6 @@ import net.ymate.platform.core.IApplication;
 import net.ymate.platform.core.beans.annotation.Ignored;
 import net.ymate.platform.core.support.IDestroyable;
 import net.ymate.platform.core.support.IInitialization;
-import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -171,7 +170,6 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      * @return
      */
     boolean publish(String topic, String payload, QosEnum qos);
-
 
 
     /**

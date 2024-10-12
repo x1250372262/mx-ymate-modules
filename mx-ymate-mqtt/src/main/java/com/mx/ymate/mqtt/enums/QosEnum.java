@@ -1,7 +1,9 @@
 package com.mx.ymate.mqtt.enums;
 
 /**
- * MQTT 消息质量
+ * @Author: mengxiang.
+ * @Date: 2024-10-11 17:00
+ * @Description:
  */
 public enum QosEnum {
 

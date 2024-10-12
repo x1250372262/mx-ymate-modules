@@ -45,24 +45,59 @@ public interface INetty extends IInitialization<IApplication>, IDestroyable {
      */
     INettyConfig getConfig();
 
-
+    /**
+     * 启动服务端
+     * @throws Exception
+     */
     void startServer() throws Exception;
 
+    /**
+     * 启动客户端
+     * @throws Exception
+     */
     void startClient() throws Exception;
 
+    /**
+     * 启动客户端和服务端
+     * @throws Exception
+     */
     void startAll() throws Exception;
 
-
+    /**
+     * 停止服务端
+     * @throws Exception
+     */
     void stopServer() throws Exception;
 
+    /**
+     * 停止客户端
+     * @throws Exception
+     */
     void stopClient() throws Exception;
 
+    /**
+     * 停止客户端和服务端
+     * @throws Exception
+     */
     void stoptAll() throws Exception;
 
+    /**
+     * 启动websocket服务
+     * @throws Exception
+     */
     void startWebSocketServer() throws Exception;
 
+    /**
+     * 停止websocket服务
+     * @throws Exception
+     */
     void stopWebSocketServer() throws Exception;
 
+    /**
+     * 连接服务
+     * @param context
+     * @throws Exception
+     */
     void connect(ChannelHandlerContext context) throws Exception;
 
 }

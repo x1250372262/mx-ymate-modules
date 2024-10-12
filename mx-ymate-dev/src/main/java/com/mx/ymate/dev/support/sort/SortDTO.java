@@ -32,7 +32,7 @@ public class SortDTO implements Serializable {
     }
 
     public SortBean toBean() throws Exception {
-        if (StringUtils.isBlank(field) || (StringUtils.isBlank(field) && StringUtils.isBlank(order))) {
+        if (StringUtils.isBlank(field)) {
             return new SortBean(false);
         }
         String[] fieldArray = field.split(StrUtil.COMMA);
@@ -64,4 +64,11 @@ public class SortDTO implements Serializable {
     }
 
 
+    @Override
+    public String toString() {
+        return "SortDTO{" +
+                "field='" + field + '\'' +
+                ", order='" + order + '\'' +
+                '}';
+    }
 }

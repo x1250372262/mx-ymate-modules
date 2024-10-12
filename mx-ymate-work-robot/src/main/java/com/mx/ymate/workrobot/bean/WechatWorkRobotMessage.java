@@ -81,13 +81,13 @@ public class WechatWorkRobotMessage implements Serializable {
         wechatWorkRobotMessage.setMsgtype(TYPE_TEXT);
         WechatText wechatText = new WechatText();
         wechatText.setContent(content);
-        List<String> mentioned_list = wechatText.getMentioned_list();
+        List<String> mentionedList = wechatText.getMentionedList();
         if (atAll) {
-            if (mentioned_list == null) {
-                mentioned_list = new ArrayList<>();
+            if (mentionedList == null) {
+                mentionedList = new ArrayList<>();
             }
-            mentioned_list.add(ALL);
-            wechatText.setMentioned_list(mentioned_list);
+            mentionedList.add(ALL);
+            wechatText.setMentionedList(mentionedList);
         }
         wechatWorkRobotMessage.setText(wechatText);
         return wechatWorkRobotMessage;

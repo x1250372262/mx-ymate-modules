@@ -26,6 +26,12 @@ public interface ISecurityUserService {
      */
     MxResult list(String userName, String realName, Integer disableStatus, PageBean pageBean) throws Exception;
 
+    /**
+     * 下拉选
+     * @param disableStatus
+     * @return
+     * @throws Exception
+     */
     MxResult select(Integer disableStatus) throws Exception;
 
     /**
@@ -47,6 +53,12 @@ public interface ISecurityUserService {
      */
     MxResult detail(String id) throws Exception;
 
+    /**
+     * 详情
+     * @param id
+     * @return
+     * @throws Exception
+     */
     SecurityUserVO detailInfo(String id) throws Exception;
 
 

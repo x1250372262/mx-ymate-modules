@@ -44,7 +44,9 @@ public class CurdGeneratorMojo extends BaseGeneratorMojo {
     private final Configuration freemarkerConfig;
     private final CurdConfig curdConfig;
 
-    //排除字段
+    /**
+     * 排除字段
+     */
     private final List<String> excludeFieldLists = Arrays.asList("dbOwner", "entityClass", "connectionHolder", "shardingable"
             , "dataSourceName", "TABLE_NAME", "serialVersionUID", "__entityClass", "__connectionHolder", "__shardingable", "__dsName");
 

@@ -90,4 +90,18 @@ public class ServerListVO implements Serializable {
     public void setLastModifyUser(String lastModifyUser) {
         this.lastModifyUser = lastModifyUser;
     }
+
+    @Override
+    public String toString() {
+        return "ServerListVO{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", ip='" + ip + '\'' +
+                ", user='" + user + '\'' +
+                ", password='" + password + '\'' +
+                ", remark='" + remark + '\'' +
+                ", lastModifyTime=" + lastModifyTime +
+                ", lastModifyUser='" + lastModifyUser + '\'' +
+                '}';
+    }
 }

@@ -23,7 +23,9 @@ public interface ISecurityMenuService {
 
     /**
      * 左侧导航栏数据
-     *
+     * @param userId
+     * @param permissionList
+     * @param isFounder
      * @return
      * @throws Exception
      */

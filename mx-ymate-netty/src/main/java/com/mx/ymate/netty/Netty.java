@@ -79,9 +79,6 @@ public final class Netty implements IModule, INetty {
     @Override
     public void initialize(IApplication owner) throws Exception {
         if (!initialized) {
-            //
-            YMP.showVersion("Initializing mx-ymate-netty-netty-${version}", new Version(1, 0, 0, Netty.class, Version.VersionType.Alpha));
-            //
             this.owner = owner;
             if (config == null) {
                 IApplicationConfigureFactory configureFactory = owner.getConfigureFactory();
@@ -93,9 +90,6 @@ public final class Netty implements IModule, INetty {
                     } else {
                         config = DefaultNettyConfig.create(DefaultModuleConfigurer.createEmpty(MODULE_NAME));
                     }
-                }
-                if (config == null) {
-                    config = DefaultNettyConfig.defaultConfig();
                 }
             }
             if (!config.isInitialized()) {
@@ -124,6 +118,7 @@ public final class Netty implements IModule, INetty {
                 }
             }
             initialized = true;
+            YMP.showVersion("初始化 mx-ymate-netty-netty-${version} 模块成功", new Version(1, 0, 0, Netty.class, Version.VersionType.Release));
         }
     }
 
@@ -136,7 +131,6 @@ public final class Netty implements IModule, INetty {
     public void close() throws Exception {
         if (initialized) {
             initialized = false;
-            //
             if (config.isEnabled()) {
                 if (SERVER_CLIENT_SERVER.equals(config.client())) {
                     if (nettyServer != null) {
@@ -160,7 +154,6 @@ public final class Netty implements IModule, INetty {
                     nettyWebsocket.stop();
                 }
             }
-            //
             config = null;
             owner = null;
         }

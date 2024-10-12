@@ -30,9 +30,9 @@ public class NettyClient {
 
     private final INettyConfig config;
 
-    private EventLoopGroup WORK_GROUP;
-    private Bootstrap BOOTSTRAP;
-    private List<RemoteAddress> REMOTE_ADDRESS_LIST;
+    private EventLoopGroup workGroup;
+    private Bootstrap bootstrap;
+    private List<RemoteAddress> remoteAddressesList;
 
     public NettyClient(INettyConfig config) {
         this.config = config;
@@ -61,17 +61,17 @@ public class NettyClient {
         if (CollUtil.isEmpty(remoteAddressStrList)) {
             throw new Exception("请指定需要连接的服务地址");
         }
-        REMOTE_ADDRESS_LIST = getRemoteAddressList(remoteAddressStrList);
-        if (CollUtil.isEmpty(REMOTE_ADDRESS_LIST)) {
+        remoteAddressesList = getRemoteAddressList(remoteAddressStrList);
+        if (CollUtil.isEmpty(remoteAddressesList)) {
             throw new Exception("请指定需要连接的服务地址");
         }
-        if (BOOTSTRAP == null) {
-            BOOTSTRAP = new Bootstrap();
+        if (bootstrap == null) {
+            bootstrap = new Bootstrap();
         }
-        if (WORK_GROUP == null) {
-            WORK_GROUP = new NioEventLoopGroup();
+        if (workGroup == null) {
+            workGroup = new NioEventLoopGroup();
         }
-        BOOTSTRAP.group(WORK_GROUP)
+        bootstrap.group(workGroup)
                 .channel(NioSocketChannel.class)
                 .option(ChannelOption.SO_BACKLOG, 100)
                 .handler(new ChannelInitializer<SocketChannel>() {
@@ -98,7 +98,7 @@ public class NettyClient {
 
     public void connect(RemoteAddress remoteAddress) throws Exception {
         Logs.get().getLogger().info(StrUtil.format("和ip:{},端口:{}服务进行连接", remoteAddress.getHost(), remoteAddress.getPort()));
-        ChannelFuture cf = BOOTSTRAP.connect(remoteAddress.getHost(), remoteAddress.getPort());
+        ChannelFuture cf = bootstrap.connect(remoteAddress.getHost(), remoteAddress.getPort());
         cf.addListener((ChannelFutureListener) future -> {
             if (!future.isSuccess()) {
                 //重连交给后端线程执行
@@ -123,7 +123,7 @@ public class NettyClient {
         }
        for(int clientIndex = 0; clientIndex < clientNum; clientIndex++){
            //启动客户端去连接服务器端
-           for (RemoteAddress remoteAddress : REMOTE_ADDRESS_LIST) {
+           for (RemoteAddress remoteAddress : remoteAddressesList) {
                ThreadUtil.execAsync(() -> {
                    try {
                        connect(remoteAddress);
@@ -138,7 +138,7 @@ public class NettyClient {
 
     public void stop() {
         //优雅退出，释放线程池
-        WORK_GROUP.shutdownGracefully();
+        workGroup.shutdownGracefully();
     }
 
 

@@ -9,7 +9,7 @@ import java.net.InetSocketAddress;
  * @create: 2022-04-29 13:25
  * @Description:
  */
-public class NettyIPUtil {
+public class NettyIpUtil {
 
 
     public static InetSocketAddress getInetSocketAddress(ChannelHandlerContext ctx) {

@@ -37,6 +37,7 @@ public interface IUserHandler {
      * 构建resourceId
      *
      * @param resourceType
+     * @param loginId
      * @return
      * @throws Exception
      */

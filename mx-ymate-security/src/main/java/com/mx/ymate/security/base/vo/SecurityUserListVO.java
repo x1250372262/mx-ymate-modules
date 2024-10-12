@@ -46,4 +46,14 @@ public class SecurityUserListVO extends SecurityUserVO {
     public void setLoginLockStatus(Integer loginLockStatus) {
         this.loginLockStatus = loginLockStatus;
     }
+
+    @Override
+    public String toString() {
+        return "SecurityUserListVO{" +
+                "roleName='" + roleName + '\'' +
+                ", createTime=" + createTime +
+                ", disableStatus=" + disableStatus +
+                ", loginLockStatus=" + loginLockStatus +
+                "} " + super.toString();
+    }
 }

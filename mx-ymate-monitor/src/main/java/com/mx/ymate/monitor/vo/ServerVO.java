@@ -70,4 +70,16 @@ public class ServerVO implements Serializable {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+    @Override
+    public String toString() {
+        return "ServerVO{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", ip='" + ip + '\'' +
+                ", user='" + user + '\'' +
+                ", password='" + password + '\'' +
+                ", remark='" + remark + '\'' +
+                '}';
+    }
 }

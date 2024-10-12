@@ -19,7 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class RMIServer {
+/**
+ * @Author: mengxiang.
+ * @Date: 2024-10-11 17:00
+ * @Description:
+ */
+public class RmiServer {
 
     private static Registry registry;
 
@@ -36,10 +41,10 @@ public class RMIServer {
     private static final String RMI_SERVER_INIT_SUCCESS = "RMI初始化成功,端口:{}";
     private static final String RMI_SERVER_INIT_ERROR = "RMI初始化失败:{}";
 
-    private RMIServer() {
+    private RmiServer() {
     }
 
-    public static RMIServer init(String host, int port) {
+    public static RmiServer init(String host, int port) {
         try {
             if (registry == null) {
                 // 指定服务端IP地址
@@ -51,21 +56,21 @@ public class RMIServer {
             LOG.error(StrUtil.format(RMI_SERVER_INIT_ERROR, e.getMessage()));
             throw new RuntimeException(StrUtil.format(RMI_SERVER_INIT_ERROR, e.getMessage()));
         }
-        return new RMIServer();
+        return new RmiServer();
     }
 
-    public static RMIServer init(String host) {
+    public static RmiServer init(String host) {
         return init(host, Registry.REGISTRY_PORT);
     }
 
     public void publishServices(String packageName) {
-        Set<Class<?>> rmiServiceClassList = ClassUtil.scanPackageByAnnotation(packageName, RMIService.class);
+        Set<Class<?>> rmiServiceClassList = ClassUtil.scanPackageByAnnotation(packageName, RmiService.class);
         if (CollUtil.isEmpty(rmiServiceClassList)) {
             return;
         }
         try {
             for (Class<?> serviceClass : rmiServiceClassList) {
-                RMIService rmiService = AnnotationUtil.getAnnotation(serviceClass, RMIService.class);
+                RmiService rmiService = AnnotationUtil.getAnnotation(serviceClass, RmiService.class);
                 if (rmiService == null) {
                     continue;
                 }

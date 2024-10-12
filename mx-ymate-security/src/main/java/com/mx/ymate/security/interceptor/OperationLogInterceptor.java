@@ -6,8 +6,8 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.mx.ymate.dev.support.Ip2region.IpRegionBean;
-import com.mx.ymate.dev.support.Ip2region.IpRegionUtil;
+import com.mx.ymate.dev.support.ip2region.IpRegionBean;
+import com.mx.ymate.dev.support.ip2region.IpRegionUtil;
 import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
@@ -35,6 +35,11 @@ import java.lang.reflect.Method;
 
 import static com.mx.ymate.security.base.config.SecurityConstants.LOG_EVENT_KEY;
 
+/**
+ * @Author: mengxiang.
+ * @Date: 2024-10-11 17:00
+ * @Description:
+ */
 public class OperationLogInterceptor extends AbstractInterceptor {
 
     private final ISecurityConfig securityConfig = Security.get().getConfig();

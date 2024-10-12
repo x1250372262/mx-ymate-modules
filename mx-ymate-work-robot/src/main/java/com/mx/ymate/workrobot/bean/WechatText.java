@@ -13,7 +13,7 @@ public class WechatText implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String content;
-    private List<String> mentioned_list;
+    private List<String> mentionedList;
 
     public String getContent() {
         return content;
@@ -23,19 +23,19 @@ public class WechatText implements Serializable {
         this.content = content;
     }
 
-    public List<String> getMentioned_list() {
-        return mentioned_list;
+    public List<String> getMentionedList() {
+        return mentionedList;
     }
 
-    public void setMentioned_list(List<String> mentioned_list) {
-        this.mentioned_list = mentioned_list;
+    public void setMentionedList(List<String> mentionedList) {
+        this.mentionedList = mentionedList;
     }
 
     @Override
     public String toString() {
         return "WechatText{" +
                 "content='" + content + '\'' +
-                ", mentioned_list=" + mentioned_list +
+                ", mentionedList=" + mentionedList +
                 '}';
     }
 }

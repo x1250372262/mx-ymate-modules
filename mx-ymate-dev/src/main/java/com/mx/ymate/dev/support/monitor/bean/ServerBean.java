@@ -4,6 +4,11 @@ package com.mx.ymate.dev.support.monitor.bean;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * @Author: mengxiang.
+ * @Date: 2024-10-11 17:00
+ * @Description:
+ */
 public class ServerBean implements Serializable {
 
     private static final long serialVersionUID = 1L;

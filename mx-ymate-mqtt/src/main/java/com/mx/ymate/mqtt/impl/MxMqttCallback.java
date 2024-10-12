@@ -5,6 +5,12 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+/**
+ * @Author: mengxiang
+ * @Date 2024/04/07
+ * @Time: 11:19
+ * @Description:
+ */
 public class MxMqttCallback implements MqttCallback {
     @Override
     public void connectionLost(Throwable cause) {

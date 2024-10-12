@@ -18,11 +18,7 @@ package com.mx.ymate.mqtt;
 import com.mx.ymate.mqtt.enums.QosEnum;
 import com.mx.ymate.mqtt.impl.DefaultMqttConfig;
 import net.ymate.platform.commons.util.RuntimeUtils;
-import net.ymate.platform.core.IApplication;
-import net.ymate.platform.core.IApplicationConfigureFactory;
-import net.ymate.platform.core.IApplicationConfigurer;
-import net.ymate.platform.core.Version;
-import net.ymate.platform.core.YMP;
+import net.ymate.platform.core.*;
 import net.ymate.platform.core.module.IModule;
 import net.ymate.platform.core.module.IModuleConfigurer;
 import net.ymate.platform.core.module.impl.DefaultModuleConfigurer;
@@ -85,9 +81,6 @@ public final class Mqtt implements IModule, IMqtt {
     @Override
     public void initialize(IApplication owner) throws Exception {
         if (!initialized) {
-            //
-            YMP.showVersion("Initializing mx-ymate-mqtt-mqtt-${version}", new Version(1, 0, 0, Mqtt.class, Version.VersionType.Alpha));
-            //
             this.owner = owner;
             if (config == null) {
                 IApplicationConfigureFactory configureFactory = owner.getConfigureFactory();
@@ -95,13 +88,10 @@ public final class Mqtt implements IModule, IMqtt {
                     IApplicationConfigurer configurer = configureFactory.getConfigurer();
                     IModuleConfigurer moduleConfigurer = configurer == null ? null : configurer.getModuleConfigurer(MODULE_NAME);
                     if (moduleConfigurer != null) {
-                        config = DefaultMqttConfig.create(configureFactory.getMainClass(), moduleConfigurer);
+                        config = DefaultMqttConfig.create(moduleConfigurer);
                     } else {
-                        config = DefaultMqttConfig.create(configureFactory.getMainClass(), DefaultModuleConfigurer.createEmpty(MODULE_NAME));
+                        config = DefaultMqttConfig.create(DefaultModuleConfigurer.createEmpty(MODULE_NAME));
                     }
-                }
-                if (config == null) {
-                    config = DefaultMqttConfig.defaultConfig();
                 }
             }
             if (!config.isInitialized()) {
@@ -111,6 +101,7 @@ public final class Mqtt implements IModule, IMqtt {
                 connect();
             }
             initialized = true;
+            YMP.showVersion("初始化 mx-ymate-mqtt-mqtt-${version} 模块成功", new Version(1, 0, 0, Mqtt.class, Version.VersionType.Release));
         }
     }
 
@@ -123,11 +114,9 @@ public final class Mqtt implements IModule, IMqtt {
     public void close() throws Exception {
         if (initialized) {
             initialized = false;
-            //
             if (config.isEnabled() && config.autoConnect()) {
                 disconnect();
             }
-            //
             config = null;
             owner = null;
         }

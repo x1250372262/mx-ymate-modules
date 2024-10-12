@@ -56,25 +56,22 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
         }
         WebSocketMsg webSocketMsg = JSON.parseObject(webSocketMsgStr, WebSocketMsg.class);
         if (!webSocketMsg.check()) {
-//            failMsg(ctx, Code.ERROR.code(), "数据格式错误");
             return;
         }
         String userId = SaUtil.loginId(webSocketMsg.getToken());
         if (StringUtils.isBlank(userId)) {
-//            failMsg(ctx, Code.NOT_LOGIN.code(), Code.NOT_LOGIN.msg());
             return;
         }
         Server server = Server.builder().id(webSocketMsg.getId()).build().load();
         if (server == null) {
-//            failMsg(ctx, Code.NO_DATA.code(), "主机数据不存在");
             return;
         }
         String operate = webSocketMsg.getOperate();
         String key = ctx.channel().id().asShortText();
         if (OPERATE_CONNECT.equals(operate)) {
-            initSsh(ctx,server.getIp(),server.getUser(),server.getPassword());
+            initSsh(ctx, server.getIp(), server.getUser(), server.getPassword());
             WebShellUtil.connectToSsh(SESSION_MAP.get(key), CHANNEL_MAP.get(key), s -> {
-                successMsg(ctx, s,"");
+                successMsg(ctx, s, "");
                 return null;
             });
         } else if (OPERATE_COMMAND.equals(operate)) {
@@ -125,8 +122,8 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
         WebShellUtil.close(SESSION_MAP.get(key), CHANNEL_MAP.get(key));
     }
 
-    private void initSsh(ChannelHandlerContext ctx, String ip,String user,String password) {
-        Session session = WebShellUtil.getSession(ip,22, user, password);
+    private void initSsh(ChannelHandlerContext ctx, String ip, String user, String password) {
+        Session session = WebShellUtil.getSession(ip, 22, user, password);
         if (session == null) {
             throw new RuntimeException("linux会话获取失败");
         }

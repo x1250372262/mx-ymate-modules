@@ -31,7 +31,6 @@ public class MxDaoImpl<MxEntity extends BaseEntity<MxEntity, String>> implements
 
     private final Class<MxEntity> entityClass;
 
-    @SuppressWarnings("unchecked")
     public MxDaoImpl() {
         entityClass = (Class<MxEntity>) getEntityClass(getClass());
         Entity entity = entityClass.getAnnotation(Entity.class);

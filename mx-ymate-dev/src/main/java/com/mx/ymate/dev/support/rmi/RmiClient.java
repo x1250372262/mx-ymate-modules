@@ -4,7 +4,12 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-public class RMIClient {
+/**
+ * @Author: mengxiang.
+ * @Date: 2024-10-11 17:00
+ * @Description:
+ */
+public class RmiClient {
     public static Registry get(String host, int port) {
         try {
             return LocateRegistry.getRegistry(host, port);

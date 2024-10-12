@@ -86,104 +86,109 @@ public interface INettyConfig extends IInitialization<INetty> {
 
     /**
      * 服务端端口 优先级最高
+     * @return
      */
     Integer serverPort();
 
     /**
      * 服务端开始端口 指定port了 以port为准
+     * @return
      */
     Integer serverStartPort();
 
     /**
      * 服务端结束端口 指定port了 以port为准
+     * @return
      */
     Integer serverEndPort();
 
     /**
      * 心跳维护时间 默认不维护
+     * @return
      */
     Integer serverHeartBeatTime();
 
     /**
      * 心跳实现类 当serverHeartBeatTime不等于0的时候有效
-     *
      * @return
      */
     IHeartServer heartServer();
 
     /**
-     * 排除端口 用,号分割 只针对startPort endPort有效
+     * 心跳实现类 当serverHeartBeatTime不等于0的时候有效
+     * @return
      */
     List<String> serverExcludePort();
 
     /**
      * 处理器名称 可以指定多个用,号分割 按顺序添加
+     * @return
      */
     List<ChannelInboundHandlerAdapter> serverHandler();
 
     /**
      * 编解码名称 只能指定一个
+     * @return
      */
     ChannelInboundHandlerAdapter serverDecoder();
 
-
     /**
      * 客户端数量
+     * @return
      */
     Integer clientNum();
 
     /**
      * 远程连接地址 ip:port  多个用逗号分割
+     * @return
      */
     List<String> clientRemoteAddress();
 
 
     /**
      * 心跳维护时间 默认不维护
+     * @return
      */
     Integer clientHeartBeatTime();
 
     /**
      * 心跳实现类 当clientHeartBeatTime不等于0的时候有效
-     *
      * @return
      */
     IHeartClient heartClient();
 
-
     /**
      * 处理器名称 可以指定多个用,号分割 按顺序添加
+     * @return
      */
     List<ChannelInboundHandlerAdapter> clientHandler();
 
     /**
      * 编解码名称 只能指定一个
+     * @return
      */
     ChannelInboundHandlerAdapter clientDecoder();
 
     /**
      * 是否启用websocket 默认false
-     *
      * @return
      */
     boolean websocketEnabled();
 
     /**
      * websocket端口 默认8756
-     *
      * @return
      */
     int websocketPort();
 
     /**
      * websocket请求路径 默认websocket
-     *
      * @return
      */
     String websocketMapping();
 
     /**
-     * websocket 处理器所在包
+     *  websocket 处理器所在包
      * @return
      */
     String websocketPackage();

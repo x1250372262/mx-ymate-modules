@@ -76,9 +76,8 @@ public interface ILoginHandler {
 
     /**
      * 自定义检查登录逻辑 默认不处理 验证失败抛出notLogin异常
-     *
      * @param securityUser
-     * @throws Exception
+     * @throws NotLoginException
      */
     void checkLoginCustom(SecurityUser securityUser) throws NotLoginException;
 

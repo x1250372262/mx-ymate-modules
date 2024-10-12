@@ -3,7 +3,6 @@ package com.mx.ymate.netty.impl;
 import cn.hutool.core.util.StrUtil;
 import com.mx.ymate.netty.INettyConfig;
 import com.mx.ymate.netty.handler.MappingHandler;
-//import com.mx.ymate.netty.handler.MxWebsocketHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;

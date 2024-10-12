@@ -30,15 +30,15 @@ public interface ISecurityRolePermissionDao {
      * @return
      * @throws Exception
      */
-    List<SecurityRolePermission> createAll(List<SecurityRolePermission> list) throws Exception;
+    void createAll(List<SecurityRolePermission> list) throws Exception;
 
 
     /**
      * 按条件删除
-     *
      * @param client
      * @param resourceId
      * @param roleId
+     * @throws Exception
      */
     void deleteByClientAndRoleIdAndResourceId(String client, String resourceId, String roleId) throws Exception;
 

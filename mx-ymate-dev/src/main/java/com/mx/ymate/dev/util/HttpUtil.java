@@ -4,15 +4,16 @@ import cn.hutool.core.map.MapUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.mx.ymate.dev.support.mvc.MxResult;
-import net.ymate.platform.commons.http.HttpClientHelper;
+import net.ymate.platform.commons.http.CloseableHttpRequestBuilder;
+import net.ymate.platform.commons.http.IHttpRequest;
 import net.ymate.platform.commons.http.IHttpResponse;
 import net.ymate.platform.commons.lang.BlurObject;
+import net.ymate.platform.log.Logs;
 import net.ymate.platform.webmvc.base.Type;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
-import static com.mx.ymate.dev.code.Code.SERVER_HTTP_METHOD_ERROR;
 import static com.mx.ymate.dev.code.Code.SERVER_REQUEST_ERROR;
 
 /**
@@ -37,25 +38,25 @@ public class HttpUtil {
 
 
     public static MxResult request(String url, HttpMethod httpMethod, Map<String, String> params) throws Exception {
-        IHttpResponse httpResponse;
-        if (httpMethod == HttpMethod.GET) {
-            httpResponse = HttpClientHelper.create().get(url, params);
-        } else if (httpMethod == HttpMethod.POST) {
-            httpResponse = HttpClientHelper.create().post(url, params);
-        } else {
-            return MxResult.create(SERVER_HTTP_METHOD_ERROR);
+
+        IHttpRequest request = CloseableHttpRequestBuilder.create(url).addParams(params).build();
+        MxResult result;
+        try (IHttpResponse httpResponse = request.execute(httpMethod.name())) {
+            if (httpResponse == null) {
+                return MxResult.create(SERVER_REQUEST_ERROR);
+            }
+            if (httpResponse.getStatusCode() != HttpServletResponse.SC_OK) {
+                return MxResult.create(SERVER_REQUEST_ERROR.code()).msg(httpResponse.toString());
+            }
+            result = create(JSON.parseObject(httpResponse.getContent()));
+            if (!result.isSuccess()) {
+                return MxResult.create(SERVER_REQUEST_ERROR.code()).msg(result.msg());
+            }
+            return result;
+        } catch (Exception e) {
+            Logs.get().getLogger().error("http调用失败", e);
+            throw new RuntimeException(e);
         }
-        if (httpResponse == null) {
-            return MxResult.create(SERVER_REQUEST_ERROR);
-        }
-        if (httpResponse.getStatusCode() != HttpServletResponse.SC_OK) {
-            return MxResult.create(SERVER_REQUEST_ERROR.code()).msg(httpResponse.toString());
-        }
-        MxResult result = create(JSON.parseObject(httpResponse.getContent()));
-        if (!result.isSuccess()) {
-            return MxResult.create(SERVER_REQUEST_ERROR.code()).msg(result.msg());
-        }
-        return result;
     }
 
     private static MxResult create(JSONObject jsonObject) {

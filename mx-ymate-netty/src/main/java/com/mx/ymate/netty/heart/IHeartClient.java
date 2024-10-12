@@ -9,6 +9,12 @@ import io.netty.channel.ChannelHandlerContext;
  */
 public interface IHeartClient {
 
+    /**
+     * 处理心跳
+     * @param ctx
+     * @param evt
+     * @throws Exception
+     */
     void handle(ChannelHandlerContext ctx, Object evt) throws Exception;
 
 }

@@ -27,6 +27,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
+import static com.mx.ymate.dev.constants.Constants.XG;
+
 /**
  * @Author: mengxiang.
  * @create: 2022-04-20 00:00
@@ -52,7 +54,7 @@ public class SecurityUserInterceptor extends AbstractInterceptor {
      * @return
      */
     private boolean checkPath(String requestUri) {
-        if (requestUri.endsWith("/")) {
+        if (requestUri.endsWith(XG)) {
             requestUri = requestUri.substring(0, requestUri.length() - 1);
         }
         String excludePathPatterns = securityConfig.excludePathPatterns();
@@ -91,7 +93,6 @@ public class SecurityUserInterceptor extends AbstractInterceptor {
             if (annotation != null) {
                 return null;
             }
-//            StpUtil.checkLogin();
             SecurityUser securityUser = iSecurityUserDao.findById(SaUtil.loginId());
             if (securityUser == null) {
                 throw new NotLoginException(Code.NOT_LOGIN.msg(), null, null);
@@ -101,7 +102,7 @@ public class SecurityUserInterceptor extends AbstractInterceptor {
             }
             securityConfig.loginHandlerClass().checkLoginCustom(securityUser);
 
-            if(securityConfig.checkLock()){
+            if (securityConfig.checkLock()) {
                 //有NoCheck注解就不验证
                 NoCheck noCheck = method.getAnnotation(NoCheck.class);
                 if (noCheck != null) {

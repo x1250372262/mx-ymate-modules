@@ -2,6 +2,11 @@ package com.mx.ymate.dev.support.monitor.bean;
 
 import java.io.Serializable;
 
+/**
+ * @Author: mengxiang.
+ * @Date: 2024-10-11 17:00
+ * @Description:
+ */
 public class DiskBean implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -26,8 +26,8 @@ public class SecurityRolePermissionDaoImpl implements ISecurityRolePermissionDao
     }
 
     @Override
-    public List<SecurityRolePermission> createAll(List<SecurityRolePermission> list) throws Exception {
-        return JDBC.get().openSession(session -> session.insert(list));
+    public void createAll(List<SecurityRolePermission> list) throws Exception {
+         JDBC.get().openSession(session -> session.insert(list));
     }
 
     @Override

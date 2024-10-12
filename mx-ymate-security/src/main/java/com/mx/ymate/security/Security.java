@@ -8,6 +8,11 @@ import net.ymate.platform.core.module.IModule;
 import net.ymate.platform.core.module.IModuleConfigurer;
 import net.ymate.platform.core.module.impl.DefaultModuleConfigurer;
 
+/**
+ * @Author: mengxiang.
+ * @Date: 2024-10-11 17:00
+ * @Description:
+ */
 public final class Security implements IModule, ISecurity {
 
     public static final String DEFAULT_PASSWORD = "123456";

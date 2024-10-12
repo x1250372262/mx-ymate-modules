@@ -20,6 +20,7 @@
         <module>mx-ymate-maven-plugin</module>
         <module>mx-ymate-mqtt</module>
         <module>mx-ymate-sms</module>
+        <module>mx-ymate-captcha-sms</module>
     </modules>
     <packaging>pom</packaging>
 

@@ -15,7 +15,6 @@
  */
 package com.mx.ymate.mqtt.impl;
 
-import cn.hutool.setting.dialect.PropsUtil;
 import com.mx.ymate.mqtt.IMqtt;
 import com.mx.ymate.mqtt.IMqttConfig;
 import net.ymate.platform.commons.lang.BlurObject;
@@ -24,9 +23,7 @@ import net.ymate.platform.commons.util.UUIDUtils;
 import net.ymate.platform.core.configuration.IConfigReader;
 import net.ymate.platform.core.module.IModuleConfigurer;
 import net.ymate.platform.log.Logs;
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.units.qual.C;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 
 import java.io.FileInputStream;
@@ -88,35 +85,25 @@ public final class DefaultMqttConfig implements IMqttConfig {
 
     private boolean willRetained;
 
-    public static DefaultMqttConfig defaultConfig() {
-        return builder().build();
-    }
 
     public static DefaultMqttConfig create(IModuleConfigurer moduleConfigurer) {
-        return new DefaultMqttConfig(null, moduleConfigurer);
+        return new DefaultMqttConfig(moduleConfigurer);
     }
 
-    public static DefaultMqttConfig create(Class<?> mainClass, IModuleConfigurer moduleConfigurer) {
-        return new DefaultMqttConfig(mainClass, moduleConfigurer);
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
 
     private DefaultMqttConfig() {
     }
 
-    private DefaultMqttConfig(Class<?> mainClass, IModuleConfigurer moduleConfigurer) {
+    private DefaultMqttConfig(IModuleConfigurer moduleConfigurer) {
         IConfigReader configReader = moduleConfigurer.getConfigReader();
         enabled = configReader.getBoolean(ENABLED, true);
         autoConnect = configReader.getBoolean(AUTO_CONNECT, true);
         url = configReader.getString(URL);
         clientId = configReader.getString(CLIENT_ID);
-        if (clientId.contains("{time}")) {
-            clientId = clientId.replace("{time}", BlurObject.bind(DateTimeUtils.currentTimeMillis()).toStringValue());
-        } else if (clientId.contains("{uuid}")) {
-            clientId = clientId.replace("{uuid}", UUIDUtils.UUID());
+        if (clientId.contains(EX_TIME)) {
+            clientId = clientId.replace(EX_TIME, BlurObject.bind(DateTimeUtils.currentTimeMillis()).toStringValue());
+        } else if (clientId.contains(EX_UUID)) {
+            clientId = clientId.replace(EX_UUID, UUIDUtils.UUID());
         }
         if (StringUtils.isBlank(clientId)) {
             clientId = "mqttClientId-" + UUIDUtils.UUID();
@@ -124,7 +111,7 @@ public final class DefaultMqttConfig implements IMqttConfig {
         userName = configReader.getString(USER_NAME);
         password = configReader.getString(PASSWORD);
         callback = configReader.getClassImpl(CALLBACK, MqttCallback.class);
-        if(callback == null){
+        if (callback == null) {
             callback = new MxMqttCallback();
         }
         cleanSession = configReader.getBoolean(CLEAN_SESSION, CLEAN_SESSION_DEFAULT);
@@ -277,242 +264,4 @@ public final class DefaultMqttConfig implements IMqttConfig {
         return StringUtils.isNotBlank(willTopic) && StringUtils.isNotBlank(willPayload);
     }
 
-    public void setEnabled(boolean enabled) {
-        if (!initialized) {
-            this.enabled = enabled;
-        }
-    }
-
-    public void setUrl(String url) {
-        if (!initialized) {
-            this.url = url;
-        }
-    }
-
-    public void setClientId(String clientId) {
-        if (!initialized) {
-            this.clientId = clientId;
-        }
-    }
-
-    public void setUserName(String userName) {
-        if (!initialized) {
-            this.userName = userName;
-        }
-    }
-
-    public void setPassword(String password) {
-        if (!initialized) {
-            this.password = password;
-        }
-    }
-
-    public void setCallback(MqttCallback callback) {
-        if (!initialized) {
-            this.callback = callback;
-        }
-    }
-
-    public void setCleanSession(boolean cleanSession) {
-        if (!initialized) {
-            this.cleanSession = cleanSession;
-        }
-    }
-
-    public void setManualAcks(boolean manualAcks) {
-        if (!initialized) {
-            this.manualAcks = manualAcks;
-        }
-    }
-
-    public void setConnectionTimeout(int connectionTimeout) {
-        if (!initialized) {
-            this.connectionTimeout = connectionTimeout;
-        }
-    }
-
-    public void setKeepAliveInterval(int keepAliveInterval) {
-        if (!initialized) {
-            this.keepAliveInterval = keepAliveInterval;
-        }
-    }
-
-    public void setMaxInflight(int maxInflight) {
-        if (!initialized) {
-            this.maxInflight = maxInflight;
-        }
-    }
-
-    public void setVersion(String version) {
-        if (!initialized) {
-            this.version = version;
-        }
-    }
-
-    public void setAutomaticReconnection(boolean automaticReconnection) {
-        if (!initialized) {
-            this.automaticReconnection = automaticReconnection;
-        }
-    }
-
-    public void setReconnectDelay(int reconnectDelay) {
-        if (!initialized) {
-            this.reconnectDelay = reconnectDelay;
-        }
-    }
-
-    public void setSslProperties(Properties sslProperties) {
-        if (!initialized) {
-            this.sslProperties = sslProperties;
-        }
-    }
-
-    public void setStorageDir(String storageDir) {
-        if (!initialized) {
-            this.storageDir = storageDir;
-        }
-    }
-
-    public void setWillTopic(String willTopic) {
-        if (!initialized) {
-            this.willTopic = willTopic;
-        }
-    }
-
-    public void setWillPayload(String willPayload) {
-        if (!initialized) {
-            this.willPayload = willPayload;
-        }
-    }
-
-    public void setWillQos(int willQos) {
-        if (!initialized) {
-            this.willQos = willQos;
-        }
-    }
-
-    public void setWillRetained(boolean willRetained) {
-        if (!initialized) {
-            this.willRetained = willRetained;
-        }
-    }
-
-    public void setAutoConnect(boolean autoConnect) {
-        if (!initialized) {
-            this.autoConnect = autoConnect;
-        }
-    }
-
-    public static final class Builder {
-
-        private final DefaultMqttConfig config = new DefaultMqttConfig();
-
-        private Builder() {
-        }
-
-        public Builder enabled(boolean enabled) {
-            config.setEnabled(enabled);
-            return this;
-        }
-
-        public Builder url(String url) {
-            config.setUrl(url);
-            return this;
-        }
-
-        public Builder clientId(String clientId) {
-            config.setClientId(clientId);
-            return this;
-        }
-
-        public Builder userName(String userName) {
-            config.setUserName(userName);
-            return this;
-        }
-
-        public Builder password(String password) {
-            config.setPassword(password);
-            return this;
-        }
-
-        public Builder cleanSession(boolean cleanSession) {
-            config.setCleanSession(cleanSession);
-            return this;
-        }
-
-        public Builder manualAcks(boolean manualAcks) {
-            config.setManualAcks(manualAcks);
-            return this;
-        }
-
-
-        public Builder connectionTimeout(int connectionTimeout) {
-            config.setConnectionTimeout(connectionTimeout);
-            return this;
-        }
-
-        public Builder keepAliveInterval(int keepAliveInterval) {
-            config.setKeepAliveInterval(keepAliveInterval);
-            return this;
-        }
-
-        public Builder maxInflight(int maxInflight) {
-            config.setMaxInflight(maxInflight);
-            return this;
-        }
-
-        public Builder version(String version) {
-            config.setVersion(version);
-            return this;
-        }
-
-        public Builder automaticReconnection(boolean automaticReconnection) {
-            config.setAutomaticReconnection(automaticReconnection);
-            return this;
-        }
-
-        public Builder reconnectDelay(int reconnectDelay) {
-            config.setReconnectDelay(reconnectDelay);
-            return this;
-        }
-
-        public Builder sslProperties(Properties sslProperties) {
-            config.setSslProperties(sslProperties);
-            return this;
-        }
-
-        public Builder storageDir(String storageDir) {
-            config.setStorageDir(storageDir);
-            return this;
-        }
-
-        public Builder willTopic(String willTopic) {
-            config.setWillTopic(willTopic);
-            return this;
-        }
-
-        public Builder willPayload(String willPayload) {
-            config.setWillPayload(willPayload);
-            return this;
-        }
-
-        public Builder willQos(int willQos) {
-            config.setWillQos(willQos);
-            return this;
-        }
-
-        public Builder willRetained(boolean willRetained) {
-            config.setWillRetained(willRetained);
-            return this;
-        }
-
-        public Builder autoConnect(boolean autoConnect) {
-            config.setAutoConnect(autoConnect);
-            return this;
-        }
-
-        public DefaultMqttConfig build() {
-            return config;
-        }
-    }
 }

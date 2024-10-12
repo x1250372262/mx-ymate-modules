@@ -21,7 +21,9 @@ public class HandlerBean {
 
     private Type type;
 
-    //类型
+    /**
+     * 类型
+     */
     public enum Type {
         //文本
         TEXT,

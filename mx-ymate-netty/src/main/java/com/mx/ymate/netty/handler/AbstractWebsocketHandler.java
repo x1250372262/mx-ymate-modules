@@ -20,6 +20,12 @@ public abstract class AbstractWebsocketHandler implements IMxWebsocketHandler {
         log.info("onOpen");
     }
 
+    /**
+     * 消息到达
+     * @param ctx 会话
+     * @param msg 消息
+     * @throws Exception
+     */
     @Override
     public abstract void onMessage(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception;
 

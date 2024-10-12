@@ -18,7 +18,7 @@ import java.util.Map;
 public class WechatWorkRobot {
 
     public static WechatWorkResult send(String url, WechatWorkRobotMessage wechatWorkRobotMessage) {
-        Map<String, String> headerParams = new HashMap<>();
+        Map<String, String> headerParams = new HashMap<>(2);
         headerParams.put("Content-Type", "application/json");
         headerParams.put("charset", "utf-8");
         HttpResponse httpResponse = HttpUtil.createPost(url)

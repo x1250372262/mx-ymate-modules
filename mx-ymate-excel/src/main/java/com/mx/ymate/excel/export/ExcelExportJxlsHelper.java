@@ -35,11 +35,19 @@ public class ExcelExportJxlsHelper extends IExportHelper implements Closeable {
 
     private List<Map<String, Object>> resultData;
 
-    //模板文件路径
+    /**
+     * 模板文件路径
+     */
     private final String templatePath;
-    //excel临时文件目录
+
+    /**
+     * excel临时文件目录
+     */
     private final String excelFilePath;
-    //zip临时文件目录
+
+    /**
+     * zip临时文件目录
+     */
     private final String zipFilePath;
 
     private ExcelExportJxlsHelper(Class<?> funcClass, String templatePath, String excelFilePath, String zipFilePath) {
@@ -147,7 +155,7 @@ public class ExcelExportJxlsHelper extends IExportHelper implements Closeable {
         JexlExpressionEvaluator evaluator = (JexlExpressionEvaluator) transformer.getTransformationConfig().getExpressionEvaluator();
         //设置静默模式，不报警告
         //函数强制，自定义功能
-        Map<String, Object> funcs = new HashMap<>();
+        Map<String, Object> funcs = new HashMap<>(1);
         //添加自定义功能
         funcs.put("utils", funClass.newInstance());
         JexlEngine customJexlEngine = new JexlBuilder().namespaces(funcs).create();
@@ -180,7 +188,11 @@ public class ExcelExportJxlsHelper extends IExportHelper implements Closeable {
         return zipFile;
     }
 
-    //获取jxls模版文件
+    /**
+     * 获取jxls模版文件
+     * @param path
+     * @return
+     */
     private static File getTemplate(String path) {
         File template = new File(path);
         if (template.exists()) {
