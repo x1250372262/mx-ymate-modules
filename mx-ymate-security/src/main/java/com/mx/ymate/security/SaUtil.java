@@ -1,23 +1,18 @@
 package com.mx.ymate.security;
 
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.mx.ymate.dev.constants.Constants;
-import com.mx.ymate.dev.support.mvc.MxResult;
-import com.mx.ymate.redis.api.RedisApi;
+import com.mx.ymate.security.adapter.ICacheStorageAdapter;
 import com.mx.ymate.security.base.bean.LoginUser;
 import com.mx.ymate.security.base.config.SecurityConstants;
-import net.ymate.platform.commons.json.JsonWrapper;
 import net.ymate.platform.webmvc.context.WebContext;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.mx.ymate.security.base.config.SecurityConstants.LOCK_KEY;
 import static com.mx.ymate.security.base.config.SecurityConstants.USER_INFO;
 
 /**
@@ -28,6 +23,7 @@ import static com.mx.ymate.security.base.config.SecurityConstants.USER_INFO;
 public class SaUtil {
 
     private final static ISecurityConfig MX_SECURITY_CONFIG = Security.get().getConfig();
+    private final static ICacheStorageAdapter CACHE_STORAGE_ADAPTER = MX_SECURITY_CONFIG.cacheStoreApater();
 
     public static boolean isFounder(String loginId) throws Exception {
         if (StringUtils.isBlank(loginId)) {
@@ -80,37 +76,31 @@ public class SaUtil {
 
     public static LoginUser user(String loginId) throws Exception {
         String userKey = StrUtil.format(USER_INFO, getTokenName(), MX_SECURITY_CONFIG.client(), loginId);
-        return JsonWrapper.deserialize(RedisApi.strGet(userKey), LoginUser.class);
+        return CACHE_STORAGE_ADAPTER.getUser(userKey);
     }
 
     public static LoginUser user() throws Exception {
         return user(loginId());
     }
 
-    public static void lock(String loginId) throws Exception{
-        RedisApi.strSet(loginId,loginId);
+    public static void lock(String loginId) throws Exception {
+        String lockKey = StrUtil.format(LOCK_KEY, getTokenName(), MX_SECURITY_CONFIG.client(), loginId);
+        CACHE_STORAGE_ADAPTER.lock(lockKey, loginId);
     }
 
-    public static void unlock(String loginId) throws Exception{
-        RedisApi.strDelete(loginId);
+    public static void unlock(String loginId) throws Exception {
+        String lockKey = StrUtil.format(LOCK_KEY, getTokenName(), MX_SECURITY_CONFIG.client(), loginId);
+        CACHE_STORAGE_ADAPTER.unlock(lockKey);
     }
 
-    public static boolean checkLock(String loginId) throws Exception{
-        String data = RedisApi.strGet(loginId);
-        return StringUtils.isNotBlank(data);
+    public static boolean checkLock(String loginId) throws Exception {
+        String lockKey = StrUtil.format(LOCK_KEY, getTokenName(), MX_SECURITY_CONFIG.client(), loginId);
+        return CACHE_STORAGE_ADAPTER.checkLock(lockKey);
     }
 
     public static List<String> permissionList(Object loginId) throws Exception {
-        List<String> permissionList = new ArrayList<>();
         String permissionKey = StrUtil.format(SecurityConstants.PERMISSION_LIST, getTokenName(), MX_SECURITY_CONFIG.client(), loginId);
-        String permissionStr = RedisApi.strGet(permissionKey);
-        if (StringUtils.isNotBlank(permissionStr)) {
-            JSONArray redisPermissionList = JSONObject.parseArray(permissionStr);
-            for (Object redisRole : redisPermissionList) {
-                permissionList.add(Convert.toStr(redisRole));
-            }
-        }
-        return permissionList;
+        return CACHE_STORAGE_ADAPTER.permissionList(permissionKey);
     }
 
     public static void cachePermission(Object loginId, List<String> permissionList) throws Exception {
@@ -118,8 +108,7 @@ public class SaUtil {
             return;
         }
         String permissionKey = StrUtil.format(SecurityConstants.PERMISSION_LIST, getTokenName(), MX_SECURITY_CONFIG.client(), loginId);
-        RedisApi.strDelete(permissionKey);
-        RedisApi.strSet(permissionKey, JSONObject.toJSONString(permissionList));
+        CACHE_STORAGE_ADAPTER.cachePermission(permissionKey, permissionList);
     }
 
     public static void cacheUser(LoginUser loginUser) throws Exception {
@@ -127,8 +116,7 @@ public class SaUtil {
             throw new RuntimeException("loginUser is null");
         }
         String userKey = StrUtil.format(USER_INFO, getTokenName(), loginUser.getClient(), loginUser.getId());
-        RedisApi.strDelete(userKey);
-        RedisApi.strSet(userKey, JsonWrapper.toJsonString(loginUser));
+        CACHE_STORAGE_ADAPTER.cacheUser(userKey, loginUser);
     }
 
 

@@ -18,6 +18,11 @@ public class SecurityConstants {
     public final static String PERMISSION_LIST = "{}:permission:{}:{}";
 
     /**
+     * 锁定key token名称:lockKey:客户端:用户id
+     */
+    public final static String LOCK_KEY = "{}:lockKey:{}:{}";
+
+    /**
      * log key
      */
     public final static String LOG_EVENT_KEY = "mxLog";

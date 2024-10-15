@@ -1,4 +1,4 @@
-package com.mx.ymate.security.satoken;
+package com.mx.ymate.security.satoken.cache;
 
 import cn.dev33.satoken.dao.SaTokenDao;
 import cn.dev33.satoken.util.SaFoxUtil;

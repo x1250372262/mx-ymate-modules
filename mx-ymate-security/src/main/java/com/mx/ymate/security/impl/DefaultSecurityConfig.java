@@ -5,6 +5,10 @@ import cn.dev33.satoken.config.SaSignConfig;
 import cn.dev33.satoken.config.SaTokenConfig;
 import com.mx.ymate.security.ISecurity;
 import com.mx.ymate.security.ISecurityConfig;
+import com.mx.ymate.security.adapter.ICacheStorageAdapter;
+import com.mx.ymate.security.adapter.impl.DefaultCacheStorageAdapter;
+import com.mx.ymate.security.adapter.impl.RedisCacheStorageAdapter;
+import com.mx.ymate.security.base.enums.CacheStoreType;
 import com.mx.ymate.security.handler.ILoginHandler;
 import com.mx.ymate.security.handler.IUserHandler;
 import net.ymate.platform.commons.util.ClassUtils;
@@ -54,6 +58,11 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
      * 登录拦截排除的路径用|分割
      */
     private String excludePathPatterns;
+
+    /**
+     * 缓存存储适配器
+     */
+    private ICacheStorageAdapter cacheStorageAdapter;
 
     /**
      * token名称 (同时也是cookie名称)
@@ -176,7 +185,13 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
     /**
      * Http Basic 认证的账号和密码
      */
-    private String saTokenBasic;
+    private String saTokenHttpBasic;
+
+    /**
+     *
+     Http Digest 认证的默认账号和密码，冒号隔开，例如：sa:123456
+     */
+    private String saTokenHttpDigest;
 
     /**
      * 配置当前项目的网络访问地址
@@ -229,10 +244,6 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
      */
     private long saTokenSignTimestampDisparity;
 
-    /**
-     * 是否校验 nonce 随机字符串 默认true
-     */
-    private Boolean saTokenSignIsCheckNonce;
 
     private boolean initialized;
 
@@ -255,6 +266,12 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
         errorCount = configReader.getInt(ERROR_COUNT, -1);
         openLog = configReader.getBoolean(OPEN_LOG, false);
         checkLock = configReader.getBoolean(CHECK_LOCK, false);
+        String cacheStore = configReader.getString(CACHE_STORE, CacheStoreType.DEFAULT.name());
+        if(CacheStoreType.REDIS.name().equals(cacheStore.toUpperCase())){
+            cacheStorageAdapter = new RedisCacheStorageAdapter();
+        }else{
+            cacheStorageAdapter = new DefaultCacheStorageAdapter();
+        }
         excludePathPatterns = configReader.getString(EXCLUDE_PATH_PATTERNS, excludePathPatterns);
         saTokenName = configReader.getString(SATOKEN_NAME, "saToken");
         saTokenTimeout = configReader.getLong(SATOKEN_TIMEOUT, 60 * 60 * 24 * 30);
@@ -279,7 +296,8 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
         saTokenLogLevelInt = configReader.getInt(SATOKEN_LOG_LEVEL_INT, 1);
         saTokenIsColorLog = configReader.getBoolean(SATOKEN_IS_COLOR_LOG, false);
         saTokenJwtSecretKey = configReader.getString(SATOKEN_JWT_SECRET_KEY);
-        saTokenBasic = configReader.getString(SATOKEN_BASIC);
+        saTokenHttpBasic = configReader.getString(SATOKEN_HTTP_BASIC);
+        saTokenHttpDigest = configReader.getString(SATOKEN_HTTP_DIGEST);
         saTokenCurrDomain = configReader.getString(SATOKEN_CURR_DOMAIN);
         saTokenSameTokenTimeout = configReader.getLong(SATOKEN_SAME_TOKEN_TIMEOUT, 60 * 60 * 24);
         saTokenCookieDomain = configReader.getString(SATOKEN_COOKIE_DOMAIN);
@@ -289,7 +307,6 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
         saTokenCookieSameSite = configReader.getString(SATOKEN_COOKIE_SAME_SITE);
         saTokenSignSecretKey = configReader.getString(SATOKEN_SIGN_SECRET_KEY);
         saTokenSignTimestampDisparity = configReader.getLong(SATOKEN_SIGN_TIMESTAMP_DISPARITY, 1000 * 60 * 15);
-        saTokenSignIsCheckNonce = configReader.getBoolean(SATOKEN_SIGN_IS_CHECK_NONCE, true);
     }
 
     @Override
@@ -345,223 +362,228 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
     }
 
     @Override
+    public ICacheStorageAdapter cacheStoreApater() {
+        return cacheStorageAdapter;
+    }
+
+    @Override
     public String saTokenName() {
-        return this.saTokenName;
+        return saTokenName;
     }
 
     @Override
     public long saTokenTimeout() {
-        return this.saTokenTimeout;
+        return saTokenTimeout;
     }
 
     @Override
     public long saTokenActiveTimeout() {
-        return this.saTokenActiveTimeout;
+        return saTokenActiveTimeout;
     }
 
     @Override
     public Boolean saTokenDynamicActiveTimeout() {
-        return this.saTokenDynamicActiveTimeout;
+        return saTokenDynamicActiveTimeout;
     }
 
     @Override
     public Boolean saTokenIsConcurrent() {
-        return this.saTokenIsConcurrent;
+        return saTokenIsConcurrent;
     }
 
     @Override
     public Boolean saTokenIsShare() {
-        return this.saTokenIsShare;
+        return saTokenIsShare;
     }
 
     @Override
     public int saTokenMaxLoginCount() {
-        return this.saTokenMaxLoginCount;
+        return saTokenMaxLoginCount;
     }
 
     @Override
     public int saTokenMaxTryTimes() {
-        return this.saTokenMaxTryTimes;
+        return saTokenMaxTryTimes;
     }
 
     @Override
     public Boolean saTokenIsReadBody() {
-        return this.saTokenIsReadBody;
+        return saTokenIsReadBody;
     }
 
     @Override
     public Boolean saTokenIsReadHeader() {
-        return this.saTokenIsReadHeader;
+        return saTokenIsReadHeader;
     }
 
     @Override
     public Boolean saTokenIsReadCookie() {
-        return this.saTokenIsReadCookie;
+        return saTokenIsReadCookie;
     }
 
     @Override
     public Boolean saTokenIsWriteHeader() {
-        return this.saTokenIsWriteHeader;
+        return saTokenIsWriteHeader;
     }
 
     @Override
     public String saTokenStyle() {
-        return this.saTokenStyle;
+        return saTokenStyle;
     }
 
     @Override
     public int saTokenDataRefreshPeriod() {
-        return this.saTokenDataRefreshPeriod;
+        return saTokenDataRefreshPeriod;
     }
 
     @Override
     public Boolean saTokenSessionCheckLogin() {
-        return this.saTokenSessionCheckLogin;
+        return saTokenSessionCheckLogin;
     }
 
     @Override
     public Boolean saTokenAutoRenew() {
-        return this.saTokenAutoRenew;
+        return saTokenAutoRenew;
     }
 
     @Override
     public String saTokenPrefix() {
-        return this.saTokenPrefix;
+        return saTokenPrefix;
     }
 
     @Override
     public Boolean saTokenIsPrint() {
-        return this.saTokenIsPrint;
+        return saTokenIsPrint;
     }
 
     @Override
     public Boolean saTokenIsLog() {
-        return this.saTokenIsLog;
+        return saTokenIsLog;
     }
 
     @Override
     public String saTokenLogLevel() {
-        return this.saTokenLogLevel;
+        return saTokenLogLevel;
     }
 
     @Override
     public int saTokenLogLevelInt() {
-        return this.saTokenLogLevelInt;
+        return saTokenLogLevelInt;
     }
 
     @Override
     public Boolean saTokenIsColorLog() {
-        return this.saTokenIsColorLog;
+        return saTokenIsColorLog;
     }
 
     @Override
     public String saTokenJwtSecretKey() {
-        return this.saTokenJwtSecretKey;
+        return saTokenJwtSecretKey;
     }
 
     @Override
-    public String saTokenBasic() {
-        return this.saTokenBasic;
+    public String saTokenHttpBasic() {
+        return saTokenHttpBasic;
+    }
+
+    @Override
+    public String saTokenHttpDigest() {
+        return saTokenHttpDigest;
     }
 
     @Override
     public String saTokenCurrDomain() {
-        return this.saTokenCurrDomain;
+        return saTokenCurrDomain;
     }
 
     @Override
     public long saTokenSameTokenTimeout() {
-        return this.saTokenSameTokenTimeout;
+        return saTokenSameTokenTimeout;
     }
 
     @Override
     public Boolean saTokenCheckSameToken() {
-        return this.saTokenCheckSameToken;
+        return saTokenCheckSameToken;
     }
 
     @Override
     public String saTokenCookieDomain() {
-        return this.saTokenCookieDomain;
+        return saTokenCookieDomain;
     }
 
     @Override
     public String saTokenCookiePath() {
-        return this.saTokenCookiePath;
+        return saTokenCookiePath;
     }
 
     @Override
     public Boolean saTokenCookieSecure() {
-        return this.saTokenCookieSecure;
+        return saTokenCookieSecure;
     }
 
     @Override
     public Boolean saTokenCookieHttpOnly() {
-        return this.saTokenCookieHttpOnly;
+        return saTokenCookieHttpOnly;
     }
 
     @Override
     public String saTokenCookieSameSite() {
-        return this.saTokenCookieSameSite;
+        return saTokenCookieSameSite;
     }
 
     @Override
     public String saTokenSignSecretKey() {
-        return this.saTokenSignSecretKey;
+        return saTokenSignSecretKey;
     }
 
     @Override
     public long saTokenSignTimestampDisparity() {
-        return this.saTokenSignTimestampDisparity;
-    }
-
-    @Override
-    public Boolean saTokenSignIsCheckNonce() {
-        return this.saTokenSignIsCheckNonce;
+        return saTokenSignTimestampDisparity;
     }
 
     @Override
     public SaTokenConfig toSaTokenConfig() {
         SaTokenConfig saTokenConfig = new SaTokenConfig();
-        saTokenConfig.setTokenName(this.saTokenName);
-        saTokenConfig.setTimeout(this.saTokenTimeout);
-        saTokenConfig.setActiveTimeout(this.saTokenActiveTimeout);
-        saTokenConfig.setDynamicActiveTimeout(this.saTokenDynamicActiveTimeout);
-        saTokenConfig.setIsConcurrent(this.saTokenIsConcurrent);
-        saTokenConfig.setIsShare(this.saTokenIsShare);
-        saTokenConfig.setMaxLoginCount(this.saTokenMaxLoginCount);
-        saTokenConfig.setMaxTryTimes(this.saTokenMaxTryTimes);
-        saTokenConfig.setIsReadBody(this.saTokenIsReadBody);
-        saTokenConfig.setIsReadHeader(this.saTokenIsReadHeader);
-        saTokenConfig.setIsReadCookie(this.saTokenIsReadCookie);
-        saTokenConfig.setIsWriteHeader(this.saTokenIsWriteHeader);
-        saTokenConfig.setTokenStyle(this.saTokenStyle);
-        saTokenConfig.setDataRefreshPeriod(this.saTokenDataRefreshPeriod);
-        saTokenConfig.setTokenSessionCheckLogin(this.saTokenSessionCheckLogin);
-        saTokenConfig.setAutoRenew(this.saTokenAutoRenew);
-        saTokenConfig.setTokenPrefix(this.saTokenPrefix);
-        saTokenConfig.setIsPrint(this.saTokenIsPrint);
-        saTokenConfig.setIsLog(this.saTokenIsLog);
-        saTokenConfig.setLogLevel(this.saTokenLogLevel);
-        saTokenConfig.setLogLevelInt(this.saTokenLogLevelInt);
-        saTokenConfig.setIsColorLog(this.saTokenIsColorLog);
-        saTokenConfig.setJwtSecretKey(this.saTokenJwtSecretKey);
-        saTokenConfig.setBasic(this.saTokenBasic);
-        saTokenConfig.setCurrDomain(this.saTokenCurrDomain);
-        saTokenConfig.setSameTokenTimeout(this.saTokenSameTokenTimeout);
-        saTokenConfig.setCheckSameToken(this.saTokenCheckSameToken);
+        saTokenConfig.setTokenName(saTokenName);
+        saTokenConfig.setTimeout(saTokenTimeout);
+        saTokenConfig.setActiveTimeout(saTokenActiveTimeout);
+        saTokenConfig.setDynamicActiveTimeout(saTokenDynamicActiveTimeout);
+        saTokenConfig.setIsConcurrent(saTokenIsConcurrent);
+        saTokenConfig.setIsShare(saTokenIsShare);
+        saTokenConfig.setMaxLoginCount(saTokenMaxLoginCount);
+        saTokenConfig.setMaxTryTimes(saTokenMaxTryTimes);
+        saTokenConfig.setIsReadBody(saTokenIsReadBody);
+        saTokenConfig.setIsReadHeader(saTokenIsReadHeader);
+        saTokenConfig.setIsReadCookie(saTokenIsReadCookie);
+        saTokenConfig.setIsWriteHeader(saTokenIsWriteHeader);
+        saTokenConfig.setTokenStyle(saTokenStyle);
+        saTokenConfig.setDataRefreshPeriod(saTokenDataRefreshPeriod);
+        saTokenConfig.setTokenSessionCheckLogin(saTokenSessionCheckLogin);
+        saTokenConfig.setAutoRenew(saTokenAutoRenew);
+        saTokenConfig.setTokenPrefix(saTokenPrefix);
+        saTokenConfig.setIsPrint(saTokenIsPrint);
+        saTokenConfig.setIsLog(saTokenIsLog);
+        saTokenConfig.setLogLevel(saTokenLogLevel);
+        saTokenConfig.setLogLevelInt(saTokenLogLevelInt);
+        saTokenConfig.setIsColorLog(saTokenIsColorLog);
+        saTokenConfig.setJwtSecretKey(saTokenJwtSecretKey);
+        saTokenConfig.setHttpBasic(saTokenHttpBasic);
+        saTokenConfig.setHttpDigest(saTokenHttpDigest);
+        saTokenConfig.setCurrDomain(saTokenCurrDomain);
+        saTokenConfig.setSameTokenTimeout(saTokenSameTokenTimeout);
+        saTokenConfig.setCheckSameToken(saTokenCheckSameToken);
 
         SaCookieConfig saCookieConfig = new SaCookieConfig();
-        saCookieConfig.setDomain(this.saTokenCookieDomain);
-        saCookieConfig.setPath(this.saTokenCookiePath);
-        saCookieConfig.setSecure(this.saTokenCookieSecure);
-        saCookieConfig.setHttpOnly(this.saTokenCookieHttpOnly);
-        saCookieConfig.setSameSite(this.saTokenCookieSameSite);
+        saCookieConfig.setDomain(saTokenCookieDomain);
+        saCookieConfig.setPath(saTokenCookiePath);
+        saCookieConfig.setSecure(saTokenCookieSecure);
+        saCookieConfig.setHttpOnly(saTokenCookieHttpOnly);
+        saCookieConfig.setSameSite(saTokenCookieSameSite);
         saTokenConfig.setCookie(saCookieConfig);
 
         SaSignConfig saSignConfig = new SaSignConfig();
-        saSignConfig.setSecretKey(this.saTokenSignSecretKey);
-        saSignConfig.setTimestampDisparity(this.saTokenSignTimestampDisparity);
-        saSignConfig.setIsCheckNonce(this.saTokenSignIsCheckNonce);
+        saSignConfig.setSecretKey(saTokenSignSecretKey);
+        saSignConfig.setTimestampDisparity(saTokenSignTimestampDisparity);
         saTokenConfig.setSign(saSignConfig);
         return saTokenConfig;
     }

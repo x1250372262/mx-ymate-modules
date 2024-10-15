@@ -1,7 +1,7 @@
 package com.mx.ymate.maven.plugin.curd;
 
 /**
- * @Author: xujianpeng.
+ * @Author: mengxiang.
  * @Create: 2024/3/21 10:26
  * @Description:
  */

@@ -1,6 +1,7 @@
 package com.mx.ymate.security;
 
 import cn.dev33.satoken.config.SaTokenConfig;
+import com.mx.ymate.security.adapter.ICacheStorageAdapter;
 import com.mx.ymate.security.handler.ILoginHandler;
 import com.mx.ymate.security.handler.IUserHandler;
 import net.ymate.platform.core.beans.annotation.Ignored;
@@ -17,6 +18,7 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
     String ENABLED = "enabled";
 
     String CLIENT = "client";
+
     String LOGIN_HANDLER_CLASS = "loginHandlerClass";
 
     String USER_HANDLER_CLASS = "userHandlerClass";
@@ -28,6 +30,8 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
     String EXCLUDE_PATH_PATTERNS = "excludePathPatterns";
 
     String CHECK_LOCK = "checkLock";
+
+    String CACHE_STORE = "cacheStore";
 
     String SATOKEN_NAME = "satoken.name";
 
@@ -74,9 +78,13 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
 
     String SATOKEN_JWT_SECRET_KEY = "satoken.jwtSecretKey";
 
-    String SATOKEN_BASIC = "satoken.basic";
+    String SATOKEN_HTTP_BASIC = "satoken.httpBasic";
+
+    String SATOKEN_HTTP_DIGEST = "satoken.httpDigest";
 
     String SATOKEN_CURR_DOMAIN = "satoken.currDomain";
+
+
     String SATOKEN_SAME_TOKEN_TIMEOUT = "satoken.sameTokenTimeout";
 
     String SATOKEN_COOKIE_DOMAIN = "satoken.cookieDomain";
@@ -93,7 +101,6 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
 
     String SATOKEN_SIGN_TIMESTAMP_DISPARITY = "satoken.signTimestampDisparity";
 
-    String SATOKEN_SIGN_IS_CHECK_NONCE = "satoken.signIsCheckNonce";
 
     /**
      * 模块是否已启用, 默认值: true
@@ -150,6 +157,12 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
      * @return
      */
     String excludePathPatterns();
+
+    /**
+     * 缓存存储适配器
+     * @return
+     */
+    ICacheStorageAdapter cacheStoreApater();
 
     /**
      * token名称 (同时也是cookie名称)
@@ -318,7 +331,13 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
      *
      * @return
      */
-    String saTokenBasic();
+    String saTokenHttpBasic();
+
+    /**
+     * Http Digest 认证的默认账号和密码，冒号隔开，例如：sa:123456
+     * @return
+     */
+    String saTokenHttpDigest();
 
     /**
      * 配置当前项目的网络访问地址
@@ -390,13 +409,6 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
      * @return
      */
     long saTokenSignTimestampDisparity();
-
-    /**
-     * 是否校验 nonce 随机字符串 默认true
-     *
-     * @return
-     */
-    Boolean saTokenSignIsCheckNonce();
 
     /**
      * 转换satoken配置

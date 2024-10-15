@@ -16,7 +16,7 @@ import net.ymate.platform.core.beans.annotation.Inject;
 import net.ymate.platform.core.persistence.IResultSet;
 
 /**
- * @Author: xujianpeng.
+ * @Author: mengxiang.
  * @Create: 2024/2/23 11:48
  * @Description:
  */

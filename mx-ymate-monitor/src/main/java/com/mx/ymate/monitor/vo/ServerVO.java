@@ -3,7 +3,7 @@ package com.mx.ymate.monitor.vo;
 import java.io.Serializable;
 
 /**
- * @Author: xujianpeng.
+ * @Author: mengxiang.
  * @Create: 2024/2/23 11:56
  * @Description:
  */

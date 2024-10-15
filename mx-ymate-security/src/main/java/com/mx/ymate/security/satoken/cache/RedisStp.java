@@ -1,4 +1,4 @@
-package com.mx.ymate.security.satoken;
+package com.mx.ymate.security.satoken.cache;
 
 import cn.dev33.satoken.stp.StpInterface;
 import com.mx.ymate.security.SaUtil;

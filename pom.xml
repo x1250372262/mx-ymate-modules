@@ -35,7 +35,7 @@
         <hutool.all.version>5.8.27</hutool.all.version>
         <redisson.version>3.27.2</redisson.version>
         <netty-all.version>4.1.108.Final</netty-all.version>
-        <sa.token.version>1.37.0</sa.token.version>
+        <sa.token.version>1.39.0</sa.token.version>
         <minio.version>8.5.9</minio.version>
         <qiniu-java-sdk.version>7.15.0</qiniu-java-sdk.version>
         <cos_api.version>5.6.205</cos_api.version>
