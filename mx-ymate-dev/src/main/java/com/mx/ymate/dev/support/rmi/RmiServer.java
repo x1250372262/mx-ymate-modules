@@ -9,6 +9,8 @@ import net.ymate.platform.core.beans.annotation.Bean;
 import net.ymate.platform.log.ILogger;
 import net.ymate.platform.log.Logs;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -30,7 +32,7 @@ public class RmiServer {
 
     private static final List<String> RMI_SERVER_LIST = new ArrayList<>();
 
-    private static final ILogger LOG = Logs.get().getLogger();
+    private static final Log LOG = LogFactory.getLog(RmiServer.class);
 
     private static final String RMI_SERVER_STOP = "RMI服务`{}`已停止";
     private static final String RMI_SERVER_START = "RMI服务`{}`已开启";

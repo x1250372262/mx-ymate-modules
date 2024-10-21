@@ -29,6 +29,8 @@ import net.ymate.platform.log.ILogger;
 import net.ymate.platform.log.Logs;
 import net.ymate.platform.webmvc.context.WebContext;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
@@ -44,7 +46,7 @@ public class OperationLogInterceptor extends AbstractInterceptor {
 
     private final ISecurityConfig securityConfig = Security.get().getConfig();
 
-    private final ILogger iLogger = Logs.get().getLogger();
+    private static final Log LOG = LogFactory.getLog(OperationLogInterceptor.class);
 
     public OperationLogInterceptor() {
     }
@@ -128,8 +130,7 @@ public class OperationLogInterceptor extends AbstractInterceptor {
             YMP.get().getEvents().fireEvent(operationLogEvent);
         } catch (Exception e) {
             // 记录本地异常日志
-            iLogger.error("==日志记录异常==");
-            iLogger.error("异常信息:{}", e);
+            LOG.error("==日志记录异常==", e);
             throw new RuntimeException(e);
         }
     }

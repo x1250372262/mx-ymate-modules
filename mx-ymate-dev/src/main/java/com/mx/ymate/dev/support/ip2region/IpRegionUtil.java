@@ -35,15 +35,6 @@ public class IpRegionUtil {
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            String ipRegionBean = parseStr("175.171.53.247", "");
-            System.out.println(ipRegionBean);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static IpRegionBean parse(String ip) {
         String region = parseStr(ip);
         String[] split = region.split("\\|");

@@ -5,6 +5,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import net.ymate.platform.log.ILogger;
 import net.ymate.platform.log.Logs;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @Author: mengxiang.
@@ -13,11 +15,11 @@ import net.ymate.platform.log.Logs;
  */
 public abstract class AbstractWebsocketHandler implements IMxWebsocketHandler {
 
-    private final ILogger log = Logs.get().getLogger();
+    private static final Log LOG = LogFactory.getLog(AbstractWebsocketHandler.class);
 
     @Override
     public void onOpen(ChannelHandlerContext ctx) throws Exception {
-        log.info("onOpen");
+        LOG.info("onOpen");
     }
 
     /**
@@ -31,11 +33,11 @@ public abstract class AbstractWebsocketHandler implements IMxWebsocketHandler {
 
     @Override
     public void onClose(ChannelHandlerContext ctx) throws Exception {
-        log.info("onClose");
+        LOG.info("onClose");
     }
 
     @Override
     public void onError(ChannelHandlerContext ctx, Throwable t) throws Exception {
-        log.info("onError");
+        LOG.info("onError");
     }
 }
