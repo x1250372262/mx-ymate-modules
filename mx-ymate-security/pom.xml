@@ -38,7 +38,6 @@
         <dependency>
             <groupId>com.mx.moudules</groupId>
             <artifactId>mx-ymate-dev</artifactId>
-            <version>${parent.version}</version>
         </dependency>
         <dependency>
             <groupId>cn.dev33</groupId>
@@ -55,7 +54,6 @@
         <dependency>
             <groupId>com.mx.moudules</groupId>
             <artifactId>mx-ymate-redis</artifactId>
-            <version>${parent.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

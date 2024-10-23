@@ -159,17 +159,14 @@
         <dependency>
             <groupId>com.mx.moudules</groupId>
             <artifactId>mx-ymate-security</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.mx.moudules</groupId>
             <artifactId>mx-ymate-upload</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.mx.moudules</groupId>
             <artifactId>mx-ymate-netty</artifactId>
-            <version>1.0.0</version>
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>net.ymate.module</groupId>-->
@@ -180,10 +177,6 @@
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
-            <artifactId>caffeine</artifactId>
         </dependency>
     </dependencies>
 </project>

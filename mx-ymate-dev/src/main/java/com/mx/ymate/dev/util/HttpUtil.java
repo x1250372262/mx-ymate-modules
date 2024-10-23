@@ -4,14 +4,12 @@ import cn.hutool.core.map.MapUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.mx.ymate.dev.support.mvc.MxResult;
-import net.ymate.platform.commons.http.CloseableHttpRequestBuilder;
-import net.ymate.platform.commons.http.IHttpRequest;
+import net.ymate.platform.commons.http.CloseableHttpClientHelper;
 import net.ymate.platform.commons.http.IHttpResponse;
 import net.ymate.platform.commons.lang.BlurObject;
 import net.ymate.platform.log.Logs;
 import net.ymate.platform.webmvc.base.Type;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 import static com.mx.ymate.dev.code.Code.SERVER_REQUEST_ERROR;
@@ -36,19 +34,16 @@ public class HttpUtil {
         POST
     }
 
-
     public static MxResult request(String url, HttpMethod httpMethod, Map<String, String> params) throws Exception {
 
-        IHttpRequest request = CloseableHttpRequestBuilder.create(url).addParams(params).build();
-        MxResult result;
-        try (IHttpResponse httpResponse = request.execute(httpMethod.name())) {
-            if (httpResponse == null) {
-                return MxResult.create(SERVER_REQUEST_ERROR);
+        try (CloseableHttpClientHelper clientHelper = CloseableHttpClientHelper.create()) {
+            IHttpResponse httpResponse;
+            if (httpMethod == HttpMethod.POST) {
+                httpResponse = clientHelper.post(url, params);
+            } else {
+                httpResponse = clientHelper.get(url, params);
             }
-            if (httpResponse.getStatusCode() != HttpServletResponse.SC_OK) {
-                return MxResult.create(SERVER_REQUEST_ERROR.code()).msg(httpResponse.toString());
-            }
-            result = create(JSON.parseObject(httpResponse.getContent()));
+            MxResult result = create(JSON.parseObject(httpResponse.getContent()));
             if (!result.isSuccess()) {
                 return MxResult.create(SERVER_REQUEST_ERROR.code()).msg(result.msg());
             }

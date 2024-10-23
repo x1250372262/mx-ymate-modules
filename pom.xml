@@ -32,78 +32,43 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <ymate.platform.version>2.1.3-dev</ymate.platform.version>
-        <ymate-module-fileuploader.version>2.0.1-dev</ymate-module-fileuploader.version>
+        <ymate.module.fileuploader.version>2.0.1-dev</ymate.module.fileuploader.version>
+        <ymate.module.schedule.version>1.0.1</ymate.module.schedule.version>
+        <ymate.module.embed.version>1.0.3-dev</ymate.module.embed.version>
         <hutool.all.version>5.8.27</hutool.all.version>
         <redisson.version>3.27.2</redisson.version>
-        <netty-all.version>4.1.108.Final</netty-all.version>
+        <netty.all.version>4.1.108.Final</netty.all.version>
+        <javax.servlet.api.version>3.0.1</javax.servlet.api.version>
+        <jsp.api.version>2.2</jsp.api.version>
         <sa.token.version>1.39.0</sa.token.version>
         <minio.version>8.5.9</minio.version>
-        <qiniu-java-sdk.version>7.15.0</qiniu-java-sdk.version>
-        <cos_api.version>5.6.205</cos_api.version>
-        <aliyun-sdk-oss.version>3.17.4</aliyun-sdk-oss.version>
+        <qiniu.java.sdk.version>7.15.0</qiniu.java.sdk.version>
+        <cosapi.version>5.6.205</cosapi.version>
+        <aliyun.sdk.oss.version>3.17.4</aliyun.sdk.oss.version>
         <org.apache.httpcomponents.version>4.5.14</org.apache.httpcomponents.version>
         <freemarker.version>2.3.31</freemarker.version>
         <jansi.version>2.4.1</jansi.version>
         <easyexcel.version>3.3.4</easyexcel.version>
         <poi.version>5.2.3</poi.version>
         <jxls.version>2.6.1-SNAPSHOT</jxls.version>
-        <jxls-poi.version>1.2.1-SNAPSHOT</jxls-poi.version>
-        <jxls-jexcel.version>1.0.7</jxls-jexcel.version>
-        <jxls-reader.version>2.0.5</jxls-reader.version>
+        <jxls.poi.version>1.2.1-SNAPSHOT</jxls.poi.version>
+        <jxls.jexcel.version>1.0.7</jxls.jexcel.version>
+        <jxls.reader.version>2.0.5</jxls.reader.version>
         <clickhouse.version>0.4.6</clickhouse.version>
         <zxing.version>3.5.3</zxing.version>
         <oshi.version>6.5.0</oshi.version>
         <ip2region.version>2.7.0</ip2region.version>
-        <lz4-java.version>1.8.0</lz4-java.version>
+        <lz4.java.version>1.8.0</lz4.java.version>
         <jsch.version>0.1.54</jsch.version>
         <caffeine.version>2.9.3</caffeine.version>
-        <eclipse-paho.version>1.2.5</eclipse-paho.version>
-        <tencentcloud-sdk-java.version>4.0.11</tencentcloud-sdk-java.version>
-        <aliyun-sms.version>3.0.0</aliyun-sms.version>
+        <eclipse.paho.version>1.2.5</eclipse.paho.version>
+        <tencentcloud.sdk.java.version>4.0.11</tencentcloud.sdk.java.version>
+        <aliyun.sms.version>3.0.0</aliyun.sms.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>net.ymate.platform</groupId>
-                <artifactId>ymate-platform-core</artifactId>
-                <version>${ymate.platform.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.ymate.platform</groupId>
-                <artifactId>ymate-platform-starter-web</artifactId>
-                <version>${ymate.platform.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.ymate.platform</groupId>
-                <artifactId>ymate-platform-log</artifactId>
-                <version>${ymate.platform.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.ymate.platform</groupId>
-                <artifactId>ymate-platform-validation</artifactId>
-                <version>${ymate.platform.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.ymate.platform</groupId>
-                <artifactId>ymate-platform-persistence-jdbc</artifactId>
-                <version>${ymate.platform.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.ymate.platform</groupId>
-                <artifactId>ymate-platform-persistence-redis</artifactId>
-                <version>${ymate.platform.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.ymate.platform</groupId>
-                <artifactId>ymate-platform-serv</artifactId>
-                <version>${ymate.platform.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.ymate.module</groupId>
-                <artifactId>ymate-module-fileuploader</artifactId>
-                <version>${ymate-module-fileuploader.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
@@ -146,7 +111,7 @@
             <dependency>
                 <groupId>com.qiniu</groupId>
                 <artifactId>qiniu-java-sdk</artifactId>
-                <version>${qiniu-java-sdk.version}</version>
+                <version>${qiniu.java.sdk.version}</version>
             </dependency>
 <!--            &lt;!&ndash;腾讯云文件存储&ndash;&gt;-->
 <!--            <dependency>-->
@@ -164,19 +129,17 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-all</artifactId>
-                <version>${netty-all.version}</version>
+                <version>${netty.all.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
-                <version>3.0.1</version>
-                <scope>provided</scope>
+                <version>${javax.servlet.api.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet.jsp</groupId>
                 <artifactId>jsp-api</artifactId>
-                <version>2.2</version>
-                <scope>provided</scope>
+                <version>${jsp.api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.fusesource.jansi</groupId>
@@ -221,17 +184,17 @@
             <dependency>
                 <groupId>org.jxls</groupId>
                 <artifactId>jxls-poi</artifactId>
-                <version>${jxls-poi.version}</version>
+                <version>${jxls.poi.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jxls</groupId>
                 <artifactId>jxls-jexcel</artifactId>
-                <version>${jxls-jexcel.version}</version>
+                <version>${jxls.jexcel.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jxls</groupId>
                 <artifactId>jxls-reader</artifactId>
-                <version>${jxls-reader.version}</version>
+                <version>${jxls.reader.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.clickhouse</groupId>
@@ -266,24 +229,138 @@
             <dependency>
                 <groupId>org.lz4</groupId>
                 <artifactId>lz4-java</artifactId>
-                <version>${lz4-java.version}</version>
+                <version>${lz4.java.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.paho</groupId>
                 <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
-                <version>${eclipse-paho.version}</version>
+                <version>${eclipse.paho.version}</version>
             </dependency>
             <!--腾讯云短信-->
             <dependency>
                 <groupId>com.tencentcloudapi</groupId>
                 <artifactId>tencentcloud-sdk-java</artifactId>
-                <version>${tencentcloud-sdk-java.version}</version>
+                <version>${tencentcloud.sdk.java.version}</version>
             </dependency>
             <!--阿里云短信-->
             <dependency>
                 <groupId>com.aliyun</groupId>
                 <artifactId>dysmsapi20170525</artifactId>
-                <version>${aliyun-sms.version}</version>
+                <version>${aliyun.sms.version}</version>
+            </dependency>
+
+
+            <!--ymp框架bom-->
+            <!--核心模块-->
+            <dependency>
+                <groupId>net.ymate.platform</groupId>
+                <artifactId>ymate-platform-core</artifactId>
+                <version>${ymate.platform.version}</version>
+            </dependency>
+            <!--webmvc模块-->
+            <dependency>
+                <groupId>net.ymate.platform</groupId>
+                <artifactId>ymate-platform-starter-web</artifactId>
+                <version>${ymate.platform.version}</version>
+            </dependency>
+            <!--日志模块-->
+            <dependency>
+                <groupId>net.ymate.platform</groupId>
+                <artifactId>ymate-platform-log</artifactId>
+                <version>${ymate.platform.version}</version>
+            </dependency>
+            <!--验证模块-->
+            <dependency>
+                <groupId>net.ymate.platform</groupId>
+                <artifactId>ymate-platform-validation</artifactId>
+                <version>${ymate.platform.version}</version>
+            </dependency>
+            <!--JDBC模块-->
+            <dependency>
+                <groupId>net.ymate.platform</groupId>
+                <artifactId>ymate-platform-persistence-jdbc</artifactId>
+                <version>${ymate.platform.version}</version>
+            </dependency>
+            <!--redis模块-->
+            <dependency>
+                <groupId>net.ymate.platform</groupId>
+                <artifactId>ymate-platform-persistence-redis</artifactId>
+                <version>${ymate.platform.version}</version>
+            </dependency>
+            <!--文件上传模块-->
+            <dependency>
+                <groupId>net.ymate.module</groupId>
+                <artifactId>ymate-module-fileuploader</artifactId>
+                <version>${ymate.module.fileuploader.version}</version>
+            </dependency>
+            <!--定时任务模块-->
+            <dependency>
+                <groupId>net.ymate.module</groupId>
+                <artifactId>ymate-module-schedule</artifactId>
+                <version>${ymate.module.schedule.version}</version>
+            </dependency>
+            <!--嵌入式tomcat模块-->
+            <dependency>
+                <groupId>net.ymate.module</groupId>
+                <artifactId>ymate-module-embed-tomcat</artifactId>
+                <version>${ymate.module.embed.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!--自定义模块bom-->
+            <!--核心模块-->
+            <dependency>
+                <groupId>com.mx.moudules</groupId>
+                <artifactId>mx-ymate-dev</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <!--clickhouse模块-->
+            <dependency>
+                <groupId>com.mx.moudules</groupId>
+                <artifactId>mx-ymate-clickhouse</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <!--excel模块-->
+            <dependency>
+                <groupId>com.mx.moudules</groupId>
+                <artifactId>mx-ymate-excel</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <!--mqtt模块-->
+            <dependency>
+                <groupId>com.mx.moudules</groupId>
+                <artifactId>mx-ymate-mqtt</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <!--netty模块-->
+            <dependency>
+                <groupId>com.mx.moudules</groupId>
+                <artifactId>mx-ymate-netty</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <!--redis模块-->
+            <dependency>
+                <groupId>com.mx.moudules</groupId>
+                <artifactId>mx-ymate-redis</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <!--安全模块-->
+            <dependency>
+                <groupId>com.mx.moudules</groupId>
+                <artifactId>mx-ymate-security</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <!--短信模块-->
+            <dependency>
+                <groupId>com.mx.moudules</groupId>
+                <artifactId>mx-ymate-sms</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <!--文件上传模块-->
+            <dependency>
+                <groupId>com.mx.moudules</groupId>
+                <artifactId>mx-ymate-upload</artifactId>
+                <version>${version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
