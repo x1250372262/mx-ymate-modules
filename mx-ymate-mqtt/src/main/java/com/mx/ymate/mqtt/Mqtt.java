@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 
+import java.util.List;
 import java.util.Properties;
 
 import static com.mx.ymate.mqtt.MqttConstant.MQTT_VERSION_3_1;
@@ -235,8 +236,20 @@ public final class Mqtt implements IModule, IMqtt {
     }
 
     @Override
+    public void subscribe(List<String> topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout) {
+        String[] topicArray = topics.toArray(new String[0]);
+        subscribe(topicArray,qosEnum,mqttMessageListener,timeout);
+    }
+
+    @Override
     public void subscribe(String[] topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener) {
         subscribe(topics, qosEnum, mqttMessageListener, -1);
+    }
+
+    @Override
+    public void subscribe(List<String> topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener) {
+        String[] topicArray = topics.toArray(new String[0]);
+        subscribe(topicArray,qosEnum,mqttMessageListener);
     }
 
     @Override
