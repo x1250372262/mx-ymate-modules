@@ -276,6 +276,13 @@ public final class Mqtt implements IModule, IMqtt {
     }
 
     @Override
+    public void unSubscribe(List<String> topicList) {
+        for(String topic : topicList){
+            unSubscribe(topic);
+        }
+    }
+
+    @Override
     public boolean publish(String topic, byte[] payload, QosEnum qos, boolean retained, long timeout) {
         try {
             IMqttToken token = mqttAsyncClient.publish(topic, payload, qos.getValue(), retained);

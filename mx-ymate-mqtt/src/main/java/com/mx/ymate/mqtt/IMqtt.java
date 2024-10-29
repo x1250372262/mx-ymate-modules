@@ -134,6 +134,12 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
     boolean unSubscribe(String topic);
 
     /**
+     * 批量取消订阅
+     * @param topicList
+     */
+    void unSubscribe(List<String> topicList);
+
+    /**
      * 发布主题
      *
      * @param topic

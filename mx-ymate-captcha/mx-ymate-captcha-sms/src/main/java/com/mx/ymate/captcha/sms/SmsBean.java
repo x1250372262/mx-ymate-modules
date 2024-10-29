@@ -3,7 +3,7 @@ package com.mx.ymate.captcha.sms;
 import java.io.Serializable;
 
 /**
- * @Author: xujianpeng.
+ * @Author: mengxiang.
  * @Date 2024/10/15.
  * @Time: 14:00.
  * @Description:

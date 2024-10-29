@@ -18,6 +18,7 @@ package com.mx.ymate.mqtt;
 import net.ymate.platform.core.beans.annotation.Ignored;
 import net.ymate.platform.core.support.IInitialization;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 
 import java.util.Properties;
 
@@ -97,7 +98,7 @@ public interface IMqttConfig extends IInitialization<IMqtt> {
      * 回调类
      * @return
      */
-    MqttCallback callback();
+    MqttCallbackExtended callback();
 
     /**
      * 是否清理session，false时可接收离线消息 true忽略离线消息 默认true

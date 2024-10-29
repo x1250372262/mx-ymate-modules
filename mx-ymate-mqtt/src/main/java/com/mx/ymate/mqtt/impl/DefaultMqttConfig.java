@@ -26,6 +26,7 @@ import net.ymate.platform.log.Logs;
 import org.apache.commons.lang.NullArgumentException;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -56,7 +57,7 @@ public final class DefaultMqttConfig implements IMqttConfig {
 
     private String password;
 
-    private MqttCallback callback;
+    private MqttCallbackExtended callback;
 
     private boolean cleanSession;
 
@@ -111,7 +112,7 @@ public final class DefaultMqttConfig implements IMqttConfig {
         }
         userName = configReader.getString(USER_NAME);
         password = configReader.getString(PASSWORD);
-        callback = configReader.getClassImpl(CALLBACK, MqttCallback.class);
+        callback = configReader.getClassImpl(CALLBACK, MqttCallbackExtended.class);
         if (callback == null) {
             Logs.get().getLogger().error("请指定mqttCallback类");
             throw new NullArgumentException(CALLBACK);
@@ -187,7 +188,7 @@ public final class DefaultMqttConfig implements IMqttConfig {
     }
 
     @Override
-    public MqttCallback callback() {
+    public MqttCallbackExtended callback() {
         return callback;
     }
 
