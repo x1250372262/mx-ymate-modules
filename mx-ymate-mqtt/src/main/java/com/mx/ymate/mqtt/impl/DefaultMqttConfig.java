@@ -23,6 +23,7 @@ import net.ymate.platform.commons.util.UUIDUtils;
 import net.ymate.platform.core.configuration.IConfigReader;
 import net.ymate.platform.core.module.IModuleConfigurer;
 import net.ymate.platform.log.Logs;
+import org.apache.commons.lang.NullArgumentException;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 
@@ -112,7 +113,8 @@ public final class DefaultMqttConfig implements IMqttConfig {
         password = configReader.getString(PASSWORD);
         callback = configReader.getClassImpl(CALLBACK, MqttCallback.class);
         if (callback == null) {
-            callback = new MxMqttCallback();
+            Logs.get().getLogger().error("请指定mqttCallback类");
+            throw new NullArgumentException(CALLBACK);
         }
         cleanSession = configReader.getBoolean(CLEAN_SESSION, CLEAN_SESSION_DEFAULT);
         manualAcks = configReader.getBoolean(MANUAL_ACKS, false);

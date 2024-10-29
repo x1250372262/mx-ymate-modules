@@ -20,7 +20,6 @@ import net.ymate.platform.core.IApplication;
 import net.ymate.platform.core.beans.annotation.Ignored;
 import net.ymate.platform.core.support.IDestroyable;
 import net.ymate.platform.core.support.IInitialization;
-import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
@@ -72,33 +71,30 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      *
      * @param topic
      * @param qosEnum
-     * @param mqttMessageListener
      * @param timeout
      * @return
      */
-    boolean subscribe(String topic, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout);
+    boolean subscribe(String topic, QosEnum qosEnum, long timeout);
 
     /**
      * 批量订阅
      *
      * @param topics
      * @param qosEnum
-     * @param mqttMessageListener
      * @param timeout
      * @return
      */
-    void subscribe(String[] topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout);
+    void subscribe(String[] topics, QosEnum qosEnum, long timeout);
 
     /**
      * 批量订阅
      *
      * @param topics
      * @param qosEnum
-     * @param mqttMessageListener
      * @param timeout
      * @return
      */
-    void subscribe(List<String> topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout);
+    void subscribe(List<String> topics, QosEnum qosEnum, long timeout);
 
 
     /**
@@ -106,30 +102,27 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      *
      * @param topic
      * @param qosEnum
-     * @param mqttMessageListener
      * @return
      */
-    boolean subscribe(String topic, QosEnum qosEnum, IMqttMessageListener mqttMessageListener);
+    boolean subscribe(String topic, QosEnum qosEnum);
 
     /**
      * 批量订阅
      *
      * @param topics
      * @param qosEnum
-     * @param mqttMessageListener
      * @return
      */
-    void subscribe(String[] topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener);
+    void subscribe(String[] topics, QosEnum qosEnum);
 
     /**
      * 批量订阅
      *
      * @param topics
      * @param qosEnum
-     * @param mqttMessageListener
      * @return
      */
-    void subscribe(List<String> topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener);
+    void subscribe(List<String> topics, QosEnum qosEnum);
 
 
     /**

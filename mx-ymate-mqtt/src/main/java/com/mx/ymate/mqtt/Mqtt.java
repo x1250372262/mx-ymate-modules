@@ -185,6 +185,7 @@ public final class Mqtt implements IModule, IMqtt {
         if (sslProperties != null && !sslProperties.isEmpty()) {
             options.setSSLProperties(sslProperties);
         }
+        mqttAsyncClient.setCallback(config.callback());
         try {
             IMqttToken token = mqttAsyncClient.connect(options);
             token.waitForCompletion();
@@ -192,24 +193,27 @@ public final class Mqtt implements IModule, IMqtt {
             LOG.error("MQTT服务连接失败", e);
             return;
         }
-        mqttAsyncClient.setCallback(config.callback());
         LOG.info("MQTT服务连接成功");
     }
 
     @Override
     public void disconnect() {
         try {
-            mqttAsyncClient.disconnect();
-            LOG.info("MQTT服务释放成功");
+            if (mqttAsyncClient != null && mqttAsyncClient.isConnected()) {
+                mqttAsyncClient.disconnect();
+                LOG.info("MQTT服务释放成功");
+            } else {
+                LOG.warn("MQTT客户端已断开或未连接");
+            }
         } catch (MqttException e) {
             LOG.error("MQTT服务释放失败", e);
         }
     }
 
     @Override
-    public boolean subscribe(String topic, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout) {
+    public boolean subscribe(String topic, QosEnum qosEnum, long timeout) {
         try {
-            IMqttToken token = mqttAsyncClient.subscribe(topic, qosEnum.getValue(), mqttMessageListener);
+            IMqttToken token = mqttAsyncClient.subscribe(topic, qosEnum.getValue());
             token.waitForCompletion(timeout);
             boolean isSuccess = token.isComplete();
             LOG.info("主题: " + topic + "订阅" + (isSuccess ? "成功" : "失败"));
@@ -221,10 +225,10 @@ public final class Mqtt implements IModule, IMqtt {
     }
 
     @Override
-    public void subscribe(String[] topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout) {
+    public void subscribe(String[] topics, QosEnum qosEnum, long timeout) {
         for (String topic : topics) {
             try {
-                IMqttToken token = mqttAsyncClient.subscribe(topic, qosEnum.getValue(), mqttMessageListener);
+                IMqttToken token = mqttAsyncClient.subscribe(topic, qosEnum.getValue());
                 token.waitForCompletion(timeout);
                 boolean isSuccess = token.isComplete();
                 LOG.info("主题: " + topic + "订阅" + (isSuccess ? "成功" : "失败"));
@@ -236,25 +240,25 @@ public final class Mqtt implements IModule, IMqtt {
     }
 
     @Override
-    public void subscribe(List<String> topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener, long timeout) {
+    public void subscribe(List<String> topics, QosEnum qosEnum, long timeout) {
         String[] topicArray = topics.toArray(new String[0]);
-        subscribe(topicArray,qosEnum,mqttMessageListener,timeout);
+        subscribe(topicArray, qosEnum, timeout);
     }
 
     @Override
-    public void subscribe(String[] topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener) {
-        subscribe(topics, qosEnum, mqttMessageListener, -1);
+    public void subscribe(String[] topics, QosEnum qosEnum) {
+        subscribe(topics, qosEnum, -1);
     }
 
     @Override
-    public void subscribe(List<String> topics, QosEnum qosEnum, IMqttMessageListener mqttMessageListener) {
+    public void subscribe(List<String> topics, QosEnum qosEnum) {
         String[] topicArray = topics.toArray(new String[0]);
-        subscribe(topicArray,qosEnum,mqttMessageListener);
+        subscribe(topicArray, qosEnum);
     }
 
     @Override
-    public boolean subscribe(String topic, QosEnum qosEnum, IMqttMessageListener mqttMessageListener) {
-        return subscribe(topic, qosEnum, mqttMessageListener, -1);
+    public boolean subscribe(String topic, QosEnum qosEnum) {
+        return subscribe(topic, qosEnum, -1);
     }
 
     @Override
