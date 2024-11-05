@@ -67,44 +67,13 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
     void disconnect();
 
     /**
-     * 订阅
-     *
-     * @param topic
-     * @param qosEnum
-     * @param timeout
-     * @return
-     */
-    boolean subscribe(String topic, QosEnum qosEnum, long timeout);
-
-    /**
-     * 批量订阅
-     *
-     * @param topics
-     * @param qosEnum
-     * @param timeout
-     * @return
-     */
-    void subscribe(String[] topics, QosEnum qosEnum, long timeout);
-
-    /**
-     * 批量订阅
-     *
-     * @param topics
-     * @param qosEnum
-     * @param timeout
-     * @return
-     */
-    void subscribe(List<String> topics, QosEnum qosEnum, long timeout);
-
-
-    /**
-     * 订阅
+     * 单个订阅
      *
      * @param topic
      * @param qosEnum
      * @return
      */
-    boolean subscribe(String topic, QosEnum qosEnum);
+    void subscribe(String topic, QosEnum qosEnum);
 
     /**
      * 批量订阅
@@ -131,48 +100,20 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      * @param topic
      * @return
      */
-    boolean unSubscribe(String topic);
+    void unSubscribe(String topic);
 
     /**
      * 批量取消订阅
-     * @param topicList
+     * @param topics
      */
-    void unSubscribe(List<String> topicList);
+    void unSubscribe(String[] topics);
 
     /**
-     * 发布主题
-     *
-     * @param topic
-     * @param payload
-     * @param qos
-     * @param retained
-     * @param timeout
-     * @return
+     * 批量取消订阅
+     * @param topics
      */
-    boolean publish(String topic, byte[] payload, QosEnum qos, boolean retained, long timeout);
+    void unSubscribe(List<String> topics);
 
-    /**
-     * 发布主题
-     *
-     * @param topic
-     * @param payload
-     * @param qos
-     * @param retained
-     * @return
-     */
-    boolean publish(String topic, byte[] payload, QosEnum qos, boolean retained);
-
-    /**
-     * 发布主题
-     *
-     * @param topic
-     * @param payload
-     * @param qos
-     * @param retained
-     * @param timeout
-     * @return
-     */
-    boolean publish(String topic, String payload, QosEnum qos, boolean retained, long timeout);
 
     /**
      * 发布主题
@@ -183,7 +124,19 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      * @param retained
      * @return
      */
-    boolean publish(String topic, String payload, QosEnum qos, boolean retained);
+    void publish(String topic, byte[] payload, QosEnum qos, boolean retained);
+
+
+    /**
+     * 发布主题
+     *
+     * @param topic
+     * @param payload
+     * @param qos
+     * @param retained
+     * @return
+     */
+    void publish(String topic, String payload, QosEnum qos, boolean retained);
 
     /**
      * 发布主题
@@ -193,7 +146,7 @@ public interface IMqtt extends IInitialization<IApplication>, IDestroyable {
      * @param qos
      * @return
      */
-    boolean publish(String topic, String payload, QosEnum qos);
+    void publish(String topic, String payload, QosEnum qos);
 
 
     /**

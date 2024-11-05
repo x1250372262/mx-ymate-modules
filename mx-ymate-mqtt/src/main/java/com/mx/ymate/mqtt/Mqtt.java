@@ -16,6 +16,7 @@
 package com.mx.ymate.mqtt;
 
 import com.mx.ymate.mqtt.enums.QosEnum;
+import com.mx.ymate.mqtt.event.MqttEvent;
 import com.mx.ymate.mqtt.impl.DefaultMqttConfig;
 import net.ymate.platform.commons.util.RuntimeUtils;
 import net.ymate.platform.core.*;
@@ -138,18 +139,12 @@ public final class Mqtt implements IModule, IMqtt {
         return mqttAsyncClient;
     }
 
-    @Override
-    public void connect() {
-        try {
-            if (StringUtils.isNotBlank(config.storageDir())) {
-                mqttAsyncClient = new MqttAsyncClient(config.url(), config.clientId(), new MqttDefaultFilePersistence(config.storageDir()));
-            } else {
-                mqttAsyncClient = new MqttAsyncClient(config.url(), config.clientId());
-            }
-        } catch (Exception e) {
-            LOG.error("MQTT客户端初始化失败", e);
-            return;
-        }
+    private void fireEvent(MqttEvent.EVENT event) {
+        owner.getEvents().fireEvent(new MqttEvent(owner, event));
+    }
+
+
+    private MqttConnectOptions getOptions() {
         // 连接参数
         MqttConnectOptions options = new MqttConnectOptions();
         mqttAsyncClient.setManualAcks(config.manualAcks());
@@ -185,10 +180,34 @@ public final class Mqtt implements IModule, IMqtt {
         if (sslProperties != null && !sslProperties.isEmpty()) {
             options.setSSLProperties(sslProperties);
         }
+        return options;
+    }
+
+    @Override
+    public void connect() {
+        try {
+            if (StringUtils.isNotBlank(config.storageDir())) {
+                mqttAsyncClient = new MqttAsyncClient(config.url(), config.clientId(), new MqttDefaultFilePersistence(config.storageDir()));
+            } else {
+                mqttAsyncClient = new MqttAsyncClient(config.url(), config.clientId());
+            }
+        } catch (Exception e) {
+            LOG.error("MQTT客户端初始化失败", e);
+            return;
+        }
         mqttAsyncClient.setCallback(config.callback());
         try {
-            IMqttToken token = mqttAsyncClient.connect(options);
-            token.waitForCompletion();
+            mqttAsyncClient.connect(getOptions(), null, new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    fireEvent(MqttEvent.EVENT.MQTT_CONNECT_SUCCESS);
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    fireEvent(MqttEvent.EVENT.MQTT_CONNECT_FAIL);
+                }
+            });
         } catch (MqttException e) {
             LOG.error("MQTT服务连接失败", e);
             return;
@@ -200,7 +219,17 @@ public final class Mqtt implements IModule, IMqtt {
     public void disconnect() {
         try {
             if (mqttAsyncClient != null && mqttAsyncClient.isConnected()) {
-                mqttAsyncClient.disconnect();
+                mqttAsyncClient.disconnect(null, new IMqttActionListener() {
+                    @Override
+                    public void onSuccess(IMqttToken asyncActionToken) {
+                        fireEvent(MqttEvent.EVENT.MQTT_DISCONNECT_SUCCESS);
+                    }
+
+                    @Override
+                    public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                        fireEvent(MqttEvent.EVENT.MQTT_DISCONNECT_FAIL);
+                    }
+                });
                 LOG.info("MQTT服务释放成功");
             } else {
                 LOG.warn("MQTT客户端已断开或未连接");
@@ -211,13 +240,19 @@ public final class Mqtt implements IModule, IMqtt {
     }
 
     @Override
-    public boolean subscribe(String topic, QosEnum qosEnum, long timeout) {
+    public void subscribe(String topic, QosEnum qosEnum) {
         try {
-            IMqttToken token = mqttAsyncClient.subscribe(topic, qosEnum.getValue());
-            token.waitForCompletion(timeout);
-            boolean isSuccess = token.isComplete();
-            LOG.info("主题: " + topic + "订阅" + (isSuccess ? "成功" : "失败"));
-            return isSuccess;
+            mqttAsyncClient.subscribe(topic, qosEnum.getValue(), null, new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    fireEvent(MqttEvent.EVENT.MQTT_SUBSCRIBE_SUCCESS);
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    fireEvent(MqttEvent.EVENT.MQTT_SUBSCRIBE_FAIL);
+                }
+            });
         } catch (MqttException e) {
             LOG.error("主题: " + topic + "订阅失败", e);
             throw RuntimeUtils.wrapRuntimeThrow(e);
@@ -225,50 +260,33 @@ public final class Mqtt implements IModule, IMqtt {
     }
 
     @Override
-    public void subscribe(String[] topics, QosEnum qosEnum, long timeout) {
+    public void subscribe(String[] topics, QosEnum qosEnum) {
         for (String topic : topics) {
-            try {
-                IMqttToken token = mqttAsyncClient.subscribe(topic, qosEnum.getValue());
-                token.waitForCompletion(timeout);
-                boolean isSuccess = token.isComplete();
-                LOG.info("主题: " + topic + "订阅" + (isSuccess ? "成功" : "失败"));
-            } catch (MqttException e) {
-                LOG.error("主题: " + topic + "订阅失败", e);
-                throw RuntimeUtils.wrapRuntimeThrow(e);
-            }
+            subscribe(topic, qosEnum);
         }
     }
 
     @Override
-    public void subscribe(List<String> topics, QosEnum qosEnum, long timeout) {
-        String[] topicArray = topics.toArray(new String[0]);
-        subscribe(topicArray, qosEnum, timeout);
-    }
-
-    @Override
-    public void subscribe(String[] topics, QosEnum qosEnum) {
-        subscribe(topics, qosEnum, -1);
-    }
-
-    @Override
     public void subscribe(List<String> topics, QosEnum qosEnum) {
-        String[] topicArray = topics.toArray(new String[0]);
-        subscribe(topicArray, qosEnum);
+        for (String topic : topics) {
+            subscribe(topic, qosEnum);
+        }
     }
 
     @Override
-    public boolean subscribe(String topic, QosEnum qosEnum) {
-        return subscribe(topic, qosEnum, -1);
-    }
-
-    @Override
-    public boolean unSubscribe(String topic) {
+    public void unSubscribe(String topic) {
         try {
-            IMqttToken token = mqttAsyncClient.unsubscribe(topic);
-            token.waitForCompletion();
-            boolean isSuccess = token.isComplete();
-            LOG.info("主题: " + topic + "取消订阅" + (isSuccess ? "成功" : "失败"));
-            return isSuccess;
+            mqttAsyncClient.unsubscribe(topic, null, new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    fireEvent(MqttEvent.EVENT.MQTT_UN_SUBSCRIBE_SUCCESS);
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    fireEvent(MqttEvent.EVENT.MQTT_UN_SUBSCRIBE_FAIL);
+                }
+            });
         } catch (MqttException e) {
             LOG.error("主题: " + topic + "取消订阅失败", e);
             throw RuntimeUtils.wrapRuntimeThrow(e);
@@ -276,20 +294,33 @@ public final class Mqtt implements IModule, IMqtt {
     }
 
     @Override
-    public void unSubscribe(List<String> topicList) {
-        for(String topic : topicList){
+    public void unSubscribe(String[] topics) {
+        for (String topic : topics) {
             unSubscribe(topic);
         }
     }
 
     @Override
-    public boolean publish(String topic, byte[] payload, QosEnum qos, boolean retained, long timeout) {
+    public void unSubscribe(List<String> topics) {
+        for (String topic : topics) {
+            unSubscribe(topic);
+        }
+    }
+
+    @Override
+    public void publish(String topic, byte[] payload, QosEnum qos, boolean retained) {
         try {
-            IMqttToken token = mqttAsyncClient.publish(topic, payload, qos.getValue(), retained);
-            token.waitForCompletion(timeout);
-            boolean isSuccess = token.isComplete();
-            LOG.info("主题: " + topic + "发布数据" + (isSuccess ? "成功" : "失败"));
-            return isSuccess;
+            mqttAsyncClient.publish(topic, payload, qos.getValue(), retained, null, new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    fireEvent(MqttEvent.EVENT.MQTT_PUBLISH_SUCCESS);
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    fireEvent(MqttEvent.EVENT.MQTT_PUBLISH_FAIL);
+                }
+            });
         } catch (MqttException e) {
             LOG.error("主题: " + topic + "发布数据失败", e);
             throw RuntimeUtils.wrapRuntimeThrow(e);
@@ -297,23 +328,13 @@ public final class Mqtt implements IModule, IMqtt {
     }
 
     @Override
-    public boolean publish(String topic, byte[] payload, QosEnum qos, boolean retained) {
-        return publish(topic, payload, qos, retained, -1);
+    public void publish(String topic, String payload, QosEnum qos, boolean retained) {
+        publish(topic, payload.getBytes(), qos, retained);
     }
 
     @Override
-    public boolean publish(String topic, String payload, QosEnum qos, boolean retained, long timeout) {
-        return publish(topic, payload.getBytes(), qos, retained, timeout);
-    }
-
-    @Override
-    public boolean publish(String topic, String payload, QosEnum qos, boolean retained) {
-        return publish(topic, payload.getBytes(), qos, retained);
-    }
-
-    @Override
-    public boolean publish(String topic, String payload, QosEnum qos) {
-        return publish(topic, payload.getBytes(), qos, false);
+    public void publish(String topic, String payload, QosEnum qos) {
+        publish(topic, payload.getBytes(), qos, false);
     }
 
 
