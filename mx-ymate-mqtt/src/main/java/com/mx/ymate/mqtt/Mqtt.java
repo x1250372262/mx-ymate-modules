@@ -99,9 +99,10 @@ public final class Mqtt implements IModule, IMqtt {
             if (!config.isInitialized()) {
                 config.initialize(this);
             }
-            if (config.isEnabled() && config.autoConnect()) {
-                connect();
-            }
+//            if (config.isEnabled() && config.autoConnect()) {
+//                //等待框架启动成功
+//                connect();
+//            }
             initialized = true;
             YMP.showVersion("初始化 mx-ymate-mqtt-mqtt-${version} 模块成功", new Version(1, 0, 0, Mqtt.class, Version.VersionType.Release));
         }
