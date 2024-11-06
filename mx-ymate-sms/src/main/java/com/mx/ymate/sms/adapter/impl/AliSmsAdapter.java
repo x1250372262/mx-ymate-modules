@@ -27,7 +27,6 @@ public class AliSmsAdapter implements ISmsAdapter {
 
     private String aliSign;
 
-    private String aliTemplateCode;
 
     private Client client;
 
@@ -46,7 +45,6 @@ public class AliSmsAdapter implements ISmsAdapter {
             throw new RuntimeException(CHANEL_ERROR.msg());
         }
         this.aliSign = aliSign;
-        this.aliTemplateCode = aliTemplateCode;
         templateIdMap = new HashMap<>();
         for (String templateId : templateIds) {
             String[] arr = StringUtils.split(templateId, "=");

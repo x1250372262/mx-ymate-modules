@@ -19,15 +19,15 @@ public interface ISmsConfig extends IInitialization<ISms> {
 
     String CHANNEL = "channel";
     String TYPE = "type";
-    String SECRET_ID = "secret_id";
-    String SECRET_KEY = "secret_key";
-    String TX_APP_ID = "tx_app_id";
-    String TX_REGION = "tx_region";
-    String TX_SIGN_NAME = "tx_sign_name";
-    String TX_TEMPLATE_ID = "tx_template_id";
-    String ALI_SIGN = "ali_sign";
-    String ALI_TEMPLATE_CODE = "ali_template_code";
-    String ALI_ENDPOINT = "ali_endpoint";
+    String SECRET_ID = "secretId";
+    String SECRET_KEY = "secretKey";
+    String TX_APP_ID = "txAppId";
+    String TX_REGION = "txRegion";
+    String TX_SIGN_NAME = "txSignName";
+    String TX_TEMPLATE_ID = "txTemplateId";
+    String ALI_SIGN = "aliSign";
+    String ALI_TEMPLATE_CODE = "aliTemplateCode";
+    String ALI_ENDPOINT = "aliEndpoint";
 
     String TYPE_CHINESE = "smschinese";
     String TYPE_TX = "tx";
