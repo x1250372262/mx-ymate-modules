@@ -44,7 +44,7 @@
             </excludes>
         </fileSet>
         <fileSet>
-            <directory>shell</directory>
+            <directory>package/shell</directory>
             <outputDirectory></outputDirectory>
             <fileMode>0744</fileMode>
             <excludes>

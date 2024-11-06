@@ -5,7 +5,7 @@
         <ymate.module.embed.version>1.0.2</ymate.module.embed.version>
     </properties>
     <build>
-        <finalName>sft-tej-manager</finalName>
+        <finalName>名称</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -102,7 +102,7 @@
                         <filter>${assembly.filter.properties}</filter>
                     </filters>
                     <descriptors>
-                        <descriptor>assembly/everything.xml</descriptor>
+                        <descriptor>package/assembly/everything.xml</descriptor>
                     </descriptors>
                 </configuration>
                 <executions>

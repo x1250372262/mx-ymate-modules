@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>mx-ymate-modules</artifactId>
-        <groupId>com.mx.moudules</groupId>
+        <groupId>com.mx.modules</groupId>
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -27,7 +27,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.mx.moudules</groupId>
+            <groupId>com.mx.modules</groupId>
             <artifactId>mx-ymate-dev</artifactId>
             <scope>provided</scope>
         </dependency>

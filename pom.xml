@@ -4,7 +4,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.mx.moudules</groupId>
+    <groupId>com.mx.modules</groupId>
     <artifactId>mx-ymate-modules</artifactId>
     <version>1.0.0</version>
     <modules>
@@ -16,7 +16,6 @@
         <module>mx-ymate-excel</module>
         <module>mx-ymate-work-robot</module>
         <module>mx-ymate-clickhouse</module>
-        <module>mx-ymate-monitor</module>
         <module>mx-ymate-maven-plugin</module>
         <module>mx-ymate-mqtt</module>
         <module>mx-ymate-sms</module>
@@ -41,10 +40,10 @@
         <javax.servlet.api.version>3.0.1</javax.servlet.api.version>
         <jsp.api.version>2.2</jsp.api.version>
         <sa.token.version>1.39.0</sa.token.version>
-        <minio.version>8.5.9</minio.version>
-        <qiniu.java.sdk.version>7.15.0</qiniu.java.sdk.version>
-        <cosapi.version>5.6.205</cosapi.version>
-        <aliyun.sdk.oss.version>3.17.4</aliyun.sdk.oss.version>
+        <minio.version>8.5.13</minio.version>
+        <qiniu.java.sdk.version>7.16.0</qiniu.java.sdk.version>
+        <cos.api.version>5.6.234</cos.api.version>
+        <aliyun.sdk.oss.version>3.18.1</aliyun.sdk.oss.version>
         <org.apache.httpcomponents.version>4.5.14</org.apache.httpcomponents.version>
         <freemarker.version>2.3.31</freemarker.version>
         <jansi.version>2.4.1</jansi.version>
@@ -64,11 +63,17 @@
         <eclipse.paho.version>1.2.5</eclipse.paho.version>
         <tencentcloud.sdk.java.version>4.0.11</tencentcloud.sdk.java.version>
         <aliyun.sms.version>3.0.0</aliyun.sms.version>
+        <thumbnailator.version>0.4.20</thumbnailator.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-
+            <!--生成缩略图-->
+            <dependency>
+                <groupId>net.coobird</groupId>
+                <artifactId>thumbnailator</artifactId>
+                <version>${thumbnailator.version}</version>
+            </dependency>
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
@@ -113,18 +118,18 @@
                 <artifactId>qiniu-java-sdk</artifactId>
                 <version>${qiniu.java.sdk.version}</version>
             </dependency>
-<!--            &lt;!&ndash;腾讯云文件存储&ndash;&gt;-->
-<!--            <dependency>-->
-<!--                <groupId>com.qcloud</groupId>-->
-<!--                <artifactId>cos_api</artifactId>-->
-<!--                <version>${cos_api.version}</version>-->
-<!--            </dependency>-->
-<!--            &lt;!&ndash;阿里云文件存储&ndash;&gt;-->
-<!--            <dependency>-->
-<!--                <groupId>com.aliyun.oss</groupId>-->
-<!--                <artifactId>aliyun-sdk-oss</artifactId>-->
-<!--                <version>${aliyun-sdk-oss.version}</version>-->
-<!--            </dependency>-->
+            <!--腾讯云文件存储-->
+            <dependency>
+                <groupId>com.qcloud</groupId>
+                <artifactId>cos_api</artifactId>
+                <version>${cos.api.version}</version>
+            </dependency>
+            <!--阿里云文件存储-->
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>${aliyun.sdk.oss.version}</version>
+            </dependency>
             <!--netty-->
             <dependency>
                 <groupId>io.netty</groupId>
@@ -204,6 +209,11 @@
             <dependency>
                 <groupId>com.google.zxing</groupId>
                 <artifactId>core</artifactId>
+                <version>${zxing.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>javase</artifactId>
                 <version>${zxing.version}</version>
             </dependency>
             <dependency>
@@ -308,59 +318,65 @@
             </dependency>
 
             <!--自定义模块bom-->
-            <!--核心模块-->
+            <!--短信验证码-->
             <dependency>
-                <groupId>com.mx.moudules</groupId>
-                <artifactId>mx-ymate-dev</artifactId>
-                <version>${version}</version>
+                <groupId>com.mx.modules</groupId>
+                <artifactId>mx-ymate-captcha-sms</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <!--clickhouse模块-->
             <dependency>
-                <groupId>com.mx.moudules</groupId>
+                <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-clickhouse</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
+            </dependency>
+            <!--核心模块-->
+            <dependency>
+                <groupId>com.mx.modules</groupId>
+                <artifactId>mx-ymate-dev</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <!--excel模块-->
             <dependency>
-                <groupId>com.mx.moudules</groupId>
+                <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-excel</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <!--mqtt模块-->
             <dependency>
-                <groupId>com.mx.moudules</groupId>
+                <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-mqtt</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <!--netty模块-->
             <dependency>
-                <groupId>com.mx.moudules</groupId>
+                <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-netty</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <!--redis模块-->
             <dependency>
-                <groupId>com.mx.moudules</groupId>
+                <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-redis</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <!--安全模块-->
             <dependency>
-                <groupId>com.mx.moudules</groupId>
+                <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-security</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <!--短信模块-->
             <dependency>
-                <groupId>com.mx.moudules</groupId>
+                <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-sms</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <!--文件上传模块-->
             <dependency>
-                <groupId>com.mx.moudules</groupId>
+                <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-upload</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
