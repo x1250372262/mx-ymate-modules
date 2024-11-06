@@ -64,6 +64,8 @@
         <tencentcloud.sdk.java.version>4.0.11</tencentcloud.sdk.java.version>
         <aliyun.sms.version>3.0.0</aliyun.sms.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
+        <mysql.connector.java.version>8.0.31</mysql.connector.java.version>
+        <druid.version>1.2.11</druid.version>
     </properties>
 
     <dependencyManagement>
@@ -258,6 +260,16 @@
                 <artifactId>dysmsapi20170525</artifactId>
                 <version>${aliyun.sms.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.connector.java.version}</version>
+            </dependency>
 
 
             <!--ymp框架bom-->
@@ -322,61 +334,61 @@
             <dependency>
                 <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-captcha-sms</artifactId>
-                <version>${project.version}</version>
+                <version>${version}</version>
             </dependency>
             <!--clickhouse模块-->
             <dependency>
                 <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-clickhouse</artifactId>
-                <version>${project.version}</version>
+                <version>${version}</version>
             </dependency>
             <!--核心模块-->
             <dependency>
                 <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-dev</artifactId>
-                <version>${project.version}</version>
+                <version>${version}</version>
             </dependency>
             <!--excel模块-->
             <dependency>
                 <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-excel</artifactId>
-                <version>${project.version}</version>
+                <version>${version}</version>
             </dependency>
             <!--mqtt模块-->
             <dependency>
                 <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-mqtt</artifactId>
-                <version>${project.version}</version>
+                <version>${version}</version>
             </dependency>
             <!--netty模块-->
             <dependency>
                 <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-netty</artifactId>
-                <version>${project.version}</version>
+                <version>${version}</version>
             </dependency>
             <!--redis模块-->
             <dependency>
                 <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-redis</artifactId>
-                <version>${project.version}</version>
+                <version>${version}</version>
             </dependency>
             <!--安全模块-->
             <dependency>
                 <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-security</artifactId>
-                <version>${project.version}</version>
+                <version>${version}</version>
             </dependency>
             <!--短信模块-->
             <dependency>
                 <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-sms</artifactId>
-                <version>${project.version}</version>
+                <version>${version}</version>
             </dependency>
             <!--文件上传模块-->
             <dependency>
                 <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-upload</artifactId>
-                <version>${project.version}</version>
+                <version>${version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
