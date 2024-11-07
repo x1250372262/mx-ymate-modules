@@ -96,7 +96,7 @@ public final class DefaultMxUploadConfig implements IMxUploadConfig {
         if (StringUtils.isNotBlank(showUrl) && !showUrl.endsWith(StrUtil.SLASH)) {
             showUrl = showUrl + StrUtil.SLASH;
         }
-        adapter = getAdapter(AdapterEnum.fromValue(configReader.getString(ADAPTER)));
+        adapter = getAdapter(AdapterEnum.fromValue(configReader.getString(ADAPTER,AdapterEnum.LOCAL.getValue())));
         jsonFilePath = configReader.getString(JSON_FILE_PATH);
         isCreateThumb = configReader.getBoolean(IS_CREATE_THUMB, false);
         thumbWidth = configReader.getInt(THUMB_WIDTH);
