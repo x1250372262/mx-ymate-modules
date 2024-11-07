@@ -291,7 +291,7 @@ public final class DefaultMxUploadConfig implements IMxUploadConfig {
     @Override
     public boolean checkQiNiuConfig() {
         return StringUtils.isNotBlank(showUrl) && StringUtils.isNotBlank(qiNiuAccessKey) && StringUtils.isNotBlank(qiNiuSecretKey)
-                && StringUtils.isNotBlank(qiNiuBucket) && StringUtils.isNotBlank(qiNiuRegion);
+                && StringUtils.isNotBlank(qiNiuBucket);
     }
 
     @Override
