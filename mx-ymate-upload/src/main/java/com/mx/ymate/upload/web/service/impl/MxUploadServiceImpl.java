@@ -7,7 +7,7 @@ import net.ymate.platform.core.beans.annotation.Bean;
 import net.ymate.platform.webmvc.IUploadFileWrapper;
 
 /**
- * @Author: xujianpeng.
+ * @Author: mengxiang.
  * @Date 2024/11/1.
  * @Time: 09:30.
  * @Description:
