@@ -413,3 +413,62 @@ columns = [
 <body ng-app="" mx_permission="MANAGER_STATION_PERMISSION"></body>
 ```
 没有MANAGER_STATION_PERMISSION权限的 就会提示页面没有权限访问  之后考虑直接关掉
+
+
+
+### mqtt使用
+#### 需要引入如下两个js
+1.[mqtt-min.js](statics/plugins/mqtt/mqtt.min.js)
+
+2.[mqtt.js](statics/js/custom/mqtt.js)
+
+#### 使用方法
+```html
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+MQTT示例
+<button id="unsub">取消订阅</button>
+<button id="pushMessage">发布消息</button>
+<button id="disconnect">断开连接</button>
+</body>
+<script type="text/javascript" src="/statics/js/system/jquery.min.js"></script>
+<script type="text/javascript" src="/statics/plugins/mqtt/mqtt.min.js"></script>
+<script type="text/javascript" src="/statics/js/custom/mqtt.js"></script>
+<script>
+    $(function(){
+        const mqttClient = Mqtt.builder();
+        mqttClient.url("ws://localhost:8083/mqtt")
+                .clientId("mqttWeb")
+                .userName("")
+                .password("")
+                .onConnectSuccess(function(){
+                    console.log("连接成功")
+                    mqttClient.batchSubscribe(new Array("aaabbb","aaabbb1"),Mqtt.Qos.EXACTLY_ONCE)
+                })
+                .onConnectFailure(function(error){console.error("连接失败",error)})
+                .onMessageArrived(function(message){console.log("消息:" + message)})
+                .onConnectionLost(function(response){console.log("连接丢失", response)})
+                .connect();
+
+
+        $("#unsub").click(function(){
+            mqttClient.unsubscribe(new Array("aaabbb","aaabbb1"))
+        });
+
+        $("#pushMessage").click(function(){
+            mqttClient.publish("aaa111","nihao")
+            mqttClient.publish("aaa222","nihao2")
+        });
+
+        $("#disconnect").click(function(){
+            mqttClient.disconnect();
+        });
+    });
+</script>
+</html>
+```

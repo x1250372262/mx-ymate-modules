@@ -1,7 +1,3 @@
-const PAGE_TYPE = {
-    CLIENT: "client",
-    SERVER: "server"
-}
 
 class Table {
     constructor() {
@@ -68,7 +64,7 @@ class Table {
         // 首页页码
         this._pageNumber = 1;
         // 设置为服务器端分页
-        this._sidePagination = PAGE_TYPE.SERVER;
+        this._sidePagination = Table.PageType.SERVER;
         //显示的列
         this._columns = [];
         //查询参数函数
@@ -84,6 +80,11 @@ class Table {
         //是否初始化表格
         this.isInitTable = false;
     }
+
+    static PageType = {
+        CLIENT: "client",
+        SERVER: "server"
+    };
 
     static builder() {
         return new Table();
