@@ -21,7 +21,6 @@
         <dependency>
             <groupId>com.mx.modules</groupId>
             <artifactId>mx-ymate-dev</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -60,7 +59,6 @@
         <dependency>
             <groupId>net.ymate.platform</groupId>
             <artifactId>ymate-platform-starter-web</artifactId>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

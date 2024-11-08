@@ -282,7 +282,19 @@
             <!--webmvc模块-->
             <dependency>
                 <groupId>net.ymate.platform</groupId>
+                <artifactId>ymate-platform-webmvc</artifactId>
+                <version>${ymate.platform.version}</version>
+            </dependency>
+            <!--webstarter模块-->
+            <dependency>
+                <groupId>net.ymate.platform</groupId>
                 <artifactId>ymate-platform-starter-web</artifactId>
+                <version>${ymate.platform.version}</version>
+            </dependency>
+            <!--starter模块-->
+            <dependency>
+                <groupId>net.ymate.platform</groupId>
+                <artifactId>ymate-platform-starter</artifactId>
                 <version>${ymate.platform.version}</version>
             </dependency>
             <!--日志模块-->
@@ -309,11 +321,11 @@
                 <artifactId>ymate-platform-persistence-redis</artifactId>
                 <version>${ymate.platform.version}</version>
             </dependency>
-            <!--文件上传模块-->
+            <!--mongodb模块-->
             <dependency>
-                <groupId>net.ymate.module</groupId>
-                <artifactId>ymate-module-fileuploader</artifactId>
-                <version>${ymate.module.fileuploader.version}</version>
+                <groupId>net.ymate.platform</groupId>
+                <artifactId>ymate-platform-persistence-mongodb</artifactId>
+                <version>${ymate.platform.version}</version>
             </dependency>
             <!--定时任务模块-->
             <dependency>

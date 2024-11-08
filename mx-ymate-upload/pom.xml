@@ -19,19 +19,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.ymate.platform</groupId>
-            <artifactId>ymate-platform-core</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.mx.modules</groupId>
             <artifactId>mx-ymate-dev</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.ymate.platform</groupId>
             <artifactId>ymate-platform-starter-web</artifactId>
-            <scope>provided</scope>
         </dependency>
         <!--minio文件存储-->
         <dependency>
