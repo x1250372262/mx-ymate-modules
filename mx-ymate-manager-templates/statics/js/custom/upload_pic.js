@@ -36,6 +36,7 @@ $(function () {
             type: 'POST',
             url: UPLOAD_FILE,
             data: data,
+            headers: {"X-Requested-With":"XMLHttpRequest"},
             cache: false,
             processData: false,
             contentType: false,
