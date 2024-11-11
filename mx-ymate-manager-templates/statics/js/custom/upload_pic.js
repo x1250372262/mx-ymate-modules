@@ -16,12 +16,12 @@ $(function () {
         if ($len === 0) {
             return false;
         } else {
-            var fileAccaccept = $this.attr('filter');
+            var fileFilter = $this.attr('filter');
             var fileType = $input.files[0].type;
             var type = (fileType.substr(fileType.lastIndexOf("/") + 1)).toLowerCase();
 
-            if (!type || fileAccaccept.indexOf(type) === -1) {
-                layer.msg("您上传图片的类型不符合:"+fileAccaccept, {
+            if (!type || fileFilter.indexOf(type) === -1) {
+                layer.msg("您上传图片的类型不符合:"+fileFilter, {
                     icon: 'cry',
                     skin: $(this).data('bg')
                 });
