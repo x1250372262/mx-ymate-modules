@@ -155,9 +155,9 @@ ymp.configs.module.sms.tx.tx_template_id=
 
 #短信服务商 网建=smschinese|腾讯=tx|阿里=ali 不能为空 可以自己指定 实现com.mx.ymate.sms.adapter.ISmsAdapter 接口
 ymp.configs.module.sms.ali.type=ali
-#SecretID
+#Secret ID
 ymp.configs.module.sms.ali.secret_id=
-#SecretKey
+#Secret Key
 ymp.configs.module.sms.ali.secret_key=
 #-------------------------------------
 # 阿里配置
