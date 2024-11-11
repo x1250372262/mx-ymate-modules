@@ -9,7 +9,6 @@ import net.ymate.platform.webmvc.annotation.PathVariable;
 import net.ymate.platform.webmvc.annotation.RequestMapping;
 import net.ymate.platform.webmvc.annotation.RequestParam;
 import net.ymate.platform.webmvc.base.Type;
-import net.ymate.platform.webmvc.cors.annotation.CrossDomain;
 import net.ymate.platform.webmvc.view.IView;
 import net.ymate.platform.webmvc.view.View;
 import net.ymate.platform.webmvc.view.impl.BinaryView;
@@ -26,7 +25,6 @@ import java.io.File;
  */
 @Controller
 @RequestMapping("/mx/qrcode/")
-@CrossDomain
 public class QrCodeController {
 
     /**

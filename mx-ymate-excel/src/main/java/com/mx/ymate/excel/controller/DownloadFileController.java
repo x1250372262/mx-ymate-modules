@@ -4,7 +4,6 @@ import net.ymate.platform.commons.util.RuntimeUtils;
 import net.ymate.platform.webmvc.annotation.Controller;
 import net.ymate.platform.webmvc.annotation.PathVariable;
 import net.ymate.platform.webmvc.annotation.RequestMapping;
-import net.ymate.platform.webmvc.cors.annotation.CrossDomain;
 import net.ymate.platform.webmvc.view.IView;
 import net.ymate.platform.webmvc.view.View;
 
@@ -19,7 +18,6 @@ import java.io.File;
  */
 @Controller
 @RequestMapping("/mx/excel/download")
-@CrossDomain
 public class DownloadFileController {
 
     /**

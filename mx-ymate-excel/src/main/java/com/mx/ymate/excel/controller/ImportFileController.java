@@ -11,7 +11,6 @@ import net.ymate.platform.webmvc.annotation.FileUpload;
 import net.ymate.platform.webmvc.annotation.RequestMapping;
 import net.ymate.platform.webmvc.annotation.RequestParam;
 import net.ymate.platform.webmvc.base.Type;
-import net.ymate.platform.webmvc.cors.annotation.CrossDomain;
 import net.ymate.platform.webmvc.view.IView;
 
 /**
@@ -22,7 +21,6 @@ import net.ymate.platform.webmvc.view.IView;
  */
 @Controller
 @RequestMapping(value = "/mx/excel/import", method = Type.HttpMethod.OPTIONS)
-@CrossDomain
 public class ImportFileController {
 
     @Inject
