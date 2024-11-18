@@ -5,7 +5,6 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mx.ymate.netty.INettyConfig;
-import com.mx.ymate.netty.handler.HeartBeatClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -20,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
+import static com.mx.ymate.netty.INettyConfig.HEART_BEAT_TIME_ITEM_COUNT;
 
 /**
  * @Author: mengxiang.
@@ -79,15 +80,16 @@ public class NettyClient {
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline channelPipeline = ch.pipeline();
                         channelPipeline.addLast(new LoggingHandler(LogLevel.INFO));
-                        if (Objects.nonNull(config.clientHeartBeatTime())) {
-                            channelPipeline.addLast(new IdleStateHandler(0, config.clientHeartBeatTime(), 0));
+                        List<Integer> heartBeatTimeList = config.clientHeartBeatTimeList();
+                        if (CollUtil.isNotEmpty(heartBeatTimeList) && heartBeatTimeList.size() == HEART_BEAT_TIME_ITEM_COUNT) {
+                            channelPipeline.addLast(new IdleStateHandler(heartBeatTimeList.get(0), heartBeatTimeList.get(1), heartBeatTimeList.get(2)));
                         }
                         channelPipeline.addLast(config.clientDecoder());
                         for (ChannelInboundHandlerAdapter clazz : config.clientHandler()) {
                             channelPipeline.addLast(clazz);
                         }
-                        if (Objects.nonNull(config.clientHeartBeatTime())) {
-                            channelPipeline.addLast(new HeartBeatClientHandler());
+                        if (CollUtil.isNotEmpty(heartBeatTimeList) && heartBeatTimeList.size() == HEART_BEAT_TIME_ITEM_COUNT) {
+                            channelPipeline.addLast(config.clientHeart());
                         }
                     }
                 });

@@ -1,8 +1,9 @@
 package com.mx.ymate.netty.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mx.ymate.netty.INettyConfig;
-import com.mx.ymate.netty.handler.MappingHandler;
+import com.mx.ymate.netty.websocket.handler.MappingHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -16,7 +17,12 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 import net.ymate.platform.log.Logs;
+
+import java.util.List;
+
+import static com.mx.ymate.netty.INettyConfig.HEART_BEAT_TIME_ITEM_COUNT;
 
 /**
  * @Author: mengxiang.
@@ -45,10 +51,17 @@ public class NettyWebsocket {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline channelPipeline = ch.pipeline();
+                        List<Integer> heartBeatTimeList = config.websocketHeartBeatTimeList();
+                        if (CollUtil.isNotEmpty(heartBeatTimeList) && heartBeatTimeList.size() == HEART_BEAT_TIME_ITEM_COUNT) {
+                            channelPipeline.addLast(new IdleStateHandler(heartBeatTimeList.get(0), heartBeatTimeList.get(1), heartBeatTimeList.get(2)));
+                        }
                         channelPipeline.addLast(new HttpServerCodec());
                         channelPipeline.addLast(new HttpObjectAggregator(65536));
                         channelPipeline.addLast(new MappingHandler());
                         channelPipeline.addLast(new WebSocketServerProtocolHandler(config.websocketMapping(), true));
+                        if (CollUtil.isNotEmpty(heartBeatTimeList) && heartBeatTimeList.size() == HEART_BEAT_TIME_ITEM_COUNT) {
+                            channelPipeline.addLast(config.websocketHeart());
+                        }
                     }
                 });
         serverBootstrap.bind(config.websocketPort()).sync();

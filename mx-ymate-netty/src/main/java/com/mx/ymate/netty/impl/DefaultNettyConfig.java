@@ -17,19 +17,16 @@ package com.mx.ymate.netty.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.mx.ymate.dev.util.ConfigUtil;
+import com.mx.ymate.netty.AbstractHeartBeatHandler;
 import com.mx.ymate.netty.INetty;
 import com.mx.ymate.netty.INettyConfig;
-import com.mx.ymate.netty.heart.IHeartClient;
-import com.mx.ymate.netty.heart.IHeartServer;
-import com.mx.ymate.netty.heart.impl.HeartClientImpl;
-import com.mx.ymate.netty.heart.impl.HeartServerImpl;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import net.ymate.platform.commons.util.ClassUtils;
 import net.ymate.platform.core.module.IModuleConfigurer;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.mx.ymate.dev.constants.Constants.XG;
 
@@ -43,29 +40,27 @@ public final class DefaultNettyConfig implements INettyConfig {
     private boolean enabled;
     private Boolean autoStart;
     private String client;
+
     private Integer serverPort;
     private Integer serverStartPort;
     private Integer serverEndPort;
-    private Integer serverHeartBeatTime;
-
-    private IHeartServer heartServer;
     private List<String> serverExcludePort;
+    private List<Integer> serverHeartBeatTimeList;
+    private AbstractHeartBeatHandler serverHeart;
     private final List<ChannelInboundHandlerAdapter> serverHandler = new ArrayList<>();
     private ChannelInboundHandlerAdapter serverDecoder;
+
     private Integer clientNum;
     private List<String> clientRemoteAddress;
-    private Integer clientHeartBeatTime;
-
-    private IHeartClient heartClient;
+    private List<Integer> clientHeartBeatTimeList;
+    private AbstractHeartBeatHandler clientHeart;
     private final List<ChannelInboundHandlerAdapter> clientHandler = new ArrayList<>();
     private ChannelInboundHandlerAdapter clientDecoder;
-    private String serverDecoderClassName;
-    private String clientDecoderClassName;
 
     private boolean websocketEnabled;
-
     private int websocketPort;
-
+    private List<Integer> websocketHeartBeatTimeList;
+    private AbstractHeartBeatHandler websocketHeart;
     private String websocketMapping;
     private String websocketPackage;
 
@@ -89,26 +84,36 @@ public final class DefaultNettyConfig implements INettyConfig {
         serverPort = configUtil.getInteger(SERVER_PORT);
         serverStartPort = configUtil.getInteger(SERVER_START_PORT);
         serverEndPort = configUtil.getInteger(SERVER_END_PORT);
-        serverHeartBeatTime = configUtil.getInteger(SERVER_HEART_BEAT_TIME);
-        heartServer = configUtil.getClassImpl(SERVER_HEART_BEAT_CLASS, IHeartServer.class);
-        if (heartServer == null) {
-            heartServer = new HeartServerImpl();
-        }
         serverExcludePort = ObjectUtil.defaultIfNull(configUtil.getList(SERVER_EXCLUDE_PORT), new ArrayList<>());
+        List<String> heartBeatTimeTempList = ObjectUtil.defaultIfNull(configUtil.getList(SERVER_HEART_BEAT_TIME), new ArrayList<>());
+        if(heartBeatTimeTempList.size() == HEART_BEAT_TIME_ITEM_COUNT){
+            serverHeartBeatTimeList =  heartBeatTimeTempList.stream()
+                    .map(Integer::valueOf)
+                    .collect(Collectors.toList());
+        }
+        serverHeart = configUtil.getClassImpl(SERVER_HEART_BEAT_CLASS, AbstractHeartBeatHandler.class);
+        if(serverHeart == null){
+            serverHeart = new AbstractHeartBeatHandler.DefaultServerHeartImpl();
+        }
         List<String> serverHandlerClassNameList = ObjectUtil.defaultIfNull(configUtil.getList(SERVER_HANDLER_CLASS), new ArrayList<>());
         if (!serverHandlerClassNameList.isEmpty()) {
             for (String className : serverHandlerClassNameList) {
                 serverHandler.add(ClassUtils.impl(className, ChannelInboundHandlerAdapter.class, this.getClass()));
             }
         }
+        serverDecoder = configUtil.getClassImpl(SERVER_DECODER_CLASS, ChannelInboundHandlerAdapter.class);
 
-        serverDecoderClassName = configUtil.getString(SERVER_DECODER_CLASS);
         clientNum = configUtil.getInteger(CLIENT_NUM, 1);
         clientRemoteAddress = ObjectUtil.defaultIfNull(configUtil.getList(CLIENT_REMOTE_ADDRESS), new ArrayList<>());
-        clientHeartBeatTime = configUtil.getInteger(CLIENT_HEART_BEAT_TIME);
-        heartClient = configUtil.getClassImpl(CLIENT_HEART_BEAT_CLASS, IHeartClient.class);
-        if (heartClient == null) {
-            heartClient = new HeartClientImpl();
+        heartBeatTimeTempList = ObjectUtil.defaultIfNull(configUtil.getList(CLIENT_HEART_BEAT_TIME), new ArrayList<>());
+        if(heartBeatTimeTempList.size() == HEART_BEAT_TIME_ITEM_COUNT){
+            clientHeartBeatTimeList =  heartBeatTimeTempList.stream()
+                    .map(Integer::valueOf)
+                    .collect(Collectors.toList());
+        }
+        clientHeart = configUtil.getClassImpl(CLIENT_HEART_BEAT_CLASS, AbstractHeartBeatHandler.class);
+        if (clientHeart == null) {
+            clientHeart = new AbstractHeartBeatHandler.DefaultClientHeartImpl();
         }
         List<String> clientHandlerClassNameList = ObjectUtil.defaultIfNull(configUtil.getList(CLIENT_HANDLER_CLASS), new ArrayList<>());
         if (!clientHandlerClassNameList.isEmpty()) {
@@ -116,10 +121,20 @@ public final class DefaultNettyConfig implements INettyConfig {
                 clientHandler.add(ClassUtils.impl(className, ChannelInboundHandlerAdapter.class, this.getClass()));
             }
         }
-        clientDecoderClassName = configUtil.getString(CLIENT_DECODER_CLASS);
+        clientDecoder = configUtil.getClassImpl(CLIENT_DECODER_CLASS, ChannelInboundHandlerAdapter.class);
 
         websocketEnabled = configUtil.getBool(WEBSOCKET_ENABLED, false);
         websocketPort = configUtil.getInt(WEBSOCKET_PORT, 8756);
+        heartBeatTimeTempList = ObjectUtil.defaultIfNull(configUtil.getList(WEBSOCKET_HEART_BEAT_TIME), new ArrayList<>());
+        if(heartBeatTimeTempList.size() == HEART_BEAT_TIME_ITEM_COUNT){
+            websocketHeartBeatTimeList =  heartBeatTimeTempList.stream()
+                    .map(Integer::valueOf)
+                    .collect(Collectors.toList());
+        }
+        websocketHeart = configUtil.getClassImpl(WEBSOCKET_HEART_BEAT_CLASS, AbstractHeartBeatHandler.class);
+        if (websocketHeart == null) {
+            websocketHeart = new AbstractHeartBeatHandler.DefaultWebsocketHeartImpl();
+        }
         websocketMapping = configUtil.getString(WEBSOCKET_MAPPING, "/websocket");
         if (!websocketMapping.startsWith(XG)) {
             websocketMapping = XG + websocketMapping;
@@ -170,13 +185,13 @@ public final class DefaultNettyConfig implements INettyConfig {
     }
 
     @Override
-    public Integer serverHeartBeatTime() {
-        return serverHeartBeatTime;
+    public List<Integer> serverHeartBeatTimeList() {
+        return serverHeartBeatTimeList;
     }
 
     @Override
-    public IHeartServer heartServer() {
-        return heartServer;
+    public AbstractHeartBeatHandler serverHeart() {
+        return serverHeart;
     }
 
     @Override
@@ -191,10 +206,6 @@ public final class DefaultNettyConfig implements INettyConfig {
 
     @Override
     public ChannelInboundHandlerAdapter serverDecoder() {
-        if (StringUtils.isNotBlank(serverDecoderClassName)) {
-            serverDecoder = ClassUtils.impl(serverDecoderClassName, ChannelInboundHandlerAdapter.class, this.getClass());
-        }
-
         return serverDecoder;
     }
 
@@ -209,13 +220,13 @@ public final class DefaultNettyConfig implements INettyConfig {
     }
 
     @Override
-    public Integer clientHeartBeatTime() {
-        return clientHeartBeatTime;
+    public List<Integer> clientHeartBeatTimeList() {
+        return clientHeartBeatTimeList;
     }
 
     @Override
-    public IHeartClient heartClient() {
-        return heartClient;
+    public AbstractHeartBeatHandler clientHeart() {
+        return clientHeart;
     }
 
     @Override
@@ -225,9 +236,6 @@ public final class DefaultNettyConfig implements INettyConfig {
 
     @Override
     public ChannelInboundHandlerAdapter clientDecoder() {
-        if (StringUtils.isNotBlank(clientDecoderClassName)) {
-            clientDecoder = ClassUtils.impl(clientDecoderClassName, ChannelInboundHandlerAdapter.class, this.getClass());
-        }
         return clientDecoder;
     }
 
@@ -239,6 +247,16 @@ public final class DefaultNettyConfig implements INettyConfig {
     @Override
     public int websocketPort() {
         return websocketPort;
+    }
+
+    @Override
+    public List<Integer> websocketHeartBeatTimeList() {
+        return websocketHeartBeatTimeList;
+    }
+
+    @Override
+    public AbstractHeartBeatHandler websocketHeart() {
+        return websocketHeart;
     }
 
     @Override

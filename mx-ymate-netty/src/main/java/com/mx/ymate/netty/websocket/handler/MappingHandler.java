@@ -1,11 +1,10 @@
-package com.mx.ymate.netty.handler;
+package com.mx.ymate.netty.websocket.handler;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
-import com.mx.ymate.netty.IMxWebsocketHandler;
 import com.mx.ymate.netty.Netty;
-import com.mx.ymate.netty.annotation.MxWebsocket;
+import com.mx.ymate.netty.websocket.annotation.MxWebsocket;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;

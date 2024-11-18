@@ -1,4 +1,4 @@
-package com.mx.ymate.netty.annotation;
+package com.mx.ymate.netty.websocket.annotation;
 
 import java.lang.annotation.*;
 

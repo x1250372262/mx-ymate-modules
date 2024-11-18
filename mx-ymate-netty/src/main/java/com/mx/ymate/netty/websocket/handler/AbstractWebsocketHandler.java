@@ -1,10 +1,8 @@
-package com.mx.ymate.netty.handler;
+package com.mx.ymate.netty.websocket.handler;
 
-import com.mx.ymate.netty.IMxWebsocketHandler;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import net.ymate.platform.log.ILogger;
-import net.ymate.platform.log.Logs;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -13,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
  * @create: 2024-05-14 14:00
  * @Description:
  */
+@ChannelHandler.Sharable
 public abstract class AbstractWebsocketHandler implements IMxWebsocketHandler {
 
     private static final Log LOG = LogFactory.getLog(AbstractWebsocketHandler.class);

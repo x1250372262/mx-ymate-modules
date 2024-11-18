@@ -1,4 +1,4 @@
-package com.mx.ymate.netty;
+package com.mx.ymate.netty.websocket.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
