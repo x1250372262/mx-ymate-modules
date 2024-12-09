@@ -18,7 +18,6 @@ import net.ymate.platform.core.event.annotation.EventRegister;
 public class MqttInitializer implements IEventRegister {
     @Override
     public void register(Events events) throws Exception {
-        events.registerEvent(ApplicationEvent.class);
         // 订阅模块事件：异步
         events.registerListener(Events.MODE.ASYNC, ApplicationEvent.class, (IEventListener<ApplicationEvent>) context -> {
             if (context.getEventName() == ApplicationEvent.EVENT.APPLICATION_INITIALIZED) {

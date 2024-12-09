@@ -2,15 +2,12 @@ package com.mx.ymate.security.adapter.impl;
 
 import cn.dev33.satoken.SaManager;
 import cn.hutool.core.convert.Convert;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.mx.ymate.security.adapter.ICacheStorageAdapter;
 import com.mx.ymate.security.base.bean.LoginUser;
 import com.mx.ymate.security.satoken.cache.DefaultDao;
 import com.mx.ymate.security.satoken.cache.DefaultStp;
-import net.ymate.platform.commons.lang.BlurObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,14 +33,20 @@ public class DefaultCacheStorageAdapter implements ICacheStorageAdapter {
     }
 
     @Override
-    public void cacheUser(String key, LoginUser loginUser) throws Exception {
-        dataMap.invalidate(key);
-        dataMap.put(key, loginUser);
+    public void cacheUser(String userKey, LoginUser loginUser) throws Exception {
+        dataMap.invalidate(userKey);
+        dataMap.put(userKey, loginUser);
     }
 
     @Override
-    public LoginUser getUser(String key) throws Exception {
-        return (LoginUser) dataMap.getIfPresent(key);
+    public LoginUser getUser(String userKey) throws Exception {
+        Object data = dataMap.getIfPresent(userKey);
+        return data != null ? (LoginUser) data : null;
+    }
+
+    @Override
+    public void clearUser(String userKey) throws Exception {
+        dataMap.invalidate(userKey);
     }
 
     @Override
@@ -65,15 +68,20 @@ public class DefaultCacheStorageAdapter implements ICacheStorageAdapter {
     @Override
     public List<String> permissionList(String permissionKey) throws Exception {
         Object permissionObj = dataMap.getIfPresent(permissionKey);
-        if(permissionObj == null){
+        if (permissionObj == null) {
             return new ArrayList<>();
         }
-        return Convert.toList(String.class,permissionObj);
+        return Convert.toList(String.class, permissionObj);
     }
 
     @Override
     public void cachePermission(String permissionKey, List<String> permissionList) throws Exception {
         dataMap.invalidate(permissionKey);
-        dataMap.put(permissionKey,permissionList);
+        dataMap.put(permissionKey, permissionList);
+    }
+
+    @Override
+    public void clearPermission(String permissionKey) throws Exception {
+        dataMap.invalidate(permissionKey);
     }
 }

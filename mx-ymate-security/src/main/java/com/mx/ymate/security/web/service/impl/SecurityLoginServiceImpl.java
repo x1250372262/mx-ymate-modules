@@ -7,7 +7,6 @@ import cn.hutool.extra.servlet.ServletUtil;
 import com.mx.ymate.dev.constants.Constants;
 import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.dev.util.BeanUtil;
-import com.mx.ymate.redis.api.RedisApi;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
@@ -32,7 +31,6 @@ import net.ymate.platform.core.beans.annotation.Inject;
 import net.ymate.platform.webmvc.context.WebContext;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -111,7 +109,6 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         if (Security.error(r)) {
             return r;
         }
-
         //重置时间和次数
         securityUser.setLoginLockStatus(Constants.BOOL_FALSE);
         securityUser.setLoginErrorCount(0);
@@ -123,10 +120,36 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
                 SecurityUser.FIELDS.LOGIN_LOCK_START_TIME, SecurityUser.FIELDS.LOGIN_LOCK_END_TIME, SecurityUser.FIELDS.LOGIN_IP, SecurityUser.FIELDS.LOGIN_TIME);
         StpUtil.login(securityUser.getId());
         SaTokenInfo saTokenInfo = StpUtil.getTokenInfo();
-        //设置用户到缓存
-        List<String> permissionList = cacheUser(securityUser);
         LoginResult loginResult = BeanUtil.copy(saTokenInfo, LoginResult::new);
         loginResult.setAttrs(r.attrs());
+        doLogin(loginResult, securityUser);
+        //登录完成的事件  不处理成功失败
+        loginHandler.loginComplete(params, securityUser, saTokenInfo);
+        return MxResult.ok().data(loginResult);
+    }
+
+    @Override
+    @OperationLog(operationType = OperationType.LOGIN, title = "管理员扫码登录")
+    public MxResult scanLogin(SecurityUser securityUser) throws Exception {
+        //重置时间和次数
+        securityUser.setLoginLockStatus(Constants.BOOL_FALSE);
+        securityUser.setLoginErrorCount(0);
+        securityUser.setLoginLockStartTime(0L);
+        securityUser.setLoginLockEndTime(0L);
+        securityUser.setLoginTime(DateTimeUtils.currentTimeMillis());
+        securityUser.setLoginIp(ServletUtil.getClientIP(WebContext.getRequest()));
+        iSecurityUserDao.update(securityUser, SecurityUser.FIELDS.LOGIN_ERROR_COUNT, SecurityUser.FIELDS.LOGIN_LOCK_STATUS,
+                SecurityUser.FIELDS.LOGIN_LOCK_START_TIME, SecurityUser.FIELDS.LOGIN_LOCK_END_TIME, SecurityUser.FIELDS.LOGIN_IP, SecurityUser.FIELDS.LOGIN_TIME);
+        StpUtil.login(securityUser.getId());
+        SaTokenInfo saTokenInfo = StpUtil.getTokenInfo();
+        LoginResult loginResult = BeanUtil.copy(saTokenInfo, LoginResult::new);
+        doLogin(loginResult, securityUser);
+        return MxResult.ok().data(loginResult);
+    }
+
+    private void doLogin(LoginResult loginResult, SecurityUser securityUser) throws Exception {
+        //设置用户到缓存
+        List<String> permissionList = cacheUser(securityUser);
         //处理菜单数据
         List<SecurityMenuNavVO> navList = iSecurityMenuService.navList(securityUser.getId(), permissionList, Objects.equals(Constants.BOOL_TRUE, securityUser.getFounder()));
         loginResult.setNavList(navList);
@@ -135,9 +158,6 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         loginResult.setUserInfo(securityUserVO);
         //处理权限数据
         loginResult.setPermissionList(permissionList);
-        //登录完成的事件  不处理成功失败
-        loginHandler.loginComplete(params, securityUser, saTokenInfo);
-        return MxResult.ok().data(loginResult);
     }
 
     @Override
@@ -145,7 +165,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         SecurityUser securityUser = iSecurityUserDao.findById(id, SecurityUser.FIELDS.PASSWORD, SecurityUser.FIELDS.SALT);
         password = DigestUtils.md5Hex(Base64.encodeBase64((password + securityUser.getSalt()).getBytes(StandardCharsets.UTF_8)));
         if (password.equals(securityUser.getPassword())) {
-           SaUtil.unlock(id);
+            SaUtil.unlock(id);
             return MxResult.ok();
         }
         return MxResult.fail();
@@ -160,7 +180,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     @Override
     public MxResult checkLock(String id) throws Exception {
         boolean isLock = SaUtil.checkLock(id);
-        if(isLock){
+        if (isLock) {
             return MxResult.ok();
         }
         return MxResult.fail();
@@ -171,12 +191,15 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     public MxResult logout() throws Exception {
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
         ILoginHandler loginHandler = config.loginHandlerClass();
-        MxResult r = loginHandler.logoutBefore(params);
+        String loginId = SaUtil.loginId();
+        MxResult r = loginHandler.logoutBefore(params,loginId);
         if (Security.error(r)) {
             return r;
         }
+        SaUtil.clearUser();
+        SaUtil.clearPermission();
         StpUtil.logout();
-        r = loginHandler.logoutAfter(params);
+        r = loginHandler.logoutAfter(params,loginId);
         if (Security.error(r)) {
             return r;
         }

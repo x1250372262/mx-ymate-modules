@@ -23,7 +23,6 @@ import net.ymate.platform.core.event.annotation.EventRegister;
 public class SecurityInitializer implements IEventRegister {
     @Override
     public void register(Events events) throws Exception {
-        events.registerEvent(ApplicationEvent.class);
         // 订阅模块事件：异步
         events.registerListener(Events.MODE.ASYNC, ApplicationEvent.class, (IEventListener<ApplicationEvent>) context -> {
             if (context.getEventName() == ApplicationEvent.EVENT.APPLICATION_INITIALIZED) {
@@ -35,7 +34,7 @@ public class SecurityInitializer implements IEventRegister {
                     SaManager.setConfig(config.toSaTokenConfig());
                     SaManager.setSaJsonTemplate(new FastJsonTemplate());
                     //注入dao和权限
-                    config.cacheStoreApater().init();
+                    config.cacheStoreAdapter().init();
                     //注入MxSaTokenListener
                     SaTokenEventCenter.registerListener(YMP.get().getBeanFactory().getBean(MxSaTokenListener.class));
                 }

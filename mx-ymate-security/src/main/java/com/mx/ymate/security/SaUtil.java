@@ -23,7 +23,7 @@ import static com.mx.ymate.security.base.config.SecurityConstants.USER_INFO;
 public class SaUtil {
 
     private final static ISecurityConfig MX_SECURITY_CONFIG = Security.get().getConfig();
-    private final static ICacheStorageAdapter CACHE_STORAGE_ADAPTER = MX_SECURITY_CONFIG.cacheStoreApater();
+    private final static ICacheStorageAdapter CACHE_STORAGE_ADAPTER = MX_SECURITY_CONFIG.cacheStoreAdapter();
 
     public static boolean isFounder(String loginId) throws Exception {
         if (StringUtils.isBlank(loginId)) {
@@ -71,11 +71,11 @@ public class SaUtil {
      * @throws Exception
      */
     public static String token() throws Exception {
-        return WebContext.getRequest().getHeader(getTokenName());
+        return WebContext.getRequest().getHeader(MX_SECURITY_CONFIG.saTokenName());
     }
 
     public static LoginUser user(String loginId) throws Exception {
-        String userKey = StrUtil.format(USER_INFO, getTokenName(), MX_SECURITY_CONFIG.client(), loginId);
+        String userKey = StrUtil.format(USER_INFO, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(), loginId);
         return CACHE_STORAGE_ADAPTER.getUser(userKey);
     }
 
@@ -84,22 +84,22 @@ public class SaUtil {
     }
 
     public static void lock(String loginId) throws Exception {
-        String lockKey = StrUtil.format(LOCK_KEY, getTokenName(), MX_SECURITY_CONFIG.client(), loginId);
+        String lockKey = StrUtil.format(LOCK_KEY, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(), loginId);
         CACHE_STORAGE_ADAPTER.lock(lockKey, loginId);
     }
 
     public static void unlock(String loginId) throws Exception {
-        String lockKey = StrUtil.format(LOCK_KEY, getTokenName(), MX_SECURITY_CONFIG.client(), loginId);
+        String lockKey = StrUtil.format(LOCK_KEY, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(), loginId);
         CACHE_STORAGE_ADAPTER.unlock(lockKey);
     }
 
     public static boolean checkLock(String loginId) throws Exception {
-        String lockKey = StrUtil.format(LOCK_KEY, getTokenName(), MX_SECURITY_CONFIG.client(), loginId);
+        String lockKey = StrUtil.format(LOCK_KEY, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(), loginId);
         return CACHE_STORAGE_ADAPTER.checkLock(lockKey);
     }
 
     public static List<String> permissionList(Object loginId) throws Exception {
-        String permissionKey = StrUtil.format(SecurityConstants.PERMISSION_LIST, getTokenName(), MX_SECURITY_CONFIG.client(), loginId);
+        String permissionKey = StrUtil.format(SecurityConstants.PERMISSION_LIST, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(), loginId);
         return CACHE_STORAGE_ADAPTER.permissionList(permissionKey);
     }
 
@@ -107,7 +107,7 @@ public class SaUtil {
         if (loginId == null || permissionList == null) {
             return;
         }
-        String permissionKey = StrUtil.format(SecurityConstants.PERMISSION_LIST, getTokenName(), MX_SECURITY_CONFIG.client(), loginId);
+        String permissionKey = StrUtil.format(SecurityConstants.PERMISSION_LIST, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(), loginId);
         CACHE_STORAGE_ADAPTER.cachePermission(permissionKey, permissionList);
     }
 
@@ -115,18 +115,27 @@ public class SaUtil {
         if (loginUser == null) {
             throw new RuntimeException("loginUser is null");
         }
-        String userKey = StrUtil.format(USER_INFO, getTokenName(), loginUser.getClient(), loginUser.getId());
+        String userKey = StrUtil.format(USER_INFO, MX_SECURITY_CONFIG.project(), loginUser.getClient(), loginUser.getId());
         CACHE_STORAGE_ADAPTER.cacheUser(userKey, loginUser);
     }
 
-
-    /**
-     * 获取token名称
-     *
-     * @return
-     */
-    public static String getTokenName() {
-        return MX_SECURITY_CONFIG.saTokenName();
+    public static void clearPermission() throws Exception {
+        String loginId = loginId();
+        if (StringUtils.isBlank(loginId)) {
+            return;
+        }
+        String permissionKey = StrUtil.format(SecurityConstants.PERMISSION_LIST, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(), loginId);
+        CACHE_STORAGE_ADAPTER.clearPermission(permissionKey);
     }
+
+    public static void clearUser() throws Exception {
+        String loginId = loginId();
+        if (StringUtils.isBlank(loginId)) {
+            return;
+        }
+        String userKey = StrUtil.format(USER_INFO, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(), loginId);
+        CACHE_STORAGE_ADAPTER.clearUser(userKey);
+    }
+
 
 }

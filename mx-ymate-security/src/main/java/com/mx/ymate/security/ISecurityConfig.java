@@ -1,6 +1,7 @@
 package com.mx.ymate.security;
 
 import cn.dev33.satoken.config.SaTokenConfig;
+import com.mx.ymate.security.adapter.AbstractScanLoginCacheStoreAdapter;
 import com.mx.ymate.security.adapter.ICacheStorageAdapter;
 import com.mx.ymate.security.handler.ILoginHandler;
 import com.mx.ymate.security.handler.IUserHandler;
@@ -17,6 +18,8 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
 
     String ENABLED = "enabled";
 
+    String PROJECT = "project";
+
     String CLIENT = "client";
 
     String LOGIN_HANDLER_CLASS = "loginHandlerClass";
@@ -32,6 +35,12 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
     String CHECK_LOCK = "checkLock";
 
     String CACHE_STORE = "cacheStore";
+
+    String SCAN_LOGIN_QRCODE_EXPIRE = "scanlogin.qrcodeExpire";
+
+    String SCAN_LOGIN_OPEN_CLEAR_EXPIRE = "scanlogin.openClearExpire";
+
+    String SCAN_LOGIN_CACHE_STORE = "scanlogin.cacheStore";
 
     String SATOKEN_NAME = "satoken.name";
 
@@ -72,6 +81,7 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
     String SATOKEN_IS_LOG = "satoken.isLog";
 
     String SATOKEN_LOG_LEVEL = "satoken.logLevel";
+
     String SATOKEN_LOG_LEVEL_INT = "satoken.logLevelInt";
 
     String SATOKEN_IS_COLOR_LOG = "satoken.isColorLog";
@@ -84,8 +94,9 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
 
     String SATOKEN_CURR_DOMAIN = "satoken.currDomain";
 
-
     String SATOKEN_SAME_TOKEN_TIMEOUT = "satoken.sameTokenTimeout";
+
+    String SATOKEN_CHECK_SAME_TOKEN = "satoken.checkSameToken";
 
     String SATOKEN_COOKIE_DOMAIN = "satoken.cookieDomain";
 
@@ -115,6 +126,13 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
      * @return
      */
     String client();
+
+    /**
+     * 项目名称
+     *
+     * @return
+     */
+    String project();
 
     /**
      * loginHandler实现类
@@ -160,9 +178,32 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
 
     /**
      * 缓存存储适配器
+     *
      * @return
      */
-    ICacheStorageAdapter cacheStoreApater();
+    ICacheStorageAdapter cacheStoreAdapter();
+
+    /**
+     * 扫码登录二维码有效期 单位秒 默认180s 不能小于等于0
+     *
+     * @return
+     */
+    int scanLoginQrCodeExpire();
+
+    /**
+     * 是否开启清空缓存配置   qrcodeExpire正确设置 并且 配置了定时任务模块 每天零点会删除过期的key  默认false 不开启
+     *
+     * @return
+     */
+    boolean openClearExpire();
+
+    /**
+     * 扫码登录二维码缓存适配器 不能为空
+     *
+     * @return
+     */
+    AbstractScanLoginCacheStoreAdapter scanLoginCacheStoreAdapter();
+
 
     /**
      * token名称 (同时也是cookie名称)
@@ -170,6 +211,7 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
      * @return
      */
     String saTokenName();
+
 
     /**
      * token的长久有效期(单位:秒) 默认30天, -1代表永久
@@ -335,6 +377,7 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
 
     /**
      * Http Digest 认证的默认账号和密码，冒号隔开，例如：sa:123456
+     *
      * @return
      */
     String saTokenHttpDigest();

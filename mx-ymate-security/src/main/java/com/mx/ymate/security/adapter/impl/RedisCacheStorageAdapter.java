@@ -2,13 +2,11 @@ package com.mx.ymate.security.adapter.impl;
 
 import cn.dev33.satoken.SaManager;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.mx.ymate.redis.api.RedisApi;
 import com.mx.ymate.security.adapter.ICacheStorageAdapter;
 import com.mx.ymate.security.base.bean.LoginUser;
-import com.mx.ymate.security.base.config.SecurityConstants;
 import com.mx.ymate.security.satoken.cache.RedisDao;
 import com.mx.ymate.security.satoken.cache.RedisStp;
 import net.ymate.platform.commons.json.JsonWrapper;
@@ -25,13 +23,13 @@ import java.util.List;
  */
 public class RedisCacheStorageAdapter implements ICacheStorageAdapter {
     @Override
-    public void init(){
+    public void init() {
         SaManager.setSaTokenDao(new RedisDao());
         SaManager.setStpInterface(new RedisStp());
     }
 
     @Override
-    public void cacheUser(String userKey,LoginUser loginUser) throws Exception {
+    public void cacheUser(String userKey, LoginUser loginUser) throws Exception {
         RedisApi.strDelete(userKey);
         RedisApi.strSet(userKey, JsonWrapper.toJsonString(loginUser));
     }
@@ -42,8 +40,13 @@ public class RedisCacheStorageAdapter implements ICacheStorageAdapter {
     }
 
     @Override
-    public void lock(String lockKey,String loginId) throws Exception {
-        RedisApi.strSet(loginId,loginId);
+    public void clearUser(String userKey) throws Exception {
+        RedisApi.strDelete(userKey);
+    }
+
+    @Override
+    public void lock(String lockKey, String loginId) throws Exception {
+        RedisApi.strSet(loginId, loginId);
     }
 
     @Override
@@ -74,5 +77,10 @@ public class RedisCacheStorageAdapter implements ICacheStorageAdapter {
     public void cachePermission(String permissionKey, List<String> permissionList) throws Exception {
         RedisApi.strDelete(permissionKey);
         RedisApi.strSet(permissionKey, JSONObject.toJSONString(permissionList));
+    }
+
+    @Override
+    public void clearPermission(String permissionKey) throws Exception {
+        RedisApi.strDelete(permissionKey);
     }
 }

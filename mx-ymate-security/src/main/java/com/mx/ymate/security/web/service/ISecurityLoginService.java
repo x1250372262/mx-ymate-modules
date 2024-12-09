@@ -3,6 +3,7 @@ package com.mx.ymate.security.web.service;
 
 import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.security.base.bean.SecurityLoginInfoBean;
+import com.mx.ymate.security.base.model.SecurityUser;
 import com.mx.ymate.security.base.vo.SecurityLoginVO;
 
 /**
@@ -21,6 +22,14 @@ public interface ISecurityLoginService {
      * @throws Exception
      */
     MxResult login(String userName, String password) throws Exception;
+
+    /**
+     * 扫码登录
+     * @param securityUser
+     * @return
+     * @throws Exception
+     */
+    MxResult scanLogin(SecurityUser securityUser) throws Exception;
 
     /**
      * 解锁

@@ -1,5 +1,7 @@
 package com.mx.ymate.security.base.bean;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.parser.deserializer.MapDeserializer;
 import com.mx.ymate.security.base.vo.SecurityMenuNavVO;
 import com.mx.ymate.security.base.vo.SecurityUserVO;
 
@@ -39,6 +41,7 @@ public class LoginResult implements Serializable {
 
     public String tag;
 
+    @JSONField(deserializeUsing = MapDeserializer.class)
     private Map<String, Object> attrs = new HashMap<>();
 
     private List<SecurityMenuNavVO> navList;

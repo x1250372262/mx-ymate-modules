@@ -60,22 +60,25 @@ public interface ILoginHandler {
      * 退出之前
      *
      * @param params
+     * @param loginId
      * @return
      * @throws Exception
      */
-    MxResult logoutBefore(Map<String, String> params) throws Exception;
+    MxResult logoutBefore(Map<String, String> params, String loginId) throws Exception;
 
     /**
      * 退出之后
      *
      * @param params
+     * @param loginId
      * @return
      * @throws Exception
      */
-    MxResult logoutAfter(Map<String, String> params) throws Exception;
+    MxResult logoutAfter(Map<String, String> params, String loginId) throws Exception;
 
     /**
      * 自定义检查登录逻辑 默认不处理 验证失败抛出notLogin异常
+     *
      * @param securityUser
      * @throws NotLoginException
      */
@@ -105,12 +108,12 @@ public interface ILoginHandler {
         }
 
         @Override
-        public MxResult logoutBefore(Map<String, String> params) throws Exception {
+        public MxResult logoutBefore(Map<String, String> params, String loginId) throws Exception {
             return MxResult.ok();
         }
 
         @Override
-        public MxResult logoutAfter(Map<String, String> params) throws Exception {
+        public MxResult logoutAfter(Map<String, String> params, String loginId) throws Exception {
             return MxResult.ok();
         }
 

@@ -8,23 +8,29 @@ package com.mx.ymate.security.base.config;
 public class SecurityConstants {
 
     /**
-     * 用户信息缓存key token名称:userInfo:客户端:用户id
+     * 用户信息缓存key 项目名称:userInfo:客户端:用户id
      */
-    public final static String USER_INFO = "{}:userInfo:{}:{}";
+    public final static String USER_INFO = "{}:{}:userInfo:{}";
 
     /**
-     * 缓存权限列表缓存key token名称:permission:客户端:用户id
+     * 缓存权限列表缓存key 项目名称:permission:客户端:用户id
      */
-    public final static String PERMISSION_LIST = "{}:permission:{}:{}";
+    public final static String PERMISSION_LIST = "{}:{}:permission:{}";
 
     /**
-     * 锁定key token名称:lockKey:客户端:用户id
+     * 锁定key 项目名称:lockKey:客户端:用户id
      */
-    public final static String LOCK_KEY = "{}:lockKey:{}:{}";
+    public final static String LOCK_KEY = "{}:{}:lockKey:{}";
+
+    /**
+     * 二维码key  项目名称:qrcodeKey:登录key
+     */
+    public final static String QRCODE_KEY = "{}:qrcodeKey:{}";
 
     /**
      * log key
      */
     public final static String LOG_EVENT_KEY = "mxLog";
+
 
 }

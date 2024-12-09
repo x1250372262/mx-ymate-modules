@@ -55,7 +55,7 @@ public final class Security implements IModule, ISecurity {
     public void initialize(IApplication owner) throws Exception {
         if (!initialized) {
             //
-            YMP.showVersion("Initializing mx-ymate-satoken-satoken-${version}", new Version(1, 0, 0, Security.class, Version.VersionType.Alpha));
+            YMP.showVersion("Initializing mx-ymate-security-${version}", new Version(1, 0, 0, Security.class, Version.VersionType.Alpha));
             //
             this.owner = owner;
             if (config == null) {

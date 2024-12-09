@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="/statics/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/statics/css/animate.min.css">
     <link rel="stylesheet" type="text/css" href="/statics/css/style.min.css">
+    <link rel="stylesheet" type="text/css" href="/statics/plugins/imgver/imgver.min.css" rel="stylesheet">
     <style>
         .login-box {
             background-color: rgba(255, 255, 255, .25);
@@ -75,7 +76,9 @@
             border-color: rgba(0, 0, 0, 0.1);
         }
 
-        .help-block {color: red;!important;}
+        .help-block {
+            color: red;!important;
+        }
     </style>
 </head>
 
@@ -83,23 +86,29 @@
 
 <div class="login-box p-5 w-420 mb-0 mr-2 ml-2">
     <div class="text-center mb-3">
-        <h3 style="color: #FFFFFF;margin-bottom: 30px;">后台管理系统</h3>
+        <h3 style="color: #FFFFFF;">后台管理系统</h3>
         <!--        <a href="change_info.html"> <img alt="light year admin" src="images/logo-sidebar.png"> </a>-->
     </div>
     <form action="" id="loginForm" method="post" class="login-form">
-        <div class="form-group has-feedback mx_validator" style="margin-bottom: 30px;">
+        <div class="form-group has-feedback mx_validator">
             <span class="mdi mdi-account" aria-hidden="true"></span>
             <input type="text" class="form-control mx_validator mx_required" mx_required_msg="用户名不能为空"
                    id="userName" name="userName" placeholder="用户名">
         </div>
 
-        <div class="form-group has-feedback mx_validator" style="margin-bottom: 30px;">
+        <div class="form-group has-feedback mx_validator">
             <span class="mdi mdi-lock" aria-hidden="true"></span>
             <input type="password" class="form-control mx_required" mx_required_msg="密码不能为空" id="password"
                    name="password" placeholder="密码">
         </div>
 
-        <div class="form-group" style="margin-top: 32px;margin-bottom: 32px;">
+        <div class="form-group mx_validator">
+            <div id="imgVer" style="display:inline-block;margin-bottom: 10px;"></div>
+            <input type="hidden" class="form-control mx_required noGet" id="verCode" mx_required_msg="请先验证"
+                   name="verCode" value="">
+        </div>
+
+        <div class="form-group">
             <div class="custom-control custom-checkbox">
                 <input type="checkbox" class="custom-control-input" id="jizhu">
                 <label class="custom-control-label not-user-select text-white" for="jizhu">记住用户名,密码</label>
@@ -114,9 +123,35 @@
     <p class="text-center text-white">Copyright © 2022 <a target="_blank" href="#">梦祥网络</a>. All right reserved</p>
 </div>
 <script src="/statics/js/custom/lib.js?_V=1"></script>
+<script type="text/javascript" src="/statics/plugins/imgver/jquery.img.ver.min.js"></script>
 <script type="text/javascript" src="/statics/js/apis/admin.js"></script>
 <script type="text/javascript">
 
+    function hk() {
+        //滑块验证
+        imgVer({
+            el: '$("#imgVer")',
+            width: '300',
+            height: '100',
+            img: [
+                '/statics/plugins/imgver/images/img-slide-1.jpg',
+                '/statics/plugins/imgver/images/img-slide-2.jpg',
+                '/statics/plugins/imgver/images/img-slide-3.jpg',
+                '/statics/plugins/imgver/images/img-slide-4.jpg',
+                '/statics/plugins/imgver/images/img-slide-5.jpg',
+            ],
+            success: function () {
+                $("#verCode").val("1");
+                $("#loginSubmit").attr('disabled', false);
+                // 在这里验证验证码
+                // 验证码验证成功后执行登录
+            },
+            error: function () {
+                $("#verCode").val("");
+                $("#loginSubmit").attr('disabled', true);
+            }
+        });
+    }
 
     function setCookie() { //设置cookie
         let userName = $("#userName").val(); //获取用户名信息
@@ -150,6 +185,7 @@
             Menu.removePermission();
             User.remove()
         }
+        hk();
         getCookie();
 
         //登录

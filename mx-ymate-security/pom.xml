@@ -69,6 +69,11 @@
             <groupId>net.ymate.platform</groupId>
             <artifactId>ymate-platform-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.ymate.module</groupId>
+            <artifactId>ymate-module-schedule</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>

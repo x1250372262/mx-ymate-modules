@@ -5,9 +5,12 @@ import cn.dev33.satoken.config.SaSignConfig;
 import cn.dev33.satoken.config.SaTokenConfig;
 import com.mx.ymate.security.ISecurity;
 import com.mx.ymate.security.ISecurityConfig;
+import com.mx.ymate.security.adapter.AbstractScanLoginCacheStoreAdapter;
 import com.mx.ymate.security.adapter.ICacheStorageAdapter;
 import com.mx.ymate.security.adapter.impl.DefaultCacheStorageAdapter;
+import com.mx.ymate.security.adapter.impl.DefaultScanLoginCacheStoreAdapter;
 import com.mx.ymate.security.adapter.impl.RedisCacheStorageAdapter;
+import com.mx.ymate.security.adapter.impl.RedisScanLoginCacheStoreAdapter;
 import com.mx.ymate.security.base.enums.CacheStoreType;
 import com.mx.ymate.security.handler.ILoginHandler;
 import com.mx.ymate.security.handler.IUserHandler;
@@ -23,6 +26,11 @@ import net.ymate.platform.core.module.IModuleConfigurer;
 public final class DefaultSecurityConfig implements ISecurityConfig {
 
     private boolean enabled;
+
+    /**
+     * 项目名称
+     */
+    private String project;
 
     /**
      * 客户端名称
@@ -63,6 +71,21 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
      * 缓存存储适配器
      */
     private ICacheStorageAdapter cacheStorageAdapter;
+
+    /**
+     * 扫码登录二维码有效期 单位秒 默认180s
+     */
+    private int scanLoginQrCodeExpire;
+
+    /**
+     * 是否开启清空缓存配置   qrcodeExpire正确设置 并且 配置了定时任务模块 每天零点会删除过期的key  默认false 不开启
+     */
+    private boolean openClearExpire;
+
+    /**
+     * 扫码登录二维码缓存适配器 不能为空
+     */
+    private AbstractScanLoginCacheStoreAdapter scanLoginCacheStoreAdapter;
 
     /**
      * token名称 (同时也是cookie名称)
@@ -188,8 +211,7 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
     private String saTokenHttpBasic;
 
     /**
-     *
-     Http Digest 认证的默认账号和密码，冒号隔开，例如：sa:123456
+     * Http Digest 认证的默认账号和密码，冒号隔开，例如：sa:123456
      */
     private String saTokenHttpDigest;
 
@@ -204,7 +226,7 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
     private long saTokenSameTokenTimeout;
 
     /**
-     * 是否校验Same-Token（部分rpc插件有效
+     * 是否校验Same-Token（部分rpc插件有效)
      */
     private Boolean saTokenCheckSameToken;
 
@@ -259,6 +281,7 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
         IConfigReader configReader = moduleConfigurer.getConfigReader();
         enabled = configReader.getBoolean(ENABLED, true);
         client = configReader.getString(CLIENT, "default");
+        project = configReader.getString(PROJECT, "default");
         String loginHandlerClassName = configReader.getString(LOGIN_HANDLER_CLASS, ILoginHandler.DefaultLoginHandler.class.getName());
         loginHandlerClass = ClassUtils.impl(loginHandlerClassName, ILoginHandler.class, this.getClass());
         String userHandlerClassName = configReader.getString(USER_HANDLER_CLASS, IUserHandler.DefaultUserHandler.class.getName());
@@ -267,10 +290,19 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
         openLog = configReader.getBoolean(OPEN_LOG, false);
         checkLock = configReader.getBoolean(CHECK_LOCK, false);
         String cacheStore = configReader.getString(CACHE_STORE, CacheStoreType.DEFAULT.name());
-        if(CacheStoreType.REDIS.name().equals(cacheStore.toUpperCase())){
+        if (CacheStoreType.REDIS.name().equals(cacheStore.toUpperCase())) {
             cacheStorageAdapter = new RedisCacheStorageAdapter();
-        }else{
+        } else {
             cacheStorageAdapter = new DefaultCacheStorageAdapter();
+        }
+        scanLoginQrCodeExpire = configReader.getInt(SCAN_LOGIN_QRCODE_EXPIRE, 180);
+        openClearExpire = configReader.getBoolean(SCAN_LOGIN_OPEN_CLEAR_EXPIRE, false);
+
+        String scanLoginCacheStore = configReader.getString(SCAN_LOGIN_CACHE_STORE, CacheStoreType.DEFAULT.name());
+        if (CacheStoreType.REDIS.name().equals(scanLoginCacheStore.toUpperCase())) {
+            scanLoginCacheStoreAdapter = new RedisScanLoginCacheStoreAdapter();
+        } else {
+            scanLoginCacheStoreAdapter = new DefaultScanLoginCacheStoreAdapter(scanLoginQrCodeExpire);
         }
         excludePathPatterns = configReader.getString(EXCLUDE_PATH_PATTERNS, excludePathPatterns);
         saTokenName = configReader.getString(SATOKEN_NAME, "saToken");
@@ -300,6 +332,7 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
         saTokenHttpDigest = configReader.getString(SATOKEN_HTTP_DIGEST);
         saTokenCurrDomain = configReader.getString(SATOKEN_CURR_DOMAIN);
         saTokenSameTokenTimeout = configReader.getLong(SATOKEN_SAME_TOKEN_TIMEOUT, 60 * 60 * 24);
+        saTokenCheckSameToken = configReader.getBoolean(SATOKEN_CHECK_SAME_TOKEN);
         saTokenCookieDomain = configReader.getString(SATOKEN_COOKIE_DOMAIN);
         saTokenCookiePath = configReader.getString(SATOKEN_COOKIE_PATH);
         saTokenCookieSecure = configReader.getBoolean(SATOKEN_COOKIE_SECURE, false);
@@ -329,6 +362,11 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
     @Override
     public String client() {
         return client;
+    }
+
+    @Override
+    public String project() {
+        return project;
     }
 
     @Override
@@ -362,8 +400,23 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
     }
 
     @Override
-    public ICacheStorageAdapter cacheStoreApater() {
+    public ICacheStorageAdapter cacheStoreAdapter() {
         return cacheStorageAdapter;
+    }
+
+    @Override
+    public int scanLoginQrCodeExpire() {
+        return scanLoginQrCodeExpire;
+    }
+
+    @Override
+    public boolean openClearExpire() {
+        return openClearExpire;
+    }
+
+    @Override
+    public AbstractScanLoginCacheStoreAdapter scanLoginCacheStoreAdapter() {
+        return scanLoginCacheStoreAdapter;
     }
 
     @Override

@@ -18,6 +18,7 @@ import com.mx.ymate.security.base.exception.MxLoginException;
 import com.mx.ymate.security.base.model.SecurityUser;
 import com.mx.ymate.security.web.dao.ISecurityUserDao;
 import net.ymate.platform.core.YMP;
+import net.ymate.platform.core.beans.annotation.Interceptor;
 import net.ymate.platform.core.beans.intercept.AbstractInterceptor;
 import net.ymate.platform.core.beans.intercept.InterceptContext;
 import net.ymate.platform.core.beans.intercept.InterceptException;
@@ -34,6 +35,7 @@ import static com.mx.ymate.dev.constants.Constants.XG;
  * @create: 2022-04-20 00:00
  * @Description: 用户拦截器
  */
+@Interceptor
 public class SecurityUserInterceptor extends AbstractInterceptor {
 
     private final ISecurityConfig securityConfig = Security.get().getConfig();
