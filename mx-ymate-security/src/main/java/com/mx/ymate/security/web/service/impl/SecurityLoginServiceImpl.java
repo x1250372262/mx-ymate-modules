@@ -118,7 +118,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         securityUser.setLoginIp(ServletUtil.getClientIP(WebContext.getRequest()));
         iSecurityUserDao.update(securityUser, SecurityUser.FIELDS.LOGIN_ERROR_COUNT, SecurityUser.FIELDS.LOGIN_LOCK_STATUS,
                 SecurityUser.FIELDS.LOGIN_LOCK_START_TIME, SecurityUser.FIELDS.LOGIN_LOCK_END_TIME, SecurityUser.FIELDS.LOGIN_IP, SecurityUser.FIELDS.LOGIN_TIME);
-        StpUtil.login(securityUser.getId());
+        StpUtil.login(securityUser.getId(),config.device());
         SaTokenInfo saTokenInfo = StpUtil.getTokenInfo();
         LoginResult loginResult = BeanUtil.copy(saTokenInfo, LoginResult::new);
         loginResult.setAttrs(r.attrs());
@@ -140,7 +140,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         securityUser.setLoginIp(ServletUtil.getClientIP(WebContext.getRequest()));
         iSecurityUserDao.update(securityUser, SecurityUser.FIELDS.LOGIN_ERROR_COUNT, SecurityUser.FIELDS.LOGIN_LOCK_STATUS,
                 SecurityUser.FIELDS.LOGIN_LOCK_START_TIME, SecurityUser.FIELDS.LOGIN_LOCK_END_TIME, SecurityUser.FIELDS.LOGIN_IP, SecurityUser.FIELDS.LOGIN_TIME);
-        StpUtil.login(securityUser.getId());
+        StpUtil.login(securityUser.getId(),config.device());
         SaTokenInfo saTokenInfo = StpUtil.getTokenInfo();
         LoginResult loginResult = BeanUtil.copy(saTokenInfo, LoginResult::new);
         doLogin(loginResult, securityUser);
@@ -198,7 +198,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         }
         SaUtil.clearUser();
         SaUtil.clearPermission();
-        StpUtil.logout();
+        StpUtil.logout(loginId,config.device());
         r = loginHandler.logoutAfter(params,loginId);
         if (Security.error(r)) {
             return r;

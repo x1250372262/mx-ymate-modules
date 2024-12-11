@@ -22,6 +22,8 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
 
     String CLIENT = "client";
 
+    String DEVICE = "device";
+
     String LOGIN_HANDLER_CLASS = "loginHandlerClass";
 
     String USER_HANDLER_CLASS = "userHandlerClass";
@@ -126,6 +128,12 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
      * @return
      */
     String client();
+
+    /**
+     * 设备类型 默认pc
+     * @return
+     */
+    String device();
 
     /**
      * 项目名称

@@ -38,6 +38,11 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
     private String client;
 
     /**
+     * 设备类型 默认pc
+     */
+    private String device;
+
+    /**
      * loginHandler实现类
      */
     private ILoginHandler loginHandlerClass;
@@ -281,6 +286,7 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
         IConfigReader configReader = moduleConfigurer.getConfigReader();
         enabled = configReader.getBoolean(ENABLED, true);
         client = configReader.getString(CLIENT, "default");
+        device = configReader.getString(DEVICE, "pc");
         project = configReader.getString(PROJECT, "default");
         String loginHandlerClassName = configReader.getString(LOGIN_HANDLER_CLASS, ILoginHandler.DefaultLoginHandler.class.getName());
         loginHandlerClass = ClassUtils.impl(loginHandlerClassName, ILoginHandler.class, this.getClass());
@@ -362,6 +368,11 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
     @Override
     public String client() {
         return client;
+    }
+
+    @Override
+    public String device() {
+        return device;
     }
 
     @Override
