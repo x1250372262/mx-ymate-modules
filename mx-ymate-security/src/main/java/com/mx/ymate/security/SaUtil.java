@@ -5,15 +5,13 @@ import cn.hutool.core.util.StrUtil;
 import com.mx.ymate.dev.constants.Constants;
 import com.mx.ymate.security.adapter.ICacheStorageAdapter;
 import com.mx.ymate.security.base.bean.LoginUser;
-import com.mx.ymate.security.base.config.SecurityConstants;
 import net.ymate.platform.webmvc.context.WebContext;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
 
-import static com.mx.ymate.security.base.config.SecurityConstants.LOCK_KEY;
-import static com.mx.ymate.security.base.config.SecurityConstants.USER_INFO;
+import static com.mx.ymate.security.base.config.SecurityConstants.*;
 
 /**
  * @Author: mengxiang.
@@ -75,7 +73,7 @@ public class SaUtil {
     }
 
     public static LoginUser user(String loginId) throws Exception {
-        String userKey = StrUtil.format(USER_INFO, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(), loginId);
+        String userKey = StrUtil.format(USER_INFO, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(),MX_SECURITY_CONFIG.device(), loginId);
         return CACHE_STORAGE_ADAPTER.getUser(userKey);
     }
 
@@ -84,22 +82,22 @@ public class SaUtil {
     }
 
     public static void lock(String loginId) throws Exception {
-        String lockKey = StrUtil.format(LOCK_KEY, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(), loginId);
+        String lockKey = StrUtil.format(LOCK_KEY, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(),MX_SECURITY_CONFIG.device(), loginId);
         CACHE_STORAGE_ADAPTER.lock(lockKey, loginId);
     }
 
     public static void unlock(String loginId) throws Exception {
-        String lockKey = StrUtil.format(LOCK_KEY, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(), loginId);
+        String lockKey = StrUtil.format(LOCK_KEY, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(),MX_SECURITY_CONFIG.device(), loginId);
         CACHE_STORAGE_ADAPTER.unlock(lockKey);
     }
 
     public static boolean checkLock(String loginId) throws Exception {
-        String lockKey = StrUtil.format(LOCK_KEY, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(), loginId);
+        String lockKey = StrUtil.format(LOCK_KEY, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(),MX_SECURITY_CONFIG.device(), loginId);
         return CACHE_STORAGE_ADAPTER.checkLock(lockKey);
     }
 
     public static List<String> permissionList(Object loginId) throws Exception {
-        String permissionKey = StrUtil.format(SecurityConstants.PERMISSION_LIST, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(), loginId);
+        String permissionKey = StrUtil.format(PERMISSION_LIST, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(),MX_SECURITY_CONFIG.device(), loginId);
         return CACHE_STORAGE_ADAPTER.permissionList(permissionKey);
     }
 
@@ -107,7 +105,7 @@ public class SaUtil {
         if (loginId == null || permissionList == null) {
             return;
         }
-        String permissionKey = StrUtil.format(SecurityConstants.PERMISSION_LIST, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(), loginId);
+        String permissionKey = StrUtil.format(PERMISSION_LIST, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(),MX_SECURITY_CONFIG.device(), loginId);
         CACHE_STORAGE_ADAPTER.cachePermission(permissionKey, permissionList);
     }
 
@@ -115,7 +113,7 @@ public class SaUtil {
         if (loginUser == null) {
             throw new RuntimeException("loginUser is null");
         }
-        String userKey = StrUtil.format(USER_INFO, MX_SECURITY_CONFIG.project(), loginUser.getClient(), loginUser.getId());
+        String userKey = StrUtil.format(USER_INFO, MX_SECURITY_CONFIG.project(), loginUser.getClient(), MX_SECURITY_CONFIG.device(),loginUser.getId());
         CACHE_STORAGE_ADAPTER.cacheUser(userKey, loginUser);
     }
 
@@ -124,7 +122,7 @@ public class SaUtil {
         if (StringUtils.isBlank(loginId)) {
             return;
         }
-        String permissionKey = StrUtil.format(SecurityConstants.PERMISSION_LIST, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(), loginId);
+        String permissionKey = StrUtil.format(PERMISSION_LIST, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(),MX_SECURITY_CONFIG.device(), loginId);
         CACHE_STORAGE_ADAPTER.clearPermission(permissionKey);
     }
 
@@ -133,7 +131,7 @@ public class SaUtil {
         if (StringUtils.isBlank(loginId)) {
             return;
         }
-        String userKey = StrUtil.format(USER_INFO, MX_SECURITY_CONFIG.project(), MX_SECURITY_CONFIG.client(), loginId);
+        String userKey = StrUtil.format(USER_INFO, MX_SECURITY_CONFIG.project(),MX_SECURITY_CONFIG.client(),MX_SECURITY_CONFIG.device(),  loginId);
         CACHE_STORAGE_ADAPTER.clearUser(userKey);
     }
 
