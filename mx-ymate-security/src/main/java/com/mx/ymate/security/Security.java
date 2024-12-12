@@ -112,6 +112,6 @@ public final class Security implements IModule, ISecurity {
      * @return
      */
     public static boolean error(MxResult mxResult) {
-        return mxResult == null || SecurityCode.SECURITY_CHECK_ERROR.code().equals(mxResult.code());
+        return mxResult == null || !mxResult.isSuccess();
     }
 }
