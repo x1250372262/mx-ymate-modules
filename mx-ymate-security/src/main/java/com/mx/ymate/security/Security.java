@@ -105,13 +105,7 @@ public final class Security implements IModule, ISecurity {
         return config;
     }
 
-    /**
-     * 检查是否有问题
-     *
-     * @param mxResult
-     * @return
-     */
-    public static boolean error(MxResult mxResult) {
-        return mxResult == null || !mxResult.isSuccess();
+    public static MxResult error() {
+        return MxResult.create(SecurityCode.SECURITY_CHECK_ERROR);
     }
 }

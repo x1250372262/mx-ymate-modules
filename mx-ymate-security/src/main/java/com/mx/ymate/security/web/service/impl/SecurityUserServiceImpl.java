@@ -83,7 +83,10 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
         String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.USER, null), config.client());
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
         MxResult r = userHandler.createBefore(params);
-        if (Security.error(r)) {
+        if(r == null){
+            return Security.error();
+        }
+        if (!r.isSuccess()) {
             return r;
         }
         SecurityUser securityUser = iSecurityUserDao.findByUserNameAndClientAndResourceId(userBean.getUserName(), config.client(), resourceId);
@@ -103,7 +106,10 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
         securityUser.setLastModifyTime(DateTimeUtils.currentTimeMillis());
         securityUser.setSalt(salt);
         r = userHandler.createAfter(params, securityUser);
-        if (Security.error(r)) {
+        if(r == null){
+            return Security.error();
+        }
+        if (!r.isSuccess()) {
             return r;
         }
         securityUser = iSecurityUserDao.create(securityUser);

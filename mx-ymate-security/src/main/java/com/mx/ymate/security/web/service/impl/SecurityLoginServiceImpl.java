@@ -63,7 +63,10 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
         ILoginHandler loginHandler = config.loginHandlerClass();
         MxResult r = loginHandler.loginBefore(params);
-        if (Security.error(r)) {
+        if(r == null){
+            return Security.error();
+        }
+        if (!r.isSuccess()) {
             return r;
         }
         SecurityUser securityUser = r.attr("securityUser");
@@ -90,7 +93,10 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         password = DigestUtils.md5Hex(Base64.encodeBase64((password + securityUser.getSalt()).getBytes(StandardCharsets.UTF_8)));
         if (!password.equals(securityUser.getPassword())) {
             r = loginHandler.loginFail(params, securityUser);
-            if (Security.error(r)) {
+            if(r == null){
+                return Security.error();
+            }
+            if (!r.isSuccess()) {
                 return r;
             }
             //次数+1 到数之后直接冻结
@@ -106,7 +112,10 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
             return MxResult.create(SECURITY_LOGIN_USER_NAME_OR_PASSWORD_ERROR);
         }
         r = loginHandler.loginSuccess(params, securityUser);
-        if (Security.error(r)) {
+        if(r == null){
+            return Security.error();
+        }
+        if (!r.isSuccess()) {
             return r;
         }
         //重置时间和次数
@@ -193,14 +202,20 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         ILoginHandler loginHandler = config.loginHandlerClass();
         String loginId = SaUtil.loginId();
         MxResult r = loginHandler.logoutBefore(params,loginId);
-        if (Security.error(r)) {
+        if(r == null){
+            return Security.error();
+        }
+        if (!r.isSuccess()) {
             return r;
         }
         SaUtil.clearUser();
         SaUtil.clearPermission();
         StpUtil.logout(loginId,config.device());
         r = loginHandler.logoutAfter(params,loginId);
-        if (Security.error(r)) {
+        if(r == null){
+            return Security.error();
+        }
+        if (!r.isSuccess()) {
             return r;
         }
         return MxResult.ok();
