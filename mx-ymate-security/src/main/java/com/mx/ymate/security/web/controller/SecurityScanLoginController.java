@@ -1,6 +1,5 @@
 package com.mx.ymate.security.web.controller;
 
-import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.base.annotation.NoLogin;
 import com.mx.ymate.security.web.service.ISecurityScanLoginService;
 import net.ymate.platform.core.beans.annotation.Inject;
@@ -76,17 +75,6 @@ public class SecurityScanLoginController {
         return iSecurityScanLoginService.scan(loginKey).toJsonView();
     }
 
-    /**
-     * 扫码之后登录
-     *
-     * @param loginKey
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/login", method = Type.HttpMethod.POST)
-    public IView login(@VRequired(msg = "loginKey不能为空") @RequestParam String loginKey) throws Exception {
-        return iSecurityScanLoginService.login(SaUtil.loginId(), loginKey).toJsonView();
-    }
 
     /**
      * 扫码之后取消登录
