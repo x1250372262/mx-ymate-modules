@@ -71,7 +71,7 @@ public class SecurityScanLoginController {
      * @return
      * @throws Exception
      */
-    @RequestMapping("/scan")
+    @RequestMapping(value = "/scan", method = Type.HttpMethod.POST)
     public IView scan(@VRequired(msg = "loginKey不能为空") @RequestParam String loginKey) throws Exception {
         return iSecurityScanLoginService.scan(loginKey).toJsonView();
     }
@@ -83,7 +83,7 @@ public class SecurityScanLoginController {
      * @return
      * @throws Exception
      */
-    @RequestMapping("/login")
+    @RequestMapping(value = "/login", method = Type.HttpMethod.POST)
     public IView login(@VRequired(msg = "loginKey不能为空") @RequestParam String loginKey) throws Exception {
         return iSecurityScanLoginService.login(SaUtil.loginId(), loginKey).toJsonView();
     }
@@ -95,7 +95,7 @@ public class SecurityScanLoginController {
      * @return
      * @throws Exception
      */
-    @RequestMapping("/cancel/login")
+    @RequestMapping(value = "/cancel/login", method = Type.HttpMethod.POST)
     public IView cancelLogin(@VRequired(msg = "loginKey不能为空") @RequestParam String loginKey) throws Exception {
         return iSecurityScanLoginService.cancelLogin(loginKey).toJsonView();
     }
