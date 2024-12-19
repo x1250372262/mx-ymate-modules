@@ -1,6 +1,7 @@
 package com.mx.ymate.security.web.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.servlet.ServletUtil;
 import com.mx.ymate.dev.constants.Constants;
 import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.security.ISecurityConfig;
@@ -9,13 +10,16 @@ import com.mx.ymate.security.adapter.AbstractScanLoginCacheStoreAdapter;
 import com.mx.ymate.security.base.bean.ScanQrcode;
 import com.mx.ymate.security.base.enums.ScanQrcodeEnum;
 import com.mx.ymate.security.base.model.SecurityUser;
+import com.mx.ymate.security.handler.ILoginHandler;
 import com.mx.ymate.security.web.dao.ISecurityUserDao;
 import com.mx.ymate.security.web.service.ISecurityLoginService;
 import com.mx.ymate.security.web.service.ISecurityScanLoginService;
 import net.ymate.platform.commons.util.DateTimeUtils;
 import net.ymate.platform.core.beans.annotation.Bean;
 import net.ymate.platform.core.beans.annotation.Inject;
+import net.ymate.platform.webmvc.context.WebContext;
 
+import java.util.Map;
 import java.util.Objects;
 
 import static com.mx.ymate.security.base.code.SecurityCode.*;
@@ -113,7 +117,19 @@ public class SecurityScanLoginServiceImpl implements ISecurityScanLoginService {
         if (ScanQrcodeEnum.SCAN != scanQrcode.getScanQrcodeEnum()) {
             return MxResult.create(SECURITY_LOGIN_SCAN_QRCODE_NEED_SCAN);
         }
-        SecurityUser securityUser = iSecurityUserDao.findById(loginId);
+        Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
+        ILoginHandler loginHandler = config.loginHandlerClass();
+        MxResult r = loginHandler.loginBefore(params);
+        if(r == null){
+            return Security.error();
+        }
+        if (!r.isSuccess()) {
+            return r;
+        }
+        SecurityUser securityUser = r.attr("securityUser");
+        if (securityUser == null) {
+            securityUser = iSecurityUserDao.findById(loginId);
+        }
         if (securityUser == null) {
             return MxResult.create(SECURITY_LOGIN_USER_NOT_EXIST);
         }

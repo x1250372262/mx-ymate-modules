@@ -140,6 +140,15 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     @Override
     @OperationLog(operationType = OperationType.LOGIN, title = "管理员扫码登录")
     public MxResult scanLogin(SecurityUser securityUser) throws Exception {
+        Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
+        ILoginHandler loginHandler = config.loginHandlerClass();
+        MxResult r = loginHandler.loginSuccess(params, securityUser);
+        if(r == null){
+            return Security.error();
+        }
+        if (!r.isSuccess()) {
+            return r;
+        }
         //重置时间和次数
         securityUser.setLoginLockStatus(Constants.BOOL_FALSE);
         securityUser.setLoginErrorCount(0);
@@ -153,6 +162,8 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         SaTokenInfo saTokenInfo = StpUtil.getTokenInfo();
         LoginResult loginResult = BeanUtil.copy(saTokenInfo, LoginResult::new);
         doLogin(loginResult, securityUser);
+        //登录完成的事件  不处理成功失败
+        loginHandler.loginComplete(params, securityUser, saTokenInfo);
         return MxResult.ok().data(loginResult);
     }
 
