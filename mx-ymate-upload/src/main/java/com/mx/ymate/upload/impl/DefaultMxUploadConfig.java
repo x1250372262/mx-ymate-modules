@@ -30,6 +30,8 @@ public final class DefaultMxUploadConfig implements IMxUploadConfig {
 
     private String showUrl;
 
+    private String prefix;
+
     private IUploadAdapter adapter;
 
     private String jsonFilePath;
@@ -95,6 +97,10 @@ public final class DefaultMxUploadConfig implements IMxUploadConfig {
         showUrl = configReader.getString(SHOW_URL);
         if (StringUtils.isNotBlank(showUrl) && !showUrl.endsWith(StrUtil.SLASH)) {
             showUrl = showUrl + StrUtil.SLASH;
+        }
+        prefix = configReader.getString(PREFIX);
+        if (StringUtils.isNotBlank(prefix) && !prefix.endsWith(StrUtil.SLASH)) {
+            prefix = prefix + StrUtil.SLASH;
         }
         adapter = getAdapter(AdapterEnum.fromValue(configReader.getString(ADAPTER,AdapterEnum.LOCAL.getValue())));
         jsonFilePath = configReader.getString(JSON_FILE_PATH);
@@ -165,6 +171,11 @@ public final class DefaultMxUploadConfig implements IMxUploadConfig {
     @Override
     public String showUrl() {
         return showUrl;
+    }
+
+    @Override
+    public String prefix() {
+        return prefix;
     }
 
     @Override

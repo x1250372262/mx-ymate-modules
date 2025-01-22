@@ -19,6 +19,7 @@ public interface IMxUploadConfig extends IInitialization<IMxUpload> {
     String MAX_SIZE = "maxSize";
     String CONTENT_TYPE = "contentType";
     String SHOW_URL = "showUrl";
+    String PREFIX = "prefix";
     String ADAPTER = "adapter";
     String JSON_FILE_PATH = "jsonFilePath";
     String IS_CREATE_THUMB = "isCreateThumb";
@@ -67,6 +68,13 @@ public interface IMxUploadConfig extends IInitialization<IMxUpload> {
      * @return
      */
     String showUrl();
+
+
+    /**
+     * 文件访问前缀 除local外会参与存储
+     * @return
+     */
+    String prefix();
 
     /**
      * 文件上传适配器类型

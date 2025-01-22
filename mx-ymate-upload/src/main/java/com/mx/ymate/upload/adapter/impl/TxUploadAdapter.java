@@ -8,6 +8,7 @@ import com.qcloud.cos.auth.BasicCOSCredentials;
 import com.qcloud.cos.auth.COSCredentials;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.region.Region;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 
@@ -39,7 +40,11 @@ public class TxUploadAdapter extends AbstractUploadAdapter {
             ClientConfig clientConfig = new ClientConfig(new Region(config.txRegion()));
             cosClient = new COSClient(cred, clientConfig);
         }
-        PutObjectRequest putObjectRequest = new PutObjectRequest(config.txBucket(), fileInfo.getNewFileName(), srcFile);
+        String fileName = fileInfo.getNewFileName();
+        if (StringUtils.isNotBlank(config.prefix())) {
+            fileName = config.prefix() + fileName;
+        }
+        PutObjectRequest putObjectRequest = new PutObjectRequest(config.txBucket(), fileName, srcFile);
         cosClient.putObject(putObjectRequest);
         return MxResult.ok();
     }

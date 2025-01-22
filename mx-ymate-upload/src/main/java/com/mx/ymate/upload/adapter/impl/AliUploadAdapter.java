@@ -5,6 +5,7 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.upload.bean.FileInfo;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 
@@ -34,7 +35,11 @@ public class AliUploadAdapter extends AbstractUploadAdapter {
         if (ossClient == null) {
             ossClient = new OSSClientBuilder().build(config.aliEndpoint(), config.aliAccessKeyId(), config.aliAccessKeySecret());
         }
-        PutObjectRequest putObjectRequest = new PutObjectRequest(config.aliBucket(), fileInfo.getNewFileName(), fileInfo.getInputStream());
+        String fileName = fileInfo.getNewFileName();
+        if (StringUtils.isNotBlank(config.prefix())) {
+            fileName = config.prefix() + fileName;
+        }
+        PutObjectRequest putObjectRequest = new PutObjectRequest(config.aliBucket(), fileName, fileInfo.getInputStream());
         ossClient.putObject(putObjectRequest);
         return MxResult.ok();
     }

@@ -8,6 +8,7 @@ import com.qiniu.storage.Configuration;
 import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 
@@ -43,8 +44,12 @@ public class QiNiuUploadAdapter extends AbstractUploadAdapter {
         }
         // 生成上传凭证，然后准备上传
         String upToken = auth.uploadToken(config.qiNiuBucket());
+        String fileName = fileInfo.getNewFileName();
+        if (StringUtils.isNotBlank(config.prefix())) {
+            fileName = config.prefix() + fileName;
+        }
         try {
-            uploadManager.put(fileInfo.getInputStream(), fileInfo.getNewFileName(), upToken, null, null);
+            uploadManager.put(fileInfo.getInputStream(), fileName, upToken, null, null);
         } catch (QiniuException e) {
             return MxResult.create(MX_UPLOAD_ERROR).msg(StrUtil.format(MX_UPLOAD_ERROR.msg(), e.getMessage()));
         }

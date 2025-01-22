@@ -129,7 +129,11 @@ public abstract class AbstractUploadAdapter implements IUploadAdapter {
     protected abstract String getShowUrl();
 
     protected String defaultShowUrl(){
-        return config.showUrl();
+        String showUrl = config.showUrl();
+        if(StringUtils.isNotBlank(config.prefix())){
+            showUrl = showUrl + config.prefix();
+        }
+        return showUrl;
     }
 
     /**

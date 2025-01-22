@@ -5,6 +5,7 @@ import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.upload.bean.FileInfo;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 
@@ -36,10 +37,14 @@ public class MinioUploadAdapter extends AbstractUploadAdapter {
             //使用MinIO服务的URL，端口，Access key和Secret key创建一个MinioClient对象
             minioClient = MinioClient.builder().endpoint(config.showUrl()).credentials(config.minioAccessKey(), config.minioSecretKey()).build();
         }
+        String fileName = fileInfo.getNewFileName();
+        if (StringUtils.isNotBlank(config.prefix())) {
+            fileName = config.prefix() + fileName;
+        }
         try {
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket(config.minioBucket())
-                    .object(fileInfo.getNewFileName())
+                    .object(fileName)
                     .stream(fileInfo.getInputStream(), fileInfo.getFileSize(), -1)
                     .contentType(fileInfo.getType()).build());
         } catch (Exception e) {
@@ -50,6 +55,6 @@ public class MinioUploadAdapter extends AbstractUploadAdapter {
 
     @Override
     protected String getShowUrl() {
-        return config.showUrl() + config.minioBucket() + "/";
+        return config.showUrl() + config.minioBucket() + "/" + config.prefix();
     }
 }
