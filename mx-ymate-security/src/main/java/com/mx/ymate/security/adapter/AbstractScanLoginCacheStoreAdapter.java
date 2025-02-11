@@ -16,7 +16,7 @@ import static com.mx.ymate.security.base.config.SecurityConstants.QRCODE_KEY;
 public abstract class AbstractScanLoginCacheStoreAdapter {
 
     public String createLoginKey() throws Exception {
-        return UUIDUtils.UUID();
+        return "SCAN_LOGIN-" + UUIDUtils.UUID();
     }
 
     public String createStoreKey(String loginKey) throws Exception {
