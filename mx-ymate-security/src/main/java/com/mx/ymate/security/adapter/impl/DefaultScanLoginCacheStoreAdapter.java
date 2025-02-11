@@ -4,7 +4,6 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Scheduler;
 import com.mx.ymate.security.ISecurityConfig;
-import com.mx.ymate.security.Security;
 import com.mx.ymate.security.adapter.AbstractScanLoginCacheStoreAdapter;
 import com.mx.ymate.security.base.bean.ScanQrcode;
 import net.ymate.platform.commons.util.ThreadUtils;
