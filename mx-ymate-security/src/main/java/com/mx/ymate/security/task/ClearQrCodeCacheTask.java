@@ -20,8 +20,6 @@ import net.ymate.platform.log.Logs;
 @TaskConfig(name = "ClearQrCodeCacheTask", cron = "0 0 0 * * ?")
 public class ClearQrCodeCacheTask extends AbstractScheduleTask {
 
-    private static final String KEY_PATTERN = "{}:qrcodeKey:*";
-
     @Override
     public void execute(ITaskExecutionContext context) throws TaskExecutionException {
         Logs.get().getLogger().debug("0点清空过期的key");
