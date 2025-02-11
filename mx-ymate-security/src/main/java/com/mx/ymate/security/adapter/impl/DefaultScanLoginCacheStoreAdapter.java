@@ -3,6 +3,7 @@ package com.mx.ymate.security.adapter.impl;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Scheduler;
+import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.Security;
 import com.mx.ymate.security.adapter.AbstractScanLoginCacheStoreAdapter;
 import com.mx.ymate.security.base.bean.ScanQrcode;
@@ -41,5 +42,10 @@ public class DefaultScanLoginCacheStoreAdapter extends AbstractScanLoginCacheSto
     @Override
     public void deleteScanQrcode(String qrcodeKey) throws Exception {
         dataMap.invalidate(qrcodeKey);
+    }
+
+    @Override
+    public void clearCache(ISecurityConfig config, long time) throws Exception {
+        dataMap.cleanUp();
     }
 }

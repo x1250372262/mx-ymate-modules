@@ -1,11 +1,18 @@
 package com.mx.ymate.security.adapter.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.mx.ymate.redis.api.RedisApi;
+import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.adapter.AbstractScanLoginCacheStoreAdapter;
 import com.mx.ymate.security.base.bean.LoginUser;
 import com.mx.ymate.security.base.bean.ScanQrcode;
 import net.ymate.platform.commons.json.JsonWrapper;
+import net.ymate.platform.log.Logs;
+import net.ymate.platform.persistence.redis.Redis;
+import redis.clients.jedis.ScanParams;
+
+import java.util.List;
 
 /**
  * @Author: xujianpeng.
@@ -29,5 +36,20 @@ public class RedisScanLoginCacheStoreAdapter extends AbstractScanLoginCacheStore
     @Override
     public void deleteScanQrcode(String qrcodeKey) throws Exception {
         RedisApi.strDelete(qrcodeKey);
+    }
+
+    @Override
+    public void clearCache(ISecurityConfig config, long time) throws Exception {
+        String key = StrUtil.format("{}:qrcodeKey:*", config.project());
+        ScanParams scanParams = new ScanParams().match(key).count(1000);
+        List<String> scanResultList = Redis.get().openSession(session -> session.getConnectionHolder().getConnection().scan("0", scanParams)).getResult();
+        for (String scanResult : scanResultList) {
+            Long ttl = RedisApi.getExpire(scanResult);
+            Logs.get().getLogger().debug("ttl::::" + ttl);
+            // 检查是否已过期
+            if (ttl != null && ttl < time) {
+                RedisApi.strDelete(scanResult);
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.mx.ymate.security.adapter;
 
 import cn.hutool.core.util.StrUtil;
+import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.Security;
 import com.mx.ymate.security.base.bean.ScanQrcode;
 import net.ymate.platform.commons.util.UUIDUtils;
@@ -50,5 +51,11 @@ public abstract class AbstractScanLoginCacheStoreAdapter {
      */
     public abstract void deleteScanQrcode(String qrcodeKey) throws Exception;
 
-
+    /**
+     * 清理过期缓存
+     * @param config
+     * @param time
+     * @throws Exception
+     */
+    public abstract void clearCache(ISecurityConfig config, long time) throws Exception;
 }
