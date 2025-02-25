@@ -181,6 +181,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     }
 
     @Override
+    @OperationLog(operationType = OperationType.OTHER, title = "解锁账号")
     public MxResult unlock(String id, String password) throws Exception {
         SecurityUser securityUser = iSecurityUserDao.findById(id, SecurityUser.FIELDS.PASSWORD, SecurityUser.FIELDS.SALT);
         password = DigestUtils.md5Hex(Base64.encodeBase64((password + securityUser.getSalt()).getBytes(StandardCharsets.UTF_8)));
@@ -192,6 +193,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     }
 
     @Override
+    @OperationLog(operationType = OperationType.OTHER, title = "锁定账号")
     public MxResult lock(String id) throws Exception {
         SaUtil.lock(id);
         return MxResult.ok();

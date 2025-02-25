@@ -25,8 +25,6 @@ import net.ymate.platform.core.YMP;
 import net.ymate.platform.core.beans.intercept.AbstractInterceptor;
 import net.ymate.platform.core.beans.intercept.InterceptContext;
 import net.ymate.platform.core.beans.intercept.InterceptException;
-import net.ymate.platform.log.ILogger;
-import net.ymate.platform.log.Logs;
 import net.ymate.platform.webmvc.context.WebContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
