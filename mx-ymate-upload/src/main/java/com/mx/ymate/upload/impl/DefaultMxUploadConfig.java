@@ -134,6 +134,8 @@ public final class DefaultMxUploadConfig implements IMxUploadConfig {
     private IUploadAdapter getAdapter(String type){
         AdapterEnum adapterEnum = AdapterEnum.fromValue(type);
         switch (adapterEnum){
+            case LOCAL:
+                return new LocalUploadAdapter();
             case MINIO:
                 return new MinioUploadAdapter();
             case QI_NIU:
