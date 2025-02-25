@@ -6,6 +6,7 @@ import com.mx.ymate.upload.IMxUploadConfig;
 import com.mx.ymate.upload.adapter.IUploadAdapter;
 import com.mx.ymate.upload.adapter.impl.*;
 import com.mx.ymate.upload.enums.AdapterEnum;
+import net.ymate.platform.commons.util.ClassUtils;
 import net.ymate.platform.core.configuration.IConfigReader;
 import net.ymate.platform.core.module.IModuleConfigurer;
 import org.apache.commons.lang3.StringUtils;
@@ -102,7 +103,11 @@ public final class DefaultMxUploadConfig implements IMxUploadConfig {
         if (StringUtils.isNotBlank(prefix) && !prefix.endsWith(StrUtil.SLASH)) {
             prefix = prefix + StrUtil.SLASH;
         }
-        adapter = getAdapter(AdapterEnum.fromValue(configReader.getString(ADAPTER,AdapterEnum.LOCAL.getValue())));
+        String type = configReader.getString(TYPE);
+        if (StringUtils.isBlank(type)) {
+            throw new RuntimeException("上传适配器不能为空");
+        }
+        adapter = getAdapter(configReader.getString(TYPE));
         jsonFilePath = configReader.getString(JSON_FILE_PATH);
         isCreateThumb = configReader.getBoolean(IS_CREATE_THUMB, false);
         thumbWidth = configReader.getInt(THUMB_WIDTH);
@@ -126,7 +131,8 @@ public final class DefaultMxUploadConfig implements IMxUploadConfig {
         aliBucket = configReader.getString(ALI_BUCKET);
     }
 
-    private IUploadAdapter getAdapter(AdapterEnum adapterEnum){
+    private IUploadAdapter getAdapter(String type){
+        AdapterEnum adapterEnum = AdapterEnum.fromValue(type);
         switch (adapterEnum){
             case MINIO:
                 return new MinioUploadAdapter();
@@ -137,7 +143,7 @@ public final class DefaultMxUploadConfig implements IMxUploadConfig {
             case ALI:
                 return new AliUploadAdapter();
             default:
-                return new LocalUploadAdapter();
+                return ClassUtils.impl(type, IUploadAdapter.class, getClass());
         }
     }
 

@@ -1,4 +1,4 @@
-package com.mx.ymate.upload.enums;
+package com.mx.ymate.sms.enums;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,19 +12,9 @@ import java.util.Objects;
 public enum AdapterEnum {
 
     /**
-     * 本地适配器
+     * 中国网建
      */
-    LOCAL("local"),
-
-    /**
-     * minio适配器
-     */
-    MINIO("minio"),
-
-    /**
-     * 七牛云
-     */
-    QI_NIU("qiniu"),
+    CHINESE("smschinese"),
 
     /**
      * 腾讯云

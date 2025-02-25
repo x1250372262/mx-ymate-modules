@@ -20,7 +20,7 @@ public interface IMxUploadConfig extends IInitialization<IMxUpload> {
     String CONTENT_TYPE = "contentType";
     String SHOW_URL = "showUrl";
     String PREFIX = "prefix";
-    String ADAPTER = "adapter";
+    String TYPE = "type";
     String JSON_FILE_PATH = "jsonFilePath";
     String IS_CREATE_THUMB = "isCreateThumb";
     String THUMB_WIDTH = "thumbWidth";
@@ -42,7 +42,6 @@ public interface IMxUploadConfig extends IInitialization<IMxUpload> {
     String ALI_ACCESS_KEY_SECRET = "ali.accessKeySecret";
     String ALI_ENDPOINT = "ali.endpoint";
     String ALI_BUCKET = "ali.bucket";
-
 
     /**
      * 模块是否已启用, 默认值: true

@@ -29,10 +29,6 @@ public interface ISmsConfig extends IInitialization<ISms> {
     String ALI_TEMPLATE_CODE = "aliTemplateCode";
     String ALI_ENDPOINT = "aliEndpoint";
 
-    String TYPE_CHINESE = "smschinese";
-    String TYPE_TX = "tx";
-    String TYPE_ALI = "ali";
-
     String DEFAULT_CHANNEL = "default";
 
 

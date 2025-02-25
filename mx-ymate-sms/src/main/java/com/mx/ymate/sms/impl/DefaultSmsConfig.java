@@ -6,6 +6,7 @@ import com.mx.ymate.sms.adapter.ISmsAdapter;
 import com.mx.ymate.sms.adapter.impl.AliSmsAdapter;
 import com.mx.ymate.sms.adapter.impl.ChineseSmsAdapter;
 import com.mx.ymate.sms.adapter.impl.TxSmsAdapter;
+import com.mx.ymate.sms.enums.AdapterEnum;
 import net.ymate.platform.commons.util.ClassUtils;
 import net.ymate.platform.core.configuration.IConfigReader;
 import net.ymate.platform.core.configuration.impl.MapSafeConfigReader;
@@ -55,25 +56,25 @@ public final class DefaultSmsConfig implements ISmsConfig {
             if (StringUtils.isBlank(type)) {
                 throw new RuntimeException("短信服务商不能为空");
             }
-            ISmsAdapter smsAdapter;
-            switch (type) {
-                case TYPE_CHINESE:
-                    smsAdapter = new ChineseSmsAdapter(smsConfigReader.getString(SECRET_ID), smsConfigReader.getString(SECRET_KEY));
-                    break;
-                case TYPE_TX:
-                    smsAdapter = new TxSmsAdapter(smsConfigReader.getString(SECRET_ID), smsConfigReader.getString(SECRET_KEY), smsConfigReader.getString(TX_APP_ID), smsConfigReader.getString(TX_REGION), smsConfigReader.getString(TX_SIGN_NAME), smsConfigReader.getString(TX_TEMPLATE_ID));
-                    break;
-                case TYPE_ALI:
-                    smsAdapter = new AliSmsAdapter(smsConfigReader.getString(SECRET_ID), smsConfigReader.getString(SECRET_KEY), smsConfigReader.getString(ALI_SIGN), smsConfigReader.getString(ALI_TEMPLATE_CODE), smsConfigReader.getString(ALI_ENDPOINT));
-                    break;
-                default:
-                    smsAdapter = ClassUtils.impl(type, ISmsAdapter.class, getClass());
-                    break;
-            }
+            ISmsAdapter smsAdapter = getAdapter(type,smsConfigReader);
             if (smsAdapter == null) {
                 continue;
             }
             SMS_ADAPTER_MAP.put(channel, smsAdapter);
+        }
+    }
+
+    private ISmsAdapter getAdapter(String type, IConfigReader smsConfigReader){
+        AdapterEnum adapterEnum = AdapterEnum.fromValue(type);
+        switch (adapterEnum){
+            case CHINESE:
+                return new ChineseSmsAdapter(smsConfigReader.getString(SECRET_ID), smsConfigReader.getString(SECRET_KEY));
+            case TX:
+                return new TxSmsAdapter(smsConfigReader.getString(SECRET_ID), smsConfigReader.getString(SECRET_KEY), smsConfigReader.getString(TX_APP_ID), smsConfigReader.getString(TX_REGION), smsConfigReader.getString(TX_SIGN_NAME), smsConfigReader.getString(TX_TEMPLATE_ID));
+            case ALI:
+                return new AliSmsAdapter(smsConfigReader.getString(SECRET_ID), smsConfigReader.getString(SECRET_KEY), smsConfigReader.getString(ALI_SIGN), smsConfigReader.getString(ALI_TEMPLATE_CODE), smsConfigReader.getString(ALI_ENDPOINT));
+            default:
+                return ClassUtils.impl(type, ISmsAdapter.class, getClass());
         }
     }
 
