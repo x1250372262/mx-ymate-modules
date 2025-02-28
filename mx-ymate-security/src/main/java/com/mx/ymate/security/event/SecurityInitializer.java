@@ -31,7 +31,6 @@ public class SecurityInitializer implements IYmpInitializer {
 
     @Override
     public void initialized(ApplicationEvent applicationEvent) {
-        System.out.println("安全模块初始化");
         ISecurityConfig config = Security.get().getConfig();
         if (config != null && config.isEnabled() && config.isInitialized()) {
             //集成初始化

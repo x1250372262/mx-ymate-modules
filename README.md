@@ -10,6 +10,7 @@
 - [mx-ymate-monitor](mx-ymate-monitor) 服务器监控模块
 - [mx-ymate-mqtt](mx-ymate-mqtt) mqtt模块 mqtt服务发布订阅话题 支持paho等.
 - [mx-ymate-netty](mx-ymate-netty) netty模块 内置心跳检测，可同时当服务端和客户端.
+- [mx-ymate-qwen](mx-ymate-qwen) 基于阿里通义千问封装的llm大模型
 - [mx-ymate-redis](mx-ymate-redis) 整合redis  提供便利的api操作。
 - [mx-ymate-security](mx-ymate-security) 基于sa-token 权限验证 需要数据库的支持，支持扩展自己的用户体系。
 - [mx-ymate-sms](mx-ymate-sms) 短信模块，支持网建、腾讯、阿里。也可以自己扩展。
