@@ -46,7 +46,7 @@ public class SecurityUserRoleServiceImpl implements ISecurityUserRoleService {
                 permissions.forEach(permission -> permissionList.add(permission.getPermissionCode()));
             }
         } else {
-            resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.USER, null), config.client());
+            resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.USER, securityUserId), config.client());
             IResultSet<SecurityUserPermissionVO> resultSet = iSecurityUserRoleDao.permissionList(securityUserId, config.client(), resourceId);
             if (resultSet.isResultsAvailable()) {
                 List<SecurityUserPermissionVO> securityUserPermissionVOList = resultSet.getResultData();

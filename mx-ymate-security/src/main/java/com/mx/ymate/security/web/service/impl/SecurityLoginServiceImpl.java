@@ -63,7 +63,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
         ILoginHandler loginHandler = config.loginHandlerClass();
         MxResult r = loginHandler.loginBefore(params);
-        if(r == null){
+        if (r == null) {
             return Security.error();
         }
         if (!r.isSuccess()) {
@@ -93,7 +93,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         password = DigestUtils.md5Hex(Base64.encodeBase64((password + securityUser.getSalt()).getBytes(StandardCharsets.UTF_8)));
         if (!password.equals(securityUser.getPassword())) {
             r = loginHandler.loginFail(params, securityUser);
-            if(r == null){
+            if (r == null) {
                 return Security.error();
             }
             if (!r.isSuccess()) {
@@ -112,7 +112,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
             return MxResult.create(SECURITY_LOGIN_USER_NAME_OR_PASSWORD_ERROR);
         }
         r = loginHandler.loginSuccess(params, securityUser);
-        if(r == null){
+        if (r == null) {
             return Security.error();
         }
         if (!r.isSuccess()) {
@@ -127,7 +127,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         securityUser.setLoginIp(ServletUtil.getClientIP(WebContext.getRequest()));
         iSecurityUserDao.update(securityUser, SecurityUser.FIELDS.LOGIN_ERROR_COUNT, SecurityUser.FIELDS.LOGIN_LOCK_STATUS,
                 SecurityUser.FIELDS.LOGIN_LOCK_START_TIME, SecurityUser.FIELDS.LOGIN_LOCK_END_TIME, SecurityUser.FIELDS.LOGIN_IP, SecurityUser.FIELDS.LOGIN_TIME);
-        StpUtil.login(securityUser.getId(),config.device());
+        StpUtil.login(securityUser.getId(), config.device());
         SaTokenInfo saTokenInfo = StpUtil.getTokenInfo();
         LoginResult loginResult = BeanUtil.copy(saTokenInfo, LoginResult::new);
         loginResult.setAttrs(r.attrs());
@@ -143,7 +143,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
         ILoginHandler loginHandler = config.loginHandlerClass();
         MxResult r = loginHandler.loginSuccess(params, securityUser);
-        if(r == null){
+        if (r == null) {
             return Security.error();
         }
         if (!r.isSuccess()) {
@@ -158,7 +158,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         securityUser.setLoginIp(ServletUtil.getClientIP(WebContext.getRequest()));
         iSecurityUserDao.update(securityUser, SecurityUser.FIELDS.LOGIN_ERROR_COUNT, SecurityUser.FIELDS.LOGIN_LOCK_STATUS,
                 SecurityUser.FIELDS.LOGIN_LOCK_START_TIME, SecurityUser.FIELDS.LOGIN_LOCK_END_TIME, SecurityUser.FIELDS.LOGIN_IP, SecurityUser.FIELDS.LOGIN_TIME);
-        StpUtil.login(securityUser.getId(),config.device());
+        StpUtil.login(securityUser.getId(), config.device());
         SaTokenInfo saTokenInfo = StpUtil.getTokenInfo();
         LoginResult loginResult = BeanUtil.copy(saTokenInfo, LoginResult::new);
         doLogin(loginResult, securityUser);
@@ -214,8 +214,8 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
         ILoginHandler loginHandler = config.loginHandlerClass();
         String loginId = SaUtil.loginId();
-        MxResult r = loginHandler.logoutBefore(params,loginId);
-        if(r == null){
+        MxResult r = loginHandler.logoutBefore(params, loginId);
+        if (r == null) {
             return Security.error();
         }
         if (!r.isSuccess()) {
@@ -223,9 +223,9 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
         }
         SaUtil.clearUser();
         SaUtil.clearPermission();
-        StpUtil.logout(loginId,config.device());
-        r = loginHandler.logoutAfter(params,loginId);
-        if(r == null){
+        StpUtil.logout(loginId, config.device());
+        r = loginHandler.logoutAfter(params, loginId);
+        if (r == null) {
             return Security.error();
         }
         if (!r.isSuccess()) {

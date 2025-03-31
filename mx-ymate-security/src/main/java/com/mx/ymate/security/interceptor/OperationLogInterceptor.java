@@ -1,6 +1,5 @@
 package com.mx.ymate.security.interceptor;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.useragent.UserAgent;
@@ -17,7 +16,6 @@ import com.mx.ymate.security.base.bean.LoginUser;
 import com.mx.ymate.security.base.enums.ResourceType;
 import com.mx.ymate.security.base.model.SecurityOperationLog;
 import com.mx.ymate.security.event.OperationLogEvent;
-import com.mx.ymate.security.handler.IUserHandler;
 import net.ymate.platform.commons.util.DateTimeUtils;
 import net.ymate.platform.commons.util.NetworkUtils;
 import net.ymate.platform.commons.util.UUIDUtils;
@@ -38,7 +36,7 @@ import static com.mx.ymate.security.base.config.SecurityConstants.LOG_EVENT_KEY;
 /**
  * @Author: mengxiang.
  * @Date: 2024-10-11 17:00
- * @Description:
+ * @Description: service层操作日志拦截 登录 退出 除外
  */
 public class OperationLogInterceptor extends AbstractInterceptor {
 
@@ -74,34 +72,43 @@ public class OperationLogInterceptor extends AbstractInterceptor {
             if (operationLog == null) {
                 return;
             }
-            LoginUser loginUser = SaUtil.user();
-            if (loginUser == null) {
-                return;
-            }
             Object result = context.getResultObject();
             if (!(result instanceof MxResult)) {
                 return;
             }
-            MxResult mxResult = (MxResult) result;
-            String code = mxResult.code();
-            String msg = mxResult.msg();
+            LoginUser loginUser = SaUtil.user();
             HttpServletRequest request = WebContext.getRequest();
+            String userId = "未知";
+            String userName = "未知";
+            //如果有登录用户的信息 直接用了
+            if (loginUser != null) {
+                userId = loginUser.getId();
+                userName = StringUtils.defaultIfBlank(loginUser.getRealName(), loginUser.getUserName());
+            } else {
+                //先看看是不是普通登录 不是的话就是扫码登录
+                String parameter = StringUtils.defaultIfBlank(request.getParameter("loginId"), request.getParameter("userName"));
+                if (StringUtils.isNotBlank(parameter)) {
+                    userId = parameter;
+                    userName = parameter;
+                }
+            }
+            MxResult mxResult = (MxResult) result;
             UserAgent userAgent = UserAgentUtil.parse(request.getHeader("user-agent"));
             // *========数据库日志=========*//
-            IUserHandler userHandler = securityConfig.userHandlerClass();
-            String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.LOG, null), securityConfig.client());
+            String resourceId = StringUtils.defaultIfBlank(securityConfig.userHandlerClass().buildResourceId(ResourceType.LOG, null), securityConfig.client());
             SecurityOperationLog securityOperationLog = SecurityOperationLog.builder()
                     .id(UUIDUtils.UUID())
                     .title(operationLog.title())
                     .resourceId(resourceId)
                     .type(operationLog.operationType().name())
                     .typeName(operationLog.operationType().value())
-                    .userId(loginUser.getId())
-                    .userName(loginUser.getUserName())
+                    .userId(userId)
+                    .userName(userName)
                     .createTime(DateTimeUtils.currentTimeMillis())
                     .requestUrl(request.getRequestURI())
                     .requestParam(JSONObject.toJSONString(ServletUtil.getParams(request)))
-                    .returnCode(Convert.toStr(code)).returnMessage(msg)
+                    .returnCode(mxResult.code())
+                    .returnMessage(mxResult.msg())
                     .returnResult(mxResult.toJson())
                     .className(context.getTargetClass().getName())
                     .methodName(method.getName())
@@ -126,6 +133,7 @@ public class OperationLogInterceptor extends AbstractInterceptor {
             operationLogEvent.addParamExtend(LOG_EVENT_KEY, securityOperationLog);
             // 触发事件
             YMP.get().getEvents().fireEvent(operationLogEvent);
+
         } catch (Exception e) {
             // 记录本地异常日志
             LOG.error("==日志记录异常==", e);

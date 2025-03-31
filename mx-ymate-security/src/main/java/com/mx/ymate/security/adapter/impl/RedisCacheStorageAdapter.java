@@ -46,7 +46,7 @@ public class RedisCacheStorageAdapter implements ICacheStorageAdapter {
 
     @Override
     public void lock(String lockKey, String loginId) throws Exception {
-        RedisApi.strSet(loginId, loginId);
+        RedisApi.strSet(lockKey, loginId);
     }
 
     @Override
