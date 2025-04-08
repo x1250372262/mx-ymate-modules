@@ -1,5 +1,6 @@
 package com.mx.ymate.dev.support.mvc;
 
+import com.mx.ymate.dev.code.Code;
 import net.ymate.platform.commons.json.IJsonObjectWrapper;
 import net.ymate.platform.commons.lang.BlurObject;
 import net.ymate.platform.webmvc.IWebResult;
@@ -40,6 +41,7 @@ public class MxWebResultBuilder implements IWebResultBuilder {
 
     @Override
     public IWebResultBuilder succeed() {
+        result.code(Code.SUCCESS.code());
         return this;
     }
 

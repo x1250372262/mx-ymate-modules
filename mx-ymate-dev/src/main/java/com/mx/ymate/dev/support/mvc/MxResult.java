@@ -5,16 +5,12 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mx.ymate.dev.code.Code;
 import com.mx.ymate.dev.code.ICode;
+import com.mx.ymate.dev.support.mvc.i18n.I18nHelper;
 import net.ymate.platform.commons.json.IJsonObjectWrapper;
-import net.ymate.platform.commons.util.ClassUtils;
-import net.ymate.platform.core.support.ErrorCode;
 import net.ymate.platform.webmvc.AbstractWebResult;
-import net.ymate.platform.webmvc.IWebMvc;
 import net.ymate.platform.webmvc.IWebResult;
-import net.ymate.platform.webmvc.IWebResultBuilder;
 import net.ymate.platform.webmvc.base.Type;
 import net.ymate.platform.webmvc.context.WebContext;
-import net.ymate.platform.webmvc.impl.DefaultWebResultBuilder;
 import net.ymate.platform.webmvc.util.WebUtils;
 import net.ymate.platform.webmvc.view.IView;
 import net.ymate.platform.webmvc.view.impl.HttpStatusView;
@@ -34,48 +30,6 @@ import java.util.Objects;
  */
 public class MxResult extends AbstractWebResult<String> {
 
-
-    public static IWebResultBuilder builder() {
-        IWebResultBuilder builder = null;
-        try {
-            builder = ClassUtils.getExtensionLoader(IWebResultBuilder.class).getExtensionClass().getConstructor().newInstance();
-        } catch (Exception ignored) {
-        }
-        return builder != null ? builder : new DefaultWebResultBuilder();
-    }
-
-    public static IWebResultBuilder builder(ErrorCode errorCode) {
-        return builder(WebContext.getContext().getOwner(), null, errorCode);
-    }
-
-    public static IWebResultBuilder builder(String resourceName, ErrorCode errorCode) {
-        return builder(WebContext.getContext().getOwner(), resourceName, errorCode);
-    }
-
-    public static IWebResultBuilder builder(IWebMvc owner, ErrorCode errorCode) {
-        return builder(owner, null, errorCode);
-    }
-
-    public static IWebResultBuilder builder(IWebMvc owner, String resourceName, ErrorCode errorCode) {
-        IWebResultBuilder builder = builder();
-        String msg = null;
-        if (StringUtils.isNotBlank(errorCode.i18nKey())) {
-            msg = WebUtils.i18nStr(owner, resourceName, errorCode.i18nKey(), null);
-        }
-        if (StringUtils.isBlank(msg)) {
-            msg = WebUtils.errorCodeI18n(owner, resourceName, errorCode.code(), errorCode.message());
-        }
-        builder.code(errorCode.code()).msg(msg);
-        if (!errorCode.attrs().isEmpty()) {
-            builder.attrs(errorCode.attrs());
-        }
-        if (!errorCode.data().isEmpty()) {
-            builder.data(errorCode.data());
-        }
-        return builder;
-    }
-
-
     public static MxResult create() {
         return new MxResult().keepNullValue();
     }
@@ -86,7 +40,7 @@ public class MxResult extends AbstractWebResult<String> {
 
 
     public static MxResult create(ICode iCode) {
-        return create(iCode.code()).msg(iCode.msg());
+        return create(iCode.code()).msg(I18nHelper.getMsg(iCode.msg()));
     }
 
 
@@ -112,11 +66,13 @@ public class MxResult extends AbstractWebResult<String> {
 
 
     public static MxResult sameName() {
-        return MxResult.create(Code.FIELDS_EXISTS.code()).msg(StrUtil.format(Code.FIELDS_EXISTS.msg(), "名称"));
+        String i18nMsg = I18nHelper.getMsg(Code.FIELDS_EXISTS.msg());
+        return MxResult.create(Code.FIELDS_EXISTS.code()).msg(StrUtil.format(i18nMsg, "名称"));
     }
 
     public static MxResult sameData(String msg) {
-        return MxResult.create(Code.FIELDS_EXISTS.code()).msg(StrUtil.format(Code.FIELDS_EXISTS.msg(), msg));
+        String i18nMsg = I18nHelper.getMsg(Code.FIELDS_EXISTS.msg());
+        return MxResult.create(Code.FIELDS_EXISTS.code()).msg(StrUtil.format(i18nMsg, msg));
     }
 
     public static MxResult noVersion() {
@@ -189,29 +145,6 @@ public class MxResult extends AbstractWebResult<String> {
         return Code.SUCCESS.code().equals(code());
     }
 
-
-    public static IView formatView(IWebResult<?> result) {
-        return formatView(null, Type.Const.PARAM_FORMAT, Type.Const.PARAM_CALLBACK, result);
-    }
-
-    public static IView formatView(String path, IWebResult<?> result) {
-        return formatView(path, Type.Const.PARAM_FORMAT, Type.Const.PARAM_CALLBACK, result);
-    }
-
-    public static IView formatView(IWebResult<?> result, String defaultFormat) {
-        return formatView(null, Type.Const.PARAM_FORMAT, defaultFormat, Type.Const.PARAM_CALLBACK, result);
-    }
-
-    /**
-     * @param path          JSP模块路径
-     * @param paramFormat   数据格式，可选值：json|jsonp|xml
-     * @param paramCallback 当数据结式为jsonp时，指定回调方法参数名
-     * @param result        回应的数据对象
-     * @return 根据paramFormat等参数判断返回对应的视图对象
-     */
-    public static IView formatView(String path, String paramFormat, String paramCallback, IWebResult<?> result) {
-        return formatView(path, paramFormat, null, paramCallback, result);
-    }
 
     public static IView formatView(String path, String paramFormat, String defaultFormat, String paramCallback, IWebResult<?> result) {
         IView returnView = null;

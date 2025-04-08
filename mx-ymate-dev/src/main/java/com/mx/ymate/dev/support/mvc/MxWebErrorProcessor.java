@@ -2,14 +2,19 @@ package com.mx.ymate.dev.support.mvc;
 
 import com.mx.ymate.dev.code.Code;
 import net.ymate.platform.commons.util.RuntimeUtils;
+import net.ymate.platform.core.support.ErrorCode;
 import net.ymate.platform.validation.ValidateResult;
 import net.ymate.platform.webmvc.*;
 import net.ymate.platform.webmvc.base.Type;
 import net.ymate.platform.webmvc.context.WebContext;
+import net.ymate.platform.webmvc.exception.ValidationResultException;
 import net.ymate.platform.webmvc.impl.DefaultWebErrorProcessor;
+import net.ymate.platform.webmvc.util.ExceptionProcessHelper;
+import net.ymate.platform.webmvc.util.IExceptionProcessor;
 import net.ymate.platform.webmvc.util.WebErrorCode;
 import net.ymate.platform.webmvc.util.WebUtils;
 import net.ymate.platform.webmvc.view.IView;
+import net.ymate.platform.webmvc.view.View;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,7 +31,7 @@ import java.util.stream.Collectors;
  */
 public class MxWebErrorProcessor extends AbstractResponseErrorProcessor implements IWebErrorProcessor, IWebInitialization {
 
-    private static final Log LOG = LogFactory.getLog(DefaultWebErrorProcessor.class);
+    private static final Log LOG = LogFactory.getLog(MxWebErrorProcessor.class);
 
     private IWebMvc owner;
 
@@ -55,7 +60,7 @@ public class MxWebErrorProcessor extends AbstractResponseErrorProcessor implemen
         HttpServletRequest httpServletRequest = WebContext.getRequest();
         String viewFormat = getErrorDefaultViewFormat(owner);
         if (WebUtils.isAjax(httpServletRequest) || WebUtils.isXmlFormat(httpServletRequest) || WebUtils.isJsonFormat(httpServletRequest) || StringUtils.containsAny(viewFormat, Type.Const.FORMAT_JSON, Type.Const.FORMAT_XML)) {
-            return MxResult.formatView(MxResult.builder().code(code).msg(msg).data(dataMap).build(), viewFormat);
+            return MxResult.formatView(null, Type.Const.PARAM_FORMAT, viewFormat, Type.Const.PARAM_CALLBACK, MxResult.create().code(code).msg(msg).data(dataMap));
         }
         return WebUtils.buildErrorView(owner, null, code, msg, null, 0, dataMap);
     }
@@ -77,6 +82,47 @@ public class MxWebErrorProcessor extends AbstractResponseErrorProcessor implemen
     @Override
     public IView onValidation(IWebMvc owner, Map<String, ValidateResult> results) {
         return showValidationResults(owner, results);
+    }
+
+    @Override
+    public IView processError(IWebMvc owner, Throwable e) {
+        IView returnView = null;
+        try {
+            Throwable unwrapThrow = RuntimeUtils.unwrapThrow(e);
+            if (unwrapThrow != null) {
+                if (unwrapThrow instanceof ValidationResultException) {
+                    ValidationResultException exception = (ValidationResultException) unwrapThrow;
+                    if (exception.getValidateResults() != null && !exception.getValidateResults().isEmpty()) {
+                        returnView = showValidationResults(owner, exception.getValidateResults());
+                    } else if (exception.getResultView() != null) {
+                        returnView = exception.getResultView();
+                        doProcessErrorStatusCodeIfNeed(owner);
+                    } else {
+                        returnView = View.httpStatusView(exception.getHttpStatus(), exception.getMessage());
+                        doProcessErrorStatusCodeIfNeed(owner);
+                    }
+                } else {
+                    IExceptionProcessor exceptionProcessor = ExceptionProcessHelper.DEFAULT.bind(unwrapThrow.getClass());
+                    if (exceptionProcessor != null) {
+                        IExceptionProcessor.Result result = exceptionProcessor.process(unwrapThrow);
+                        if (result != null) {
+                            returnView = showErrorMsg(owner, result.getCode(), WebUtils.errorCodeI18n(owner, result), result.getAttributes());
+                        } else {
+                            doProcessError(owner, unwrapThrow);
+                        }
+                    } else {
+                        doProcessError(owner, unwrapThrow);
+                        returnView = showErrorMsg(owner, String.valueOf(ErrorCode.INTERNAL_SYSTEM_ERROR), WebUtils.errorCodeI18n(owner, ErrorCode.INTERNAL_SYSTEM_ERROR, ErrorCode.MSG_INTERNAL_SYSTEM_ERROR), null);
+                    }
+                    doProcessErrorStatusCodeIfNeed(owner);
+                }
+            }
+        } catch (Exception e1) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn(StringUtils.EMPTY, RuntimeUtils.unwrapThrow(e1));
+            }
+        }
+        return returnView;
     }
 
     @Override
