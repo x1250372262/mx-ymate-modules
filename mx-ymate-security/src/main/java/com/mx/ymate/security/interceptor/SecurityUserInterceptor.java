@@ -174,9 +174,8 @@ public class SecurityUserInterceptor extends AbstractInterceptor {
         }
         SaCheckPermission saCheckPermission = method.getAnnotation(SaCheckPermission.class);
         if (saCheckPermission == null) {
-            return;
+            saCheckPermission = targetClass.getAnnotation(SaCheckPermission.class);
         }
-        saCheckPermission = targetClass.getAnnotation(SaCheckPermission.class);
         if (saCheckPermission == null) {
             return;
         }
