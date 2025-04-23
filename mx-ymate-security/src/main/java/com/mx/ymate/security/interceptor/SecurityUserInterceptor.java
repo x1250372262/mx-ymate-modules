@@ -3,6 +3,9 @@ package com.mx.ymate.security.interceptor;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.exception.NotRoleException;
+import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.strategy.SaAnnotationStrategy;
+import cn.dev33.satoken.strategy.SaStrategy;
 import com.mx.ymate.dev.code.Code;
 import com.mx.ymate.dev.constants.Constants;
 import com.mx.ymate.dev.support.mvc.MxResult;
@@ -95,6 +98,7 @@ public class SecurityUserInterceptor extends AbstractInterceptor {
             if (annotation != null) {
                 return null;
             }
+            StpUtil.checkLogin();
             SecurityUser securityUser = iSecurityUserDao.findById(SaUtil.loginId());
             if (securityUser == null) {
                 throw new NotLoginException(Code.NOT_LOGIN.msg(), null, null);
@@ -118,6 +122,8 @@ public class SecurityUserInterceptor extends AbstractInterceptor {
                     throw new MxLockException(SecurityCode.SECURITY_LOGIN_USER_LOCK_SCREEN.msg());
                 }
             }
+            //权限拦截
+            SaAnnotationStrategy.instance.checkMethodAnnotation.accept(method);
         } catch (NotLoginException notLoginException) {
             return MxResult.create(Code.NOT_LOGIN).toJsonView();
         } catch (MxLoginException mxLoginException) {

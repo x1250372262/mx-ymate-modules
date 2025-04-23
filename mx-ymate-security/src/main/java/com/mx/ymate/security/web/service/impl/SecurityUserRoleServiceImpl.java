@@ -32,11 +32,10 @@ public class SecurityUserRoleServiceImpl implements ISecurityUserRoleService {
     private ISecurityPermissionDao isecurityPermissionDao;
 
     private final ISecurityConfig config = Security.get().getConfig();
-    private final IUserHandler userHandler = config.userHandlerClass();
+
 
     @Override
     public List<String> securityUserPermissionList(String securityUserId) throws Exception {
-        String resourceId;
         List<String> permissionList = new ArrayList<>();
         if (SaUtil.isFounder(securityUserId)) {
             IResultSet<SecurityPermission> resultSet = isecurityPermissionDao.findAll(config.client());
