@@ -1,6 +1,8 @@
 package com.mx.ymate.dev.support.mvc;
 
 import com.mx.ymate.dev.code.Code;
+import com.mx.ymate.dev.support.mvc.i18n.I18nHelper;
+import net.ymate.platform.commons.lang.BlurObject;
 import net.ymate.platform.commons.util.RuntimeUtils;
 import net.ymate.platform.core.support.ErrorCode;
 import net.ymate.platform.validation.ValidateResult;
@@ -106,13 +108,14 @@ public class MxWebErrorProcessor extends AbstractResponseErrorProcessor implemen
                     if (exceptionProcessor != null) {
                         IExceptionProcessor.Result result = exceptionProcessor.process(unwrapThrow);
                         if (result != null) {
-                            returnView = showErrorMsg(owner, result.getCode(), WebUtils.errorCodeI18n(owner, result), result.getAttributes());
+                            String msg =  I18nHelper.getMsg(result.getCode(),result.getMessage());
+                            returnView = showErrorMsg(owner, result.getCode(), msg, result.getAttributes());
                         } else {
                             doProcessError(owner, unwrapThrow);
                         }
                     } else {
                         doProcessError(owner, unwrapThrow);
-                        returnView = showErrorMsg(owner, String.valueOf(ErrorCode.INTERNAL_SYSTEM_ERROR), WebUtils.errorCodeI18n(owner, ErrorCode.INTERNAL_SYSTEM_ERROR, ErrorCode.MSG_INTERNAL_SYSTEM_ERROR), null);
+                        returnView = showErrorMsg(owner, String.valueOf(ErrorCode.INTERNAL_SYSTEM_ERROR), I18nHelper.getMsg(BlurObject.bind(ErrorCode.INTERNAL_SYSTEM_ERROR).toStringValue(), ErrorCode.MSG_INTERNAL_SYSTEM_ERROR), null);
                     }
                     doProcessErrorStatusCodeIfNeed(owner);
                 }
@@ -127,8 +130,7 @@ public class MxWebErrorProcessor extends AbstractResponseErrorProcessor implemen
 
     @Override
     public IView showValidationResults(IWebMvc owner, Map<String, ValidateResult> results) {
-        String message = WebUtils.errorCodeI18n(owner, Code.INVALID_PARAMETER.code(), WebErrorCode.MSG_INVALID_PARAMS_VALIDATION);
-        //
+        String message = I18nHelper.getMsg(Code.FIELDS_EXISTS.msg(),Code.INVALID_PARAMETER.msg());
         HttpServletRequest httpServletRequest = WebContext.getRequest();
         if (!WebUtils.isAjax(httpServletRequest) && !WebUtils.isXmlFormat(httpServletRequest) && !WebUtils.isJsonFormat(httpServletRequest) && !StringUtils.containsAny(getErrorDefaultViewFormat(owner), Type.Const.FORMAT_JSON, Type.Const.FORMAT_XML)) {
             // 拼装所有的验证消息

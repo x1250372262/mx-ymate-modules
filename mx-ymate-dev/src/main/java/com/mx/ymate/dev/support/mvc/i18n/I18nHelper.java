@@ -93,7 +93,7 @@ public class I18nHelper {
         if (defaultMap != null && defaultMap.containsKey(key)) {
             return defaultMap.get(key);
         }
-        return "无效的key:" + key;
+        return null;
     }
 
     /**
@@ -128,5 +128,9 @@ public class I18nHelper {
             headerLanguage = StringUtils.defaultIfBlank(WebContext.getRequest().getHeader("language"), DEFAULT_LANG);
         }
         return get(headerLanguage, key);
+    }
+
+    public static String getMsg(String key,String defaultValue) {
+       return StringUtils.defaultIfBlank(getMsg(key),defaultValue);
     }
 }
