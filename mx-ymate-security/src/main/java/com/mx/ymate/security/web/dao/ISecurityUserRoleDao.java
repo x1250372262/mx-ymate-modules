@@ -47,11 +47,10 @@ public interface ISecurityUserRoleDao {
      *
      * @param userId
      * @param client
-     * @param resourceId
      * @return
      * @throws Exception
      */
-    IResultSet<SecurityUserPermissionVO> permissionList(String userId, String client, String resourceId) throws Exception;
+    IResultSet<SecurityUserPermissionVO> permissionList(String userId, String client) throws Exception;
 
 
     /**
@@ -59,12 +58,11 @@ public interface ISecurityUserRoleDao {
      *
      * @param userId
      * @param client
-     * @param resourceId
      * @param page
      * @return
      * @throws Exception
      */
-    IResultSet<SecurityUserRoleVO> roleList(String userId, String client, String resourceId, Page page) throws Exception;
+    IResultSet<SecurityUserRoleVO> roleList(String userId, String client, Page page) throws Exception;
 
     /**
      * 根据条件查询
@@ -72,11 +70,10 @@ public interface ISecurityUserRoleDao {
      * @param userId
      * @param roleId
      * @param client
-     * @param resourceId
      * @return
      * @throws Exception
      */
-    SecurityUserRole findByUserIdAndRoleidAndClientAndResourceId(String userId, String roleId, String client, String resourceId) throws Exception;
+    SecurityUserRole findByUserIdAndRoleIdAndClient(String userId, String roleId, String client) throws Exception;
 
 
 }

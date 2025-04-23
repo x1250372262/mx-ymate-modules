@@ -20,10 +20,9 @@ import net.ymate.platform.persistence.jdbc.query.Select;
 @Bean
 public class SecurityMenuDaoImpl implements ISecurityMenuDao {
     @Override
-    public IResultSet<SecurityMenuNavVO> findAll(Integer type, Integer hideStatus, String client, String resourceId) throws Exception {
+    public IResultSet<SecurityMenuNavVO> findAll(Integer type, Integer hideStatus, String client) throws Exception {
         Cond cond = Cond.create()
                 .eqWrap(SecurityMenu.FIELDS.CLIENT).param(client)
-                .and().eqWrap(SecurityMenu.FIELDS.RESOURCE_ID).param(resourceId)
                 .exprNotEmpty(type, c -> c.and().eqWrap(SecurityMenu.FIELDS.TYPE).param(type))
                 .exprNotEmpty(hideStatus, c -> c.and().eqWrap(SecurityMenu.FIELDS.HIDE_STATUS).param(hideStatus));
         return JDBC.get().openSession(session -> {

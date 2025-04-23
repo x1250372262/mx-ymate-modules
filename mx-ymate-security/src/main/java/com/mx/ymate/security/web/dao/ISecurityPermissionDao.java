@@ -14,9 +14,8 @@ public interface ISecurityPermissionDao {
      * 查询所有
      *
      * @param client
-     * @param resourceId
      * @return
      * @throws Exception
      */
-    IResultSet<SecurityPermission> findAll(String client, String resourceId) throws Exception;
+    IResultSet<SecurityPermission> findAll(String client) throws Exception;
 }

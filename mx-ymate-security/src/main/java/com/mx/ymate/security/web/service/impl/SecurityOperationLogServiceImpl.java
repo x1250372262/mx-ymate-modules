@@ -4,6 +4,7 @@ import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.dev.support.page.PageBean;
 import com.mx.ymate.dev.util.BeanUtil;
 import com.mx.ymate.security.ISecurityConfig;
+import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
 import com.mx.ymate.security.base.annotation.OperationLog;
 import com.mx.ymate.security.base.enums.OperationType;
@@ -11,7 +12,7 @@ import com.mx.ymate.security.base.enums.ResourceType;
 import com.mx.ymate.security.base.model.SecurityOperationLog;
 import com.mx.ymate.security.base.vo.SecurityOperationLogListVO;
 import com.mx.ymate.security.base.vo.SecurityOperationLogVO;
-import com.mx.ymate.security.handler.IUserHandler;
+import com.mx.ymate.security.handler.IResourceHandler;
 import com.mx.ymate.security.web.dao.ISecurityOperationLogDao;
 import com.mx.ymate.security.web.service.ISecurityOperationLogService;
 import net.ymate.platform.core.beans.annotation.Bean;
@@ -34,8 +35,8 @@ public class SecurityOperationLogServiceImpl implements ISecurityOperationLogSer
 
     @Override
     public MxResult list(String title, Long startTime, Long endTime, PageBean pageBean) throws Exception {
-        IUserHandler userHandler = config.userHandlerClass();
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.LOG, null), config.client());
+        IResourceHandler resourceHandler = config.resourceHandlerClass();
+        String resourceId = StringUtils.defaultIfBlank(resourceHandler.buildResourceId(ResourceType.LOG, SaUtil.loginId()), config.client());
         IResultSet<SecurityOperationLog> resultSet = iSecurityOperationLogDao.findAll(resourceId, config.client(), title, startTime, endTime, pageBean.toPage());
         return MxResult.ok().data(BeanUtil.copyResultSet(resultSet, SecurityOperationLogListVO::new));
     }

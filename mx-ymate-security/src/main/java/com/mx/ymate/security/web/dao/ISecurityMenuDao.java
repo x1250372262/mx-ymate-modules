@@ -13,14 +13,14 @@ public interface ISecurityMenuDao {
 
     /**
      * 根据类型和客户端获取
+     *
      * @param type
      * @param hideStatus
      * @param client
-     * @param resourceId
      * @return
      * @throws Exception
      */
-    IResultSet<SecurityMenuNavVO> findAll(Integer type, Integer hideStatus, String client, String resourceId) throws Exception;
+    IResultSet<SecurityMenuNavVO> findAll(Integer type, Integer hideStatus, String client) throws Exception;
 
 
     /**

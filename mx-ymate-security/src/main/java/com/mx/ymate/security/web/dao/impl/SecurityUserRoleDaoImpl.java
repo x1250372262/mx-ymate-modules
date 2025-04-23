@@ -46,10 +46,9 @@ public class SecurityUserRoleDaoImpl implements ISecurityUserRoleDao {
     }
 
     @Override
-    public IResultSet<SecurityUserPermissionVO> permissionList(String userId, String client, String resourceId) throws Exception {
+    public IResultSet<SecurityUserPermissionVO> permissionList(String userId, String client) throws Exception {
         Cond cond = Cond.create().eqWrap("sur", SecurityUserRole.FIELDS.USER_ID).param(userId)
-                .and().eqWrap("sur", SecurityUserRole.FIELDS.CLIENT).param(client)
-                .and().eqWrap("sur", SecurityUserRole.FIELDS.RESOURCE_ID).param(resourceId);
+                .and().eqWrap("sur", SecurityUserRole.FIELDS.CLIENT).param(client);
         return JDBC.get().openSession(session -> {
             String prefix = session.getConnectionHolder().getDataSourceConfig().getTablePrefix();
             Join spJoin = Join.inner(prefix, SecurityPermission.TABLE_NAME).alias("sp")
@@ -69,10 +68,9 @@ public class SecurityUserRoleDaoImpl implements ISecurityUserRoleDao {
     }
 
     @Override
-    public IResultSet<SecurityUserRoleVO> roleList(String userId, String client, String resourceId, Page page) throws Exception {
+    public IResultSet<SecurityUserRoleVO> roleList(String userId, String client, Page page) throws Exception {
         Cond cond = Cond.create().eqWrap("sur", SecurityUserRole.FIELDS.USER_ID).param(userId)
-                .and().eqWrap("sur", SecurityUserRole.FIELDS.CLIENT).param(client)
-                .and().eqWrap("sur", SecurityUserRole.FIELDS.RESOURCE_ID).param(resourceId);
+                .and().eqWrap("sur", SecurityUserRole.FIELDS.CLIENT).param(client);
         return JDBC.get().openSession(session -> {
             String prefix = session.getConnectionHolder().getDataSourceConfig().getTablePrefix();
             Join srJoin = Join.inner(prefix, SecurityRole.TABLE_NAME).alias("sr")
@@ -90,11 +88,10 @@ public class SecurityUserRoleDaoImpl implements ISecurityUserRoleDao {
     }
 
     @Override
-    public SecurityUserRole findByUserIdAndRoleidAndClientAndResourceId(String userId, String roleId, String client, String resourceId) throws Exception {
+    public SecurityUserRole findByUserIdAndRoleIdAndClient(String userId, String roleId, String client) throws Exception {
         Cond cond = Cond.create().eqWrap(SecurityUserRole.FIELDS.USER_ID).param(userId)
                 .and().eqWrap(SecurityUserRole.FIELDS.ROLE_ID).param(roleId)
-                .and().eqWrap(SecurityUserRole.FIELDS.CLIENT).param(client)
-                .and().eqWrap(SecurityUserRole.FIELDS.RESOURCE_ID).param(resourceId);
+                .and().eqWrap(SecurityUserRole.FIELDS.CLIENT).param(client);
         return SecurityUserRole.builder().build().findFirst(Where.create(cond));
     }
 }

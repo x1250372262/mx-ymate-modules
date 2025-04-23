@@ -16,12 +16,11 @@ public interface ISecurityRolePermissionDao {
      * 查询所有
      *
      * @param client
-     * @param resourceId
      * @param roleId
      * @return
      * @throws Exception
      */
-    IResultSet<SecurityRolePermission> findAll(String client, String resourceId, String roleId) throws Exception;
+    IResultSet<SecurityRolePermission> findAll(String client, String roleId) throws Exception;
 
     /**
      * 批量添加
@@ -35,11 +34,11 @@ public interface ISecurityRolePermissionDao {
 
     /**
      * 按条件删除
+     *
      * @param client
-     * @param resourceId
      * @param roleId
      * @throws Exception
      */
-    void deleteByClientAndRoleIdAndResourceId(String client, String resourceId, String roleId) throws Exception;
+    void deleteByClientAndRoleIdAndResourceId(String client, String roleId) throws Exception;
 
 }

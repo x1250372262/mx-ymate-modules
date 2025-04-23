@@ -9,8 +9,6 @@ public class SecurityOperationLogVO extends SecurityOperationLogListVO {
 
     private String requestParam;
 
-    private String returnCode;
-
     private String returnMessage;
 
     private String returnResult;
@@ -30,16 +28,6 @@ public class SecurityOperationLogVO extends SecurityOperationLogListVO {
 
     public void setRequestParam(String requestParam) {
         this.requestParam = requestParam;
-    }
-
-    @Override
-    public String getReturnCode() {
-        return returnCode;
-    }
-
-    @Override
-    public void setReturnCode(String returnCode) {
-        this.returnCode = returnCode;
     }
 
     public String getReturnMessage() {
@@ -92,6 +80,6 @@ public class SecurityOperationLogVO extends SecurityOperationLogListVO {
 
     @Override
     public String toString() {
-        return "SecurityOperationLogVO{" + "requestParam='" + requestParam + '\'' + ", returnCode='" + returnCode + '\'' + ", returnMessage='" + returnMessage + '\'' + ", returnResult='" + returnResult + '\'' + ", className='" + className + '\'' + ", methodName='" + methodName + '\'' + ", os='" + os + '\'' + ", browser='" + browser + '\'' + '}';
+        return "SecurityOperationLogVO{" + "requestParam='" + requestParam + '\'' + ",  returnMessage='" + returnMessage + '\'' + ", returnResult='" + returnResult + '\'' + ", className='" + className + '\'' + ", methodName='" + methodName + '\'' + ", os='" + os + '\'' + ", browser='" + browser + '\'' + '}';
     }
 }

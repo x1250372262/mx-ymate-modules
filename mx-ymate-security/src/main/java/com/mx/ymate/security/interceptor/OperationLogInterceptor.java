@@ -13,6 +13,7 @@ import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
 import com.mx.ymate.security.base.annotation.OperationLog;
 import com.mx.ymate.security.base.bean.LoginUser;
+import com.mx.ymate.security.base.enums.OperationType;
 import com.mx.ymate.security.base.enums.ResourceType;
 import com.mx.ymate.security.base.model.SecurityOperationLog;
 import com.mx.ymate.security.event.OperationLogEvent;
@@ -76,68 +77,81 @@ public class OperationLogInterceptor extends AbstractInterceptor {
             if (!(result instanceof MxResult)) {
                 return;
             }
-            LoginUser loginUser = SaUtil.user();
-            HttpServletRequest request = WebContext.getRequest();
+            MxResult mxResult = (MxResult) result;
             String userId = "未知";
             String userName = "未知";
-            //如果有登录用户的信息 直接用了
+            boolean isLogin = false;
+            LoginUser loginUser = SaUtil.user();
+            HttpServletRequest request = WebContext.getRequest();
             if (loginUser != null) {
+                isLogin = true;
                 userId = loginUser.getId();
                 userName = StringUtils.defaultIfBlank(loginUser.getRealName(), loginUser.getUserName());
             } else {
-                //先看看是不是普通登录 不是的话就是扫码登录
-                String parameter = StringUtils.defaultIfBlank(request.getParameter("loginId"), request.getParameter("userName"));
-                if (StringUtils.isNotBlank(parameter)) {
-                    userId = parameter;
-                    userName = parameter;
+                if (operationLog.operationType() == OperationType.LOGIN) {
+                    //先看看是不是普通登录 不是的话就是扫码登录
+                    String parameter = StringUtils.defaultIfBlank(request.getParameter("userName"), request.getParameter("loginId"));
+                    if (StringUtils.isNotBlank(parameter)) {
+                        userId = parameter;
+                        userName = parameter;
+                    }
                 }
             }
-            MxResult mxResult = (MxResult) result;
-            UserAgent userAgent = UserAgentUtil.parse(request.getHeader("user-agent"));
-            // *========数据库日志=========*//
-            String resourceId = StringUtils.defaultIfBlank(securityConfig.userHandlerClass().buildResourceId(ResourceType.LOG, null), securityConfig.client());
-            SecurityOperationLog securityOperationLog = SecurityOperationLog.builder()
-                    .id(UUIDUtils.UUID())
-                    .title(operationLog.title())
-                    .resourceId(resourceId)
-                    .type(operationLog.operationType().name())
-                    .typeName(operationLog.operationType().value())
-                    .userId(userId)
-                    .userName(userName)
-                    .createTime(DateTimeUtils.currentTimeMillis())
-                    .requestUrl(request.getRequestURI())
-                    .requestParam(JSONObject.toJSONString(ServletUtil.getParams(request)))
-                    .returnCode(mxResult.code())
-                    .returnMessage(mxResult.msg())
-                    .returnResult(mxResult.toJson())
-                    .className(context.getTargetClass().getName())
-                    .methodName(method.getName())
-                    .os(userAgent.getOs().toString())
-                    .browser(userAgent.getBrowser().toString())
-                    .client(securityConfig.client())
-                    .build();
-            String ip = ServletUtil.getClientIP(request);
-            if (StringUtils.isNotBlank(ip)) {
-                securityOperationLog.setIp(ip);
-                if (NetworkUtils.IP.isIPv4(ip) && !NetUtil.isInnerIP(ip)) {
-                    IpRegionBean ipRegionBean = IpRegionUtil.parse(ip);
-                    securityOperationLog.setLocation(ipRegionBean.getCountry() + ipRegionBean.getProvince() + ipRegionBean.getCity() + ipRegionBean.getIsp());
-                } else {
-                    securityOperationLog.setLocation("");
-                }
-            }
-            // 保存数据库
-            // 创建事件对象
-            OperationLogEvent operationLogEvent = new OperationLogEvent(YMP.get(), OperationLogEvent.EVENT.CREATE_LOG);
-            // 为当前事件设置扩展参数
-            operationLogEvent.addParamExtend(LOG_EVENT_KEY, securityOperationLog);
-            // 触发事件
-            YMP.get().getEvents().fireEvent(operationLogEvent);
-
+            createLog(request, isLogin, operationLog, userId, userName, mxResult, context, method);
         } catch (Exception e) {
             // 记录本地异常日志
             LOG.error("==日志记录异常==", e);
             throw new RuntimeException(e);
         }
+    }
+
+    private void createLog(HttpServletRequest request, boolean isLogin, OperationLog operationLog, String userId, String userName,
+                           MxResult mxResult, InterceptContext context, Method method) throws Exception {
+        UserAgent userAgent = UserAgentUtil.parse(request.getHeader("user-agent"));
+        // *========数据库日志=========*//
+        //ServletUtil.getParamMap(request) 会有参数信息
+        String resourceId;
+        if (isLogin) {
+            resourceId = StringUtils.defaultIfBlank(securityConfig.resourceHandlerClass().buildResourceId(ResourceType.LOG, userId), securityConfig.client());
+        } else {
+            resourceId = StringUtils.defaultIfBlank(securityConfig.resourceHandlerClass().buildResourceIdNoLogin(ResourceType.LOG, ServletUtil.getParamMap(request)), securityConfig.client());
+        }
+        SecurityOperationLog securityOperationLog = SecurityOperationLog.builder()
+                .id(UUIDUtils.UUID())
+                .title(operationLog.title())
+                .resourceId(resourceId)
+                .type(operationLog.operationType().name())
+                .typeName(operationLog.operationType().value())
+                .userId(userId)
+                .userName(userName)
+                .createTime(DateTimeUtils.currentTimeMillis())
+                .requestUrl(request.getRequestURI())
+                .requestParam(JSONObject.toJSONString(ServletUtil.getParams(request)))
+                .returnCode(mxResult.code())
+                .returnMessage(mxResult.msg())
+                .returnResult(mxResult.toJson())
+                .className(context.getTargetClass().getName())
+                .methodName(method.getName())
+                .os(userAgent.getOs().toString())
+                .browser(userAgent.getBrowser().toString())
+                .client(securityConfig.client())
+                .build();
+        String ip = ServletUtil.getClientIP(request);
+        if (StringUtils.isNotBlank(ip)) {
+            securityOperationLog.setIp(ip);
+            if (NetworkUtils.IP.isIPv4(ip) && !NetUtil.isInnerIP(ip)) {
+                IpRegionBean ipRegionBean = IpRegionUtil.parse(ip);
+                securityOperationLog.setLocation(ipRegionBean.getCountry() + ipRegionBean.getProvince() + ipRegionBean.getCity() + ipRegionBean.getIsp());
+            } else {
+                securityOperationLog.setLocation("");
+            }
+        }
+        // 保存数据库
+        // 创建事件对象
+        OperationLogEvent operationLogEvent = new OperationLogEvent(YMP.get(), OperationLogEvent.EVENT.CREATE_LOG);
+        // 为当前事件设置扩展参数
+        operationLogEvent.addParamExtend(LOG_EVENT_KEY, securityOperationLog);
+        // 触发事件
+        YMP.get().getEvents().fireEvent(operationLogEvent);
     }
 }

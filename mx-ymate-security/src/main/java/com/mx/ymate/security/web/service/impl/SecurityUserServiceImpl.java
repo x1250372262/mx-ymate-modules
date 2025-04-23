@@ -19,6 +19,7 @@ import com.mx.ymate.security.base.model.SecurityUserRole;
 import com.mx.ymate.security.base.vo.SecurityUserListVO;
 import com.mx.ymate.security.base.vo.SecurityUserRoleVO;
 import com.mx.ymate.security.base.vo.SecurityUserVO;
+import com.mx.ymate.security.handler.IResourceHandler;
 import com.mx.ymate.security.handler.IUserHandler;
 import com.mx.ymate.security.web.dao.ISecurityUserDao;
 import com.mx.ymate.security.web.dao.ISecurityUserRoleDao;
@@ -59,11 +60,12 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
 
     private final ISecurityConfig config = Security.get().getConfig();
     private final IUserHandler userHandler = config.userHandlerClass();
+    private final IResourceHandler resourceHandler = config.resourceHandlerClass();
 
 
     @Override
     public MxResult list(String userName, String realName, Integer disableStatus, PageBean pageBean) throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.USER, null), config.client());
+        String resourceId = StringUtils.defaultIfBlank(resourceHandler.buildResourceId(ResourceType.USER, SaUtil.loginId()), config.client());
         IResultSet<SecurityUserListVO> resultData = iSecurityUserDao.findAll(userName, realName, disableStatus, config.client(), resourceId, pageBean.toPage());
         return MxResult.ok().data(Pages.create(resultData));
     }
@@ -80,10 +82,10 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
     @Transaction
     @OperationLog(operationType = OperationType.CREATE, title = "添加人员")
     public MxResult create(String password, SecurityUserBean userBean) throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.USER, null), config.client());
+        String resourceId = StringUtils.defaultIfBlank(resourceHandler.buildResourceId(ResourceType.USER, SaUtil.loginId()), config.client());
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
         MxResult r = userHandler.createBefore(params);
-        if(r == null){
+        if (r == null) {
             return Security.error();
         }
         if (!r.isSuccess()) {
@@ -106,7 +108,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
         securityUser.setLastModifyTime(DateTimeUtils.currentTimeMillis());
         securityUser.setSalt(salt);
         r = userHandler.createAfter(params, securityUser);
-        if(r == null){
+        if (r == null) {
             return Security.error();
         }
         if (!r.isSuccess()) {
@@ -191,16 +193,14 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
 
     @Override
     public MxResult roleList(String userId, PageBean pageBean) throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.USER, null), config.client());
-        IResultSet<SecurityUserRoleVO> resultData = iSecurityUserRoleDao.roleList(userId, config.client(), resourceId, pageBean.toPage());
+        IResultSet<SecurityUserRoleVO> resultData = iSecurityUserRoleDao.roleList(userId, config.client(), pageBean.toPage());
         return MxResult.ok().data(Pages.create(resultData));
     }
 
     @Override
     @OperationLog(operationType = OperationType.CREATE, title = "添加人员角色")
     public MxResult roleCreate(String userId, String roleId) throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.USER, null), config.client());
-        SecurityUserRole securityUserRole = iSecurityUserRoleDao.findByUserIdAndRoleidAndClientAndResourceId(userId, roleId, config.client(), resourceId);
+        SecurityUserRole securityUserRole = iSecurityUserRoleDao.findByUserIdAndRoleIdAndClient(userId, roleId, config.client());
         if (securityUserRole != null) {
             return MxResult.create(SECURITY_USER_ROLE_EXISTS);
         }
@@ -208,7 +208,6 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
                 .id(UUIDUtils.UUID())
                 .userId(userId)
                 .roleId(roleId)
-                .resourceId(resourceId)
                 .client(config.client())
                 .createUser(SaUtil.loginId())
                 .createTime(DateTimeUtils.currentTimeMillis())

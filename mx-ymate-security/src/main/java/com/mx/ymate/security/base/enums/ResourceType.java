@@ -8,11 +8,6 @@ package com.mx.ymate.security.base.enums;
 public enum ResourceType {
 
     /**
-     * 菜单
-     */
-    MENU,
-
-    /**
      * 角色
      */
     ROLE,
@@ -21,11 +16,6 @@ public enum ResourceType {
      * 用户
      */
     USER,
-
-    /**
-     * 权限
-     */
-    PERMISSION,
 
     /**
      * 日志

@@ -43,12 +43,6 @@ public class SecurityRolePermission extends BaseEntity<SecurityRolePermission, S
     private String id;
 
     
-    @Property(name = FIELDS.RESOURCE_ID, nullable = false, length = 32)
-    @Comment("资源id 默认和客户端一致")
-    @PropertyState(propertyName = FIELDS.RESOURCE_ID)
-    private String resourceId;
-
-    
     @Property(name = FIELDS.CLIENT, nullable = false, length = 100)
     @Comment("客户端")
     @PropertyState(propertyName = FIELDS.CLIENT)
@@ -100,9 +94,8 @@ public class SecurityRolePermission extends BaseEntity<SecurityRolePermission, S
     }
 
 
-    public SecurityRolePermission(String id, String resourceId, String client, String roleId, String permissonId, Long createTime, String groupName, String permissionName, String permissionCode) {
+    public SecurityRolePermission(String id,String client, String roleId, String permissonId, Long createTime, String groupName, String permissionName, String permissionCode) {
         this.id = id;
-        this.resourceId = resourceId;
         this.client = client;
         this.roleId = roleId;
         this.permissonId = permissonId;
@@ -112,10 +105,9 @@ public class SecurityRolePermission extends BaseEntity<SecurityRolePermission, S
         this.permissionCode = permissionCode;
     }
 
-    public SecurityRolePermission(IDatabase dbOwner, String id, String resourceId, String client, String roleId, String permissonId, Long createTime, String groupName, String permissionName, String permissionCode) {
+    public SecurityRolePermission(IDatabase dbOwner, String id, String client, String roleId, String permissonId, Long createTime, String groupName, String permissionName, String permissionCode) {
         super(dbOwner);
         this.id = id;
-        this.resourceId = resourceId;
         this.client = client;
         this.roleId = roleId;
         this.permissonId = permissonId;
@@ -133,14 +125,6 @@ public class SecurityRolePermission extends BaseEntity<SecurityRolePermission, S
     @Override
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getResourceId() {
-        return resourceId;
-    }
-
-    public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
     }
 
     public String getClient() {
@@ -278,15 +262,6 @@ public class SecurityRolePermission extends BaseEntity<SecurityRolePermission, S
             return this;
         }
 
-        public String resourceId() {
-            return targetEntity.getResourceId();
-        }
-
-        public Builder resourceId(String resourceId) {
-            targetEntity.setResourceId(resourceId);
-            return this;
-        }
-
         public String client() {
             return targetEntity.getClient();
         }
@@ -353,7 +328,6 @@ public class SecurityRolePermission extends BaseEntity<SecurityRolePermission, S
 
     public interface FIELDS {
         String ID = "id";
-        String RESOURCE_ID = "resource_id";
         String CLIENT = "client";
         String ROLE_ID = "role_id";
         String PERMISSON_ID = "permisson_id";
@@ -429,10 +403,6 @@ public class SecurityRolePermission extends BaseEntity<SecurityRolePermission, S
 
         public FieldCondition id() {
             return createFieldCondition(FIELDS.ID);
-        }
-
-        public FieldCondition resourceId() {
-            return createFieldCondition(FIELDS.RESOURCE_ID);
         }
 
         public FieldCondition client() {

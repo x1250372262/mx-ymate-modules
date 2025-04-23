@@ -32,13 +32,11 @@ public class SecurityPermissionServiceImpl implements ISecurityPermissionService
     @Inject
     private ISecurityPermissionDao iPermissionDao;
     private final ISecurityConfig config = Security.get().getConfig();
-    private final IUserHandler userHandler = config.userHandlerClass();
 
     @Override
     public MxResult list() throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.PERMISSION, null), config.client());
         List<SecurityPermissionSelectVO> permissionSelectVOList = new ArrayList<>();
-        IResultSet<SecurityPermission> resultSet = iPermissionDao.findAll(config.client(), resourceId);
+        IResultSet<SecurityPermission> resultSet = iPermissionDao.findAll(config.client());
         if (!resultSet.isResultsAvailable()) {
             return MxResult.ok().data(permissionSelectVOList);
         }

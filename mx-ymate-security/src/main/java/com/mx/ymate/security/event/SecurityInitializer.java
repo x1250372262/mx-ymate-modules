@@ -1,20 +1,13 @@
 package com.mx.ymate.security.event;
 
 import cn.dev33.satoken.SaManager;
-import cn.dev33.satoken.listener.SaTokenEventCenter;
 import com.mx.ymate.dev.support.event.IYmpInitializer;
 import com.mx.ymate.dev.support.event.annotation.Initializer;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.Security;
-import com.mx.ymate.security.satoken.*;
-import com.mx.ymate.security.satoken.cache.RedisDao;
-import com.mx.ymate.security.satoken.cache.RedisStp;
+import com.mx.ymate.security.satoken.FastJsonTemplate;
+import com.mx.ymate.security.satoken.YmpContext;
 import net.ymate.platform.core.ApplicationEvent;
-import net.ymate.platform.core.YMP;
-import net.ymate.platform.core.event.Events;
-import net.ymate.platform.core.event.IEventListener;
-import net.ymate.platform.core.event.IEventRegister;
-import net.ymate.platform.core.event.annotation.EventRegister;
 
 /**
  * @Author: mengxiang.
@@ -40,8 +33,6 @@ public class SecurityInitializer implements IYmpInitializer {
             SaManager.setSaJsonTemplate(new FastJsonTemplate());
             //注入dao和权限
             config.cacheStoreAdapter().init();
-            //注入MxSaTokenListener
-            SaTokenEventCenter.registerListener(YMP.get().getBeanFactory().getBean(MxSaTokenListener.class));
         }
     }
 

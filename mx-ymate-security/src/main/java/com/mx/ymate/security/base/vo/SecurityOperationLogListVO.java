@@ -16,6 +16,7 @@ public class SecurityOperationLogListVO implements Serializable {
     private String title;
 
     private String typeName;
+
     private String returnCode;
 
     private String userName;

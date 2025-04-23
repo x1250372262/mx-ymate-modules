@@ -17,6 +17,7 @@ import com.mx.ymate.security.base.model.SecurityPermission;
 import com.mx.ymate.security.base.model.SecurityRole;
 import com.mx.ymate.security.base.model.SecurityRolePermission;
 import com.mx.ymate.security.base.vo.SecurityRoleVO;
+import com.mx.ymate.security.handler.IResourceHandler;
 import com.mx.ymate.security.handler.IUserHandler;
 import com.mx.ymate.security.web.dao.ISecurityPermissionDao;
 import com.mx.ymate.security.web.dao.ISecurityRoleDao;
@@ -34,6 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Author: mengxiang.
@@ -55,11 +57,11 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
 
     private final ISecurityConfig config = Security.get().getConfig();
 
-    private final IUserHandler userHandler = config.userHandlerClass();
+    private final IResourceHandler resourceHandler = config.resourceHandlerClass();
 
     @Override
     public MxResult list(String name, PageBean pageBean) throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE, null), config.client());
+        String resourceId = StringUtils.defaultIfBlank(resourceHandler.buildResourceId(ResourceType.ROLE, SaUtil.loginId()), config.client());
         IResultSet<SecurityRole> resultSet = iSecurityRoleDao.findAll(resourceId, config.client(), name, pageBean.toPage());
         return MxResult.ok().data(Pages.create(resultSet));
     }
@@ -67,7 +69,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
     @Override
     @OperationLog(operationType = OperationType.CREATE, title = "添加角色")
     public MxResult create(SecurityRoleBean roleBean) throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE, null), config.client());
+        String resourceId = StringUtils.defaultIfBlank(resourceHandler.buildResourceId(ResourceType.ROLE, SaUtil.loginId()), config.client());
         SecurityRole role = iSecurityRoleDao.findByClientAndResourceIdAndName(resourceId, config.client(), roleBean.getName());
         if (role != null) {
             return MxResult.sameName();
@@ -87,7 +89,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
     @Override
     @OperationLog(operationType = OperationType.UPDATE, title = "修改角色")
     public MxResult update(String id, Long lastModifyTime, SecurityRoleBean roleBean) throws Exception {
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE, null), config.client());
+        String resourceId = StringUtils.defaultIfBlank(resourceHandler.buildResourceId(ResourceType.ROLE, SaUtil.loginId()), config.client());
         SecurityRole role = iSecurityRoleDao.findByClientAndResourceIdAndNameNotId(id, resourceId, config.client(), roleBean.getName());
         if (role != null) {
             return MxResult.sameName();
@@ -126,8 +128,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
         if (role == null) {
             return MxResult.noData();
         }
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE, null), config.client());
-        IResultSet<SecurityRolePermission> resultSet = iSecurityRolePermissionDao.findAll(config.client(), resourceId, id);
+        IResultSet<SecurityRolePermission> resultSet = iSecurityRolePermissionDao.findAll(config.client(), id);
         if (resultSet.isResultsAvailable()) {
             List<SecurityRolePermission> rolePermissionList = resultSet.getResultData();
             String[] selectRoles = new String[rolePermissionList.size()];
@@ -147,17 +148,19 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
         if (role == null) {
             return MxResult.noData();
         }
-        String resourceId = StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.PERMISSION, null), config.client());
-        iSecurityRolePermissionDao.deleteByClientAndRoleIdAndResourceId(config.client(), resourceId, id);
-        List<SecurityPermission> permissionList = isecurityPermissionDao.findAll(config.client(), resourceId).getResultData();
+        iSecurityRolePermissionDao.deleteByClientAndRoleIdAndResourceId(config.client(), id);
+        List<SecurityPermission> permissionList = isecurityPermissionDao.findAll(config.client()).getResultData();
         if (permissions != null && permissions.length > 0) {
             List<SecurityRolePermission> rolePermissions = new ArrayList<>();
             for (String permissionCode : permissions) {
-                SecurityPermission permission = permissionList.stream().filter(p -> p.getPermissionCode().equals(permissionCode)).findFirst().get();
+                Optional<SecurityPermission> optional = permissionList.stream().filter(p -> p.getPermissionCode().equals(permissionCode)).findFirst();
+                if(!optional.isPresent()){
+                    continue;
+                }
+                SecurityPermission permission = optional.get();
                 SecurityRolePermission rolePermission = SecurityRolePermission.builder()
                         .id(UUIDUtils.UUID())
                         .roleId(id)
-                        .resourceId(StringUtils.defaultIfBlank(userHandler.buildResourceId(ResourceType.ROLE, null), config.client()))
                         .client(config.client())
                         .permissonId(permission.getId())
                         .createTime(DateTimeUtils.currentTimeMillis())

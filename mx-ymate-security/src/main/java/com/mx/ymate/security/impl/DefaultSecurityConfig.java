@@ -13,6 +13,7 @@ import com.mx.ymate.security.adapter.impl.RedisCacheStorageAdapter;
 import com.mx.ymate.security.adapter.impl.RedisScanLoginCacheStoreAdapter;
 import com.mx.ymate.security.base.enums.CacheStoreType;
 import com.mx.ymate.security.handler.ILoginHandler;
+import com.mx.ymate.security.handler.IResourceHandler;
 import com.mx.ymate.security.handler.IUserHandler;
 import net.ymate.platform.commons.util.ClassUtils;
 import net.ymate.platform.core.configuration.IConfigReader;
@@ -51,6 +52,11 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
      * userHandler实现类
      */
     private IUserHandler userHandlerClass;
+
+    /**
+     * resource处理实现类
+     */
+    private IResourceHandler resourceHandlerClass;
 
     /**
      * 验证错误N次后锁定账户  默认不锁定  -1不锁定
@@ -292,6 +298,8 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
         loginHandlerClass = ClassUtils.impl(loginHandlerClassName, ILoginHandler.class, this.getClass());
         String userHandlerClassName = configReader.getString(USER_HANDLER_CLASS, IUserHandler.DefaultUserHandler.class.getName());
         userHandlerClass = ClassUtils.impl(userHandlerClassName, IUserHandler.class, this.getClass());
+        String resourceHandlerClassName = configReader.getString(RESOURCE_HANDLER_CLASS, IResourceHandler.DefaultUserHandler.class.getName());
+        resourceHandlerClass = ClassUtils.impl(resourceHandlerClassName, IResourceHandler.class, this.getClass());
         errorCount = configReader.getInt(ERROR_COUNT, -1);
         openLog = configReader.getBoolean(OPEN_LOG, false);
         checkLock = configReader.getBoolean(CHECK_LOCK, false);
@@ -388,6 +396,11 @@ public final class DefaultSecurityConfig implements ISecurityConfig {
     @Override
     public IUserHandler userHandlerClass() {
         return userHandlerClass;
+    }
+
+    @Override
+    public IResourceHandler resourceHandlerClass() {
+        return resourceHandlerClass;
     }
 
     @Override

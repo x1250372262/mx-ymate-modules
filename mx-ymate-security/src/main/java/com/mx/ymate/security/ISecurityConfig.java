@@ -4,6 +4,7 @@ import cn.dev33.satoken.config.SaTokenConfig;
 import com.mx.ymate.security.adapter.AbstractScanLoginCacheStoreAdapter;
 import com.mx.ymate.security.adapter.ICacheStorageAdapter;
 import com.mx.ymate.security.handler.ILoginHandler;
+import com.mx.ymate.security.handler.IResourceHandler;
 import com.mx.ymate.security.handler.IUserHandler;
 import net.ymate.platform.core.beans.annotation.Ignored;
 import net.ymate.platform.core.support.IInitialization;
@@ -27,6 +28,8 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
     String LOGIN_HANDLER_CLASS = "loginHandlerClass";
 
     String USER_HANDLER_CLASS = "userHandlerClass";
+
+    String RESOURCE_HANDLER_CLASS = "resourceHandlerClass";
 
     String ERROR_COUNT = "errorCount";
 
@@ -131,6 +134,7 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
 
     /**
      * 设备类型 默认pc
+     *
      * @return
      */
     String device();
@@ -155,6 +159,13 @@ public interface ISecurityConfig extends IInitialization<ISecurity> {
      * @return
      */
     IUserHandler userHandlerClass();
+
+    /**
+     * resourceHandler实现类
+     *
+     * @return
+     */
+    IResourceHandler resourceHandlerClass();
 
     /**
      * 验证错误N次后锁定账户  默认不锁定  -1不锁定

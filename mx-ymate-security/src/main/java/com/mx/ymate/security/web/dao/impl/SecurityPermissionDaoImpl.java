@@ -15,9 +15,8 @@ import net.ymate.platform.persistence.jdbc.query.Where;
 @Bean
 public class SecurityPermissionDaoImpl implements ISecurityPermissionDao {
     @Override
-    public IResultSet<SecurityPermission> findAll(String client, String resourceId) throws Exception {
-        Cond cond = Cond.create().eqWrap(SecurityPermission.FIELDS.CLIENT).param(client)
-                .and().eqWrap(SecurityPermission.FIELDS.RESOURCE_ID).param(resourceId);
+    public IResultSet<SecurityPermission> findAll(String client) throws Exception {
+        Cond cond = Cond.create().eqWrap(SecurityPermission.FIELDS.CLIENT).param(client);
         return SecurityPermission.builder().build().find(Where.create(cond));
     }
 }

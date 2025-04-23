@@ -1,7 +1,6 @@
 package com.mx.ymate.security.handler;
 
 import com.mx.ymate.dev.support.mvc.MxResult;
-import com.mx.ymate.security.base.enums.ResourceType;
 import com.mx.ymate.security.base.model.SecurityUser;
 import net.ymate.platform.core.beans.annotation.Bean;
 
@@ -33,15 +32,6 @@ public interface IUserHandler {
      */
     MxResult createAfter(Map<String, String> params, SecurityUser securityUser) throws Exception;
 
-    /**
-     * 构建resourceId
-     *
-     * @param resourceType
-     * @param loginId
-     * @return
-     * @throws Exception
-     */
-    String buildResourceId(ResourceType resourceType, String loginId) throws Exception;
 
     @Bean
     class DefaultUserHandler implements IUserHandler {
@@ -55,11 +45,6 @@ public interface IUserHandler {
         @Override
         public MxResult createAfter(Map<String, String> params, SecurityUser securityUser) throws Exception {
             return MxResult.ok();
-        }
-
-        @Override
-        public String buildResourceId(ResourceType resourceType, String loginId) throws Exception {
-            return null;
         }
     }
 
