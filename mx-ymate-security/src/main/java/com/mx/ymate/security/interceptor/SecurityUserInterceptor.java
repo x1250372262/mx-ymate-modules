@@ -1,11 +1,11 @@
 package com.mx.ymate.security.interceptor;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaMode;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.exception.NotRoleException;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.dev33.satoken.strategy.SaAnnotationStrategy;
-import cn.dev33.satoken.strategy.SaStrategy;
 import com.mx.ymate.dev.code.Code;
 import com.mx.ymate.dev.constants.Constants;
 import com.mx.ymate.dev.support.mvc.MxResult;
@@ -15,6 +15,7 @@ import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
 import com.mx.ymate.security.base.annotation.NoCheck;
 import com.mx.ymate.security.base.annotation.NoLogin;
+import com.mx.ymate.security.base.annotation.NoPermission;
 import com.mx.ymate.security.base.code.SecurityCode;
 import com.mx.ymate.security.base.exception.MxLockException;
 import com.mx.ymate.security.base.exception.MxLoginException;
@@ -87,6 +88,7 @@ public class SecurityUserInterceptor extends AbstractInterceptor {
             return null;
         }
         Method method = context.getTargetMethod();
+        Class<?> targetClass = method.getDeclaringClass();
         // 进行验证
         try {
             //有notlogin注解就不验证
@@ -94,7 +96,7 @@ public class SecurityUserInterceptor extends AbstractInterceptor {
             if (annotation != null) {
                 return null;
             }
-            annotation = method.getDeclaringClass().getAnnotation(NoLogin.class);
+            annotation = targetClass.getAnnotation(NoLogin.class);
             if (annotation != null) {
                 return null;
             }
@@ -108,22 +110,10 @@ public class SecurityUserInterceptor extends AbstractInterceptor {
             }
             securityConfig.loginHandlerClass().checkLoginCustom(securityUser);
 
-            if (securityConfig.checkLock()) {
-                //有NoCheck注解就不验证
-                NoCheck noCheck = method.getAnnotation(NoCheck.class);
-                if (noCheck != null) {
-                    return null;
-                }
-                noCheck = method.getDeclaringClass().getAnnotation(NoCheck.class);
-                if (noCheck != null) {
-                    return null;
-                }
-                if (SaUtil.checkLock(securityUser.getId())) {
-                    throw new MxLockException(SecurityCode.SECURITY_LOGIN_USER_LOCK_SCREEN.msg());
-                }
-            }
+            //检查锁定
+            checkLock(targetClass, securityUser, method);
             //权限拦截
-            SaAnnotationStrategy.instance.checkMethodAnnotation.accept(method);
+            checkPermission(targetClass, method);
         } catch (NotLoginException notLoginException) {
             return MxResult.create(Code.NOT_LOGIN).toJsonView();
         } catch (MxLoginException mxLoginException) {
@@ -141,8 +131,64 @@ public class SecurityUserInterceptor extends AbstractInterceptor {
 
     @Override
     protected Object after(InterceptContext context) throws InterceptException {
-        return null;
+        return super.after(context);
     }
 
+    /**
+     * 检查锁定
+     *
+     * @param method
+     */
+    private void checkLock(Class<?> targetClass, SecurityUser securityUser, Method method) throws Exception {
+        if (securityConfig.checkLock()) {
+            //有NoCheck注解就不验证
+            NoCheck noCheck = method.getAnnotation(NoCheck.class);
+            if (noCheck != null) {
+                return;
+            }
+            noCheck = targetClass.getAnnotation(NoCheck.class);
+            if (noCheck != null) {
+                return;
+            }
+            if (SaUtil.checkLock(securityUser.getId())) {
+                throw new MxLockException(SecurityCode.SECURITY_LOGIN_USER_LOCK_SCREEN.msg());
+            }
+        }
+    }
+
+
+    /**
+     * 检查权限
+     *
+     * @param method
+     */
+    private void checkPermission(Class<?> targetClass, Method method) {
+        //有NoPermission注解就不验证
+        NoPermission noPermission = method.getAnnotation(NoPermission.class);
+        if (noPermission != null) {
+            return;
+        }
+        noPermission = targetClass.getAnnotation(NoPermission.class);
+        if (noPermission != null) {
+            return;
+        }
+        SaCheckPermission saCheckPermission = method.getAnnotation(SaCheckPermission.class);
+        if (saCheckPermission == null) {
+            return;
+        }
+        saCheckPermission = targetClass.getAnnotation(SaCheckPermission.class);
+        if (saCheckPermission == null) {
+            return;
+        }
+        String[] permission = saCheckPermission.value();
+        if (permission == null || permission.length == 0) {
+            return;
+        }
+        if (SaMode.OR == saCheckPermission.mode()) {
+            StpUtil.checkPermissionOr(permission);
+        } else {
+            StpUtil.checkPermissionAnd(permission);
+        }
+    }
 
 }
