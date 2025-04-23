@@ -1,5 +1,7 @@
 package com.mx.ymate.dev.support.mvc.i18n;
 
+import com.mx.ymate.dev.code.Code;
+import com.mx.ymate.dev.code.ICode;
 import net.ymate.platform.commons.util.ClassUtils;
 import net.ymate.platform.core.YMP;
 import net.ymate.platform.webmvc.context.WebContext;
@@ -122,7 +124,7 @@ public class I18nHelper {
 
     public static String getMsg(String key) {
         if (!isInit) {
-            return key;
+            return null;
         }
         if(StringUtils.isBlank(headerLanguage)){
             headerLanguage = StringUtils.defaultIfBlank(WebContext.getRequest().getHeader("language"), DEFAULT_LANG);
@@ -132,5 +134,9 @@ public class I18nHelper {
 
     public static String getMsg(String key,String defaultValue) {
        return StringUtils.defaultIfBlank(getMsg(key),defaultValue);
+    }
+
+    public static String getMsg(ICode iCode) {
+        return getMsg(iCode.i18nKey(),iCode.msg());
     }
 }

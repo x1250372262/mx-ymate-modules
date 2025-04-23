@@ -2,18 +2,14 @@ package com.mx.ymate.dev.support.mvc;
 
 import com.mx.ymate.dev.code.Code;
 import com.mx.ymate.dev.support.mvc.i18n.I18nHelper;
-import net.ymate.platform.commons.lang.BlurObject;
 import net.ymate.platform.commons.util.RuntimeUtils;
-import net.ymate.platform.core.support.ErrorCode;
 import net.ymate.platform.validation.ValidateResult;
 import net.ymate.platform.webmvc.*;
 import net.ymate.platform.webmvc.base.Type;
 import net.ymate.platform.webmvc.context.WebContext;
 import net.ymate.platform.webmvc.exception.ValidationResultException;
-import net.ymate.platform.webmvc.impl.DefaultWebErrorProcessor;
 import net.ymate.platform.webmvc.util.ExceptionProcessHelper;
 import net.ymate.platform.webmvc.util.IExceptionProcessor;
-import net.ymate.platform.webmvc.util.WebErrorCode;
 import net.ymate.platform.webmvc.util.WebUtils;
 import net.ymate.platform.webmvc.view.IView;
 import net.ymate.platform.webmvc.view.View;
@@ -108,14 +104,14 @@ public class MxWebErrorProcessor extends AbstractResponseErrorProcessor implemen
                     if (exceptionProcessor != null) {
                         IExceptionProcessor.Result result = exceptionProcessor.process(unwrapThrow);
                         if (result != null) {
-                            String msg =  I18nHelper.getMsg(result.getCode(),result.getMessage());
+                            String msg = I18nHelper.getMsg(result.getCode(), result.getMessage());
                             returnView = showErrorMsg(owner, result.getCode(), msg, result.getAttributes());
                         } else {
                             doProcessError(owner, unwrapThrow);
                         }
                     } else {
                         doProcessError(owner, unwrapThrow);
-                        returnView = showErrorMsg(owner, String.valueOf(ErrorCode.INTERNAL_SYSTEM_ERROR), I18nHelper.getMsg(BlurObject.bind(ErrorCode.INTERNAL_SYSTEM_ERROR).toStringValue(), ErrorCode.MSG_INTERNAL_SYSTEM_ERROR), null);
+                        returnView = showErrorMsg(owner, Code.SYSTEM_ERROR.code(), I18nHelper.getMsg(Code.SYSTEM_ERROR), null);
                     }
                     doProcessErrorStatusCodeIfNeed(owner);
                 }
@@ -130,7 +126,7 @@ public class MxWebErrorProcessor extends AbstractResponseErrorProcessor implemen
 
     @Override
     public IView showValidationResults(IWebMvc owner, Map<String, ValidateResult> results) {
-        String message = I18nHelper.getMsg(Code.FIELDS_EXISTS.msg(),Code.INVALID_PARAMETER.msg());
+        String message = I18nHelper.getMsg(Code.INVALID_PARAMETER);
         HttpServletRequest httpServletRequest = WebContext.getRequest();
         if (!WebUtils.isAjax(httpServletRequest) && !WebUtils.isXmlFormat(httpServletRequest) && !WebUtils.isJsonFormat(httpServletRequest) && !StringUtils.containsAny(getErrorDefaultViewFormat(owner), Type.Const.FORMAT_JSON, Type.Const.FORMAT_XML)) {
             // 拼装所有的验证消息

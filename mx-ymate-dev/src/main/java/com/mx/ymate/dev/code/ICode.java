@@ -14,6 +14,12 @@ public interface ICode {
     String code();
 
     /**
+     * i18nKey
+     * @return
+     */
+    String i18nKey();
+
+    /**
      * 错误信息
      * @return
      */
