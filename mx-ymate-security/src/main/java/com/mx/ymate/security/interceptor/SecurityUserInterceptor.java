@@ -13,7 +13,6 @@ import com.mx.ymate.dev.util.PathMatchUtil;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
-import com.mx.ymate.security.base.annotation.NoCheck;
 import com.mx.ymate.security.base.annotation.NoLogin;
 import com.mx.ymate.security.base.annotation.NoPermission;
 import com.mx.ymate.security.base.code.SecurityCode;
@@ -111,7 +110,7 @@ public class SecurityUserInterceptor extends AbstractInterceptor {
             securityConfig.loginHandlerClass().checkLoginCustom(securityUser);
 
             //检查锁定
-            checkLock(targetClass, securityUser, method);
+            checkLock(securityUser);
             //权限拦截
             checkPermission(targetClass, method);
         } catch (NotLoginException notLoginException) {
@@ -139,17 +138,8 @@ public class SecurityUserInterceptor extends AbstractInterceptor {
      *
      * @param method
      */
-    private void checkLock(Class<?> targetClass, SecurityUser securityUser, Method method) throws Exception {
+    private void checkLock(SecurityUser securityUser) throws Exception {
         if (securityConfig.checkLock()) {
-            //有NoCheck注解就不验证
-            NoCheck noCheck = method.getAnnotation(NoCheck.class);
-            if (noCheck != null) {
-                return;
-            }
-            noCheck = targetClass.getAnnotation(NoCheck.class);
-            if (noCheck != null) {
-                return;
-            }
             if (SaUtil.checkLock(securityUser.getId())) {
                 throw new MxLockException(SecurityCode.SECURITY_LOGIN_USER_LOCK_SCREEN.msg());
             }

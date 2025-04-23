@@ -1,7 +1,6 @@
 package com.mx.ymate.security.web.controller;
 
 import com.mx.ymate.dev.support.mvc.MxResult;
-import com.mx.ymate.security.base.annotation.NoCheck;
 import com.mx.ymate.security.base.annotation.NoLogin;
 import com.mx.ymate.security.base.dto.SecurityLoginInfoDTO;
 import com.mx.ymate.security.web.service.ISecurityLoginService;
@@ -54,7 +53,6 @@ public class SecurityLoginController {
      * @throws Exception
      */
     @RequestMapping(value = "/unlock", method = Type.HttpMethod.POST)
-    @NoCheck
     public IView unlock(@VRequired(msg = "用户ID不能为空")
                         @RequestParam String id,
                         @VRequired(msg = "密码不能为空")
@@ -70,7 +68,6 @@ public class SecurityLoginController {
      * @throws Exception
      */
     @RequestMapping(value = "/lock", method = Type.HttpMethod.POST)
-    @NoCheck
     public IView lock(@VRequired(msg = "用户ID不能为空")
                       @RequestParam String id) throws Exception {
         return iSecurityLoginService.lock(id).toJsonView();
@@ -84,7 +81,6 @@ public class SecurityLoginController {
      * @throws Exception
      */
     @RequestMapping(value = "/check/lock", method = Type.HttpMethod.POST)
-    @NoCheck
     public IView checkLock(@VRequired(msg = "用户ID不能为空")
                            @RequestParam String id) throws Exception {
         return iSecurityLoginService.checkLock(id).toJsonView();
