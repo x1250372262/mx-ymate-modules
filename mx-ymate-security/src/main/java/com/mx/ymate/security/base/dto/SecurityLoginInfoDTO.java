@@ -7,7 +7,7 @@ import net.ymate.platform.webmvc.annotation.RequestParam;
 
 import java.io.Serializable;
 
-import static com.mx.ymate.security.ValidateConstant.*;
+import static com.mx.ymate.security.I18nConstant.*;
 
 /**
  * @Author: mengxiang.

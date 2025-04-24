@@ -18,6 +18,8 @@ public class SecurityMenuNavVO implements Serializable {
 
     private String name;
 
+    private String i18nKey;
+
     private String value;
 
     private String icon;
@@ -54,6 +56,14 @@ public class SecurityMenuNavVO implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getI18nKey() {
+        return i18nKey;
+    }
+
+    public void setI18nKey(String i18nKey) {
+        this.i18nKey = i18nKey;
     }
 
     public String getValue() {
@@ -118,6 +128,7 @@ public class SecurityMenuNavVO implements Serializable {
                 "id='" + id + '\'' +
                 ", pid='" + pid + '\'' +
                 ", name='" + name + '\'' +
+                ", i18nKey='" + i18nKey + '\'' +
                 ", value='" + value + '\'' +
                 ", icon='" + icon + '\'' +
                 ", path='" + path + '\'' +

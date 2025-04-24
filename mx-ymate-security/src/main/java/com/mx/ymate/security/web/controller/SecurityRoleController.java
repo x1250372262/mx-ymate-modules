@@ -12,7 +12,7 @@ import net.ymate.platform.webmvc.annotation.*;
 import net.ymate.platform.webmvc.base.Type;
 import net.ymate.platform.webmvc.view.IView;
 
-import static com.mx.ymate.security.ValidateConstant.*;
+import static com.mx.ymate.security.I18nConstant.*;
 
 
 /**

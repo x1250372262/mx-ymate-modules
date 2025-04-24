@@ -32,6 +32,7 @@ public class SecurityMenuDaoImpl implements ISecurityMenuDao {
                     .field("sm", SecurityMenu.FIELDS.PARENT_ID, "pid")
                     .field("sm", SecurityMenu.FIELDS.NAME)
                     .field("sm", SecurityMenu.FIELDS.NAME, "value")
+                    .field("sm", SecurityMenu.FIELDS.I18N_KEY)
                     .field("sm", SecurityMenu.FIELDS.ICON)
                     .field("sm", SecurityMenu.FIELDS.PATH)
                     .field("sm", SecurityMenu.FIELDS.URL)

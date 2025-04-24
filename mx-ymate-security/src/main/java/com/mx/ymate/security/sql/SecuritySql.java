@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import static com.mx.ymate.security.I18nConstant.*;
+
 /**
  * @Author: mengxiang.
  * @Date 2025/04/24.
@@ -26,16 +28,16 @@ import java.util.Scanner;
 public class SecuritySql {
 
     private static void menuSql(List<String> sqlList, String dbName, String client, String userId, long time, String prefix) {
-        String sql = "INSERT INTO `{}`.`{}security_menu` (`id`, `client`, `type`, `parent_id`, `name`, `icon`, `path`, `url`, `sort`, `hide_status`, `permission`, `create_time`, `create_user`, `last_modify_time`, `last_modify_user`) VALUES ('{}', '{}',{}, '{}', '{}', '{}', '{}', '{}', {}, {},'{}',{},'{}',{},'{}');";
+        String sql = "INSERT INTO `{}`.`{}security_menu` (`id`, `client`, `type`, `parent_id`, `name`,`i18n_key`, `icon`, `path`, `url`, `sort`, `hide_status`, `permission`, `create_time`, `create_user`, `last_modify_time`, `last_modify_user`) VALUES ('{}', '{}',{}, '{}', '{}','{}', '{}', '{}', '{}', {}, {},'{}',{},'{}',{},'{}');";
         String id = UUIDUtils.UUID();
         //首页
-        sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, 1, "0", "首页", "mdi mdi-home", "", "/admin/home.html", 0, 0, "", time, userId, time, userId));
+        sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, 1, "0", MENU_INDEX_MSG, MENU_INDEX_I18N_KEY, "mdi mdi-home", "", "/admin/home.html", 0, 0, "", time, userId, time, userId));
         //安全
-        sqlList.add(StrUtil.format(sql, dbName, prefix, id, client, 2, "0", "安全管理", "mdi mdi-alarm-light", "/security", "", 100, 0, "SECURITY_MANAGER", time, userId, time, userId));
-        sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, 0, id, "菜单管理", "", "", "/security/menu/list.html", 1, 0, "SECURITY_MENU_LIST", time, userId, time, userId));
-        sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, 0, id, "人员管理", "", "", "/security/user/list.html", 3, 0, "SECURITY_USER_LIST", time, userId, time, userId));
-        sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, 0, id, "角色管理", "", "", "/security/role/list.html", 2, 0, "SECURITY_ROLE_LIST", time, userId, time, userId));
-        sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, 0, id, "日志管理", "", "", "/security/log/list.html", 4, 0, "SECURITY_LOG_LIST", time, userId, time, userId));
+        sqlList.add(StrUtil.format(sql, dbName, prefix, id, client, 2, "0", MENU_SECURITY_MANAGER_MSG, MENU_SECURITY_MANAGER_I18N_KEY, "mdi mdi-alarm-light", "/security", "", 100, 0, "SECURITY_MANAGER", time, userId, time, userId));
+        sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, 0, id, MENU_SECURITY_MENU_LIST_MSG, MENU_SECURITY_MENU_LIST_I18N_KEY, "", "", "/security/menu/list.html", 1, 0, "SECURITY_MENU_LIST", time, userId, time, userId));
+        sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, 0, id, MENU_SECURITY_USER_LIST_MSG, MENU_SECURITY_USER_LIST_I18N_KEY, "", "", "/security/user/list.html", 3, 0, "SECURITY_USER_LIST", time, userId, time, userId));
+        sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, 0, id, MENU_SECURITY_ROLE_LIST_MSG, MENU_SECURITY_ROLE_LIST_I18N_KEY, "", "", "/security/role/list.html", 2, 0, "SECURITY_ROLE_LIST", time, userId, time, userId));
+        sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, 0, id, MENU_SECURITY_LOG_LIST_MSG, MENU_SECURITY_LOG_LIST_I18N_KEY, "", "", "/security/log/list.html", 4, 0, "SECURITY_LOG_LIST", time, userId, time, userId));
     }
 
     private static void userSql(List<String> sqlList, String dbName, String client, String userId, long time, String prefix) {
@@ -49,8 +51,8 @@ public class SecuritySql {
     }
 
     private static void permissionSql(List<String> sqlList, String dbName, String client, String userId, long time, String prefix) {
-        String sql = "INSERT INTO `{}`.`{}security_permission` (`id`, `resource_id`,`client`, `group_name`, `permission_name`, `permission_code`, `create_user`, `create_time`, `last_modify_user`, `last_modify_time`) VALUES ('{}', '{}', '{}', '{}', '{}', '{}','{}', {}, '{}', {});";
-        SecurityPermissionConfig.permissionList().forEach(permission -> sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, client, permission.getGroupName(), permission.getName(), permission.getCode(), userId, time, userId, time)));
+        String sql = "INSERT INTO `{}`.`{}security_permission` (`id`, `client`, `group_name`,`group_i18n_key`, `permission_name`,`permission_i18n_key`, `permission_code`, `create_user`, `create_time`, `last_modify_user`, `last_modify_time`) VALUES ('{}', '{}', '{}','{}', '{}','{}', '{}','{}', {}, '{}', {});";
+        SecurityPermissionConfig.permissionList().forEach(permission -> sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, permission.getGroupName(), permission.getGroupI18nKey(), permission.getName(), permission.getNameI18nKey(), permission.getCode(), userId, time, userId, time)));
     }
 
     private static void outFile(File outFile, List<String> sqlList) {

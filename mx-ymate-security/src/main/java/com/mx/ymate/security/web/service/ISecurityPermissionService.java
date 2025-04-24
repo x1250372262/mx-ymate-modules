@@ -16,5 +16,5 @@ public interface ISecurityPermissionService {
      * @return
      * @throws Exception
      */
-    MxResult list() throws Exception;
+    MxResult select() throws Exception;
 }

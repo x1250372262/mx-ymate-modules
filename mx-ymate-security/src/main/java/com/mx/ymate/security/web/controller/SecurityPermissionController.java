@@ -28,8 +28,8 @@ public class SecurityPermissionController {
      * @throws Exception
      */
     @RequestMapping("/select")
-    public IView list() throws Exception {
-        return iPermissionService.list().toJsonView();
+    public IView select() throws Exception {
+        return iPermissionService.select().toJsonView();
     }
 
 }

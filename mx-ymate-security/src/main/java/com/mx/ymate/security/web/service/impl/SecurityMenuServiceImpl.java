@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import com.mx.ymate.dev.constants.Constants;
 import com.mx.ymate.dev.support.mvc.MxResult;
+import com.mx.ymate.dev.support.mvc.i18n.I18nHelper;
 import com.mx.ymate.dev.util.BeanUtil;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
@@ -16,6 +17,7 @@ import com.mx.ymate.security.base.model.SecurityMenu;
 import com.mx.ymate.security.base.vo.SecurityMenuListVO;
 import com.mx.ymate.security.base.vo.SecurityMenuNavVO;
 import com.mx.ymate.security.base.vo.SecurityMenuVO;
+import com.mx.ymate.security.base.vo.SecurityPermissionVO;
 import com.mx.ymate.security.web.dao.ISecurityMenuDao;
 import com.mx.ymate.security.web.service.ISecurityMenuService;
 import com.mx.ymate.security.web.service.ISecurityUserRoleService;
@@ -61,13 +63,16 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     public List<SecurityMenuNavVO> navList(String userId, List<String> permissionList, boolean isFounder) throws Exception {
         //取出来这个人所有的菜单
         List<SecurityMenuNavVO> menuAllList = iSecurityMenuDao.findAll(null, Constants.BOOL_FALSE, config.client()).getResultData();
+        List<SecurityMenuNavVO> resultList = BeanUtil.copyList(menuAllList, SecurityMenuNavVO::new, (s, t) -> {
+            t.setName(I18nHelper.getMsg(s.getI18nKey(), s.getName()));
+        });
         if (isFounder) {
-            return menuAllList;
+            return resultList;
         }
         //不是总管理的前提下
         //首先是公开的
-        List<SecurityMenuNavVO> permissionMenuList = menuAllList.stream().filter(m -> Objects.equals(MenuType.PUBLIC.value(), m.getType())).collect(Collectors.toList());
-        List<SecurityMenuNavVO> defaultPermissionsList = menuAllList.stream().filter(m -> Objects.equals(MenuType.DEFAULT.value(), m.getType())).collect(Collectors.toList());
+        List<SecurityMenuNavVO> permissionMenuList = resultList.stream().filter(m -> Objects.equals(MenuType.PUBLIC.value(), m.getType())).collect(Collectors.toList());
+        List<SecurityMenuNavVO> defaultPermissionsList = resultList.stream().filter(m -> Objects.equals(MenuType.DEFAULT.value(), m.getType())).collect(Collectors.toList());
         if (permissionList.isEmpty()) {
             return permissionMenuList;
         }
@@ -90,7 +95,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
         }
         resultSet.forEach(menuNavVO -> {
             SecurityMenuListVO treeVO = new SecurityMenuListVO();
-            treeVO.setText(menuNavVO.getName());
+            treeVO.setText(I18nHelper.getMsg(menuNavVO.getI18nKey(),menuNavVO.getName()));
             treeVO.setState("{ \"opened\" : false }");
             List<SecurityMenuNavVO> childrenCategory = allCategory.stream().filter(cs -> menuNavVO.getId().equals(cs.getPid())).collect(Collectors.toList());
             if (CollUtil.isNotEmpty(childrenCategory)) {

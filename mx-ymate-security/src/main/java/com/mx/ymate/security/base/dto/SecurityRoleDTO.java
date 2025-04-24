@@ -7,8 +7,8 @@ import net.ymate.platform.webmvc.annotation.RequestParam;
 
 import java.io.Serializable;
 
-import static com.mx.ymate.security.ValidateConstant.NAME_NOT_EMPTY_I18N_KEY;
-import static com.mx.ymate.security.ValidateConstant.NAME_NOT_EMPTY_MSG;
+import static com.mx.ymate.security.I18nConstant.NAME_NOT_EMPTY_I18N_KEY;
+import static com.mx.ymate.security.I18nConstant.NAME_NOT_EMPTY_MSG;
 
 /**
  * @Author: mengxiang.
