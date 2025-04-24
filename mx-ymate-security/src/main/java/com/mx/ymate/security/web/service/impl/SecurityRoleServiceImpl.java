@@ -18,7 +18,6 @@ import com.mx.ymate.security.base.model.SecurityRole;
 import com.mx.ymate.security.base.model.SecurityRolePermission;
 import com.mx.ymate.security.base.vo.SecurityRoleVO;
 import com.mx.ymate.security.handler.IResourceHandler;
-import com.mx.ymate.security.handler.IUserHandler;
 import com.mx.ymate.security.web.dao.ISecurityPermissionDao;
 import com.mx.ymate.security.web.dao.ISecurityRoleDao;
 import com.mx.ymate.security.web.dao.ISecurityRolePermissionDao;
@@ -39,7 +38,8 @@ import java.util.Optional;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-24 10:48
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @Bean
@@ -154,7 +154,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
             List<SecurityRolePermission> rolePermissions = new ArrayList<>();
             for (String permissionCode : permissions) {
                 Optional<SecurityPermission> optional = permissionList.stream().filter(p -> p.getPermissionCode().equals(permissionCode)).findFirst();
-                if(!optional.isPresent()){
+                if (!optional.isPresent()) {
                     continue;
                 }
                 SecurityPermission permission = optional.get();

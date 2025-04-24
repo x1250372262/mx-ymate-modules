@@ -26,7 +26,8 @@ import static com.mx.ymate.security.base.code.SecurityCode.*;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-03 15:21
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @Bean

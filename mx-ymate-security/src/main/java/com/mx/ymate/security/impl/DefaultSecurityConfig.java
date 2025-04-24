@@ -21,7 +21,8 @@ import net.ymate.platform.core.module.IModuleConfigurer;
 
 /**
  * @Author: mengxiang.
- * @create: 2022-04-20 00:00
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public final class DefaultSecurityConfig implements ISecurityConfig {

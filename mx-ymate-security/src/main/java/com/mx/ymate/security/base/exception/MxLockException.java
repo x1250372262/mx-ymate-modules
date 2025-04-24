@@ -2,7 +2,8 @@ package com.mx.ymate.security.base.exception;
 
 /**
  * @Author: mengxiang.
- * @create: 2022-12-16 15:28
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class MxLockException extends RuntimeException {

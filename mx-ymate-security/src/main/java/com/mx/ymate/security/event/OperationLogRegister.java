@@ -10,7 +10,8 @@ import static com.mx.ymate.security.base.config.SecurityConstants.LOG_EVENT_KEY;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-06 17:20
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @EventRegister

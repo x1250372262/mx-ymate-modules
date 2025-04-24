@@ -4,7 +4,8 @@ import java.io.Serializable;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-04 15:45
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class SecurityUserRoleVO implements Serializable {

@@ -8,7 +8,8 @@ import com.mx.ymate.security.base.vo.SecurityLoginVO;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-03 15:20
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public interface ISecurityLoginService {

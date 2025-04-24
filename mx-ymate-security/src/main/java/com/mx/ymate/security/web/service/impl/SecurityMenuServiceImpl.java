@@ -12,13 +12,10 @@ import com.mx.ymate.security.base.annotation.OperationLog;
 import com.mx.ymate.security.base.bean.SecurityMenuBean;
 import com.mx.ymate.security.base.enums.MenuType;
 import com.mx.ymate.security.base.enums.OperationType;
-import com.mx.ymate.security.base.enums.ResourceType;
 import com.mx.ymate.security.base.model.SecurityMenu;
 import com.mx.ymate.security.base.vo.SecurityMenuListVO;
 import com.mx.ymate.security.base.vo.SecurityMenuNavVO;
 import com.mx.ymate.security.base.vo.SecurityMenuVO;
-import com.mx.ymate.security.handler.IResourceHandler;
-import com.mx.ymate.security.handler.IUserHandler;
 import com.mx.ymate.security.web.dao.ISecurityMenuDao;
 import com.mx.ymate.security.web.service.ISecurityMenuService;
 import com.mx.ymate.security.web.service.ISecurityUserRoleService;
@@ -38,7 +35,8 @@ import static com.mx.ymate.security.base.code.SecurityCode.SECURITY_MENU_HAS_CHI
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-23 15:44
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @Bean

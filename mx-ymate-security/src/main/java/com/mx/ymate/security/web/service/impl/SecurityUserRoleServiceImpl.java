@@ -3,24 +3,22 @@ package com.mx.ymate.security.web.service.impl;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
-import com.mx.ymate.security.base.enums.ResourceType;
 import com.mx.ymate.security.base.model.SecurityPermission;
 import com.mx.ymate.security.base.vo.SecurityUserPermissionVO;
-import com.mx.ymate.security.handler.IUserHandler;
 import com.mx.ymate.security.web.dao.ISecurityPermissionDao;
 import com.mx.ymate.security.web.dao.ISecurityUserRoleDao;
 import com.mx.ymate.security.web.service.ISecurityUserRoleService;
 import net.ymate.platform.core.beans.annotation.Bean;
 import net.ymate.platform.core.beans.annotation.Inject;
 import net.ymate.platform.core.persistence.IResultSet;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-04 16:02
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @Bean

@@ -4,17 +4,14 @@ import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.dev.util.BeanUtil;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.Security;
-import com.mx.ymate.security.base.enums.ResourceType;
 import com.mx.ymate.security.base.model.SecurityPermission;
 import com.mx.ymate.security.base.vo.SecurityPermissionSelectVO;
 import com.mx.ymate.security.base.vo.SecurityPermissionVO;
-import com.mx.ymate.security.handler.IUserHandler;
 import com.mx.ymate.security.web.dao.ISecurityPermissionDao;
 import com.mx.ymate.security.web.service.ISecurityPermissionService;
 import net.ymate.platform.core.beans.annotation.Bean;
 import net.ymate.platform.core.beans.annotation.Inject;
 import net.ymate.platform.core.persistence.IResultSet;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +20,8 @@ import java.util.stream.Collectors;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-24 14:45
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @Bean

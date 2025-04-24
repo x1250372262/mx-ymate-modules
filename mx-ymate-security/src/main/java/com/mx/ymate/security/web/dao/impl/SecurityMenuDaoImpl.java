@@ -14,7 +14,8 @@ import net.ymate.platform.persistence.jdbc.query.Select;
 
 /**
  * @Author: mengxiang.
- * @create: 2022-07-04 13:05
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @Bean

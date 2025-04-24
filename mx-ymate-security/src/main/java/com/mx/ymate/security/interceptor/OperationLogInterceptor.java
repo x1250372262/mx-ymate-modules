@@ -36,8 +36,9 @@ import static com.mx.ymate.security.base.config.SecurityConstants.LOG_EVENT_KEY;
 
 /**
  * @Author: mengxiang.
- * @Date: 2024-10-11 17:00
- * @Description: service层操作日志拦截 登录 退出 除外
+ * @Date 2025/04/24.
+ * @Time: 11:00.
+ * @Description:
  */
 public class OperationLogInterceptor extends AbstractInterceptor {
 

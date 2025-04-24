@@ -12,8 +12,9 @@ import java.util.List;
 
 /**
  * @Author: mengxiang.
- * @create: 2022-04-20 00:00
- * @Description: Ymate DefaultDao
+ * @Date 2025/04/24.
+ * @Time: 11:00.
+ * @Description:
  */
 public class DefaultDao implements SaTokenDao {
 

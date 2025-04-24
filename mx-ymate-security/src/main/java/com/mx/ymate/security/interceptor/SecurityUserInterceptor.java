@@ -35,8 +35,9 @@ import static com.mx.ymate.dev.constants.Constants.XG;
 
 /**
  * @Author: mengxiang.
- * @create: 2022-04-20 00:00
- * @Description: 用户拦截器
+ * @Date 2025/04/24.
+ * @Time: 11:00.
+ * @Description:
  */
 @Interceptor
 public class SecurityUserInterceptor extends AbstractInterceptor {

@@ -5,7 +5,8 @@ import com.mx.ymate.dev.support.mvc.MxResult;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-03 15:20
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public interface ISecurityScanLoginService {

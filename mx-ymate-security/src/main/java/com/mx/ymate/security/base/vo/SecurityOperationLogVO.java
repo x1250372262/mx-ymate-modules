@@ -2,7 +2,8 @@ package com.mx.ymate.security.base.vo;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-24 16:00
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class SecurityOperationLogVO extends SecurityOperationLogListVO {

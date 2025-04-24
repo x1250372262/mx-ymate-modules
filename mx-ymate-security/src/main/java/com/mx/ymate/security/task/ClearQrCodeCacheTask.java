@@ -12,8 +12,9 @@ import net.ymate.platform.log.Logs;
 
 
 /**
- * @Author: MaHaoYu.
- * @Create: 2023/12/12 9:12
+ * @Author: mengxiang.
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @ScheduleTask(name = "ClearQrCodeCacheTask", description = "0点清空过期的key")

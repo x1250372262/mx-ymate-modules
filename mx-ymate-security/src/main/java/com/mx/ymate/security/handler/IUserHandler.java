@@ -8,7 +8,8 @@ import java.util.Map;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-10-27 15:03
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public interface IUserHandler {

@@ -9,8 +9,9 @@ import java.util.List;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-04 15:43
- * @Description: 权限角色来源配置
+ * @Date 2025/04/24.
+ * @Time: 11:00.
+ * @Description:
  */
 @Bean
 public class DefaultStp implements StpInterface {

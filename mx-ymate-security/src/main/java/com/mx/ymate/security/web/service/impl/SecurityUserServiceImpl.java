@@ -46,7 +46,8 @@ import static com.mx.ymate.security.base.code.SecurityCode.SECURITY_USER_ROLE_EX
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-24 16:08
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @Bean

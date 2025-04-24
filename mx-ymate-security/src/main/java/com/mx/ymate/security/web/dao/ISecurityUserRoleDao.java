@@ -10,7 +10,8 @@ import java.util.List;
 
 /**
  * @Author: mengxiang.
- * @create: 2022-07-04 14:42
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public interface ISecurityUserRoleDao {

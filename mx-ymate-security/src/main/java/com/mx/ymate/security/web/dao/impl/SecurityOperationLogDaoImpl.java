@@ -12,7 +12,8 @@ import net.ymate.platform.persistence.jdbc.query.Where;
 
 /**
  * @Author: mengxiang.
- * @create: 2022-07-04 11:58
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @Bean

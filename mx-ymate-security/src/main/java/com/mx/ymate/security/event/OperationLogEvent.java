@@ -5,7 +5,8 @@ import net.ymate.platform.core.event.IEvent;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-06 17:20
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class OperationLogEvent extends AbstractEventContext<Object, OperationLogEvent.EVENT> implements IEvent {
