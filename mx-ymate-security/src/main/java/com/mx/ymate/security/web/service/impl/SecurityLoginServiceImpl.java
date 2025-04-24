@@ -27,6 +27,7 @@ import com.mx.ymate.security.web.service.ISecurityUserRoleService;
 import com.mx.ymate.security.web.service.ISecurityUserService;
 import net.ymate.platform.commons.util.DateTimeUtils;
 import net.ymate.platform.core.beans.annotation.Bean;
+import net.ymate.platform.core.beans.annotation.Clean;
 import net.ymate.platform.core.beans.annotation.Inject;
 import net.ymate.platform.webmvc.context.WebContext;
 import org.apache.commons.codec.binary.Base64;
@@ -211,6 +212,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
 
     @Override
     @OperationLog(operationType = OperationType.LOGIN, title = "管理员退出")
+    @Clean
     public MxResult logout() throws Exception {
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
         ILoginHandler loginHandler = config.loginHandlerClass();
