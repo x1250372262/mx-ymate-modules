@@ -1,19 +1,23 @@
 package com.mx.ymate.security.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.mx.ymate.dev.support.mvc.i18n.validate.VMxRequired;
 import com.mx.ymate.dev.support.page.PageDTO;
 import com.mx.ymate.security.base.config.SecurityPermissionConfig;
 import com.mx.ymate.security.web.service.ISecurityOperationLogService;
 import net.ymate.platform.core.beans.annotation.Inject;
-import net.ymate.platform.validation.validate.VRequired;
 import net.ymate.platform.webmvc.annotation.*;
 import net.ymate.platform.webmvc.base.Type;
 import net.ymate.platform.webmvc.view.IView;
 
+import static com.mx.ymate.security.ValidateConstant.IDS_NOT_EMPTY_I18N_KEY;
+import static com.mx.ymate.security.ValidateConstant.IDS_NOT_EMPTY_MSG;
+
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-03 15:03
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @Controller
@@ -66,7 +70,7 @@ public class SecurityOperationLogController {
      */
     @RequestMapping(value = "/delete", method = Type.HttpMethod.POST)
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_LOG_DELETE)
-    public IView delete(@VRequired(msg = "ids不能为空")
+    public IView delete(@VMxRequired(msg = IDS_NOT_EMPTY_MSG, i18nKey = IDS_NOT_EMPTY_I18N_KEY)
                         @RequestParam("ids[]") String[] ids) throws Exception {
         return iLogService.delete(ids).toJsonView();
     }

@@ -7,7 +7,6 @@ import com.mx.ymate.dev.MxDev;
 import com.mx.ymate.dev.support.event.annotation.Initializer;
 import net.ymate.platform.commons.util.ClassUtils;
 import net.ymate.platform.core.ApplicationEvent;
-import net.ymate.platform.core.YMP;
 import net.ymate.platform.core.event.Events;
 import net.ymate.platform.core.event.IEventListener;
 import net.ymate.platform.core.event.IEventRegister;
@@ -18,9 +17,11 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.*;
 
+
 /**
  * @Author: mengxiang.
- * @create: 2025-02-25
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: 框架初始化成功事件监听  只支持异步
  */
 @EventRegister

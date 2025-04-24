@@ -26,8 +26,9 @@ import static com.mx.ymate.netty.INettyConfig.HEART_BEAT_TIME_ITEM_COUNT;
 
 /**
  * @Author: mengxiang.
- * @create: 2022-04-22 15:27
- * @Description: netty服务类
+ * @Date 2025/04/24.
+ * @Time: 11:00.
+ * @Description: nettywebsocket
  */
 public class NettyWebsocket {
 

@@ -7,7 +7,6 @@ import com.mx.ymate.dev.support.qrcode.bean.QrCodeResult;
 import net.ymate.platform.commons.QRCodeHelper;
 import net.ymate.platform.commons.lang.BlurObject;
 import net.ymate.platform.commons.util.DateTimeUtils;
-import net.ymate.platform.core.YMP;
 import net.ymate.platform.webmvc.context.WebContext;
 import net.ymate.platform.webmvc.util.WebUtils;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -19,8 +18,8 @@ import java.io.File;
 
 /**
  * @Author: mengxiang.
- * @Date: 2020/4/26.
- * @Time: 9:29 上午.
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class QrCodeFactory {
@@ -41,7 +40,7 @@ public class QrCodeFactory {
 
     private QrCodeFactory(boolean createCode) {
         if (StringUtils.isBlank(FILE_PATH)) {
-            throw new NullArgumentException("mx.qrcode.file_path");
+            throw new NullArgumentException("ymp.configs.module.mxDev.qrcode.file_path");
         }
         this.createCode = createCode;
     }

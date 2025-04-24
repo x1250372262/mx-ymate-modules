@@ -11,7 +11,7 @@ import net.ymate.platform.commons.util.ThreadUtils;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Author: xujianpeng.
+ * @Author: mengxiang.
  * @Date 2024/12/5.
  * @Time: 14:06.
  * @Description:
@@ -20,7 +20,7 @@ public class DefaultScanLoginCacheStoreAdapter extends AbstractScanLoginCacheSto
 
     public Cache<String, ScanQrcode> dataMap;
 
-    public DefaultScanLoginCacheStoreAdapter(int scanLoginQrCodeExpire){
+    public DefaultScanLoginCacheStoreAdapter(int scanLoginQrCodeExpire) {
         dataMap = Caffeine.newBuilder()
                 .scheduler(Scheduler.forScheduledExecutorService(ThreadUtils.newScheduledThreadPool(1)))
                 .expireAfterWrite(scanLoginQrCodeExpire, TimeUnit.SECONDS)

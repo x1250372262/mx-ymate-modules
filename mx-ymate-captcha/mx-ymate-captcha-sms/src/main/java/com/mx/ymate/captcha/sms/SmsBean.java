@@ -5,10 +5,10 @@ import java.io.Serializable;
 /**
  * @Author: mengxiang.
  * @Date 2024/10/15.
- * @Time: 14:00.
+ * @Time: 09:28.
  * @Description:
  */
-public class SmsBean  implements Serializable {
+public class SmsBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

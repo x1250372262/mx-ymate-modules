@@ -2,8 +2,8 @@ package com.mx.ymate.dev.support.qrcode;
 
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.mx.ymate.dev.support.mvc.MxResult;
+import com.mx.ymate.dev.support.mvc.i18n.validate.VMxRequired;
 import com.mx.ymate.dev.support.qrcode.bean.QrCodeResult;
-import net.ymate.platform.validation.validate.VRequired;
 import net.ymate.platform.webmvc.annotation.Controller;
 import net.ymate.platform.webmvc.annotation.PathVariable;
 import net.ymate.platform.webmvc.annotation.RequestMapping;
@@ -17,10 +17,13 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 
+import static com.mx.ymate.dev.ValidateConstant.QR_CODE_NOT_EMPTY_I18N_KEY;
+import static com.mx.ymate.dev.ValidateConstant.QR_CODE_NOT_EMPTY_MSG;
+
 /**
  * @Author: mengxiang.
- * @Date: 2020/4/26.
- * @Time: 9:44 上午.¬
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @Controller
@@ -35,8 +38,7 @@ public class QrCodeController {
      * @throws Exception
      */
     @RequestMapping("/show/{timeStr}/{fileName}/{format}")
-    public IView show(@VRequired(msg = "参数错误")
-                      @PathVariable(value = "fileName") String fileName,
+    public IView show(@PathVariable(value = "fileName") String fileName,
                       @PathVariable(value = "timeStr") String timeStr,
                       @PathVariable(value = "format") String format,
                       @RequestParam(defaultValue = "false") boolean attach) throws Exception {
@@ -69,7 +71,7 @@ public class QrCodeController {
      * @throws Exception
      */
     @RequestMapping(value = "/create", method = {Type.HttpMethod.POST, Type.HttpMethod.GET})
-    public IView create(@VRequired(msg = "内容不能为空")
+    public IView create(@VMxRequired(msg = QR_CODE_NOT_EMPTY_MSG, i18nKey = QR_CODE_NOT_EMPTY_I18N_KEY)
                         @RequestParam String content,
                         @RequestParam(defaultValue = "UTF-8") String characterSet,
                         @RequestParam(defaultValue = "300") Integer width,

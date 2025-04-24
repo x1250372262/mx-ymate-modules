@@ -24,7 +24,8 @@ import java.util.stream.Collectors;
 
 /**
  * @Author: mengxiang.
- * @create: 2023-08-03 16:58
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: 自定义错误处理器
  */
 public class MxWebErrorProcessor extends AbstractResponseErrorProcessor implements IWebErrorProcessor, IWebInitialization {

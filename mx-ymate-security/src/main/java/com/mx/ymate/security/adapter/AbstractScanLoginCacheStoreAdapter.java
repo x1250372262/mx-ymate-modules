@@ -9,7 +9,7 @@ import net.ymate.platform.commons.util.UUIDUtils;
 import static com.mx.ymate.security.base.config.SecurityConstants.QRCODE_KEY;
 
 /**
- * @Author: xujianpeng.
+ * @Author: mengxiang.
  * @Date 2024/11/22.
  * @Time: 13:34.
  * @Description:
@@ -53,6 +53,7 @@ public abstract class AbstractScanLoginCacheStoreAdapter {
 
     /**
      * 清理过期缓存
+     *
      * @param config
      * @param time
      * @throws Exception

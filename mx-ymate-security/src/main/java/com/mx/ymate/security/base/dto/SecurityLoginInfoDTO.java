@@ -1,24 +1,28 @@
 package com.mx.ymate.security.base.dto;
 
+import com.mx.ymate.dev.support.mvc.i18n.validate.VMxRequired;
 import com.mx.ymate.dev.util.BeanUtil;
 import com.mx.ymate.security.base.bean.SecurityLoginInfoBean;
-import net.ymate.platform.validation.validate.VRequired;
 import net.ymate.platform.webmvc.annotation.RequestParam;
 
 import java.io.Serializable;
 
+import static com.mx.ymate.security.ValidateConstant.*;
+
 /**
  * @Author: mengxiang.
- * @create: 2021-09-03 15:08
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class SecurityLoginInfoDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     /**
      * 真实姓名
      */
-    @VRequired(msg = "真实姓名不能为空")
+    @VMxRequired(msg = REAL_NAME_NOT_EMPTY_MSG, i18nKey = REAL_NAME_NOT_EMPTY_I18N_KEY)
     @RequestParam
     private String realName;
 
@@ -31,14 +35,14 @@ public class SecurityLoginInfoDTO implements Serializable {
     /**
      * 手机号
      */
-    @VRequired(msg = "手机号不能为空")
+    @VMxRequired(msg = MOBILE_NOT_EMPTY_MSG, i18nKey = MOBILE_NOT_EMPTY_I18N_KEY)
     @RequestParam
     private String mobile;
 
     /**
      * 性别
      */
-    @VRequired(msg = "性别不能为空")
+    @VMxRequired(msg = GENDER_NOT_EMPTY_MSG, i18nKey = GENDER_NOT_EMPTY_I18N_KEY)
     @RequestParam
     private Integer gender;
 

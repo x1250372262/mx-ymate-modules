@@ -1,12 +1,12 @@
 package com.mx.ymate.security.web.controller;
 
 import com.mx.ymate.dev.support.mvc.MxResult;
+import com.mx.ymate.dev.support.mvc.i18n.validate.VMxRequired;
 import com.mx.ymate.security.base.annotation.NoLogin;
 import com.mx.ymate.security.base.dto.SecurityLoginInfoDTO;
 import com.mx.ymate.security.web.service.ISecurityLoginService;
 import net.ymate.platform.core.beans.annotation.Inject;
 import net.ymate.platform.validation.annotation.VModel;
-import net.ymate.platform.validation.validate.VRequired;
 import net.ymate.platform.webmvc.annotation.Controller;
 import net.ymate.platform.webmvc.annotation.ModelBind;
 import net.ymate.platform.webmvc.annotation.RequestMapping;
@@ -14,10 +14,13 @@ import net.ymate.platform.webmvc.annotation.RequestParam;
 import net.ymate.platform.webmvc.base.Type;
 import net.ymate.platform.webmvc.view.IView;
 
+import static com.mx.ymate.security.ValidateConstant.*;
+
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-03 15:03
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @Controller
@@ -37,9 +40,9 @@ public class SecurityLoginController {
      */
     @RequestMapping(value = "/login", method = Type.HttpMethod.POST)
     @NoLogin
-    public IView login(@VRequired(msg = "用户名不能为空")
+    public IView login(@VMxRequired(msg = USER_NAME_NOT_EMPTY_MSG, i18nKey = USER_NAME_NOT_EMPTY_I18N_KEY)
                        @RequestParam String userName,
-                       @VRequired(msg = "密码不能为空")
+                       @VMxRequired(msg = PASSWORD_NOT_EMPTY_MSG, i18nKey = PASSWORD_NOT_EMPTY_I18N_KEY)
                        @RequestParam String password) throws Exception {
         return iSecurityLoginService.login(userName, password).toJsonView();
     }
@@ -53,9 +56,9 @@ public class SecurityLoginController {
      * @throws Exception
      */
     @RequestMapping(value = "/unlock", method = Type.HttpMethod.POST)
-    public IView unlock(@VRequired(msg = "用户ID不能为空")
+    public IView unlock(@VMxRequired(msg = ID_NOT_EMPTY_MSG, i18nKey = ID_NOT_EMPTY_I18N_KEY)
                         @RequestParam String id,
-                        @VRequired(msg = "密码不能为空")
+                        @VMxRequired(msg = PASSWORD_NOT_EMPTY_MSG, i18nKey = PASSWORD_NOT_EMPTY_I18N_KEY)
                         @RequestParam String password) throws Exception {
         return iSecurityLoginService.unlock(id, password).toJsonView();
     }
@@ -68,7 +71,7 @@ public class SecurityLoginController {
      * @throws Exception
      */
     @RequestMapping(value = "/lock", method = Type.HttpMethod.POST)
-    public IView lock(@VRequired(msg = "用户ID不能为空")
+    public IView lock(@VMxRequired(msg = ID_NOT_EMPTY_MSG, i18nKey = ID_NOT_EMPTY_I18N_KEY)
                       @RequestParam String id) throws Exception {
         return iSecurityLoginService.lock(id).toJsonView();
     }
@@ -81,7 +84,7 @@ public class SecurityLoginController {
      * @throws Exception
      */
     @RequestMapping(value = "/check/lock", method = Type.HttpMethod.POST)
-    public IView checkLock(@VRequired(msg = "用户ID不能为空")
+    public IView checkLock(@VMxRequired(msg = ID_NOT_EMPTY_MSG, i18nKey = ID_NOT_EMPTY_I18N_KEY)
                            @RequestParam String id) throws Exception {
         return iSecurityLoginService.checkLock(id).toJsonView();
     }
@@ -132,11 +135,11 @@ public class SecurityLoginController {
      * @throws Exception
      */
     @RequestMapping(value = "/password", method = Type.HttpMethod.POST)
-    public IView password(@VRequired(msg = "旧密码不能为空")
+    public IView password(@VMxRequired(msg = OLD_PASSWORD_NOT_EMPTY_MSG, i18nKey = OLD_PASSWORD_NOT_EMPTY_I18N_KEY)
                           @RequestParam String oldPassword,
-                          @VRequired(msg = "新密码不能为空")
+                          @VMxRequired(msg = NEW_PASSWORD_NOT_EMPTY_MSG, i18nKey = NEW_PASSWORD_NOT_EMPTY_I18N_KEY)
                           @RequestParam String newPassword,
-                          @VRequired(msg = "确认密码不能为空")
+                          @VMxRequired(msg = RE_PASSWORD_NOT_EMPTY_MSG, i18nKey = RE_PASSWORD_NOT_EMPTY_I18N_KEY)
                           @RequestParam String rePassword) throws Exception {
         return iSecurityLoginService.password(oldPassword, newPassword, rePassword).toJsonView();
     }

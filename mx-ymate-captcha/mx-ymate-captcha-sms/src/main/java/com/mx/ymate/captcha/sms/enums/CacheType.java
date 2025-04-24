@@ -2,8 +2,9 @@ package com.mx.ymate.captcha.sms.enums;
 
 /**
  * @Author: mengxiang.
- * @create: 2022-04-20 00:00
- * @Description: 操作日志类型枚举
+ * @Date 2024/10/15.
+ * @Time: 09:28.
+ * @Description:
  */
 public enum CacheType {
 

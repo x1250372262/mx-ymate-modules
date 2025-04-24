@@ -1,19 +1,22 @@
 package com.mx.ymate.security.web.controller;
 
+import com.mx.ymate.dev.support.mvc.i18n.validate.VMxRequired;
 import com.mx.ymate.security.base.annotation.NoLogin;
 import com.mx.ymate.security.web.service.ISecurityScanLoginService;
 import net.ymate.platform.core.beans.annotation.Inject;
-import net.ymate.platform.validation.validate.VRequired;
 import net.ymate.platform.webmvc.annotation.Controller;
 import net.ymate.platform.webmvc.annotation.RequestMapping;
 import net.ymate.platform.webmvc.annotation.RequestParam;
 import net.ymate.platform.webmvc.base.Type;
 import net.ymate.platform.webmvc.view.IView;
 
+import static com.mx.ymate.security.ValidateConstant.*;
+
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-03 15:03
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @Controller
@@ -43,7 +46,7 @@ public class SecurityScanLoginController {
      * @throws Exception
      */
     @RequestMapping(value = "/check/qrcode", method = Type.HttpMethod.POST)
-    public IView checkQrcode(@VRequired(msg = "二维码登录标识不能为空")
+    public IView checkQrcode(@VMxRequired(msg = SCAN_QR_CODE_FLAG_NOT_EMPTY_MSG, i18nKey = SCAN_QR_CODE_FLAG_NOT_EMPTY_I18N_KEY)
                              @RequestParam String loginKey) throws Exception {
         return iSecurityScanLoginService.checkQrcode(loginKey).toJsonView();
     }
@@ -55,9 +58,9 @@ public class SecurityScanLoginController {
      * @throws Exception
      */
     @RequestMapping(value = "/", method = Type.HttpMethod.POST)
-    public IView login(@VRequired(msg = "登录id不能为空")
+    public IView login(@VMxRequired(msg = SCAN_LOGIN_ID_NOT_EMPTY_MSG, i18nKey = SCAN_LOGIN_ID_NOT_EMPTY_I18N_KEY)
                        @RequestParam String loginId,
-                       @VRequired(msg = "二维码登录标识不能为空")
+                       @VMxRequired(msg = SCAN_QR_CODE_FLAG_NOT_EMPTY_MSG, i18nKey = SCAN_QR_CODE_FLAG_NOT_EMPTY_I18N_KEY)
                        @RequestParam String loginKey) throws Exception {
         return iSecurityScanLoginService.login(loginId, loginKey).toJsonView();
     }
@@ -71,7 +74,8 @@ public class SecurityScanLoginController {
      * @throws Exception
      */
     @RequestMapping(value = "/scan", method = Type.HttpMethod.POST)
-    public IView scan(@VRequired(msg = "loginKey不能为空") @RequestParam String loginKey) throws Exception {
+    public IView scan(@VMxRequired(msg = SCAN_LOGIN_KEY_NOT_EMPTY_MSG, i18nKey = SCAN_LOGIN_KEY_NOT_EMPTY_I18N_KEY)
+                      @RequestParam String loginKey) throws Exception {
         return iSecurityScanLoginService.scan(loginKey).toJsonView();
     }
 
@@ -84,7 +88,8 @@ public class SecurityScanLoginController {
      * @throws Exception
      */
     @RequestMapping(value = "/cancel/login", method = Type.HttpMethod.POST)
-    public IView cancelLogin(@VRequired(msg = "loginKey不能为空") @RequestParam String loginKey) throws Exception {
+    public IView cancelLogin(@VMxRequired(msg = SCAN_LOGIN_KEY_NOT_EMPTY_MSG, i18nKey = SCAN_LOGIN_KEY_NOT_EMPTY_I18N_KEY)
+                             @RequestParam String loginKey) throws Exception {
         return iSecurityScanLoginService.cancelLogin(loginKey).toJsonView();
     }
 }

@@ -56,7 +56,7 @@ public final class DefaultSmsConfig implements ISmsConfig {
             if (StringUtils.isBlank(type)) {
                 throw new RuntimeException("短信服务商不能为空");
             }
-            ISmsAdapter smsAdapter = getAdapter(type,smsConfigReader);
+            ISmsAdapter smsAdapter = getAdapter(type, smsConfigReader);
             if (smsAdapter == null) {
                 continue;
             }
@@ -64,9 +64,9 @@ public final class DefaultSmsConfig implements ISmsConfig {
         }
     }
 
-    private ISmsAdapter getAdapter(String type, IConfigReader smsConfigReader){
+    private ISmsAdapter getAdapter(String type, IConfigReader smsConfigReader) {
         AdapterEnum adapterEnum = AdapterEnum.fromValue(type);
-        switch (adapterEnum){
+        switch (adapterEnum) {
             case CHINESE:
                 return new ChineseSmsAdapter(smsConfigReader.getString(SECRET_ID), smsConfigReader.getString(SECRET_KEY));
             case TX:

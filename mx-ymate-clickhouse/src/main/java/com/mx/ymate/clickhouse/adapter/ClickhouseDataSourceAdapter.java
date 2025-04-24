@@ -12,7 +12,8 @@ import java.util.Properties;
 
 /**
  * @Author: mengxiang.
- * @Date: 2023-06-16 14:41
+ * @Date: 2023-06-16
+ * @Time: 14:41
  * @Description: clickhouse数据源适配器
  */
 @DataSourceAdapter("clickhouse")

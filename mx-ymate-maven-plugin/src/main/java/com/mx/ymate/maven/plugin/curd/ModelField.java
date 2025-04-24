@@ -2,7 +2,8 @@ package com.mx.ymate.maven.plugin.curd;
 
 /**
  * @Author: mengxiang.
- * @Create: 2024/3/21 10:26
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class ModelField {

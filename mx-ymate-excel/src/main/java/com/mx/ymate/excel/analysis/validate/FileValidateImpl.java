@@ -1,5 +1,6 @@
 package com.mx.ymate.excel.analysis.validate;
 
+import com.mx.ymate.dev.support.mvc.i18n.I18nHelper;
 import com.mx.ymate.excel.analysis.validate.annotation.VFile;
 import net.ymate.platform.commons.util.FileUtils;
 import net.ymate.platform.log.Logs;
@@ -16,8 +17,8 @@ import java.util.List;
 
 /**
  * @Author: mengxiang.
- * @Date: 2019/8/28.
- * @Time: 5:00 下午.
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @Validator(VFile.class)
@@ -38,11 +39,11 @@ public class FileValidateImpl implements IValidator {
             }
             //判断导入是否是excel
             if (file == null || !file.exists() || !file.isFile()) {
-                return ValidateResult.builder(context, StringUtils.defaultIfBlank(anno.msg(), "excel文件不合法"), null, null).matched(true).build();
+                return ValidateResult.builder(context, StringUtils.defaultIfBlank(I18nHelper.get(anno.i18nKey(),anno.msg()), "excel文件不合法"), null, null).matched(true).build();
             } else {
                 String extension = FileUtils.getExtName(file.getName());
                 if (!ex.contains(extension)) {
-                    return ValidateResult.builder(context, StringUtils.defaultIfBlank(anno.msg(), "excel文件不合法"), null, null).matched(true).build();
+                    return ValidateResult.builder(context, StringUtils.defaultIfBlank(I18nHelper.get(anno.i18nKey(),anno.msg()), "excel文件不合法"), null, null).matched(true).build();
                 }
             }
         }

@@ -6,7 +6,8 @@ import net.ymate.platform.persistence.jdbc.query.OrderBy;
 
 /**
  * @Author: mengxiang.
- * @create: 2022-08-16 11:54
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: 排序工具类
  */
 public class Sorts {

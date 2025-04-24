@@ -2,7 +2,8 @@ package com.mx.ymate.excel.analysis.bean;
 
 /**
  * @Author: mengxiang.
- * @Date: 2024-10-11 17:00
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public interface IImportBean {

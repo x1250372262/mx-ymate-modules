@@ -4,9 +4,9 @@ import java.util.List;
 
 /**
  * @Author: mengxiang.
- * @Date: 2019-07-18.
- * @Time: 13:39.
- * @Description: 导入结果
+ * @Date 2025/04/24.
+ * @Time: 11:00.
+ * @Description:
  */
 public class ResultBean {
 

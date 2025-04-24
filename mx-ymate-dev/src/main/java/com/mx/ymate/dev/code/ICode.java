@@ -2,7 +2,8 @@ package com.mx.ymate.dev.code;
 
 /**
  * @Author: mengxiang.
- * @create: 2022-06-24 15:34
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: 错误码接口
  */
 public interface ICode {
@@ -17,7 +18,9 @@ public interface ICode {
      * i18nKey
      * @return
      */
-    String i18nKey();
+    default String i18nKey(){
+        return "";
+    }
 
     /**
      * 错误信息

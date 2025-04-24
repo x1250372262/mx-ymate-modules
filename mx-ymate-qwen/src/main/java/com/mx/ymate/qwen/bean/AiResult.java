@@ -1,9 +1,7 @@
 package com.mx.ymate.qwen.bean;
 
-import java.util.Map;
-
 /**
- * @Author: xujianpeng.
+ * @Author: mengxiang.
  * @Date 2025/2/28.
  * @Time: 11:29.
  * @Description:
@@ -22,7 +20,7 @@ public class AiResult {
     /**
      * 输出消息的角色，固定为assistant
      */
-    private  String role;
+    private String role;
 
     /**
      * 输出消息的内容。当使用qwen-vl或qwen-audio系列模型时为array，其余情况为string。

@@ -16,7 +16,8 @@ import static com.mx.ymate.dev.code.Code.SERVER_REQUEST_ERROR;
 
 /**
  * @Author: mengxiang.
- * @create: 2022-07-13 15:43
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class HttpUtil {

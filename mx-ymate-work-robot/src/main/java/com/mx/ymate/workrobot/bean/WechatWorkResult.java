@@ -6,7 +6,8 @@ import java.io.Serializable;
 
 /**
  * @Author: mengxiang.
- * @Date: 2023-06-09 15:26
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class WechatWorkResult implements Serializable {

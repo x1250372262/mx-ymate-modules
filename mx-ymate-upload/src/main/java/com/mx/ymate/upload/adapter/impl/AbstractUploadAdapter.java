@@ -84,11 +84,11 @@ public abstract class AbstractUploadAdapter implements IUploadAdapter {
             String hash = fileInfo.getHash();
             //缩略图文件名
             String thumbFileName = newFileName.replace(hash + ".", hash + "_thumb.");
-            Thumbnails.Builder<BufferedImage> thumbFile = createThumb(file, fileInfo.getType(),fileInfo.getExtName());
+            Thumbnails.Builder<BufferedImage> thumbFile = createThumb(file, fileInfo.getType(), fileInfo.getExtName());
             //返回缩略图url 可以为空
             if (thumbFile != null) {
                 //创建一个临时文件 把缩略图暂时保存一下  然后在调用保存方法去保存
-                File tempFile = FileUtils.createTempFile("mxUpload",thumbFileName);
+                File tempFile = FileUtils.createTempFile("mxUpload", thumbFileName);
                 thumbFile.toFile(tempFile);
                 //保存缩略图
                 FileInfo thumbFileInfo = getFileInfo(tempFile);
@@ -124,13 +124,14 @@ public abstract class AbstractUploadAdapter implements IUploadAdapter {
 
     /**
      * 获取显示url
+     *
      * @return
      */
     protected abstract String getShowUrl();
 
-    protected String defaultShowUrl(){
+    protected String defaultShowUrl() {
         String showUrl = config.showUrl();
-        if(StringUtils.isNotBlank(config.prefix())){
+        if (StringUtils.isNotBlank(config.prefix())) {
             showUrl = showUrl + config.prefix();
         }
         return showUrl;
@@ -222,13 +223,13 @@ public abstract class AbstractUploadAdapter implements IUploadAdapter {
         return new FileInfo(hash, file.length(), fileName, extName, type, upload, newFileName, FileUtil.getInputStream(file));
     }
 
-    protected Thumbnails.Builder<BufferedImage> createThumb(File file,String type, String extName) throws Exception {
+    protected Thumbnails.Builder<BufferedImage> createThumb(File file, String type, String extName) throws Exception {
         if (!config.isCreateThumb()) {
             return null;
         }
-        String resourceType =  StringUtils.substringBefore(type,  "/").toUpperCase();
+        String resourceType = StringUtils.substringBefore(type, "/").toUpperCase();
         //不是图片直接return
-        if(!"IMAGE".equals(resourceType)){
+        if (!"IMAGE".equals(resourceType)) {
             return null;
         }
         int thumbWidth = Math.max(config.thumbWidth(), 0);

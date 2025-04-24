@@ -9,7 +9,8 @@ import java.io.Serializable;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-07-02 16:58
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: 排序dto
  */
 public class SortDTO implements Serializable {

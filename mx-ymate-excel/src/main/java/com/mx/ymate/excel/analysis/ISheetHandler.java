@@ -5,8 +5,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 /**
  * @Author: mengxiang.
- * @Date: 2019-07-10.
- * @Time: 16:32.
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: excel导入处理接口
  */
 public interface ISheetHandler {

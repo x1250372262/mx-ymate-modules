@@ -22,7 +22,8 @@ import static com.mx.ymate.netty.INettyConfig.WEBSOCKET_PACKAGE;
 
 /**
  * @Author: mengxiang.
- * @create: 2024-05-14 14:00
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class MappingHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {

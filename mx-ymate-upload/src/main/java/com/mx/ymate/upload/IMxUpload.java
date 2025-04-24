@@ -23,7 +23,6 @@ import net.ymate.platform.core.support.IInitialization;
 import net.ymate.platform.webmvc.IUploadFileWrapper;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * @Author: mengxiang.

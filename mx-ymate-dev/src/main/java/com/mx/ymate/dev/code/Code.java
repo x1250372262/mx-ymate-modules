@@ -2,10 +2,11 @@ package com.mx.ymate.dev.code;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-07-02 16:58
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: 错误码枚举
  */
-public enum Code implements ICode {
+public enum Code implements II18nCode {
 
     /**
      * 通用错误码

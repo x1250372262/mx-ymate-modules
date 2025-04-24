@@ -18,7 +18,8 @@ import java.util.function.Function;
 
 /**
  * @Author: mengxiang.
- * @create: 2023-10-13 12:00
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: webShell工具类
  */
 public class WebShellUtil {

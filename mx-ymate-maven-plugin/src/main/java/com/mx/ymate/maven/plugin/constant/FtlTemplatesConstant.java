@@ -2,8 +2,9 @@ package com.mx.ymate.maven.plugin.constant;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-30 09:21
- * @Description: 文件名称常量
+ * @Date 2025/04/24.
+ * @Time: 11:00.
+ * @Description: ftl文件名称常量
  */
 public class FtlTemplatesConstant {
 
@@ -19,7 +20,6 @@ public class FtlTemplatesConstant {
     public static final String VO_JAVA = "/curd/VO.ftl";
     public static final String PAGE_HTML = "/curd/page.ftl";
     public static final String PAGE_JS = "/curd/js.ftl";
-
 
 
 }

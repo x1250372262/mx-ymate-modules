@@ -13,7 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Author: mengxiang.
- * @create: 2022-04-29 13:25
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class NettyUtil {
@@ -114,7 +115,7 @@ public class NettyUtil {
         sendBuffer(key, buffer, message);
     }
 
-    public static void send(String key,Object message){
+    public static void send(String key, Object message) {
         ChannelHandlerContext context = getContent(key);
         if (context == null) {
             return;
@@ -139,7 +140,6 @@ public class NettyUtil {
             Logs.get().getLogger().error("发送失败:", exception);
         }
     }
-
 
 
 }

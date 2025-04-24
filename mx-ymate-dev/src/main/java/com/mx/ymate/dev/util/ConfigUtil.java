@@ -11,7 +11,8 @@ import java.util.Map;
 
 /**
  * @Author: mengxiang.
- * @Date: 2023-02-28 13:49
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class ConfigUtil {

@@ -2,7 +2,8 @@ package com.mx.ymate.maven.plugin.constant;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-30 09:21
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: 文件名称常量
  */
 public interface FileNameConstant {

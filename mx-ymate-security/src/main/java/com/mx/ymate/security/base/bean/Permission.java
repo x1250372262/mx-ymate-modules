@@ -4,7 +4,8 @@ import java.io.Serializable;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-10-18 10:04
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class Permission implements Serializable {

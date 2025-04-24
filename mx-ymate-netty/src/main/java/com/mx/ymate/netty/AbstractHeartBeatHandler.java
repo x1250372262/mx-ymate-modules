@@ -1,7 +1,6 @@
 package com.mx.ymate.netty;
 
 import cn.hutool.core.util.StrUtil;
-import com.mx.ymate.netty.impl.NettyServer;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -14,7 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import java.net.InetSocketAddress;
 
 /**
- * @Author: xujianpeng.
+ * @Author: mengxiang.
  * @Date 2024/11/18.
  * @Time: 10:11.
  * @Description:
@@ -47,7 +46,7 @@ public abstract class AbstractHeartBeatHandler extends ChannelInboundHandlerAdap
         }
     }
 
-    private void onHandle(ChannelHandlerContext ctx){
+    private void onHandle(ChannelHandlerContext ctx) {
         InetSocketAddress ipSocket = (InetSocketAddress) ctx.channel().remoteAddress();
         LOG.debug(StrUtil.format("ip:{},端口:{}客户端长时间未发送消息", ipSocket.getHostString(), ipSocket.getPort()));
         ctx.channel().close();
@@ -88,15 +87,15 @@ public abstract class AbstractHeartBeatHandler extends ChannelInboundHandlerAdap
     }
 
 
-    public static class DefaultServerHeartImpl extends AbstractHeartBeatHandler{
+    public static class DefaultServerHeartImpl extends AbstractHeartBeatHandler {
 
     }
 
-    public static class DefaultClientHeartImpl extends AbstractHeartBeatHandler{
+    public static class DefaultClientHeartImpl extends AbstractHeartBeatHandler {
 
     }
 
-    public static class DefaultWebsocketHeartImpl extends AbstractHeartBeatHandler{
+    public static class DefaultWebsocketHeartImpl extends AbstractHeartBeatHandler {
 
     }
 }

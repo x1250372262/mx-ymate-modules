@@ -131,9 +131,9 @@ public final class DefaultMxUploadConfig implements IMxUploadConfig {
         aliBucket = configReader.getString(ALI_BUCKET);
     }
 
-    private IUploadAdapter getAdapter(String type){
+    private IUploadAdapter getAdapter(String type) {
         AdapterEnum adapterEnum = AdapterEnum.fromValue(type);
-        switch (adapterEnum){
+        switch (adapterEnum) {
             case LOCAL:
                 return new LocalUploadAdapter();
             case MINIO:

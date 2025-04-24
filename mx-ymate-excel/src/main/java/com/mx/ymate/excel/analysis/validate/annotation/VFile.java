@@ -1,10 +1,13 @@
 package com.mx.ymate.excel.analysis.validate.annotation;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.lang.annotation.*;
 
 /**
  * @Author: mengxiang.
- * @Date: 2024-10-11 17:00
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @Target({ElementType.FIELD, ElementType.PARAMETER})
@@ -12,6 +15,8 @@ import java.lang.annotation.*;
 @Documented
 public @interface VFile {
 
-    String msg() default "";
+    String msg() default StringUtils.EMPTY;
+
+    String i18nKey() default StringUtils.EMPTY;
 
 }

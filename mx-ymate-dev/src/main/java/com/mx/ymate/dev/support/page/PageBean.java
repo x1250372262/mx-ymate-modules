@@ -5,7 +5,8 @@ import net.ymate.platform.core.persistence.Page;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-07-02 16:58
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: 分页bean
  */
 public class PageBean {

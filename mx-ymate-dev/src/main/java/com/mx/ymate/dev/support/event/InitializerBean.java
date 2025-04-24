@@ -3,9 +3,9 @@ package com.mx.ymate.dev.support.event;
 import java.io.Serializable;
 
 /**
- * @Author: xujianpeng.
- * @Date 2025/2/25.
- * @Time: 10:51.
+ * @Author: mengxiang.
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class InitializerBean implements Serializable {

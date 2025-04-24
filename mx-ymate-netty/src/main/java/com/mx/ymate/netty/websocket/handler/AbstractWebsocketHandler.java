@@ -8,7 +8,8 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * @Author: mengxiang.
- * @create: 2024-05-14 14:00
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @ChannelHandler.Sharable
@@ -23,6 +24,7 @@ public abstract class AbstractWebsocketHandler implements IMxWebsocketHandler {
 
     /**
      * 消息到达
+     *
      * @param ctx 会话
      * @param msg 消息
      * @throws Exception

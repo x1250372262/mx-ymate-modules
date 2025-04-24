@@ -10,7 +10,6 @@ import com.mx.ymate.maven.plugin.enums.CurdEnums;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
-import freemarker.template.utility.NullArgumentException;
 import net.ymate.platform.core.persistence.annotation.Comment;
 import net.ymate.platform.core.persistence.annotation.Id;
 import org.apache.commons.lang3.StringUtils;
@@ -30,11 +29,11 @@ import static com.mx.ymate.maven.plugin.constant.ConfigConstant.CURD_MODEL_CLASS
 import static com.mx.ymate.maven.plugin.constant.FtlTemplatesConstant.*;
 import static com.mx.ymate.maven.plugin.constant.MapConstant.*;
 import static org.fusesource.jansi.Ansi.Color.GREEN;
-import static org.fusesource.jansi.Ansi.Color.YELLOW;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-30 09:21
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: curd代码生成
  */
 @Mojo(name = "curd")

@@ -6,7 +6,10 @@ import com.mx.ymate.excel.analysis.IDefaultClass;
 import java.lang.annotation.*;
 
 /**
- * @author mengxiang
+ * @Author: mengxiang.
+ * @Date 2025/04/24.
+ * @Time: 11:00.
+ * @Description:
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

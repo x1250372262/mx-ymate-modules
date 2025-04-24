@@ -14,8 +14,8 @@ import static com.mx.ymate.captcha.sms.code.SmsCaptchaCode.EXPIRE_ERROR;
 
 /**
  * @Author: mengxiang.
- * @Date 2024/10/9.
- * @Time: 09:36.
+ * @Date 2024/10/15.
+ * @Time: 09:28.
  * @Description:
  */
 public class SmsCaptcha {

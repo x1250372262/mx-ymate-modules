@@ -8,9 +8,9 @@ import java.lang.reflect.Method;
 
 /**
  * @Author: mengxiang.
- * @Date: 2019-07-20.
- * @Time: 14:18.
- * @Description: 数据处理bean
+ * @Date 2025/04/24.
+ * @Time: 11:00.
+ * @Description:
  */
 public class HandlerBean {
 

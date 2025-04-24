@@ -14,7 +14,8 @@ import static org.fusesource.jansi.Ansi.ansi;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-30 09:21
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: 代码生成抽象类
  */
 public abstract class BaseGeneratorMojo extends AbstractMojo {

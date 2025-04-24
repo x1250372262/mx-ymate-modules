@@ -4,8 +4,8 @@ import java.io.File;
 
 /**
  * @Author: mengxiang.
- * @Date: 2020/4/26.
- * @Time: 9:23 上午.
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class QrCodeResult {

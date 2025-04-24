@@ -8,7 +8,6 @@ import net.ymate.platform.core.module.IModule;
 import net.ymate.platform.core.module.IModuleConfigurer;
 import net.ymate.platform.core.module.impl.DefaultModuleConfigurer;
 
-import java.net.InetSocketAddress;
 import java.util.List;
 
 import static com.mx.ymate.sms.ISmsConfig.DEFAULT_CHANNEL;

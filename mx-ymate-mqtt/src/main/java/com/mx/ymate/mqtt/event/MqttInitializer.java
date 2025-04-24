@@ -9,8 +9,9 @@ import net.ymate.platform.core.ApplicationEvent;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-06 17:20
- * @Description:
+ * @Date 2025/04/24.
+ * @Time: 11:00.
+ * @Description: 代码生成抽象类
  */
 @Initializer(value = -99)
 public class MqttInitializer implements IYmpInitializer {

@@ -3,9 +3,9 @@ package com.mx.ymate.dev.support.mvc.i18n;
 import java.util.Map;
 
 /**
- * @Author: xujianpeng.
- * @Date 2025/4/8.
- * @Time: 10:46.
+ * @Author: mengxiang.
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public interface IWebmvcI18nConfig {

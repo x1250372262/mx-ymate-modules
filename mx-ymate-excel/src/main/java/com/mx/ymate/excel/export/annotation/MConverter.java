@@ -7,9 +7,9 @@ import com.mx.ymate.excel.export.converter.IMxDataHandler;
 import java.lang.annotation.*;
 
 /**
- * @author mengxiang
- * @Date 2020/5/20.
- * @Time: 16:57.
+ * @Author: mengxiang.
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: 阿里excel导出数据处理
  */
 @Target(ElementType.FIELD)

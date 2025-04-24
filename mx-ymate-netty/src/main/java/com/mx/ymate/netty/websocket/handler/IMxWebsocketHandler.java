@@ -3,9 +3,11 @@ package com.mx.ymate.netty.websocket.handler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 
+
 /**
  * @Author: mengxiang.
- * @create: 2024-05-14 14:00
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: websocket处理接口
  */
 public interface IMxWebsocketHandler {
@@ -13,6 +15,7 @@ public interface IMxWebsocketHandler {
 
     /**
      * 连接打开
+     *
      * @param ctx
      * @throws Exception
      */
@@ -20,6 +23,7 @@ public interface IMxWebsocketHandler {
 
     /**
      * 连接收到消息
+     *
      * @param ctx
      * @param msg
      * @throws Exception
@@ -28,6 +32,7 @@ public interface IMxWebsocketHandler {
 
     /**
      * 连接关闭
+     *
      * @param ctx
      * @throws Exception
      */
@@ -35,6 +40,7 @@ public interface IMxWebsocketHandler {
 
     /**
      * 连接发生错误
+     *
      * @param ctx
      * @param t
      * @throws Exception
@@ -43,6 +49,7 @@ public interface IMxWebsocketHandler {
 
     /**
      * 发送消息
+     *
      * @param ctx
      * @param message
      * @throws Exception

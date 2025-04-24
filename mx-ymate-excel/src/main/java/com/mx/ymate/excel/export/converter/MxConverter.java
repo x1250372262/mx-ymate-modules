@@ -15,9 +15,9 @@ import java.lang.reflect.Field;
 import java.net.URL;
 
 /**
- * @author mengxiang
- * @Date 2020/5/20.
- * @Time: 16:57.
+ * @Author: mengxiang.
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: excel转换类
  */
 public class MxConverter implements Converter<String> {

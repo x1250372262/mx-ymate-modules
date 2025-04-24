@@ -1,12 +1,12 @@
 package com.mx.ymate.security.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.mx.ymate.dev.support.mvc.i18n.validate.VMxRequired;
 import com.mx.ymate.security.base.config.SecurityPermissionConfig;
 import com.mx.ymate.security.base.dto.SecurityMenuDTO;
 import com.mx.ymate.security.web.service.ISecurityMenuService;
 import net.ymate.platform.core.beans.annotation.Inject;
 import net.ymate.platform.validation.annotation.VModel;
-import net.ymate.platform.validation.validate.VRequired;
 import net.ymate.platform.webmvc.annotation.Controller;
 import net.ymate.platform.webmvc.annotation.ModelBind;
 import net.ymate.platform.webmvc.annotation.RequestMapping;
@@ -14,10 +14,14 @@ import net.ymate.platform.webmvc.annotation.RequestParam;
 import net.ymate.platform.webmvc.base.Type;
 import net.ymate.platform.webmvc.view.IView;
 
+import static com.mx.ymate.security.ValidateConstant.ID_NOT_EMPTY_I18N_KEY;
+import static com.mx.ymate.security.ValidateConstant.ID_NOT_EMPTY_MSG;
+
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-03 15:03
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @Controller
@@ -75,7 +79,7 @@ public class SecurityMenuController {
      */
     @RequestMapping(value = "/update", method = Type.HttpMethod.POST)
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_MENU_UPDATE)
-    public IView update(@VRequired(msg = "ID不能为空")
+    public IView update(@VMxRequired(msg = ID_NOT_EMPTY_MSG, i18nKey = ID_NOT_EMPTY_I18N_KEY)
                         @RequestParam String id,
                         @VModel @ModelBind SecurityMenuDTO menuDTO) throws Exception {
         return iMenuService.update(id, menuDTO.toBean()).toJsonView();
@@ -90,7 +94,7 @@ public class SecurityMenuController {
      */
     @RequestMapping("/detail")
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_MENU_DETAIL)
-    public IView detail(@VRequired(msg = "ID不能为空")
+    public IView detail(@VMxRequired(msg = ID_NOT_EMPTY_MSG, i18nKey = ID_NOT_EMPTY_I18N_KEY)
                         @RequestParam String id) throws Exception {
         return iMenuService.detail(id).toJsonView();
     }
@@ -104,7 +108,7 @@ public class SecurityMenuController {
      */
     @RequestMapping(value = "/delete", method = Type.HttpMethod.POST)
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_MENU_DELETE)
-    public IView delete(@VRequired(msg = "ID不能为空")
+    public IView delete(@VMxRequired(msg = ID_NOT_EMPTY_MSG, i18nKey = ID_NOT_EMPTY_I18N_KEY)
                         @RequestParam String id) throws Exception {
         return iMenuService.delete(id).toJsonView();
     }

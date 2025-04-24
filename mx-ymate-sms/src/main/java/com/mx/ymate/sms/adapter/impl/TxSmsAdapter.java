@@ -111,11 +111,11 @@ public class TxSmsAdapter implements ISmsAdapter {
 
     @Override
     public MxResult send(String mobile, Object params) throws Exception {
-        return send(mobile,null,params);
+        return send(mobile, null, params);
     }
 
     @Override
     public MxResult send(List<String> mobileList, Object params) throws Exception {
-        return send(mobileList,null,params);
+        return send(mobileList, null, params);
     }
 }

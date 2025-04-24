@@ -6,7 +6,8 @@ import java.util.List;
 
 /**
  * @Author: mengxiang.
- * @Date: 2023-06-09 14:52
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class WechatWorkRobotMessage implements Serializable {

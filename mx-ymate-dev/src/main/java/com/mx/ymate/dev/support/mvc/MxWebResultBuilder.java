@@ -13,7 +13,8 @@ import java.util.Map;
 
 /**
  * @Author: mengxiang.
- * @create: 2023-08-03 16:58
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: 自定义结果构建
  */
 public class MxWebResultBuilder implements IWebResultBuilder {

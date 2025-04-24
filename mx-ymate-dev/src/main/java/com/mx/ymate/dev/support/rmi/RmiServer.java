@@ -6,8 +6,6 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import net.ymate.platform.core.YMP;
 import net.ymate.platform.core.beans.annotation.Bean;
-import net.ymate.platform.log.ILogger;
-import net.ymate.platform.log.Logs;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,7 +21,8 @@ import java.util.Set;
 
 /**
  * @Author: mengxiang.
- * @Date: 2024-10-11 17:00
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class RmiServer {

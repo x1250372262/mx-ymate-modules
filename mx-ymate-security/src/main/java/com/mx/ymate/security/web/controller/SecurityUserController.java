@@ -1,21 +1,24 @@
 package com.mx.ymate.security.web.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.mx.ymate.dev.support.mvc.i18n.validate.VMxRequired;
 import com.mx.ymate.dev.support.page.PageDTO;
 import com.mx.ymate.security.base.config.SecurityPermissionConfig;
 import com.mx.ymate.security.base.dto.SecurityUserDTO;
 import com.mx.ymate.security.web.service.ISecurityUserService;
 import net.ymate.platform.core.beans.annotation.Inject;
 import net.ymate.platform.validation.annotation.VModel;
-import net.ymate.platform.validation.validate.VRequired;
 import net.ymate.platform.webmvc.annotation.*;
 import net.ymate.platform.webmvc.base.Type;
 import net.ymate.platform.webmvc.view.IView;
 
+import static com.mx.ymate.security.ValidateConstant.*;
+
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-03 15:03
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @Controller
@@ -68,7 +71,7 @@ public class SecurityUserController {
      */
     @RequestMapping(value = "/create", method = Type.HttpMethod.POST)
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_USER_CREATE)
-    public IView create(@VRequired(msg = "密码不能为空")
+    public IView create(@VMxRequired(msg = PASSWORD_NOT_EMPTY_MSG, i18nKey = PASSWORD_NOT_EMPTY_I18N_KEY)
                         @RequestParam String password,
                         @VModel @ModelBind SecurityUserDTO securityUserDTO) throws Exception {
         return iUserService.create(password, securityUserDTO.toBean()).toJsonView();
@@ -86,9 +89,9 @@ public class SecurityUserController {
     @RequestMapping(value = "/status/{id}", method = Type.HttpMethod.POST)
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_USER_UPDATE_STATUS)
     public IView status(@PathVariable String id,
-                        @VRequired(msg = "最后修改时间(乐观锁)不能为空")
+                        @VMxRequired(msg = LAST_MODIFY_TIME_NOT_EMPTY_MSG, i18nKey = LAST_MODIFY_TIME_NOT_EMPTY_I18N_KEY)
                         @RequestParam Long lastModifyTime,
-                        @VRequired(msg = "状态不能为空")
+                        @VMxRequired(msg = STATUS_NOT_EMPTY_MSG, i18nKey = STATUS_NOT_EMPTY_I18N_KEY)
                         @RequestParam Integer status) throws Exception {
         return iUserService.status(id, lastModifyTime, status).toJsonView();
     }
@@ -104,7 +107,7 @@ public class SecurityUserController {
     @RequestMapping(value = "/unlock/{id}", method = Type.HttpMethod.POST)
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_USER_UNLOCK)
     public IView unlock(@PathVariable String id,
-                        @VRequired(msg = "最后修改时间(乐观锁)不能为空")
+                        @VMxRequired(msg = LAST_MODIFY_TIME_NOT_EMPTY_MSG, i18nKey = LAST_MODIFY_TIME_NOT_EMPTY_I18N_KEY)
                         @RequestParam Long lastModifyTime) throws Exception {
         return iUserService.unlock(id, lastModifyTime).toJsonView();
     }
@@ -120,7 +123,7 @@ public class SecurityUserController {
     @RequestMapping(value = "/resetPassword/{id}", method = Type.HttpMethod.POST)
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_USER_RESET_PASSWORD)
     public IView resetPassword(@PathVariable String id,
-                               @VRequired(msg = "最后修改时间(乐观锁)不能为空")
+                               @VMxRequired(msg = LAST_MODIFY_TIME_NOT_EMPTY_MSG, i18nKey = LAST_MODIFY_TIME_NOT_EMPTY_I18N_KEY)
                                @RequestParam Long lastModifyTime) throws Exception {
         return iUserService.resetPassword(id, lastModifyTime).toJsonView();
     }
@@ -149,7 +152,7 @@ public class SecurityUserController {
      */
     @RequestMapping("/role/list")
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_USER_ROLE_LIST)
-    public IView roleList(@VRequired(msg = "人员ID不能为空")
+    public IView roleList(@VMxRequired(msg = USER_ID_NOT_EMPTY_MSG, i18nKey = USER_ID_NOT_EMPTY_I18N_KEY)
                           @RequestParam String userId,
                           @ModelBind PageDTO pageDTO) throws Exception {
         return iUserService.roleList(userId, pageDTO.toBean()).toJsonView();
@@ -165,9 +168,9 @@ public class SecurityUserController {
      */
     @RequestMapping(value = "/role/create", method = Type.HttpMethod.POST)
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_USER_ROLE_CREATE)
-    public IView roleCreate(@VRequired(msg = "人员ID不能为空")
+    public IView roleCreate(@VMxRequired(msg = USER_ID_NOT_EMPTY_MSG, i18nKey = USER_ID_NOT_EMPTY_I18N_KEY)
                             @RequestParam String userId,
-                            @VRequired(msg = "角色ID不能为空")
+                            @VMxRequired(msg = ROLE_ID_NOT_EMPTY_MSG, i18nKey = ROLE_ID_NOT_EMPTY_I18N_KEY)
                             @RequestParam String roleId) throws Exception {
         return iUserService.roleCreate(userId, roleId).toJsonView();
     }
@@ -181,7 +184,7 @@ public class SecurityUserController {
      */
     @RequestMapping(value = "/role/delete", method = Type.HttpMethod.POST)
     @SaCheckPermission(value = SecurityPermissionConfig.SECURITY_USER_ROLE_DELETE)
-    public IView roleDelete(@VRequired(msg = "ids不能为空")
+    public IView roleDelete(@VMxRequired(msg = IDS_NOT_EMPTY_MSG, i18nKey = IDS_NOT_EMPTY_I18N_KEY)
                             @RequestParam("ids[]") String[] ids) throws Exception {
         return iUserService.roleDelete(ids).toJsonView();
     }

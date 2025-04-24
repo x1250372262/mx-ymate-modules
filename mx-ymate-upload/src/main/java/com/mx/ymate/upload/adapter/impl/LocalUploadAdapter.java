@@ -40,9 +40,9 @@ public class LocalUploadAdapter extends AbstractUploadAdapter {
             fileStorageDir = FileUtil.mkdir(config.localFileStoragePath());
         }
         try {
-            File targetFile = new File(fileStorageDir,  fileInfo.getNewFileName());
+            File targetFile = new File(fileStorageDir, fileInfo.getNewFileName());
             if (!targetFile.getParentFile().exists()) {
-                FileUtil.mkdir( targetFile.getParentFile());
+                FileUtil.mkdir(targetFile.getParentFile());
             }
             FileUtils.writeTo(srcFile, new File(fileStorageDir, fileInfo.getNewFileName()));
         } catch (IOException e) {

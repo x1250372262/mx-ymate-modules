@@ -6,7 +6,8 @@ import java.lang.annotation.*;
 
 /**
  * @Author: mengxiang.
- * @create: 2023-08-03 16:58
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: 查询条件构建
  */
 @Target(ElementType.FIELD)

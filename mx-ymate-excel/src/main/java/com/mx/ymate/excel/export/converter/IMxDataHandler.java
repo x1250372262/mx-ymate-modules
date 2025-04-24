@@ -1,9 +1,9 @@
 package com.mx.ymate.excel.export.converter;
 
 /**
- * @author mengxiang
- * @Date 2020/5/20.
- * @Time: 16:57.
+ * @Author: mengxiang.
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public interface IMxDataHandler {

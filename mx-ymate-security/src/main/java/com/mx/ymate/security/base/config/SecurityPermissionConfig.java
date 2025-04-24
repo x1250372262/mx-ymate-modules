@@ -10,7 +10,8 @@ import static com.mx.ymate.security.base.config.SecurityPermissionConfig.GroupEn
 
 /**
  * @Author: mengxiang.
- * @create: 2021-09-07 15:16
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: 权限配置 常量 方法
  */
 public class SecurityPermissionConfig {

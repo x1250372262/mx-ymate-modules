@@ -6,7 +6,8 @@ import net.ymate.platform.core.support.IInitialization;
 
 /**
  * @Author: mengxiang.
- * @create: 2022-04-20 00:00
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 @Ignored
@@ -29,7 +30,6 @@ public interface IMxDevConfig extends IInitialization<IMxDev> {
     String I18N_HEADER_LANGUAGE = "i18n.header_language";
 
     String I18N_OPEN_FALLBACK = "i18n.open_fallback";
-
 
 
     /**
@@ -62,6 +62,7 @@ public interface IMxDevConfig extends IInitialization<IMxDev> {
 
     /**
      * 是否开启i18n 默认false
+     *
      * @return
      */
     boolean i18nEnabled();
@@ -91,6 +92,7 @@ public interface IMxDevConfig extends IInitialization<IMxDev> {
 
     /**
      * 是否启用fallback 其他语言获取不到 是否获取默认语言的 默认false
+     *
      * @return
      */
     boolean i18nOpenFallback();

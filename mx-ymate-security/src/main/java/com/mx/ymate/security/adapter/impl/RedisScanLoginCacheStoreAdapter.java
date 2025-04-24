@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.mx.ymate.redis.api.RedisApi;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.adapter.AbstractScanLoginCacheStoreAdapter;
-import com.mx.ymate.security.base.bean.LoginUser;
 import com.mx.ymate.security.base.bean.ScanQrcode;
 import net.ymate.platform.commons.json.JsonWrapper;
 import net.ymate.platform.log.Logs;
@@ -15,7 +14,7 @@ import redis.clients.jedis.ScanParams;
 import java.util.List;
 
 /**
- * @Author: xujianpeng.
+ * @Author: mengxiang.
  * @Date 2024/12/5.
  * @Time: 14:06.
  * @Description:
@@ -25,7 +24,7 @@ public class RedisScanLoginCacheStoreAdapter extends AbstractScanLoginCacheStore
     @Override
     public void cacheScanQrcode(String qrcodeKey, ScanQrcode scanQrcode) throws Exception {
         RedisApi.strDelete(qrcodeKey);
-        RedisApi.strSet(qrcodeKey, JSONObject.toJSONString(scanQrcode),scanQrcode.getExpire());
+        RedisApi.strSet(qrcodeKey, JSONObject.toJSONString(scanQrcode), scanQrcode.getExpire());
     }
 
     @Override

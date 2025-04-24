@@ -25,7 +25,8 @@ import java.util.Objects;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-07-02 16:58
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: 通用请求返回数据-操作消息提醒
  */
 public class MxResult extends AbstractWebResult<String> {

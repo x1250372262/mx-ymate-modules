@@ -4,7 +4,8 @@ import java.io.Serializable;
 
 /**
  * @Author: mengxiang.
- * @create: 2022-04-20 00:00
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: 登录结果
  */
 public class LoginUser implements Serializable {

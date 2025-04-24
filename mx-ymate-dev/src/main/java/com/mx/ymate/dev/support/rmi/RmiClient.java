@@ -6,7 +6,8 @@ import java.rmi.registry.Registry;
 
 /**
  * @Author: mengxiang.
- * @Date: 2024-10-11 17:00
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public class RmiClient {

@@ -1,7 +1,6 @@
 package com.mx.ymate.dev;
 
 import com.mx.ymate.dev.impl.DefaultMxDevConfig;
-import com.mx.ymate.dev.support.mvc.MxResult;
 import com.mx.ymate.dev.support.mvc.i18n.I18nHelper;
 import net.ymate.platform.core.*;
 import net.ymate.platform.core.module.IModule;
@@ -10,7 +9,8 @@ import net.ymate.platform.core.module.impl.DefaultModuleConfigurer;
 
 /**
  * @Author: mengxiang.
- * @Date: 2024-10-11 17:00
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public final class MxDev implements IModule, IMxDev {

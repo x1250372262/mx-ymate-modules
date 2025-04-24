@@ -1,12 +1,11 @@
 package com.mx.ymate.sms.enums;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Objects;
 
 /**
  * @Author: mengxiang.
- * @Date: 2024-10-11 17:00
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public enum AdapterEnum {

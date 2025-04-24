@@ -13,10 +13,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @Author: xujianpeng.
- * @Date 2025/4/8.
- * @Time: 10:48.
- * @Description:
+ * @Author: mengxiang.
+ * @Date 2025/04/24.
+ * @Time: 11:00.
+ * @Description: 国际化帮助类
  */
 public class I18nHelper {
 
@@ -116,8 +116,12 @@ public class I18nHelper {
         if(!IS_ENABLED){
            return null;
         }
+        if(StringUtils.isBlank(key)){
+            return null;
+        }
+        String headerLanguage = WebContext.getRequest().getHeader(MX_DEV_CONFIG.i18nHeaderLanguage());
         if (StringUtils.isBlank(headerLanguage)) {
-            headerLanguage = WebContext.getRequest().getHeader(MX_DEV_CONFIG.i18nHeaderLanguage());
+            return null;
         }
         return get(headerLanguage, key);
     }

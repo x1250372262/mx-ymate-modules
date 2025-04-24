@@ -2,7 +2,8 @@ package com.mx.ymate.dev.constants;
 
 /**
  * @Author: mengxiang.
- * @create: 2021-07-02 16:58
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: 系统常量
  */
 public interface Constants {

@@ -37,6 +37,7 @@ public interface ICacheStorageAdapter {
 
     /**
      * 清空用户缓存
+     *
      * @param userKey
      * @throws Exception
      */
@@ -88,6 +89,7 @@ public interface ICacheStorageAdapter {
 
     /**
      * 清空缓存权限
+     *
      * @param permissionKey
      * @throws Exception
      */

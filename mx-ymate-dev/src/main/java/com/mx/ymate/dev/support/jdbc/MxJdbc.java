@@ -14,7 +14,8 @@ import java.lang.reflect.Field;
 
 /**
  * @Author: mengxiang.
- * @create: 2023-08-03 16:58
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description: jdbc简化操作
  */
 public class MxJdbc {

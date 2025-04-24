@@ -21,7 +21,7 @@ public class DefaultCacheStorageAdapter {
         DATA_MAP.put(key, smsBean);
     }
 
-    public static SmsBean get(String key){
+    public static SmsBean get(String key) {
         return DATA_MAP.getIfPresent(key);
     }
 }

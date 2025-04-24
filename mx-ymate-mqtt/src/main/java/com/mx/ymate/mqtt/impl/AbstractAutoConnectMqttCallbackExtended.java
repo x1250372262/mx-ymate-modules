@@ -6,7 +6,6 @@ import com.mx.ymate.mqtt.ResubscribeBean;
 import com.mx.ymate.mqtt.enums.QosEnum;
 import net.ymate.platform.log.Logs;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 
 import java.util.List;
 

@@ -3,9 +3,9 @@ package com.mx.ymate.dev.support.event;
 import net.ymate.platform.core.ApplicationEvent;
 
 /**
- * @Author: xujianpeng.
- * @Date 2025/2/25.
- * @Time: 10:34.
+ * @Author: mengxiang.
+ * @Date 2025/04/24.
+ * @Time: 11:00.
  * @Description:
  */
 public interface IYmpInitializer {
