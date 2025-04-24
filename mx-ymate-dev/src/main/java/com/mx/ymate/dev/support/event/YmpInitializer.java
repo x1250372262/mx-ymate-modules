@@ -3,6 +3,7 @@ package com.mx.ymate.dev.support.event;
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ClassUtil;
+import com.mx.ymate.dev.MxDev;
 import com.mx.ymate.dev.support.event.annotation.Initializer;
 import net.ymate.platform.commons.util.ClassUtils;
 import net.ymate.platform.core.ApplicationEvent;
@@ -27,7 +28,7 @@ public class YmpInitializer implements IEventRegister {
 
     private static final Log LOG = LogFactory.getLog(YmpInitializer.class);
 
-    private static final String PACKAGES = YMP.get().getParam("mx.initializer.packages");
+    private static final String PACKAGES = MxDev.get().getConfig().initializerPackages();
 
     private final List<InitializerBean> initializerBeanList = new ArrayList<>();
 

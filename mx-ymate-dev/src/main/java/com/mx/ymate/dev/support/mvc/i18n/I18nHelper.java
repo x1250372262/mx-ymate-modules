@@ -1,9 +1,8 @@
 package com.mx.ymate.dev.support.mvc.i18n;
 
-import com.mx.ymate.dev.code.Code;
+import com.mx.ymate.dev.IMxDevConfig;
+import com.mx.ymate.dev.MxDev;
 import com.mx.ymate.dev.code.ICode;
-import net.ymate.platform.commons.util.ClassUtils;
-import net.ymate.platform.core.YMP;
 import net.ymate.platform.webmvc.context.WebContext;
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,34 +26,27 @@ public class I18nHelper {
     private static final Map<String, Map<String, String>> I18N_MAP = new ConcurrentHashMap<>();
 
     /**
-     * 默认语言
-     */
-    private static final String DEFAULT_LANG = "zh";
-
-    /**
-     * 是否初始化
-     */
-    private static boolean isInit = false;
-
-    /**
      * 请求头语言
      */
     private static String headerLanguage = "";
+
+    private final static IMxDevConfig MX_DEV_CONFIG = MxDev.get().getConfig();
+
+    /**
+     * 是否启用i18n
+     */
+    private final static boolean IS_ENABLED = MX_DEV_CONFIG.i18nEnabled();
+
 
     /**
      * 初始化
      */
     public static void init() {
-        String webmvcI18nConfigName = YMP.get().getParam("mx.webmvc.i18n.config_class");
-        if (StringUtils.isBlank(webmvcI18nConfigName)) {
-            return;
-        }
-        IWebmvcI18nConfig iWebmvcI18nConfig = ClassUtils.impl(webmvcI18nConfigName, IWebmvcI18nConfig.class, I18nHelper.class);
+        IWebmvcI18nConfig iWebmvcI18nConfig = MX_DEV_CONFIG.i18nConfigClass();
         if (iWebmvcI18nConfig == null) {
             return;
         }
         addAll(iWebmvcI18nConfig.getConfig());
-        isInit = true;
     }
 
     /**
@@ -87,13 +79,11 @@ public class I18nHelper {
      */
     public static String get(String language, String key) {
         Map<String, String> langMap = I18N_MAP.get(language);
-        if (langMap != null && langMap.containsKey(key)) {
-            return langMap.get(key);
+        if(langMap == null && MX_DEV_CONFIG.i18nOpenFallback()){
+            langMap = I18N_MAP.get(MX_DEV_CONFIG.i18nDefaultLanguage());
         }
-        // fallback
-        Map<String, String> defaultMap = I18N_MAP.get(DEFAULT_LANG);
-        if (defaultMap != null && defaultMap.containsKey(key)) {
-            return defaultMap.get(key);
+        if (langMap != null) {
+            return langMap.get(key);
         }
         return null;
     }
@@ -123,20 +113,20 @@ public class I18nHelper {
     }
 
     public static String getMsg(String key) {
-        if (!isInit) {
-            return null;
+        if(!IS_ENABLED){
+           return null;
         }
-        if(StringUtils.isBlank(headerLanguage)){
-            headerLanguage = StringUtils.defaultIfBlank(WebContext.getRequest().getHeader("language"), DEFAULT_LANG);
+        if (StringUtils.isBlank(headerLanguage)) {
+            headerLanguage = WebContext.getRequest().getHeader(MX_DEV_CONFIG.i18nHeaderLanguage());
         }
         return get(headerLanguage, key);
     }
 
-    public static String getMsg(String key,String defaultValue) {
-       return StringUtils.defaultIfBlank(getMsg(key),defaultValue);
+    public static String getMsg(String key, String defaultValue) {
+        return StringUtils.defaultIfBlank(getMsg(key), defaultValue);
     }
 
     public static String getMsg(ICode iCode) {
-        return getMsg(iCode.i18nKey(),iCode.msg());
+        return getMsg(iCode.i18nKey(), iCode.msg());
     }
 }

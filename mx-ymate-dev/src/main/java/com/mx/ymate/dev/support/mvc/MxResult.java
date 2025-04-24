@@ -40,7 +40,7 @@ public class MxResult extends AbstractWebResult<String> {
 
 
     public static MxResult create(ICode iCode) {
-        return create(iCode.code()).msg(I18nHelper.getMsg(iCode.msg()));
+        return create(iCode.code()).msg(I18nHelper.getMsg(iCode.i18nKey(),iCode.msg()));
     }
 
 
@@ -66,12 +66,12 @@ public class MxResult extends AbstractWebResult<String> {
 
 
     public static MxResult sameName() {
-        String i18nMsg = I18nHelper.getMsg(Code.FIELDS_EXISTS.msg());
+        String i18nMsg = I18nHelper.getMsg(Code.FIELDS_EXISTS.i18nKey(),Code.FIELDS_EXISTS.msg());
         return MxResult.create(Code.FIELDS_EXISTS.code()).msg(StrUtil.format(i18nMsg, "名称"));
     }
 
     public static MxResult sameData(String msg) {
-        String i18nMsg = I18nHelper.getMsg(Code.FIELDS_EXISTS.msg());
+        String i18nMsg = I18nHelper.getMsg(Code.FIELDS_EXISTS.i18nKey(),Code.FIELDS_EXISTS.msg());
         return MxResult.create(Code.FIELDS_EXISTS.code()).msg(StrUtil.format(i18nMsg, msg));
     }
 

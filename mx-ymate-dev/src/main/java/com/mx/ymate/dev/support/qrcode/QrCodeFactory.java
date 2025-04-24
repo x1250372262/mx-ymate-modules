@@ -2,6 +2,7 @@ package com.mx.ymate.dev.support.qrcode;
 
 import cn.hutool.core.io.FileUtil;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.mx.ymate.dev.MxDev;
 import com.mx.ymate.dev.support.qrcode.bean.QrCodeResult;
 import net.ymate.platform.commons.QRCodeHelper;
 import net.ymate.platform.commons.lang.BlurObject;
@@ -27,8 +28,8 @@ public class QrCodeFactory {
     private final String defaultCharset = "UTF-8";
     private final ErrorCorrectionLevel defaultLevel = ErrorCorrectionLevel.L;
     private final boolean createCode;
-    public final static String FILE_PATH = YMP.get().getParam("mx.qrcode.file_path");
-    private final String WEB_URL = YMP.get().getParam("mx.qrcode.web_url");
+    public final static String FILE_PATH = MxDev.get().getConfig().qrcodeFilePath();
+    private final String WEB_URL = MxDev.get().getConfig().qrcodeWebUrl();
 
     private File logoFile;
     private int logoImageSize;
