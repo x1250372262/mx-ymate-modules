@@ -41,6 +41,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import static com.mx.ymate.security.I18nConstant.*;
 import static com.mx.ymate.security.Security.DEFAULT_PASSWORD;
 import static com.mx.ymate.security.base.code.SecurityCode.SECURITY_USER_ROLE_EXISTS;
 
@@ -81,7 +82,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
 
     @Override
     @Transaction
-    @OperationLog(operationType = OperationType.CREATE, title = "添加人员")
+    @OperationLog(operationType = OperationType.CREATE, title = LOG_USER_CREATE_TITLE_MSG, i18nKey = LOG_USER_CREATE_TITLE_I18N_KEY)
     public MxResult create(String password, SecurityUserBean userBean) throws Exception {
         String resourceId = StringUtils.defaultIfBlank(resourceHandler.buildResourceId(ResourceType.USER, SaUtil.loginId()), config.client());
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
@@ -130,7 +131,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
     }
 
     @Override
-    @OperationLog(operationType = OperationType.OTHER, title = "修改状态")
+    @OperationLog(operationType = OperationType.OTHER, title = LOG_USER_UPDATE_STATUS_TITLE_MSG, i18nKey = LOG_USER_UPDATE_STATUS_TITLE_I18N_KEY)
     public MxResult status(String id, Long lastModifyTime, Integer status) throws Exception {
         SecurityUser securityUser = iSecurityUserDao.findById(id);
         if (securityUser == null) {
@@ -147,7 +148,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
     }
 
     @Override
-    @OperationLog(operationType = OperationType.OTHER, title = "解锁")
+    @OperationLog(operationType = OperationType.OTHER, title = LOG_USER_UNLOCK_TITLE_MSG, i18nKey = LOG_USER_UNLOCK_TITLE_I18N_KEY)
     public MxResult unlock(String id, Long lastModifyTime) throws Exception {
         SecurityUser securityUser = iSecurityUserDao.findById(id);
         if (securityUser == null) {
@@ -168,7 +169,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
     }
 
     @Override
-    @OperationLog(operationType = OperationType.OTHER, title = "重置密码")
+    @OperationLog(operationType = OperationType.OTHER, title = LOG_USER_RESET_PASSWORD_TITLE_MSG, i18nKey = LOG_USER_RESET_PASSWORD_TITLE_I18N_KEY)
     public MxResult resetPassword(String id, Long lastModifyTime) throws Exception {
         SecurityUser securityUser = iSecurityUserDao.findById(id);
         if (securityUser == null) {
@@ -199,7 +200,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
     }
 
     @Override
-    @OperationLog(operationType = OperationType.CREATE, title = "添加人员角色")
+    @OperationLog(operationType = OperationType.CREATE, title = LOG_USER_ROLE_CREATE_TITLE_MSG, i18nKey = LOG_USER_ROLE_CREATE_TITLE_I18N_KEY)
     public MxResult roleCreate(String userId, String roleId) throws Exception {
         SecurityUserRole securityUserRole = iSecurityUserRoleDao.findByUserIdAndRoleIdAndClient(userId, roleId, config.client());
         if (securityUserRole != null) {
@@ -220,7 +221,7 @@ public class SecurityUserServiceImpl implements ISecurityUserService {
     }
 
     @Override
-    @OperationLog(operationType = OperationType.DELETE, title = "删除人员角色")
+    @OperationLog(operationType = OperationType.DELETE, title = LOG_USER_ROLE_DELETE_TITLE_MSG, i18nKey = LOG_USER_ROLE_DELETE_TITLE_I18N_KEY)
     public MxResult roleDelete(String[] ids) throws Exception {
         return MxResult.result(iSecurityUserRoleDao.deleteByIds(ids));
     }

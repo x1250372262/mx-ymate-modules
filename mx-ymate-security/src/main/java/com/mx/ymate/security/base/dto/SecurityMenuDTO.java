@@ -28,6 +28,9 @@ public class SecurityMenuDTO implements Serializable {
     private String name;
 
     @RequestParam
+    private String i18nKey;
+
+    @RequestParam
     private String icon;
 
     @RequestParam
@@ -70,6 +73,14 @@ public class SecurityMenuDTO implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getI18nKey() {
+        return i18nKey;
+    }
+
+    public void setI18nKey(String i18nKey) {
+        this.i18nKey = i18nKey;
     }
 
     public String getIcon() {
@@ -133,6 +144,7 @@ public class SecurityMenuDTO implements Serializable {
         return "SecurityMenuDTO{" +
                 "parentId='" + parentId + '\'' +
                 ", name='" + name + '\'' +
+                ", i18nKey='" + i18nKey + '\'' +
                 ", icon='" + icon + '\'' +
                 ", path='" + path + '\'' +
                 ", url='" + url + '\'' +

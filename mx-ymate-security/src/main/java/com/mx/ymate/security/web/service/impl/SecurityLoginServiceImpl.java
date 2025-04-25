@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.mx.ymate.security.I18nConstant.*;
 import static com.mx.ymate.security.base.code.SecurityCode.*;
 
 /**
@@ -60,7 +61,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     private final ISecurityConfig config = Security.get().getConfig();
 
     @Override
-    @OperationLog(operationType = OperationType.LOGIN, title = "管理员登录")
+    @OperationLog(operationType = OperationType.LOGIN, title = LOG_LOGIN_TITLE_MSG, i18nKey = LOG_LOGIN_TITLE_I18N_KEY)
     public MxResult login(String userName, String password) throws Exception {
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
         ILoginHandler loginHandler = config.loginHandlerClass();
@@ -140,7 +141,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     }
 
     @Override
-    @OperationLog(operationType = OperationType.LOGIN, title = "管理员扫码登录")
+    @OperationLog(operationType = OperationType.LOGIN, title = LOG_SCAN_LOGIN_TITLE_MSG, i18nKey = LOG_SCAN_LOGIN_TITLE_I18N_KEY)
     public MxResult scanLogin(SecurityUser securityUser) throws Exception {
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
         ILoginHandler loginHandler = config.loginHandlerClass();
@@ -183,7 +184,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     }
 
     @Override
-    @OperationLog(operationType = OperationType.OTHER, title = "解锁账号")
+    @OperationLog(operationType = OperationType.OTHER, title = LOG_UNLOCK_TITLE_MSG, i18nKey = LOG_UNLOCK_TITLE_I18N_KEY)
     public MxResult unlock(String id, String password) throws Exception {
         SecurityUser securityUser = iSecurityUserDao.findById(id, SecurityUser.FIELDS.PASSWORD, SecurityUser.FIELDS.SALT);
         password = DigestUtils.md5Hex(Base64.encodeBase64((password + securityUser.getSalt()).getBytes(StandardCharsets.UTF_8)));
@@ -195,7 +196,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     }
 
     @Override
-    @OperationLog(operationType = OperationType.OTHER, title = "锁定账号")
+    @OperationLog(operationType = OperationType.OTHER, title = LOG_LOCK_TITLE_MSG, i18nKey = LOG_LOCK_TITLE_I18N_KEY)
     public MxResult lock(String id) throws Exception {
         SaUtil.lock(id);
         return MxResult.ok();
@@ -211,7 +212,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     }
 
     @Override
-    @OperationLog(operationType = OperationType.LOGIN, title = "管理员退出")
+    @OperationLog(operationType = OperationType.LOGIN, title = LOG_LOGOUT_TITLE_MSG, i18nKey = LOG_LOGOUT_TITLE_I18N_KEY)
     @Clean
     public MxResult logout() throws Exception {
         Map<String, String> params = ServletUtil.getParamMap(WebContext.getRequest());
@@ -257,7 +258,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     }
 
     @Override
-    @OperationLog(operationType = OperationType.UPDATE, title = "修改管理员信息")
+    @OperationLog(operationType = OperationType.UPDATE, title = LOG_ADMIN_UPDATE_TITLE_MSG,i18nKey = LOG_ADMIN_UPDATE_TITLE_I18N_KEY)
     public MxResult update(SecurityLoginInfoBean securityLoginInfoBean) throws Exception {
         SecurityUser securityUser = iSecurityUserDao.findById(SaUtil.loginId());
         if (securityUser == null) {
@@ -274,7 +275,7 @@ public class SecurityLoginServiceImpl implements ISecurityLoginService {
     }
 
     @Override
-    @OperationLog(operationType = OperationType.UPDATE, title = "修改管理员密码")
+    @OperationLog(operationType = OperationType.UPDATE, title = LOG_ADMIN_UPDATE_PASSWORD_TITLE_MSG,i18nKey = LOG_ADMIN_UPDATE_PASSWORD_TITLE_I18N_KEY)
     public MxResult password(String oldPassword, String newPassword, String rePassword) throws Exception {
         if (!newPassword.equals(rePassword)) {
             return MxResult.create(SECURITY_USER_PASSWORD_NOT_SAME);

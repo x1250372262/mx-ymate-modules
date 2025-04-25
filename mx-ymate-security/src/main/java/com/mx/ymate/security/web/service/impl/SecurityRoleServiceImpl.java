@@ -36,6 +36,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.mx.ymate.security.I18nConstant.*;
+
 /**
  * @Author: mengxiang.
  * @Date 2025/04/24.
@@ -67,7 +69,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
     }
 
     @Override
-    @OperationLog(operationType = OperationType.CREATE, title = "添加角色")
+    @OperationLog(operationType = OperationType.CREATE, title = LOG_ROLE_CREATE_TITLE_MSG, i18nKey = LOG_ROLE_CREATE_TITLE_I18N_KEY)
     public MxResult create(SecurityRoleBean roleBean) throws Exception {
         String resourceId = StringUtils.defaultIfBlank(resourceHandler.buildResourceId(ResourceType.ROLE, SaUtil.loginId()), config.client());
         SecurityRole role = iSecurityRoleDao.findByClientAndResourceIdAndName(resourceId, config.client(), roleBean.getName());
@@ -87,7 +89,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
     }
 
     @Override
-    @OperationLog(operationType = OperationType.UPDATE, title = "修改角色")
+    @OperationLog(operationType = OperationType.UPDATE, title = LOG_ROLE_UPDATE_TITLE_MSG, i18nKey = LOG_ROLE_UPDATE_TITLE_I18N_KEY)
     public MxResult update(String id, Long lastModifyTime, SecurityRoleBean roleBean) throws Exception {
         String resourceId = StringUtils.defaultIfBlank(resourceHandler.buildResourceId(ResourceType.ROLE, SaUtil.loginId()), config.client());
         SecurityRole role = iSecurityRoleDao.findByClientAndResourceIdAndNameNotId(id, resourceId, config.client(), roleBean.getName());
@@ -115,7 +117,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
 
     @Override
     @Transaction
-    @OperationLog(operationType = OperationType.DELETE, title = "删除角色")
+    @OperationLog(operationType = OperationType.DELETE, title = LOG_ROLE_DELETE_TITLE_MSG, i18nKey = LOG_ROLE_DELETE_TITLE_I18N_KEY)
     public MxResult delete(String[] ids) throws Exception {
         iSecurityUserRoleDao.deleteByRoleIds(Arrays.asList(ids));
         return MxResult.result(iSecurityRoleDao.deleteByIds(ids));
@@ -142,7 +144,7 @@ public class SecurityRoleServiceImpl implements ISecurityRoleService {
 
     @Override
     @Transaction
-    @OperationLog(operationType = OperationType.OTHER, title = "角色权限绑定")
+    @OperationLog(operationType = OperationType.OTHER, title = LOG_ROLE_PERMISSION_BIND_TITLE_MSG, i18nKey = LOG_ROLE_PERMISSION_BIND_TITLE_I18N_KEY)
     public MxResult permissionBind(String id, String[] permissions) throws Exception {
         SecurityRole role = iSecurityRoleDao.findById(id);
         if (role == null) {

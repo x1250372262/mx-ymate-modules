@@ -119,10 +119,7 @@ public class I18nHelper {
         if(StringUtils.isBlank(key)){
             return null;
         }
-        String headerLanguage = WebContext.getRequest().getHeader(MX_DEV_CONFIG.i18nHeaderLanguage());
-        if (StringUtils.isBlank(headerLanguage)) {
-            return null;
-        }
+        String headerLanguage = StringUtils.defaultIfBlank(WebContext.getRequest().getHeader(MX_DEV_CONFIG.i18nHeaderLanguage()),MX_DEV_CONFIG.i18nDefaultLanguage());
         return get(headerLanguage, key);
     }
 

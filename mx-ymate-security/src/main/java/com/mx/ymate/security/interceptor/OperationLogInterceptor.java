@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.mx.ymate.dev.support.ip2region.IpRegionBean;
 import com.mx.ymate.dev.support.ip2region.IpRegionUtil;
 import com.mx.ymate.dev.support.mvc.MxResult;
+import com.mx.ymate.dev.support.mvc.i18n.I18nHelper;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.SaUtil;
 import com.mx.ymate.security.Security;
@@ -119,10 +120,10 @@ public class OperationLogInterceptor extends AbstractInterceptor {
         }
         SecurityOperationLog securityOperationLog = SecurityOperationLog.builder()
                 .id(UUIDUtils.UUID())
-                .title(operationLog.title())
+                .title(I18nHelper.getMsg(operationLog.i18nKey(),operationLog.title()))
                 .resourceId(resourceId)
                 .type(operationLog.operationType().name())
-                .typeName(operationLog.operationType().value())
+                .typeName(I18nHelper.getMsg(operationLog.operationType().i18nKey(),operationLog.operationType().value()))
                 .userId(userId)
                 .userName(userName)
                 .createTime(DateTimeUtils.currentTimeMillis())

@@ -17,7 +17,6 @@ import com.mx.ymate.security.base.model.SecurityMenu;
 import com.mx.ymate.security.base.vo.SecurityMenuListVO;
 import com.mx.ymate.security.base.vo.SecurityMenuNavVO;
 import com.mx.ymate.security.base.vo.SecurityMenuVO;
-import com.mx.ymate.security.base.vo.SecurityPermissionVO;
 import com.mx.ymate.security.web.dao.ISecurityMenuDao;
 import com.mx.ymate.security.web.service.ISecurityMenuService;
 import com.mx.ymate.security.web.service.ISecurityUserRoleService;
@@ -32,6 +31,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.mx.ymate.security.I18nConstant.*;
 import static com.mx.ymate.security.base.code.SecurityCode.SECURITY_MENU_HAS_CHILD_NOT_DELETE;
 
 
@@ -95,7 +95,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
         }
         resultSet.forEach(menuNavVO -> {
             SecurityMenuListVO treeVO = new SecurityMenuListVO();
-            treeVO.setText(I18nHelper.getMsg(menuNavVO.getI18nKey(),menuNavVO.getName()));
+            treeVO.setText(I18nHelper.getMsg(menuNavVO.getI18nKey(), menuNavVO.getName()));
             treeVO.setState("{ \"opened\" : false }");
             List<SecurityMenuNavVO> childrenCategory = allCategory.stream().filter(cs -> menuNavVO.getId().equals(cs.getPid())).collect(Collectors.toList());
             if (CollUtil.isNotEmpty(childrenCategory)) {
@@ -130,7 +130,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     }
 
     @Override
-    @OperationLog(operationType = OperationType.CREATE, title = "添加菜单")
+    @OperationLog(operationType = OperationType.CREATE, title = LOG_MENU_CREATE_TITLE_MSG, i18nKey = LOG_MENU_CREATE_TITLE_I18N_KEY)
     public MxResult create(SecurityMenuBean menuBean) throws Exception {
         SecurityMenu menu = BeanUtil.copy(menuBean, SecurityMenu::new);
         long time = System.currentTimeMillis();
@@ -146,7 +146,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     }
 
     @Override
-    @OperationLog(operationType = OperationType.UPDATE, title = "修改菜单")
+    @OperationLog(operationType = OperationType.UPDATE, title = LOG_MENU_UPDATE_TITLE_MSG, i18nKey = LOG_MENU_UPDATE_TITLE_I18N_KEY)
     public MxResult update(String id, SecurityMenuBean menuBean) throws Exception {
         SecurityMenu menu = iSecurityMenuDao.findById(id);
         if (menu == null) {
@@ -155,7 +155,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
         menu = BeanUtil.duplicate(menuBean, menu);
         menu.setLastModifyTime(System.currentTimeMillis());
         menu.setLastModifyUser(SaUtil.loginId());
-        menu = iSecurityMenuDao.update(menu, SecurityMenu.FIELDS.PARENT_ID, SecurityMenu.FIELDS.NAME, SecurityMenu.FIELDS.ICON,
+        menu = iSecurityMenuDao.update(menu, SecurityMenu.FIELDS.PARENT_ID, SecurityMenu.FIELDS.NAME, SecurityMenu.FIELDS.I18N_KEY, SecurityMenu.FIELDS.ICON,
                 SecurityMenu.FIELDS.PATH, SecurityMenu.FIELDS.URL, SecurityMenu.FIELDS.SORT, SecurityMenu.FIELDS.TYPE,
                 SecurityMenu.FIELDS.HIDE_STATUS, SecurityMenu.FIELDS.PERMISSION, SecurityMenu.FIELDS.LAST_MODIFY_TIME, SecurityMenu.FIELDS.LAST_MODIFY_USER);
         return MxResult.result(menu);
@@ -167,7 +167,7 @@ public class SecurityMenuServiceImpl implements ISecurityMenuService {
     }
 
     @Override
-    @OperationLog(operationType = OperationType.DELETE, title = "删除菜单")
+    @OperationLog(operationType = OperationType.DELETE, title = LOG_MENU_DELETE_TITLE_MSG, i18nKey = LOG_MENU_DELETE_TITLE_I18N_KEY)
     public MxResult delete(String id) throws Exception {
         SecurityMenu menu = iSecurityMenuDao.findByParentId(id, SecurityMenu.FIELDS.ID);
         if (menu != null) {

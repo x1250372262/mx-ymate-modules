@@ -1,5 +1,7 @@
 package com.mx.ymate.security.base.enums;
 
+import static com.mx.ymate.security.I18nConstant.*;
+
 /**
  * @Author: mengxiang.
  * @Date 2025/04/24.
@@ -11,60 +13,48 @@ public enum OperationType {
     /**
      * 未知
      */
-    UNKNOWN("未知"),
+    UNKNOWN(LOG_OPERATION_TYPE_UNKNOWN_MSG, LOG_OPERATION_TYPE_UNKNOWN_I18N_KEY),
 
     /**
      * 新增
      */
-    CREATE("新增"),
+    CREATE(LOG_OPERATION_TYPE_CREATE_MSG, LOG_OPERATION_TYPE_CREATE_I18N_KEY),
 
     /**
      * 修改
      */
-    UPDATE("修改"),
+    UPDATE(LOG_OPERATION_TYPE_UPDATE_MSG, LOG_OPERATION_TYPE_UPDATE_I18N_KEY),
 
     /**
      * 删除
      */
-    DELETE("删除"),
+    DELETE(LOG_OPERATION_TYPE_DELETE_MSG, LOG_OPERATION_TYPE_DELETE_I18N_KEY),
 
     /**
      * 其他
      */
-    OTHER("其他"),
+    OTHER(LOG_OPERATION_TYPE_OTHER_MSG, LOG_OPERATION_TYPE_OTHER_I18N_KEY),
 
     /**
      * 登录
      */
-    LOGIN("登录");
+    LOGIN(LOG_OPERATION_TYPE_LOGIN_MSG, LOG_OPERATION_TYPE_LOGIN_I18N_KEY);
 
     private final String value;
 
-    OperationType(String value) {
-        this.value = value;
-    }
+    private final String i18nKey;
 
-    public static OperationType valueTo(String value) {
-        switch (value) {
-            case "未知":
-                return UNKNOWN;
-            case "新增":
-                return CREATE;
-            case "修改":
-                return UPDATE;
-            case "删除":
-                return DELETE;
-            case "其他":
-                return OTHER;
-            case "登录":
-                return LOGIN;
-            default:
-                return null;
-        }
+    OperationType(String value, String i18nKey) {
+        this.value = value;
+        this.i18nKey = i18nKey;
     }
 
     public String value() {
         return this.value;
+    }
+
+    public String i18nKey() {
+        return this.i18nKey;
     }
 
 }

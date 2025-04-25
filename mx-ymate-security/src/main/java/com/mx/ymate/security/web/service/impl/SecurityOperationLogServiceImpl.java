@@ -20,6 +20,9 @@ import net.ymate.platform.core.beans.annotation.Inject;
 import net.ymate.platform.core.persistence.IResultSet;
 import org.apache.commons.lang3.StringUtils;
 
+import static com.mx.ymate.security.I18nConstant.LOG_OPERATION_LOG_DELETE_TITLE_I18N_KEY;
+import static com.mx.ymate.security.I18nConstant.LOG_OPERATION_LOG_DELETE_TITLE_MSG;
+
 /**
  * @Author: mengxiang.
  * @Date 2025/04/24.
@@ -48,7 +51,7 @@ public class SecurityOperationLogServiceImpl implements ISecurityOperationLogSer
     }
 
     @Override
-    @OperationLog(operationType = OperationType.DELETE, title = "删除日志")
+    @OperationLog(operationType = OperationType.DELETE, title = LOG_OPERATION_LOG_DELETE_TITLE_MSG,i18nKey = LOG_OPERATION_LOG_DELETE_TITLE_I18N_KEY)
     public MxResult delete(String[] ids) throws Exception {
         return MxResult.result(iSecurityOperationLogDao.deleteByIds(ids));
     }

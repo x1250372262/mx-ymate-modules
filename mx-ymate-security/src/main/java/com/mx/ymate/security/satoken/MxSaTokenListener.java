@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.mx.ymate.dev.code.Code;
 import com.mx.ymate.dev.support.ip2region.IpRegionBean;
 import com.mx.ymate.dev.support.ip2region.IpRegionUtil;
+import com.mx.ymate.dev.support.mvc.i18n.I18nHelper;
 import com.mx.ymate.security.ISecurityConfig;
 import com.mx.ymate.security.Security;
 import com.mx.ymate.security.base.enums.OperationType;
@@ -29,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static com.mx.ymate.security.I18nConstant.*;
 import static com.mx.ymate.security.base.config.SecurityConstants.LOG_EVENT_KEY;
 
 /**
@@ -54,7 +56,7 @@ public class MxSaTokenListener implements SaTokenListener {
         if (config.openLog()) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("code", Code.SUCCESS.code());
-            jsonObject.put("msg", "退出成功");
+            jsonObject.put("msg", I18nHelper.getMsg(LOG_LOGOUT_SUCCESS_I18N_KEY, LOG_LOGOUT_SUCCESS_MSG));
             try {
                 SecurityUser securityUser = iSecurityUserDao.findById(Convert.toStr(loginId));
                 HttpServletRequest request = WebContext.getRequest();
@@ -63,10 +65,10 @@ public class MxSaTokenListener implements SaTokenListener {
                 SecurityOperationLog securityOperationLog = SecurityOperationLog.builder()
                         .id(UUIDUtils.UUID())
                         .resourceId(securityUser.getResourceId())
-                        .title("管理员退出")
+                        .title(I18nHelper.getMsg(LOG_LOGOUT_TITLE_I18N_KEY, LOG_LOGOUT_TITLE_MSG))
                         .client(config.client())
                         .type(OperationType.LOGIN.name())
-                        .typeName(OperationType.LOGIN.value())
+                        .typeName(I18nHelper.getMsg(OperationType.LOGIN.i18nKey(), OperationType.LOGIN.value()))
                         .userId(Convert.toStr(loginId))
                         .userName(StringUtils.defaultIfBlank(securityUser.getRealName(), securityUser.getUserName()))
                         .createTime(DateTimeUtils.currentTimeMillis())

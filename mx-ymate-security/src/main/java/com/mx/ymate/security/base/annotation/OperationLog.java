@@ -2,6 +2,7 @@ package com.mx.ymate.security.base.annotation;
 
 
 import com.mx.ymate.security.base.enums.OperationType;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.annotation.*;
 
@@ -17,9 +18,15 @@ import java.lang.annotation.*;
 public @interface OperationLog {
 
     /**
-     * 模块
+     * 标题
      */
-    String title() default "";
+    String title() default StringUtils.EMPTY;
+
+    /**
+     * i18nKey
+     * @return
+     */
+    String i18nKey() default StringUtils.EMPTY;
 
     /**
      * 功能
