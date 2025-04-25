@@ -25,11 +25,6 @@ public class I18nHelper {
      */
     private static final Map<String, Map<String, String>> I18N_MAP = new ConcurrentHashMap<>();
 
-    /**
-     * 请求头语言
-     */
-    private static String headerLanguage = "";
-
     private final static IMxDevConfig MX_DEV_CONFIG = MxDev.get().getConfig();
 
     /**
