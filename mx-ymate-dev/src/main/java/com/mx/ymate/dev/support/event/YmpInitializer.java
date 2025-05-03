@@ -36,7 +36,7 @@ public class YmpInitializer implements IEventRegister {
 
     public YmpInitializer() {
         LOG.info("初始化启动事件");
-        List<Class<?>> classList = findClass();
+        Set<Class<?>> classList = findClass();
         // 遍历所有的类
         for (Class<?> clazz : classList) {
             // 检查每个类是否有 @Initializer 注解
@@ -57,8 +57,8 @@ public class YmpInitializer implements IEventRegister {
         }
     }
 
-    private List<Class<?>> findClass() {
-        List<Class<?>> classList = new ArrayList<>();
+    private Set<Class<?>> findClass() {
+        Set<Class<?>> classList = new HashSet<>(Collections.emptySet());
         List<String> packageList = ListUtil.toList("com.mx");
         if (StringUtils.isNotBlank(PACKAGES)) {
             String[] packageArr = PACKAGES.split("\\|");
@@ -66,6 +66,7 @@ public class YmpInitializer implements IEventRegister {
                 packageList.addAll(Arrays.asList(packageArr));
             }
         }
+
         for (String packageName : packageList) {
             Set<Class<?>> classSet = ClassUtil.scanPackageBySuper(packageName, IYmpInitializer.class);
             classList.addAll(classSet);
