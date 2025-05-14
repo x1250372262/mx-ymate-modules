@@ -15,6 +15,7 @@
  */
 package com.mx.ymate.netty;
 
+import com.mx.ymate.netty.impl.NettyClient;
 import io.netty.channel.ChannelHandlerContext;
 import net.ymate.platform.core.IApplication;
 import net.ymate.platform.core.beans.annotation.Ignored;
@@ -86,7 +87,32 @@ public interface INetty extends IInitialization<IApplication>, IDestroyable {
      *
      * @throws Exception
      */
-    void stoptAll() throws Exception;
+    void stopAll() throws Exception;
+
+    /**
+     * 连接服务
+     *
+     * @param context
+     * @throws Exception
+     */
+    void connect(ChannelHandlerContext context) throws Exception;
+
+    /**
+     * 连接服务
+     *
+     * @param remoteAddress
+     * @throws Exception
+     */
+    void connect(NettyClient.RemoteAddress remoteAddress) throws Exception;
+
+    /**
+     * 连接服务
+     *
+     * @param
+     * @throws Exception
+     */
+    void connect() throws Exception;
+
 
     /**
      * 启动websocket服务
@@ -101,13 +127,5 @@ public interface INetty extends IInitialization<IApplication>, IDestroyable {
      * @throws Exception
      */
     void stopWebSocketServer() throws Exception;
-
-    /**
-     * 连接服务
-     *
-     * @param context
-     * @throws Exception
-     */
-    void connect(ChannelHandlerContext context) throws Exception;
 
 }

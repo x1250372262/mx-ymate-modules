@@ -213,7 +213,7 @@ public final class Netty implements IModule, INetty {
     }
 
     @Override
-    public void stoptAll() {
+    public void stopAll() {
         if (nettyClient != null) {
             nettyClient.stop();
         }
@@ -242,6 +242,16 @@ public final class Netty implements IModule, INetty {
         InetSocketAddress ipSocket = (InetSocketAddress) context.channel().remoteAddress();
         int port = ipSocket.getPort();
         String host = ipSocket.getHostString();
-        nettyClient.connect(new NettyClient.RemoteAddress(host, port));
+        connect(new NettyClient.RemoteAddress(host, port));
+    }
+
+    @Override
+    public void connect(NettyClient.RemoteAddress remoteAddress) throws Exception {
+        nettyClient.connect(remoteAddress);
+    }
+
+    @Override
+    public void connect() throws Exception {
+        nettyClient.connect();
     }
 }

@@ -94,8 +94,11 @@ public class NettyClient {
                     }
                 });
 
-        connect();
-
+        int clientNum = config.clientNum();
+        if(clientNum <= 0){
+            return;
+        }
+        connect(clientNum);
     }
 
     public void connect(RemoteAddress remoteAddress) throws Exception {
@@ -118,22 +121,22 @@ public class NettyClient {
         });
     }
 
-    private void connect() {
-        int clientNum = config.clientNum();
-        if(clientNum <= 0){
-            return;
+    public void connect() {
+        //启动客户端去连接服务器端
+        for (RemoteAddress remoteAddress : remoteAddressesList) {
+            ThreadUtil.execAsync(() -> {
+                try {
+                    connect(remoteAddress);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
+    }
+
+    public void connect(int clientNum) {
        for(int clientIndex = 0; clientIndex < clientNum; clientIndex++){
-           //启动客户端去连接服务器端
-           for (RemoteAddress remoteAddress : remoteAddressesList) {
-               ThreadUtil.execAsync(() -> {
-                   try {
-                       connect(remoteAddress);
-                   } catch (Exception e) {
-                       throw new RuntimeException(e);
-                   }
-               });
-           }
+           connect();
        }
     }
 
