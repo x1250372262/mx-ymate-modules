@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <title>登录</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <script type="text/javascript" src="/statics/js/custom/login_base.js"></script>
+    <style>
+        .login-box {
+            background-color: rgba(255, 255, 255, .25);
+        }
+
+        .login-box p:last-child {
+            margin-bottom: 0px;
+        }
+
+        .login-form .form-control {
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+
+        .login-form .has-feedback {
+            position: relative;
+        }
+
+        .login-form .has-feedback .form-control {
+            padding-left: 36px;
+        }
+
+        .login-form .has-feedback .mdi {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: auto;
+            width: 36px;
+            height: 36px;
+            line-height: 36px;
+            z-index: 4;
+            color: #dcdcdc;
+            display: block;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .login-form .has-feedback.row .mdi {
+            left: 15px;
+        }
+
+        .login-form .form-control::-webkit-input-placeholder {
+            color: rgba(255, 255, 255, .8);
+        }
+
+        .login-form .form-control:-moz-placeholder {
+            color: rgba(255, 255, 255, .8);
+        }
+
+        .login-form .form-control::-moz-placeholder {
+            color: rgba(255, 255, 255, .8);
+        }
+
+        .login-form .form-control:-ms-input-placeholder {
+            color: rgba(255, 255, 255, .8);
+        }
+
+        .login-form .custom-control-label::before {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .help-block {color: red;!important;}
+    </style>
+</head>
+
+<body class="center-vh" style="background-image: url(/statics/images/login_bg.jpg); background-size: cover;">
+
+<div class="login-box p-5 w-420 mb-0 mr-2 ml-2">
+    <div class="text-center mb-3">
+        <h3 style="color: #FFFFFF;margin-bottom: 30px;">后台管理系统</h3>
+        <!--        <a href="change_info.html"> <img alt="light year admin" src="images/logo-sidebar.png"> </a>-->
+    </div>
+    <form action="" id="loginForm" method="post" class="login-form">
+
+        <div class="mb-3 has-feedback mx_validator">
+            <span class="mdi mdi-account" aria-hidden="true"></span>
+            <input type="text" class="form-control mx_validator mx_required" mx_required_msg="用户名不能为空"
+                   id="userName" name="userName" placeholder="用户名">
+        </div>
+
+        <div class="mb-3 has-feedback mx_validator" >
+            <span class="mdi mdi-lock" aria-hidden="true"></span>
+            <input type="password" class="form-control mx_required" mx_required_msg="密码不能为空" id="password"
+                   name="password" placeholder="密码">
+        </div>
+
+        <div class="mb-3" >
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="jizhu">
+                <label class="custom-control-label not-user-select text-white" for="jizhu">记住用户名,密码</label>
+            </div>
+        </div>
+
+        <div class="mb-3 d-grid">
+            <button class="btn btn-block btn-primary mx_validator_button" id="loginSubmit" type="button">立即登录
+            </button>
+        </div>
+    </form>
+    <p class="text-center text-white">Copyright © 2022 <a target="_blank" href="#">梦祥网络</a>. All right reserved</p>
+</div>
+
+</body>
+</html>

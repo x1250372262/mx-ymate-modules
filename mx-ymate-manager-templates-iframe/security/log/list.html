@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <title>操作日志</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <script src="/statics/js/custom/base.js?_V=1"></script>
+</head>
+
+<body>
+<div class="container-fluid">
+
+    <!--详情-->
+    <div class="modal fade bs-example-modal-lg" id="detail" tabindex="-1" role="dialog"
+         aria-labelledby="myLargeModalLabel" data-backdrop="static">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">日志详情</h6>
+                    <div class="float-right">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3 col-md-12">
+                        <label for="title" class="form-label">标题</label>
+                        <input type="text" class="form-control" id="title" name="title" readonly/>
+                    </div>
+                    <div class="mb-3 col-md-12">
+                        <label for="typeName" class="form-label">类型名称</label>
+                        <input type="text" class="form-control" id="typeName" name="typeName" readonly/>
+                    </div>
+                    <div class="mb-3 col-md-12">
+                        <label for="userName" class="form-label">操作人名称</label>
+                        <input type="text" class="form-control" id="userName" name="userName" readonly/>
+                    </div>
+                    <div class="mb-3 col-md-12">
+                        <label for="createTime" class="form-label">创建时间</label>
+                        <input type="text" class="form-control times" id="createTime" name="createTime" readonly/>
+                    </div>
+                    <div class="mb-3 col-md-12">
+                        <label for="requestUrl" class="form-label">请求路径</label>
+                        <input type="text" class="form-control" id="requestUrl" name="requestUrl" readonly/>
+                    </div>
+                    <div class="mb-3 col-md-12">
+                        <label for="requestParam" class="form-label">请求参数</label>
+                        <textarea id="requestParam" name="requestParam" class="form-control" style="height: 100px;" readonly></textarea>
+                    </div>
+                    <div class="mb-3 col-md-12">
+                        <label for="returnCode" class="form-label">返回错误码</label>
+                        <input type="text" class="form-control" id="returnCode" name="returnCode" readonly/>
+                    </div>
+                    <div class="mb-3 col-md-12">
+                        <label for="returnMessage" class="form-label">返回错误信息</label>
+                        <input id="returnMessage" name="returnMessage" class="form-control" readonly/>
+                    </div>
+                    <div class="mb-3 col-md-12">
+                        <label for="returnResult" class="form-label">返回结果</label>
+                        <textarea id="returnResult" name="returnResult" class="form-control" style="height: 100px;" readonly></textarea>
+                    </div>
+                    <div class="mb-3 col-md-12">
+                        <label for="className" class="form-label">类名称</label>
+                        <input type="text" class="form-control" id="className" name="className" readonly/>
+                    </div>
+                    <div class="mb-3 col-md-12">
+                        <label for="methodName" class="form-label">方法名</label>
+                        <input type="text" class="form-control" id="methodName" name="methodName" readonly/>
+                    </div>
+                    <div class="mb-3 col-md-12">
+                        <label for="ip" class="form-label">ip地址</label>
+                        <input type="text" class="form-control" id="ip" name="ip" readonly/>
+                    </div>
+                    <div class="mb-3 col-md-12">
+                        <label for="location" class="form-label">位置</label>
+                        <input type="text" class="form-control" id="location" name="location" readonly/>
+                    </div>
+                    <div class="mb-3-group col-md-12">
+                        <label for="os" class="form-label">操作系统</label>
+                        <input type="text" class="form-control" id="os" name="os" readonly/>
+                    </div>
+                    <div class="mb-3 col-md-12">
+                        <label for="browser" class="form-label">浏览器</label>
+                        <input type="text" class="form-control" id="browser" name="browser" readonly/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <header class="card-header">
+                    <div class="card-title">操作日志</div>
+                </header>
+                <div class="card-body">
+                    <div class="mb-3 rowd-flex justify-content-between align-items-center">
+                        <form class="row row-cols-lg-auto g-3 align-items-center" id="searchForm">
+                            <div class="col-12 mb-1">
+                                <input class="form-control" type="text" name="title" placeholder="请输入标题..">
+                            </div>
+                            <div class="col-12 mb-1">
+                                <div class="input-group">
+                                    <input class="form-control  js-datetimepicker times" dateType="day" autocomplete="off" data-date-format="yyyy-mm-dd"
+                                           type="text" name="startTime" value="" placeholder="开始时间">
+                                    <span class="input-group-text">~</span>
+                                    <input class="form-control  js-datetimepicker times end" dateType="day" autocomplete="off" data-date-format="yyyy-mm-dd"
+                                           type="text" name="endTime" value="" placeholder="结束时间">
+                                </div>
+                            </div>
+                            <a class="btn btn-primary mb-1 me-2" id="searchButton"><i class="mdi mdi-magnify"></i> 搜索</a>
+                            <a class="btn btn-secondary mb-1 me-2" id="resetButton"><i class="mdi mdi-delete"></i> 重置查询</a>
+                        </form>
+                    </div>
+
+                    <div id="toolbar" class="toolbar-btn-action mb-3">
+                        <button class="btn btn-danger mb-1 me-2 deleteAll">
+                            <i class="mdi mdi-window-close"></i>
+                            删除</button>
+                    </div>
+
+                    <table id="tableAjaxId">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript" src="/statics/js/apis/log.js"></script>
+<script type="text/javascript" src="/statics/js/custom/table.js?_v=1"></script>
+<script type="text/javascript">
+
+    $(function () {
+        Table.builder()
+            .listUrl(LOG_LIST)
+            .detailUrl(LOG_DETAIL)
+            .deleteUrl(LOG_DELETE)
+            .showColumns(true)
+            .init();
+    });
+
+    columns = [
+        {
+            checkbox: true, // 显示一个勾选框
+            align: 'center' // 居中显示
+        }, {
+            field: 'title',
+            title: '标题',
+            align: 'center',
+            valign: 'middle'
+        }, {
+            field: 'returnCode',
+            title: '状态',
+            align: 'center',
+            valign: 'middle',
+            formatter: function (value, row, index) { // 单元格格式化函数
+                if(value === "00000"){
+                    return "<span style='color:green'>成功</span>";
+                }else{
+                    return "<span style='color:red'>失败</span>";
+                }
+            }
+        }, {
+            field: 'typeName',
+            title: '类型',
+            align: 'center',
+            valign: 'middle'
+        }, {
+            field: 'userName',
+            title: '操作人',
+            align: 'center',
+            valign: 'middle'
+        }, {
+            field: 'requestUrl',
+            title: '请求路径',
+            align: 'center',
+            valign: 'middle',
+            formatter: function (value, row, index) { // 单元格格式化函数
+                return Table.moreText(value);
+            }
+        }, {
+            field: 'ip',
+            title: 'ip地址',
+            align: 'center',
+            valign: 'middle'
+        }, {
+            field: 'location',
+            title: '位置',
+            align: 'center',
+            valign: 'middle'
+        }, {
+            field: 'createTime',
+            title: '创建时间',
+            align: 'center',
+            valign: 'middle',
+            formatter: function (value, row, index) { // 单元格格式化函数
+                return DateUtil.changeDateToString(value);
+            }
+        }, {
+            title: "操作",
+            align: 'center',
+            valign: 'middle',
+            width: 160, // 定义列的宽度，单位为像素px
+            formatter: option
+        }
+    ]
+
+    function option(value, row, index) {
+        return '<a class="btn btn-sm btn-default detail me-1" data-bs-toggle="modal" data-bs-target="#detail" dataId="' + row.id + '"  title="详情" >详情</a>' +
+            '<a class="btn btn-sm btn-default deletes" dataId="' + row.id + '"  title="删除" >删除</a>';
+
+    }
+</script>
+</body>
+</html>
