@@ -15,7 +15,11 @@
  */
 package com.mx.ymate.netty;
 
-import com.mx.ymate.netty.impl.NettyClient;
+import com.mx.ymate.netty.bean.ClientContext;
+import com.mx.ymate.netty.bean.RemoteAddress;
+import com.mx.ymate.netty.manager.NettyClientManager;
+import com.mx.ymate.netty.manager.NettyServerManager;
+import com.mx.ymate.netty.manager.NettyWebsocketManager;
 import io.netty.channel.ChannelHandlerContext;
 import net.ymate.platform.core.IApplication;
 import net.ymate.platform.core.beans.annotation.Ignored;
@@ -48,84 +52,21 @@ public interface INetty extends IInitialization<IApplication>, IDestroyable {
     INettyConfig getConfig();
 
     /**
-     * 启动服务端
-     *
-     * @throws Exception
+     * 获取服务端管理对象
+     * @return
      */
-    void startServer() throws Exception;
+    NettyServerManager serverManager();
 
     /**
-     * 启动客户端
-     *
-     * @throws Exception
+     * 获取客户端管理对象
+     * @return
      */
-    void startClient() throws Exception;
+    NettyClientManager clientManager();
 
     /**
-     * 启动客户端和服务端
-     *
-     * @throws Exception
+     * 获取websocket管理对象
+     * @return
      */
-    void startAll() throws Exception;
-
-    /**
-     * 停止服务端
-     *
-     * @throws Exception
-     */
-    void stopServer() throws Exception;
-
-    /**
-     * 停止客户端
-     *
-     * @throws Exception
-     */
-    void stopClient() throws Exception;
-
-    /**
-     * 停止客户端和服务端
-     *
-     * @throws Exception
-     */
-    void stopAll() throws Exception;
-
-    /**
-     * 连接服务
-     *
-     * @param context
-     * @throws Exception
-     */
-    void connect(ChannelHandlerContext context) throws Exception;
-
-    /**
-     * 连接服务
-     *
-     * @param remoteAddress
-     * @throws Exception
-     */
-    void connect(NettyClient.RemoteAddress remoteAddress) throws Exception;
-
-    /**
-     * 连接服务
-     *
-     * @param
-     * @throws Exception
-     */
-    void connect() throws Exception;
-
-
-    /**
-     * 启动websocket服务
-     *
-     * @throws Exception
-     */
-    void startWebSocketServer() throws Exception;
-
-    /**
-     * 停止websocket服务
-     *
-     * @throws Exception
-     */
-    void stopWebSocketServer() throws Exception;
+    NettyWebsocketManager websocketManager();
 
 }

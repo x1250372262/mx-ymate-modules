@@ -2,6 +2,7 @@ package com.mx.ymate.dev.util;
 
 import net.ymate.platform.commons.lang.BlurObject;
 import net.ymate.platform.commons.util.ClassUtils;
+import net.ymate.platform.core.configuration.impl.MapSafeConfigReader;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -154,5 +155,9 @@ public class ConfigUtil {
 
     public boolean contains(String key) {
         return configMap.containsKey(key);
+    }
+
+    public Map<String, String> getMap(String keyHead) {
+        return MapSafeConfigReader.keyStartsWith(configMap, keyHead);
     }
 }

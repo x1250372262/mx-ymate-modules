@@ -15,21 +15,21 @@
  */
 package com.mx.ymate.netty.impl;
 
-import cn.hutool.core.util.ObjectUtil;
 import com.mx.ymate.dev.util.ConfigUtil;
-import com.mx.ymate.netty.AbstractHeartBeatHandler;
 import com.mx.ymate.netty.INetty;
 import com.mx.ymate.netty.INettyConfig;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import net.ymate.platform.commons.util.ClassUtils;
+import com.mx.ymate.netty.bean.ClientConfig;
+import com.mx.ymate.netty.bean.ServerConfig;
+import com.mx.ymate.netty.bean.WebsocketConfig;
+import net.ymate.platform.core.configuration.IConfigReader;
+import net.ymate.platform.core.configuration.impl.MapSafeConfigReader;
 import net.ymate.platform.core.module.IModuleConfigurer;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.mx.ymate.dev.constants.Constants.XG;
+import java.util.Map;
 
 /**
  * @Author: mengxiang.
@@ -40,33 +40,15 @@ import static com.mx.ymate.dev.constants.Constants.XG;
 public final class DefaultNettyConfig implements INettyConfig {
 
     private boolean enabled;
-    private Boolean autoStart;
-    private String client;
-
-    private Integer serverPort;
-    private Integer serverStartPort;
-    private Integer serverEndPort;
-    private List<String> serverExcludePort;
-    private List<Integer> serverHeartBeatTimeList;
-    private AbstractHeartBeatHandler serverHeart;
-    private final List<ChannelInboundHandlerAdapter> serverHandler = new ArrayList<>();
-    private String serverDecoderClassName;
-
-    private Integer clientNum;
-    private List<String> clientRemoteAddress;
-    private List<Integer> clientHeartBeatTimeList;
-    private AbstractHeartBeatHandler clientHeart;
-    private final List<ChannelInboundHandlerAdapter> clientHandler = new ArrayList<>();
-    private String clientDecoderClassName;
-
-    private boolean websocketEnabled;
-    private int websocketPort;
-    private List<Integer> websocketHeartBeatTimeList;
-    private AbstractHeartBeatHandler websocketHeart;
-    private String websocketMapping;
-    private String websocketPackage;
-
-
+    private final Map<String, String> SERVER_NAME_ADDRESS_MAP = new HashMap<>();
+    private final Map<String, ServerConfig> SERVER_CONFIG_MAP = new HashMap<>();
+    private final List<ServerConfig> serverConfigList = new ArrayList<>();
+    private final Map<String, ClientConfig> CLIENT_CONFIG_MAP = new HashMap<>();
+    private final List<ClientConfig> clientConfigList = new ArrayList<>();
+    private WebsocketConfig websocketConfig;
+    private boolean serverAutoInit;
+    private boolean clientAutoInit;
+    private boolean websocketAutoInit;
     private boolean initialized;
 
 
@@ -79,69 +61,65 @@ public final class DefaultNettyConfig implements INettyConfig {
     }
 
     private DefaultNettyConfig(IModuleConfigurer moduleConfigurer) {
-        ConfigUtil configUtil = new ConfigUtil(moduleConfigurer.getConfigReader().toMap());
+        //对于不能自动装配的参数进行设置
+        IConfigReader configReader = moduleConfigurer.getConfigReader();
+        ConfigUtil configUtil = new ConfigUtil(configReader.toMap());
         enabled = configUtil.getBool(ENABLED, true);
-        autoStart = configUtil.getBool(AUTO_START, true);
-        client = configUtil.getString(CLIENT, "all");
-        serverPort = configUtil.getInteger(SERVER_PORT);
-        serverStartPort = configUtil.getInteger(SERVER_START_PORT);
-        serverEndPort = configUtil.getInteger(SERVER_END_PORT);
-        serverExcludePort = ObjectUtil.defaultIfNull(configUtil.getList(SERVER_EXCLUDE_PORT), new ArrayList<>());
-        List<String> heartBeatTimeTempList = ObjectUtil.defaultIfNull(configUtil.getList(SERVER_HEART_BEAT_TIME), new ArrayList<>());
-        if (heartBeatTimeTempList.size() == HEART_BEAT_TIME_ITEM_COUNT) {
-            serverHeartBeatTimeList = heartBeatTimeTempList.stream()
-                    .map(Integer::valueOf)
-                    .collect(Collectors.toList());
-        }
-        serverHeart = configUtil.getClassImpl(SERVER_HEART_BEAT_CLASS, AbstractHeartBeatHandler.class);
-        if (serverHeart == null) {
-            serverHeart = new AbstractHeartBeatHandler.DefaultServerHeartImpl();
-        }
-        List<String> serverHandlerClassNameList = ObjectUtil.defaultIfNull(configUtil.getList(SERVER_HANDLER_CLASS), new ArrayList<>());
-        if (!serverHandlerClassNameList.isEmpty()) {
-            for (String className : serverHandlerClassNameList) {
-                serverHandler.add(ClassUtils.impl(className, ChannelInboundHandlerAdapter.class, this.getClass()));
-            }
-        }
-        serverDecoderClassName = configUtil.getString(SERVER_DECODER_CLASS);
-        clientNum = configUtil.getInteger(CLIENT_NUM, 1);
-        clientRemoteAddress = ObjectUtil.defaultIfNull(configUtil.getList(CLIENT_REMOTE_ADDRESS), new ArrayList<>());
-        heartBeatTimeTempList = ObjectUtil.defaultIfNull(configUtil.getList(CLIENT_HEART_BEAT_TIME), new ArrayList<>());
-        if (heartBeatTimeTempList.size() == HEART_BEAT_TIME_ITEM_COUNT) {
-            clientHeartBeatTimeList = heartBeatTimeTempList.stream()
-                    .map(Integer::valueOf)
-                    .collect(Collectors.toList());
-        }
-        clientHeart = configUtil.getClassImpl(CLIENT_HEART_BEAT_CLASS, AbstractHeartBeatHandler.class);
-        if (clientHeart == null) {
-            clientHeart = new AbstractHeartBeatHandler.DefaultClientHeartImpl();
-        }
-        List<String> clientHandlerClassNameList = ObjectUtil.defaultIfNull(configUtil.getList(CLIENT_HANDLER_CLASS), new ArrayList<>());
-        if (!clientHandlerClassNameList.isEmpty()) {
-            for (String className : clientHandlerClassNameList) {
-                clientHandler.add(ClassUtils.impl(className, ChannelInboundHandlerAdapter.class, this.getClass()));
-            }
-        }
-        clientDecoderClassName = configUtil.getString(CLIENT_DECODER_CLASS);
-
-        websocketEnabled = configUtil.getBool(WEBSOCKET_ENABLED, false);
-        websocketPort = configUtil.getInt(WEBSOCKET_PORT, 8756);
-        heartBeatTimeTempList = ObjectUtil.defaultIfNull(configUtil.getList(WEBSOCKET_HEART_BEAT_TIME), new ArrayList<>());
-        if (heartBeatTimeTempList.size() == HEART_BEAT_TIME_ITEM_COUNT) {
-            websocketHeartBeatTimeList = heartBeatTimeTempList.stream()
-                    .map(Integer::valueOf)
-                    .collect(Collectors.toList());
-        }
-        websocketHeart = configUtil.getClassImpl(WEBSOCKET_HEART_BEAT_CLASS, AbstractHeartBeatHandler.class);
-        if (websocketHeart == null) {
-            websocketHeart = new AbstractHeartBeatHandler.DefaultWebsocketHeartImpl();
-        }
-        websocketMapping = configUtil.getString(WEBSOCKET_MAPPING, "/websocket");
-        if (!websocketMapping.startsWith(XG)) {
-            websocketMapping = XG + websocketMapping;
-        }
-        websocketPackage = configUtil.getString(WEBSOCKET_PACKAGE);
+        serverAutoInit = configUtil.getBool(ServerConfig.AUTO_INIT, false);
+        clientAutoInit = configUtil.getBool(ClientConfig.AUTO_INIT, false);
+        websocketAutoInit = configUtil.getBool(WebsocketConfig.AUTO_INIT, false);
+        buildServerConfigList(configUtil);
+        buildClientConfigList(configUtil);
+        websocketConfig = WebsocketConfig.buildConfig(configUtil);
     }
+
+    /**
+     * 构建服务端配置
+     *
+     * @param allConfigUtil
+     */
+    private void buildServerConfigList(ConfigUtil allConfigUtil) {
+        String[] nameList = StringUtils.split(allConfigUtil.getString(ServerConfig.NAME, DEFAULT_NAME), "|");
+        for (String name : nameList) {
+            if (SERVER_CONFIG_MAP.containsKey(name)) {
+                throw new IllegalArgumentException("重复的Netty 服务端配置名称: " + name);
+            }
+            Map<String, String> configMap = allConfigUtil.getMap(String.format("server.%s.", name));
+            if (configMap.isEmpty()) {
+                continue;
+            }
+            IConfigReader configReader = MapSafeConfigReader.bind(configMap);
+            ConfigUtil configUtil = new ConfigUtil(configReader.toMap());
+            ServerConfig serverConfig = ServerConfig.buildConfig(name, configUtil);
+            SERVER_NAME_ADDRESS_MAP.put(serverConfig.getHost() + serverConfig.getPort(), name);
+            SERVER_CONFIG_MAP.put(name, serverConfig);
+            serverConfigList.add(serverConfig);
+        }
+    }
+
+    /**
+     * 构建客户端配置
+     *
+     * @param allConfigUtil
+     */
+    private void buildClientConfigList(ConfigUtil allConfigUtil) {
+        String[] nameList = StringUtils.split(allConfigUtil.getString(ClientConfig.NAME, DEFAULT_NAME), "|");
+        for (String name : nameList) {
+            if (CLIENT_CONFIG_MAP.containsKey(name)) {
+                throw new IllegalArgumentException("重复的Netty 客户端配置名称: " + name);
+            }
+            Map<String, String> configMap = allConfigUtil.getMap(String.format("client.%s.", name));
+            if (configMap.isEmpty()) {
+                continue;
+            }
+            IConfigReader configReader = MapSafeConfigReader.bind(configMap);
+            ConfigUtil configUtil = new ConfigUtil(configReader.toMap());
+            ClientConfig clientConfig = ClientConfig.buildConfig(name, configUtil);
+            CLIENT_CONFIG_MAP.put(name, clientConfig);
+            clientConfigList.add(clientConfig);
+        }
+    }
+
 
     @Override
     public void initialize(INetty owner) throws Exception {
@@ -161,119 +139,48 @@ public final class DefaultNettyConfig implements INettyConfig {
     }
 
     @Override
-    public Boolean autoStart() {
-        return autoStart;
+    public boolean serverAutoInit() {
+        return serverAutoInit;
     }
 
     @Override
-    public String client() {
-        return client;
+    public boolean clientAutoInit() {
+        return clientAutoInit;
     }
 
     @Override
-    public Integer serverPort() {
-        return serverPort;
+    public boolean websocketAutoInit() {
+        return websocketAutoInit;
     }
 
     @Override
-    public Integer serverStartPort() {
-        return serverStartPort;
+    public String getServerName(String address) {
+        return SERVER_NAME_ADDRESS_MAP.get(address);
     }
 
     @Override
-    public Integer serverEndPort() {
-        return serverEndPort;
+    public List<ServerConfig> serverConfigList() {
+        return serverConfigList;
     }
 
     @Override
-    public List<Integer> serverHeartBeatTimeList() {
-        return serverHeartBeatTimeList;
+    public ServerConfig serverConfig(String serverName) {
+        return SERVER_CONFIG_MAP.get(serverName);
     }
 
     @Override
-    public AbstractHeartBeatHandler serverHeart() {
-        return serverHeart;
+    public List<ClientConfig> clientConfigList() {
+        return clientConfigList;
     }
 
     @Override
-    public List<String> serverExcludePort() {
-        return serverExcludePort;
+    public ClientConfig clientConfig(String clientName) {
+        return CLIENT_CONFIG_MAP.get(clientName);
     }
 
     @Override
-    public List<ChannelInboundHandlerAdapter> serverHandler() {
-        return serverHandler;
-    }
-
-    @Override
-    public ChannelInboundHandlerAdapter serverDecoder() {
-        if (StringUtils.isNotBlank(serverDecoderClassName)) {
-            return ClassUtils.impl(serverDecoderClassName, ChannelInboundHandlerAdapter.class, this.getClass());
-        }
-        return null;
-    }
-
-    @Override
-    public Integer clientNum() {
-        return clientNum;
-    }
-
-    @Override
-    public List<String> clientRemoteAddress() {
-        return clientRemoteAddress;
-    }
-
-    @Override
-    public List<Integer> clientHeartBeatTimeList() {
-        return clientHeartBeatTimeList;
-    }
-
-    @Override
-    public AbstractHeartBeatHandler clientHeart() {
-        return clientHeart;
-    }
-
-    @Override
-    public List<ChannelInboundHandlerAdapter> clientHandler() {
-        return clientHandler;
-    }
-
-    @Override
-    public ChannelInboundHandlerAdapter clientDecoder() {
-        if (StringUtils.isNotBlank(clientDecoderClassName)) {
-            return ClassUtils.impl(clientDecoderClassName, ChannelInboundHandlerAdapter.class, this.getClass());
-        }
-        return null;
-    }
-
-    @Override
-    public boolean websocketEnabled() {
-        return websocketEnabled;
-    }
-
-    @Override
-    public int websocketPort() {
-        return websocketPort;
-    }
-
-    @Override
-    public List<Integer> websocketHeartBeatTimeList() {
-        return websocketHeartBeatTimeList;
-    }
-
-    @Override
-    public AbstractHeartBeatHandler websocketHeart() {
-        return websocketHeart;
-    }
-
-    @Override
-    public String websocketMapping() {
-        return websocketMapping;
-    }
-
-    @Override
-    public String websocketPackage() {
-        return websocketPackage;
+    public WebsocketConfig websocketConfig() {
+        return websocketConfig;
     }
 
 }

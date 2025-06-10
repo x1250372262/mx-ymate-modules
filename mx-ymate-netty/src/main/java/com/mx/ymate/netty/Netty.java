@@ -16,19 +16,13 @@
 package com.mx.ymate.netty;
 
 import com.mx.ymate.netty.impl.DefaultNettyConfig;
-import com.mx.ymate.netty.impl.NettyClient;
-import com.mx.ymate.netty.impl.NettyServer;
-import com.mx.ymate.netty.impl.NettyWebsocket;
-import io.netty.channel.ChannelHandlerContext;
+import com.mx.ymate.netty.manager.NettyClientManager;
+import com.mx.ymate.netty.manager.NettyServerManager;
+import com.mx.ymate.netty.manager.NettyWebsocketManager;
 import net.ymate.platform.core.*;
 import net.ymate.platform.core.module.IModule;
 import net.ymate.platform.core.module.IModuleConfigurer;
 import net.ymate.platform.core.module.impl.DefaultModuleConfigurer;
-
-import java.net.InetSocketAddress;
-
-import static com.mx.ymate.netty.INettyConfig.SERVER_CLIENT_CLIENT;
-import static com.mx.ymate.netty.INettyConfig.SERVER_CLIENT_SERVER;
 
 /**
  * @Author: mengxiang.
@@ -38,19 +32,19 @@ import static com.mx.ymate.netty.INettyConfig.SERVER_CLIENT_SERVER;
  */
 public final class Netty implements IModule, INetty {
 
-
     private static volatile INetty instance;
 
     private IApplication owner;
 
     private INettyConfig config;
 
+    private NettyServerManager nettyServerManager;
+
+    private NettyClientManager nettyClientManager;
+
+    private NettyWebsocketManager nettyWebsocketManager;
+
     private boolean initialized;
-
-    private NettyServer nettyServer;
-    private NettyClient nettyClient;
-
-    private NettyWebsocket nettyWebsocket;
 
     public static INetty get() {
         INetty inst = instance;
@@ -96,26 +90,18 @@ public final class Netty implements IModule, INetty {
             if (!config.isInitialized()) {
                 config.initialize(this);
             }
-
             if (config.isEnabled()) {
-
-                if (config.autoStart()) {
-                    if (SERVER_CLIENT_SERVER.equals(config.client())) {
-                        nettyServer = new NettyServer(config);
-                        nettyServer.run();
-                    } else if (SERVER_CLIENT_CLIENT.equals(config.client())) {
-                        nettyClient = new NettyClient(config);
-                        nettyClient.run();
-                    } else {
-                        nettyServer = new NettyServer(config);
-                        nettyClient = new NettyClient(config);
-                        nettyServer.run();
-                        nettyClient.run();
-                    }
+                nettyServerManager = new NettyServerManager(config.serverConfigList());
+                nettyClientManager = new NettyClientManager(config.clientConfigList());
+                nettyWebsocketManager = new NettyWebsocketManager(config.websocketConfig());
+                if (config.serverAutoInit()) {
+                    nettyServerManager.initAll();
                 }
-                if (config.websocketEnabled()) {
-                    nettyWebsocket = new NettyWebsocket(config);
-                    nettyWebsocket.run();
+                if (config.clientAutoInit()) {
+                    nettyClientManager.initAll();
+                }
+                if (config.websocketAutoInit()) {
+                    nettyWebsocketManager.init();
                 }
             }
             initialized = true;
@@ -133,27 +119,9 @@ public final class Netty implements IModule, INetty {
         if (initialized) {
             initialized = false;
             if (config.isEnabled()) {
-                if (SERVER_CLIENT_SERVER.equals(config.client())) {
-                    if (nettyServer != null) {
-                        nettyServer.stop();
-                    }
-                } else if (SERVER_CLIENT_CLIENT.equals(config.client())) {
-                    if (nettyClient != null) {
-                        nettyClient.stop();
-                    }
-                } else {
-                    if (nettyClient != null) {
-                        nettyClient.stop();
-                    }
-                    if (nettyServer != null) {
-                        nettyServer.stop();
-                    }
-
-                }
-
-                if (nettyWebsocket != null) {
-                    nettyWebsocket.stop();
-                }
+                nettyServerManager.stopAll();
+                nettyClientManager.stopAll();
+                nettyWebsocketManager.stop();
             }
             config = null;
             owner = null;
@@ -171,87 +139,21 @@ public final class Netty implements IModule, INetty {
     }
 
     @Override
-    public void startServer() throws Exception {
-        if (nettyServer == null) {
-            nettyServer = new NettyServer(config);
-            nettyServer.run();
-        }
+    public NettyServerManager serverManager() {
+        return nettyServerManager;
     }
 
     @Override
-    public void startClient() throws Exception {
-        if (nettyClient == null) {
-            nettyClient = new NettyClient(config);
-            nettyClient.run();
-        }
+    public NettyClientManager clientManager() {
+        return nettyClientManager;
     }
 
     @Override
-    public void startAll() throws Exception {
-        if (nettyClient == null) {
-            nettyClient = new NettyClient(config);
-            nettyClient.run();
-        }
-        if (nettyServer == null) {
-            nettyServer = new NettyServer(config);
-            nettyServer.run();
-        }
+    public NettyWebsocketManager websocketManager() {
+        return nettyWebsocketManager;
     }
 
-    @Override
-    public void stopServer() {
-        if (nettyServer != null) {
-            nettyServer.stop();
-        }
-    }
 
-    @Override
-    public void stopClient() {
-        if (nettyClient != null) {
-            nettyClient.stop();
-        }
-    }
-
-    @Override
-    public void stopAll() {
-        if (nettyClient != null) {
-            nettyClient.stop();
-        }
-        if (nettyServer != null) {
-            nettyServer.stop();
-        }
-    }
-
-    @Override
-    public void startWebSocketServer() throws Exception {
-        if (nettyWebsocket == null) {
-            nettyWebsocket = new NettyWebsocket(config);
-            nettyWebsocket.run();
-        }
-    }
-
-    @Override
-    public void stopWebSocketServer() throws Exception {
-        if (nettyWebsocket != null) {
-            nettyWebsocket.stop();
-        }
-    }
-
-    @Override
-    public void connect(ChannelHandlerContext context) throws Exception {
-        InetSocketAddress ipSocket = (InetSocketAddress) context.channel().remoteAddress();
-        int port = ipSocket.getPort();
-        String host = ipSocket.getHostString();
-        connect(new NettyClient.RemoteAddress(host, port));
-    }
-
-    @Override
-    public void connect(NettyClient.RemoteAddress remoteAddress) throws Exception {
-        nettyClient.connect(remoteAddress);
-    }
-
-    @Override
-    public void connect() throws Exception {
-        nettyClient.connect();
-    }
 }
+
+

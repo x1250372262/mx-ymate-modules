@@ -1,24 +1,24 @@
-package com.mx.ymate.netty.websocket.handler;
+package com.mx.ymate.netty.websocket;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mx.ymate.netty.Netty;
-import com.mx.ymate.netty.websocket.annotation.MxWebsocket;
+import com.mx.ymate.netty.bean.WebsocketConfig;
+import com.mx.ymate.netty.annotation.MxWebsocket;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import net.ymate.platform.commons.util.ClassUtils;
 import net.ymate.platform.log.Logs;
-import org.apache.commons.lang.NullArgumentException;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static com.mx.ymate.netty.INettyConfig.WEBSOCKET_PACKAGE;
 
 /**
  * @Author: mengxiang.
@@ -31,21 +31,33 @@ public class MappingHandler extends SimpleChannelInboundHandler<TextWebSocketFra
     public static final Map<String, IMxWebsocketHandler> URI_HANDLER_MAP = new ConcurrentHashMap<>();
     public static final Map<String, IMxWebsocketHandler> ID_HANDLER_MAP = new ConcurrentHashMap<>();
     private static final String UPGRADE_VALUE = "websocket";
+    private final WebsocketConfig WEBSOCKET_CONFIG;
 
-    static {
-        String packageName = Netty.get().getConfig().websocketPackage();
-        if (StringUtils.isBlank(packageName)) {
-            throw new NullArgumentException(WEBSOCKET_PACKAGE);
+    public MappingHandler(WebsocketConfig websocketConfig){
+        WEBSOCKET_CONFIG = websocketConfig;
+        List<String> packageNameList = WEBSOCKET_CONFIG.getPackageList();
+        if (CollUtil.isEmpty(packageNameList)) {
+            throw new IllegalArgumentException("请至少配置一个websocket包名");
         }
-        Set<Class<?>> mxWebsocketList = ClassUtil.scanPackageByAnnotation(packageName, MxWebsocket.class);
+        Set<Class<?>> mxWebsocketList = scanWebsocketByAnnotation(packageNameList);
         if (CollUtil.isEmpty(mxWebsocketList)) {
             throw new RuntimeException("请至少指定一个 websocket handler ");
         }
-        String mapping = Netty.get().getConfig().websocketMapping();
+        String mapping = WEBSOCKET_CONFIG.getMapping();
         for (Class<?> clazz : mxWebsocketList) {
             MxWebsocket mxWebsocket = clazz.getAnnotation(MxWebsocket.class);
             URI_HANDLER_MAP.put(mapping + mxWebsocket.mapping(), ClassUtils.impl(clazz, IMxWebsocketHandler.class));
         }
+    }
+
+    private static Set<Class<?>> scanWebsocketByAnnotation(List<String> packageList) {
+        Set<Class<?>> classList = new HashSet<>();
+        // 扫描所有继承 ChannelHandler 的类
+        for (String packageName : packageList) {
+            Set<Class<?>> classSet = ClassUtil.scanPackageByAnnotation(packageName, MxWebsocket.class);
+            classList.addAll(classSet);
+        }
+        return classList;
     }
 
     @Override
@@ -66,7 +78,7 @@ public class MappingHandler extends SimpleChannelInboundHandler<TextWebSocketFra
             if (StringUtils.isBlank(upgrade) || !UPGRADE_VALUE.equalsIgnoreCase(upgrade)) {
                 ctx.close();
             } else {
-                String pathPrefix = Netty.get().getConfig().websocketMapping();
+                String pathPrefix = WEBSOCKET_CONFIG.getMapping();
                 if (!uri.startsWith(pathPrefix)) {
                     Logs.get().getLogger().error(StrUtil.format("url {} 格式错误", uri));
                     notFoundError(ctx);

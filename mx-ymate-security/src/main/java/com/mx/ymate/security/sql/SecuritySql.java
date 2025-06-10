@@ -31,7 +31,7 @@ public class SecuritySql {
         String sql = "INSERT INTO `{}`.`{}security_menu` (`id`, `client`, `type`, `parent_id`, `name`,`i18n_key`, `icon`, `path`, `url`, `sort`, `hide_status`, `permission`, `create_time`, `create_user`, `last_modify_time`, `last_modify_user`) VALUES ('{}', '{}',{}, '{}', '{}','{}', '{}', '{}', '{}', {}, {},'{}',{},'{}',{},'{}');";
         String id = UUIDUtils.UUID();
         //首页
-        sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, 1, "0", MENU_INDEX_MSG, MENU_INDEX_I18N_KEY, "mdi mdi-home", "", "/admin/home.html", 0, 0, "", time, userId, time, userId));
+        sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, 1, "0", MENU_INDEX_MSG, MENU_INDEX_I18N_KEY, "mdi mdi-home", "", "/admin/page_index.html", 0, 0, "", time, userId, time, userId));
         //安全
         sqlList.add(StrUtil.format(sql, dbName, prefix, id, client, 2, "0", MENU_SECURITY_MANAGER_MSG, MENU_SECURITY_MANAGER_I18N_KEY, "mdi mdi-alarm-light", "/security", "", 100, 0, "SECURITY_MANAGER", time, userId, time, userId));
         sqlList.add(StrUtil.format(sql, dbName, prefix, UUIDUtils.UUID(), client, 0, id, MENU_SECURITY_MENU_LIST_MSG, MENU_SECURITY_MENU_LIST_I18N_KEY, "", "", "/security/menu/list.html", 1, 0, "SECURITY_MENU_LIST", time, userId, time, userId));

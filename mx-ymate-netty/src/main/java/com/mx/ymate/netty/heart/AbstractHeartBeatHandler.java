@@ -1,4 +1,4 @@
-package com.mx.ymate.netty;
+package com.mx.ymate.netty.heart;
 
 import cn.hutool.core.util.StrUtil;
 import io.netty.channel.ChannelHandler;
@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: mengxiang.
@@ -24,6 +25,7 @@ public abstract class AbstractHeartBeatHandler extends ChannelInboundHandlerAdap
     private static final Log LOG = LogFactory.getLog(AbstractHeartBeatHandler.class);
 
     private final static String MESSAGE = "netty异常，ip:{},端口:{}";
+
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
@@ -45,6 +47,8 @@ public abstract class AbstractHeartBeatHandler extends ChannelInboundHandlerAdap
             super.userEventTriggered(ctx, evt);
         }
     }
+
+
 
     private void onHandle(ChannelHandlerContext ctx) {
         InetSocketAddress ipSocket = (InetSocketAddress) ctx.channel().remoteAddress();
@@ -84,18 +88,5 @@ public abstract class AbstractHeartBeatHandler extends ChannelInboundHandlerAdap
         }
         LOG.error(StrUtil.format(MESSAGE, ip, port), cause);
         throw new RuntimeException(StrUtil.format(MESSAGE, ip, port), cause);
-    }
-
-
-    public static class DefaultServerHeartImpl extends AbstractHeartBeatHandler {
-
-    }
-
-    public static class DefaultClientHeartImpl extends AbstractHeartBeatHandler {
-
-    }
-
-    public static class DefaultWebsocketHeartImpl extends AbstractHeartBeatHandler {
-
     }
 }
