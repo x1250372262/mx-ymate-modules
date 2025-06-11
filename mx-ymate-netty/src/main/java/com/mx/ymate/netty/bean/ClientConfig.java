@@ -63,7 +63,7 @@ public class ClientConfig {
         if (heartBeatTimeTempList.size() == HEART_BEAT_TIME_ITEM_COUNT) {
             //闲时检测
             List<Integer> heartTimeList = heartBeatTimeTempList.stream().map(Integer::valueOf).collect(Collectors.toList());
-            handlerConfigs.add(new HandlerConfig(new IdleStateHandler(heartTimeList.get(0), heartTimeList.get(1), heartTimeList.get(2)), 100, true));
+            handlerConfigs.add(new HandlerConfig(() -> new IdleStateHandler(heartTimeList.get(0), heartTimeList.get(1), heartTimeList.get(2)), 100, true));
             //心跳
             AbstractHeartBeatHandler heartBeatHandler = configUtil.getClassImpl(HEART_BEAT_CLASS, AbstractHeartBeatHandler.class);
             if (heartBeatHandler == null) {
