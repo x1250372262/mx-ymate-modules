@@ -32,10 +32,17 @@ public class NettyClientManager {
 
     public void initAll() {
         for (ClientConfig clientConfig : clientConfigList) {
-            NettyClient result = CLIENT_MAP.computeIfAbsent(clientConfig.getName(), name -> new NettyClient(clientConfig).init());
-            if (result == null) {
-                LOG.error(StrUtil.format("NettyClient[{}] 初始化失败", clientConfig.getName()));
+            String name = clientConfig.getName();
+            if (CLIENT_MAP.containsKey(name)) {
+                LOG.warn(StrUtil.format("NettyClient[{}] 已初始化，忽略重复初始化", name));
+                continue;
             }
+            NettyClient result = new NettyClient(clientConfig).init();
+            if (result == null) {
+                LOG.error(StrUtil.format("NettyClient[{}] 初始化失败", name));
+                continue;
+            }
+            CLIENT_MAP.put(name, result);
         }
     }
 
@@ -50,10 +57,16 @@ public class NettyClientManager {
             return;
         }
 
-        NettyClient result = CLIENT_MAP.computeIfAbsent(name, n -> new NettyClient(targetConfig).init());
+        if (CLIENT_MAP.containsKey(name)) {
+            LOG.warn(StrUtil.format("NettyClient[{}] 已初始化，忽略重复初始化", name));
+            return;
+        }
+        NettyClient result = new NettyClient(targetConfig).init();
         if (result == null) {
             LOG.error(StrUtil.format("NettyClient[{}] 初始化失败", name));
+            return;
         }
+        CLIENT_MAP.put(name, result);
     }
 
     public void connect(String name, ChannelHandlerContext context, Map<String, Object> extras) {
@@ -126,7 +139,7 @@ public class NettyClientManager {
     public void connectAll(RemoteAddress remoteAddress, Map<String, Map<String, Object>> extrasMap) {
         CLIENT_MAP.forEach((name, nettyClient) -> {
             try {
-                Map<String, Object> extras = extrasMap != null?extrasMap.get(name):new HashMap<>();
+                Map<String, Object> extras = extrasMap != null ? extrasMap.get(name) : new HashMap<>();
                 nettyClient.connect(remoteAddress, extras);
             } catch (Exception e) {
                 LOG.error(StrUtil.format("NettyClient[{}] 连接失败", name), e);
@@ -137,7 +150,7 @@ public class NettyClientManager {
     public void connectAll(Map<String, Map<String, Object>> extrasMap) {
         CLIENT_MAP.forEach((name, nettyClient) -> {
             try {
-                Map<String, Object> extras = extrasMap != null?extrasMap.get(name):new HashMap<>();
+                Map<String, Object> extras = extrasMap != null ? extrasMap.get(name) : new HashMap<>();
                 nettyClient.connect(extras);
             } catch (Exception e) {
                 LOG.error(StrUtil.format("NettyClient[{}] 连接失败", name), e);

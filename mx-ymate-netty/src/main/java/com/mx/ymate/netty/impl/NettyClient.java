@@ -39,7 +39,8 @@ public class NettyClient {
     private static final Log LOG = LogFactory.getLog(NettyClient.class);
     private volatile Bootstrap clientBootstrap;
     private List<RemoteAddress> remoteAddressesList;
-    private volatile boolean started = false;
+    private volatile boolean connected = false;
+    private volatile Channel currentChannel;
 
     public NettyClient(ClientConfig config) {
         this.config = config;
@@ -83,7 +84,7 @@ public class NettyClient {
     }
 
     private synchronized void doConnect(RemoteAddress remoteAddress, Map<String, Object> extras) {
-        if (started) {
+        if (connected) {
             LOG.warn("Netty Client 已连接，忽略重复连接");
             return;
         }
@@ -102,10 +103,14 @@ public class NettyClient {
                 }, 3, TimeUnit.SECONDS);
             } else {
                 LOG.info("服务端连接成功...");
+                1缓存调整  分为 客户端 服务端 ws 分别缓存不同的内容
+                客户端增加一个 ctx，nettyclient 或者 name    以便断连的时候能获取到nettyclient
+                2客户端配置文件增加断线重连开关 以及 断线重连时间
+                currentChannel = future.channel();
                 future.channel().attr(CLIENT_CTX_KEY).set(ClientContext.builder().clientId(config.getName()).putExtras(extras).build());
+                connected = true;
             }
         });
-        started = true;
     }
 
     public void connect(Map<String, Object> extras) {
@@ -136,11 +141,18 @@ public class NettyClient {
         ThreadUtil.execAsync(() -> doConnect(remoteAddress, null));
     }
 
-    public void stop() {
+    public void disconnect() {
+        connected = false;
+        currentChannel.disconnect();
+        currentChannel.close();
+        LOG.info(StrUtil.format("NettyClient[{}]已断开连接",config.getName()));
+    }
+
+    public void destory() {
         //优雅退出，释放线程池
         workGroup.shutdownGracefully();
         clientBootstrap = null;
-        started = false;
+        connected = false;
         LOG.info("Netty Client 已停止");
     }
 

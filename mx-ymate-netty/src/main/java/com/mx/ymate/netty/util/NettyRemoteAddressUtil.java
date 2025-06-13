@@ -1,6 +1,6 @@
 package com.mx.ymate.netty.util;
 
-import com.mx.ymate.netty.handler.ConnectionManager;
+import com.mx.ymate.netty.handler.connection.AbstractConnectionManager;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.net.InetSocketAddress;
@@ -23,7 +23,7 @@ public class NettyRemoteAddressUtil {
     }
 
     public static InetSocketAddress getInetSocketAddress(String key) {
-        ChannelHandlerContext ctx = ConnectionManager.getContext(key); // 确认 ConnectionManager 类名
+        ChannelHandlerContext ctx = AbstractConnectionManager.getContext(key); // 确认 ConnectionManager 类名
         if (ctx == null) {
             return null;
         }

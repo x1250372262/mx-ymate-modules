@@ -2,6 +2,7 @@ package com.mx.ymate.netty.handler;
 
 import cn.hutool.core.util.HexUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.mx.ymate.netty.handler.connection.AbstractConnectionManager;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -30,7 +31,7 @@ public class MessageSender {
      * @param msg 要发送的字符串
      */
     public static void sendStrDirect(String key, String msg) {
-        ChannelHandlerContext ctx = ConnectionManager.getContext(key);
+        ChannelHandlerContext ctx = AbstractConnectionManager.getContext(key);
         if (ctx != null && ctx.channel().isActive()) {
             try {
                 LOG.info("直接发送字符串: key=" + key + " 原始数据=" + msg);
@@ -50,7 +51,7 @@ public class MessageSender {
      * @param msg 要发送的字符串
      */
     public static void sendStrAsBuffer(String key, String msg) {
-        ChannelHandlerContext ctx = ConnectionManager.getContext(key);
+        ChannelHandlerContext ctx = AbstractConnectionManager.getContext(key);
         if (ctx != null && ctx.channel().isActive()) {
             try {
                 ByteBuf buffer = Unpooled.copiedBuffer(msg, StandardCharsets.UTF_8);
@@ -71,7 +72,7 @@ public class MessageSender {
      * @param hex 16进制字符串
      */
     public static void sendHex(String key, String hex) {
-        ChannelHandlerContext ctx = ConnectionManager.getContext(key);
+        ChannelHandlerContext ctx = AbstractConnectionManager.getContext(key);
         if (ctx != null && ctx.channel().isActive()) {
             try {
                 byte[] bytes = HexUtil.decodeHex(hex);
@@ -93,7 +94,7 @@ public class MessageSender {
      * @param buffer 要发送的字节缓冲区
      */
     public static void sendBuffer(String key, ByteBuf buffer, String raw) {
-        ChannelHandlerContext ctx = ConnectionManager.getContext(key);
+        ChannelHandlerContext ctx = AbstractConnectionManager.getContext(key);
         if (ctx != null && ctx.channel().isActive()) {
             try {
                 LOG.info("发送 ByteBuf 数据: key=" + key + " 原始数据:" + raw);
@@ -114,7 +115,7 @@ public class MessageSender {
      * @param message 发送的对象
      */
     public static void send(String key, Object message) {
-        ChannelHandlerContext ctx = ConnectionManager.getContext(key);
+        ChannelHandlerContext ctx = AbstractConnectionManager.getContext(key);
         if (ctx != null && ctx.channel().isActive()) {
             try {
                 LOG.info("发送对象数据: key=" + key + " 原始数据:" + JSONObject.toJSONString(message));

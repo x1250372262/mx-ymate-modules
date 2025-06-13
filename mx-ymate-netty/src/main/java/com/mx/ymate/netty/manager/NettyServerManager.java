@@ -1,7 +1,6 @@
 package com.mx.ymate.netty.manager;
 
 import cn.hutool.core.util.StrUtil;
-import com.mx.ymate.netty.INettyConfig;
 import com.mx.ymate.netty.bean.ServerConfig;
 import com.mx.ymate.netty.impl.NettyServer;
 import org.apache.commons.logging.Log;
@@ -29,10 +28,17 @@ public class NettyServerManager {
 
     public void initAll() {
         for (ServerConfig serverConfig : serverConfigList) {
-            NettyServer result = SERVER_MAP.computeIfAbsent(serverConfig.getName(), name -> new NettyServer(serverConfig).init());
-            if (result == null) {
-                LOG.error(StrUtil.format("NettyServer[{}] 初始化失败", serverConfig.getName()));
+            String name = serverConfig.getName();
+            if (SERVER_MAP.containsKey(name)) {
+                LOG.warn(StrUtil.format("NettyServer[{}] 已初始化，忽略重复初始化", name));
+                continue;
             }
+            NettyServer result = new NettyServer(serverConfig).init();
+            if (result == null) {
+                LOG.error(StrUtil.format("NettyServer[{}] 初始化失败", name));
+                continue;
+            }
+            SERVER_MAP.put(name, result);
         }
     }
 
@@ -47,13 +53,19 @@ public class NettyServerManager {
             return;
         }
 
-        NettyServer result = SERVER_MAP.computeIfAbsent(name, n -> new NettyServer(targetConfig).init());
+        if (SERVER_MAP.containsKey(name)) {
+            LOG.warn(StrUtil.format("NettyServer[{}] 已初始化，忽略重复初始化", name));
+            return;
+        }
+        NettyServer result = new NettyServer(targetConfig).init();
         if (result == null) {
             LOG.error(StrUtil.format("NettyServer[{}] 初始化失败", name));
+            return;
         }
+        SERVER_MAP.put(name, result);
     }
 
-    public void start(String name){
+    public void start(String name) {
         NettyServer nettyServer = SERVER_MAP.get(name);
         if (nettyServer == null) {
             LOG.error(StrUtil.format("NettyServer[{}] 没有初始化，请先初始化", name));

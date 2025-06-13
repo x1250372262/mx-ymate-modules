@@ -23,10 +23,18 @@ public class NettyWebsocketManager {
 
 
     public void init() {
+        if (nettyWebsocket != null) {
+            LOG.warn("NettyWebsocket已初始化，忽略重复初始化");
+            return;
+        }
         nettyWebsocket = new NettyWebsocket(websocketConfig).init();
     }
 
     public void start() {
+        if (nettyWebsocket == null) {
+            LOG.warn("NettyWebsocket没有初始化，请先初始化");
+            return;
+        }
         try {
             nettyWebsocket.start();
         } catch (Exception e) {
