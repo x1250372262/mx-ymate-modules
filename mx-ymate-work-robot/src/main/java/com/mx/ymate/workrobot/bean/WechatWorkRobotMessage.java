@@ -13,7 +13,6 @@ import java.util.List;
 public class WechatWorkRobotMessage implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
     public final static String TYPE_TEXT = "text";
     public final static String TYPE_NEWS = "news";
     public final static String ALL = "@all";
