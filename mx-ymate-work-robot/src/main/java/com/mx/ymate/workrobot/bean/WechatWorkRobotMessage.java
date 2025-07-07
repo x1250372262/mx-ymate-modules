@@ -14,9 +14,9 @@ public class WechatWorkRobotMessage implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final static String TYPE_TEXT = "text";
-    private final static String TYPE_NEWS = "news";
-    private final static String ALL = "@all";
+    public final static String TYPE_TEXT = "text";
+    public final static String TYPE_NEWS = "news";
+    public final static String ALL = "@all";
 
     private String webhook;
 
