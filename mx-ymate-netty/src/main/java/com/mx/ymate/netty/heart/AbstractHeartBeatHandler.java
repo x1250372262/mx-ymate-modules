@@ -11,7 +11,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: mengxiang.
@@ -47,7 +46,6 @@ public abstract class AbstractHeartBeatHandler extends ChannelInboundHandlerAdap
             super.userEventTriggered(ctx, evt);
         }
     }
-
 
 
     private void onHandle(ChannelHandlerContext ctx) {

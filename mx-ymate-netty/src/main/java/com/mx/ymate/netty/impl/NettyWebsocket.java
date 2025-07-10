@@ -6,7 +6,6 @@ import com.mx.ymate.netty.bean.WebsocketConfig;
 import com.mx.ymate.netty.websocket.MappingHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -18,12 +17,10 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
-import net.ymate.platform.commons.lang.BlurObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
-import java.util.Map;
 
 import static com.mx.ymate.netty.INettyConfig.HEART_BEAT_TIME_ITEM_COUNT;
 
@@ -80,7 +77,7 @@ public class NettyWebsocket {
         }
         Integer port = config.getPort();
         websocketBootstrap.bind(port).sync();
-        LOG.info(StrUtil.format("服务端口{}websocket启动成功",port));
+        LOG.info(StrUtil.format("服务端口{}websocket启动成功", port));
         started = true;
     }
 

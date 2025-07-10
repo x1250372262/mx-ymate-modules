@@ -15,12 +15,9 @@
  */
 package com.mx.ymate.netty;
 
-import com.mx.ymate.netty.bean.ClientContext;
-import com.mx.ymate.netty.bean.RemoteAddress;
 import com.mx.ymate.netty.manager.NettyClientManager;
 import com.mx.ymate.netty.manager.NettyServerManager;
 import com.mx.ymate.netty.manager.NettyWebsocketManager;
-import io.netty.channel.ChannelHandlerContext;
 import net.ymate.platform.core.IApplication;
 import net.ymate.platform.core.beans.annotation.Ignored;
 import net.ymate.platform.core.support.IDestroyable;
@@ -53,18 +50,21 @@ public interface INetty extends IInitialization<IApplication>, IDestroyable {
 
     /**
      * 获取服务端管理对象
+     *
      * @return
      */
     NettyServerManager serverManager();
 
     /**
      * 获取客户端管理对象
+     *
      * @return
      */
     NettyClientManager clientManager();
 
     /**
      * 获取websocket管理对象
+     *
      * @return
      */
     NettyWebsocketManager websocketManager();

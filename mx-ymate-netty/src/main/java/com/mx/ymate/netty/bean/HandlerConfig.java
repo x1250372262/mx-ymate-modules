@@ -35,7 +35,7 @@ public class HandlerConfig {
         this.handlerSupplier = null;
     }
 
-    public HandlerConfig(Supplier<ChannelHandler> supplier, int order,boolean sharable) {
+    public HandlerConfig(Supplier<ChannelHandler> supplier, int order, boolean sharable) {
         if (supplier == null) {
             throw new IllegalArgumentException("supplier 不能为空");
         }
@@ -46,6 +46,7 @@ public class HandlerConfig {
         this.sharable = sharable;
         this.order = order;
     }
+
     public boolean isSharable() {
         return sharable;
     }

@@ -66,6 +66,7 @@ public interface INettyConfig extends IInitialization<INetty> {
 
     /**
      * 根据服务地址获取服务名
+     *
      * @param address
      * @return
      */
@@ -102,7 +103,6 @@ public interface INettyConfig extends IInitialization<INetty> {
      * @return
      */
     ClientConfig clientConfig(String clientName);
-
 
 
     /**

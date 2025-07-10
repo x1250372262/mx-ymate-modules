@@ -12,6 +12,7 @@ public interface IWebsocketOptionConfig {
 
     /**
      * 配置option
+     *
      * @param serverBootstrap
      */
     void optionConfig(ServerBootstrap serverBootstrap);

@@ -3,9 +3,8 @@ package com.mx.ymate.netty.websocket;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
-import com.mx.ymate.netty.Netty;
-import com.mx.ymate.netty.bean.WebsocketConfig;
 import com.mx.ymate.netty.annotation.MxWebsocket;
+import com.mx.ymate.netty.bean.WebsocketConfig;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
@@ -33,7 +32,7 @@ public class MappingHandler extends SimpleChannelInboundHandler<TextWebSocketFra
     private static final String UPGRADE_VALUE = "websocket";
     private final WebsocketConfig WEBSOCKET_CONFIG;
 
-    public MappingHandler(WebsocketConfig websocketConfig){
+    public MappingHandler(WebsocketConfig websocketConfig) {
         WEBSOCKET_CONFIG = websocketConfig;
         List<String> packageNameList = WEBSOCKET_CONFIG.getPackageList();
         if (CollUtil.isEmpty(packageNameList)) {

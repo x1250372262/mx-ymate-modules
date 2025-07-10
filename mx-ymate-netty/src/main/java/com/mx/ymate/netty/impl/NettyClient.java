@@ -22,7 +22,6 @@ import org.apache.commons.logging.LogFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static com.mx.ymate.netty.bean.ClientConfig.CLIENT_CTX_KEY;
 import static com.mx.ymate.netty.bean.ClientConfig.REMOTE_ADDRESS_KEY;

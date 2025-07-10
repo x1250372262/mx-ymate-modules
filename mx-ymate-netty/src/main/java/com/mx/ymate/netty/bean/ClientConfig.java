@@ -89,11 +89,11 @@ public class ClientConfig {
         ClientConfig clientConfig = new ClientConfig();
         clientConfig.setName(name);
         clientConfig.setRemoteAddress(configUtil.getList(REMOTE_ADDRESS));
-        clientConfig.setReconnectEnabled(configUtil.getBool(RECONNECT_ENABLED,false));
-        clientConfig.setReconnectMaxAttempts(configUtil.getInt(RECONNECT_MAX_ATTEMPTS,3));
-        clientConfig.setReconnectInterval(configUtil.getInt(RECONNECT_INTERVAL,10));
-        clientConfig.setReconnectBackoff(configUtil.getBool(RECONNECT_BACKOFF,false));
-        clientConfig.setReconnectResetOnSuccess(configUtil.getBool(RECONNECT_RESET_ON_SUCCESS,true));
+        clientConfig.setReconnectEnabled(configUtil.getBool(RECONNECT_ENABLED, false));
+        clientConfig.setReconnectMaxAttempts(configUtil.getInt(RECONNECT_MAX_ATTEMPTS, 3));
+        clientConfig.setReconnectInterval(configUtil.getInt(RECONNECT_INTERVAL, 10));
+        clientConfig.setReconnectBackoff(configUtil.getBool(RECONNECT_BACKOFF, false));
+        clientConfig.setReconnectResetOnSuccess(configUtil.getBool(RECONNECT_RESET_ON_SUCCESS, true));
         List<HandlerConfig> handlerConfigs = NettyHandlerUtil.findAllHandlerConfig(configUtil.getList(HANDLER_PACKAGE), configUtil.getClassImpl(HANDLER_REGISTRAR_CLASS, IHandlerRegistrar.class));
         List<String> heartBeatTimeTempList = configUtil.getList(HEART_BEAT_TIME);
         if (heartBeatTimeTempList.size() == HEART_BEAT_TIME_ITEM_COUNT) {

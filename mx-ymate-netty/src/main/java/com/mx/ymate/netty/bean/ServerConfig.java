@@ -1,6 +1,5 @@
 package com.mx.ymate.netty.bean;
 
-import cn.hutool.core.collection.CollUtil;
 import com.mx.ymate.dev.util.ConfigUtil;
 import com.mx.ymate.netty.handler.IHandlerRegistrar;
 import com.mx.ymate.netty.handler.NettyHandlerUtil;
@@ -62,20 +61,20 @@ public class ServerConfig {
     public static ServerConfig buildConfig(String name, ConfigUtil configUtil) {
         ServerConfig serverConfig = new ServerConfig();
         serverConfig.setName(name);
-        serverConfig.setHost(configUtil.getString(HOST,"127.0.0.1"));
+        serverConfig.setHost(configUtil.getString(HOST, "127.0.0.1"));
         serverConfig.setPort(configUtil.getInteger(PORT));
-        List<HandlerConfig> handlerConfigs = NettyHandlerUtil.findAllHandlerConfig(configUtil.getList(HANDLER_PACKAGE),configUtil.getClassImpl(HANDLER_REGISTRAR_CLASS, IHandlerRegistrar.class));
+        List<HandlerConfig> handlerConfigs = NettyHandlerUtil.findAllHandlerConfig(configUtil.getList(HANDLER_PACKAGE), configUtil.getClassImpl(HANDLER_REGISTRAR_CLASS, IHandlerRegistrar.class));
         List<String> heartBeatTimeTempList = configUtil.getList(HEART_BEAT_TIME);
         if (heartBeatTimeTempList.size() == HEART_BEAT_TIME_ITEM_COUNT) {
             //闲时检测
             List<Integer> heartTimeList = heartBeatTimeTempList.stream().map(Integer::valueOf).collect(Collectors.toList());
-            handlerConfigs.add(new HandlerConfig(() -> new IdleStateHandler(heartTimeList.get(0), heartTimeList.get(1), heartTimeList.get(2)) ,100,false));
+            handlerConfigs.add(new HandlerConfig(() -> new IdleStateHandler(heartTimeList.get(0), heartTimeList.get(1), heartTimeList.get(2)), 100, false));
             //心跳
             AbstractHeartBeatHandler heartBeatHandler = configUtil.getClassImpl(HEART_BEAT_CLASS, AbstractHeartBeatHandler.class);
             if (heartBeatHandler == null) {
                 heartBeatHandler = new DefaultServerHeartImpl();
             }
-            handlerConfigs.add(new HandlerConfig(heartBeatHandler,101,true));
+            handlerConfigs.add(new HandlerConfig(heartBeatHandler, 101, true));
         }
 
         handlerConfigs.sort(Comparator
