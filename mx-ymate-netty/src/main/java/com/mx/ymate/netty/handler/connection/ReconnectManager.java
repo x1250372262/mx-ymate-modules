@@ -12,30 +12,30 @@ import java.util.concurrent.TimeUnit;
  */
 public class ReconnectManager {
 
-    private final boolean backoff;
-    private final boolean resetOnSuccess;
-    private final int baseInterval;
-    private final int maxInterval;
-    private int currentInterval;
+    private final int interval;
+    private final int maxAttempts;
+    private int attemptCount = 0;
 
-    public ReconnectManager(boolean backoff, boolean resetOnSuccess, int baseInterval, int maxInterval) {
-        this.backoff = backoff;
-        this.resetOnSuccess = resetOnSuccess;
-        this.baseInterval = baseInterval;
-        this.maxInterval = maxInterval;
-        this.currentInterval = baseInterval;
+    public ReconnectManager(int interval, int maxAttempts) {
+        this.interval = interval;
+        this.maxAttempts = maxAttempts;
     }
 
+    /**
+     * 调度重连任务，返回是否已调度
+     */
     public void scheduleReconnect(EventLoop eventLoop, Runnable reconnectTask) {
-        eventLoop.schedule(reconnectTask, currentInterval, TimeUnit.SECONDS);
-        if (backoff) {
-            currentInterval = Math.min(currentInterval * 2, maxInterval);
+        if (maxAttempts > 0 && attemptCount >= maxAttempts) {
+            return;
         }
+        attemptCount++;
+        eventLoop.schedule(reconnectTask, interval, TimeUnit.SECONDS);
     }
 
+    /**
+     * 成功连接后重置尝试次数
+     */
     public void reset() {
-        if (resetOnSuccess) {
-            currentInterval = baseInterval;
-        }
+        attemptCount = 0;
     }
 }

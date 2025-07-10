@@ -46,12 +46,7 @@ public class NettyClient {
 
     public NettyClient(ClientConfig config) {
         this.config = config;
-        this.reconnectManager = new ReconnectManager(
-                config.isReconnectBackoff(),
-                config.isReconnectResetOnSuccess(),
-                config.getReconnectInterval(),
-                config.getReconnectMaxAttempts()
-        );
+        this.reconnectManager = new ReconnectManager(config.getReconnectInterval(), config.getReconnectMaxAttempts());
     }
 
     private List<RemoteAddress> getRemoteAddressList(List<String> remoteAddressStrList) {

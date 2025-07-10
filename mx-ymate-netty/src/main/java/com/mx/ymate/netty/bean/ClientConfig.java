@@ -30,8 +30,6 @@ public class ClientConfig {
     private static final String RECONNECT_ENABLED = "reconnect.enabled";
     private static final String RECONNECT_MAX_ATTEMPTS = "reconnect.maxAttempts";
     private static final String RECONNECT_INTERVAL = "reconnect.interval";
-    private static final String RECONNECT_BACKOFF = "reconnect.backoff";
-    private static final String RECONNECT_RESET_ON_SUCCESS = "reconnect.resetOnSuccess";
     private static final String HEART_BEAT_TIME = "heartBeatTime";
     private static final String HEART_BEAT_CLASS = "heartBeatClass";
     private static final String HANDLER_PACKAGE = "handlerPackage";
@@ -66,16 +64,6 @@ public class ClientConfig {
     private int reconnectInterval;
 
     /**
-     * 是否指数退避 每次连接失败后，重试时间间隔指数级增长（例如：1s → 2s → 4s → 8s ...），最多到某个上限。
-     */
-    private boolean reconnectBackoff;
-
-    /**
-     * 是否连接成功后重置 backoff
-     */
-    private boolean reconnectResetOnSuccess;
-
-    /**
      * 处理器列表 排序之后的
      */
     private List<HandlerConfig> handlerConfigList;
@@ -92,8 +80,6 @@ public class ClientConfig {
         clientConfig.setReconnectEnabled(configUtil.getBool(RECONNECT_ENABLED, false));
         clientConfig.setReconnectMaxAttempts(configUtil.getInt(RECONNECT_MAX_ATTEMPTS, 3));
         clientConfig.setReconnectInterval(configUtil.getInt(RECONNECT_INTERVAL, 10));
-        clientConfig.setReconnectBackoff(configUtil.getBool(RECONNECT_BACKOFF, false));
-        clientConfig.setReconnectResetOnSuccess(configUtil.getBool(RECONNECT_RESET_ON_SUCCESS, true));
         List<HandlerConfig> handlerConfigs = NettyHandlerUtil.findAllHandlerConfig(configUtil.getList(HANDLER_PACKAGE), configUtil.getClassImpl(HANDLER_REGISTRAR_CLASS, IHandlerRegistrar.class));
         List<String> heartBeatTimeTempList = configUtil.getList(HEART_BEAT_TIME);
         if (heartBeatTimeTempList.size() == HEART_BEAT_TIME_ITEM_COUNT) {
@@ -164,22 +150,6 @@ public class ClientConfig {
 
     public void setReconnectInterval(int reconnectInterval) {
         this.reconnectInterval = reconnectInterval;
-    }
-
-    public boolean isReconnectBackoff() {
-        return reconnectBackoff;
-    }
-
-    public void setReconnectBackoff(boolean reconnectBackoff) {
-        this.reconnectBackoff = reconnectBackoff;
-    }
-
-    public boolean isReconnectResetOnSuccess() {
-        return reconnectResetOnSuccess;
-    }
-
-    public void setReconnectResetOnSuccess(boolean reconnectResetOnSuccess) {
-        this.reconnectResetOnSuccess = reconnectResetOnSuccess;
     }
 
     public List<HandlerConfig> getHandlerConfigList() {
