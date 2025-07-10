@@ -26,7 +26,6 @@ public class ClientConfig {
 
     public static final String NAME = "client.name";
     public static final String AUTO_INIT = "client.autoInit";
-    private static final String INITIAL_RETRY_DELAY = "initialRetryDelay";
     private static final String REMOTE_ADDRESS = "remoteAddress";
     private static final String RECONNECT_ENABLED = "reconnect.enabled";
     private static final String RECONNECT_MAX_ATTEMPTS = "reconnect.maxAttempts";
@@ -45,11 +44,6 @@ public class ClientConfig {
      * 客户端名称
      */
     private String name;
-
-    /**
-     * 第一次连接失败的重试时间间隔（秒）默认10s  小于等于0代表不重连
-     */
-    private int initialRetryDelay;
 
     /**
      * 远程连接地址 ip:port  多个用逗号分割
@@ -94,7 +88,6 @@ public class ClientConfig {
     public static ClientConfig buildConfig(String name, ConfigUtil configUtil) {
         ClientConfig clientConfig = new ClientConfig();
         clientConfig.setName(name);
-        clientConfig.setInitialRetryDelay(configUtil.getInt(INITIAL_RETRY_DELAY,10));
         clientConfig.setRemoteAddress(configUtil.getList(REMOTE_ADDRESS));
         clientConfig.setReconnectEnabled(configUtil.getBool(RECONNECT_ENABLED,false));
         clientConfig.setReconnectMaxAttempts(configUtil.getInt(RECONNECT_MAX_ATTEMPTS,3));
@@ -139,14 +132,6 @@ public class ClientConfig {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getInitialRetryDelay() {
-        return initialRetryDelay;
-    }
-
-    public void setInitialRetryDelay(int initialRetryDelay) {
-        this.initialRetryDelay = initialRetryDelay;
     }
 
     public List<String> getRemoteAddress() {

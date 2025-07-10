@@ -92,7 +92,7 @@ public class NettyClient {
         return this;
     }
 
-    private synchronized void doConnect(RemoteAddress remoteAddress, Map<String, Object> extras, int retryCount) {
+    private synchronized void doConnect(RemoteAddress remoteAddress, Map<String, Object> extras) {
         if (connected) {
             LOG.warn("Netty Client 已连接，忽略重复连接");
             return;
@@ -101,22 +101,8 @@ public class NettyClient {
         ChannelFuture cf = clientBootstrap.connect(remoteAddress.getHost(), remoteAddress.getPort());
         cf.addListener((ChannelFutureListener) future -> {
             if (!future.isSuccess()) {
-                //最大重试次数
-                int maxAttempts = config.getReconnectMaxAttempts();
-                if (retryCount >= maxAttempts) {
-                    LOG.error("重连超过最大次数(" + maxAttempts + ")，停止重连");
-                    return;
-                }
-                int initialRetryDelay = config.getInitialRetryDelay();
-                if (initialRetryDelay <= 0) {
-                    return;
-                }
-                //重连交给后端线程执行
-                future.channel().eventLoop().schedule(() -> {
-                    int nextRetryCount = retryCount + 1;
-                    LOG.warn("重连服务端失败，尝试第 " + (nextRetryCount) + " 次...");
-                    doConnect(remoteAddress, extras, nextRetryCount);
-                }, initialRetryDelay, TimeUnit.SECONDS);
+                LOG.warn("连接失败，尝试重连...");
+                reconnect(remoteAddress, extras);
             } else {
                 LOG.info("服务端连接成功...");
                 currentChannel = future.channel();
@@ -133,7 +119,7 @@ public class NettyClient {
     }
 
     public void reconnect(RemoteAddress remoteAddress, Map<String, Object> extras) {
-        reconnectManager.scheduleReconnect(workGroup.next(), () -> doConnect(remoteAddress, extras, 0));
+        reconnectManager.scheduleReconnect(workGroup.next(), () -> doConnect(remoteAddress, extras));
     }
 
     public void connect(Map<String, Object> extras) {
@@ -142,12 +128,12 @@ public class NettyClient {
         }
         //启动客户端去连接服务器端
         for (RemoteAddress remoteAddress : remoteAddressesList) {
-            ThreadUtil.execAsync(() -> doConnect(remoteAddress, extras, 0));
+            ThreadUtil.execAsync(() -> doConnect(remoteAddress, extras));
         }
     }
 
     public void connect(RemoteAddress remoteAddress, Map<String, Object> extras) {
-        ThreadUtil.execAsync(() -> doConnect(remoteAddress, extras, 0));
+        ThreadUtil.execAsync(() -> doConnect(remoteAddress, extras));
     }
 
     public void connect() {
@@ -156,12 +142,12 @@ public class NettyClient {
         }
         //启动客户端去连接服务器端
         for (RemoteAddress remoteAddress : remoteAddressesList) {
-            ThreadUtil.execAsync(() -> doConnect(remoteAddress, null, 0));
+            ThreadUtil.execAsync(() -> doConnect(remoteAddress, null));
         }
     }
 
     public void connect(RemoteAddress remoteAddress) {
-        ThreadUtil.execAsync(() -> doConnect(remoteAddress, null, 0));
+        ThreadUtil.execAsync(() -> doConnect(remoteAddress, null));
     }
 
     public void disconnect() {
