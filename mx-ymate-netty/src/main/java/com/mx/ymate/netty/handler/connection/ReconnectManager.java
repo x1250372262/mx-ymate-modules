@@ -32,6 +32,10 @@ public class ReconnectManager {
         eventLoop.schedule(reconnectTask, interval, TimeUnit.SECONDS);
     }
 
+    public boolean canReconnect() {
+        return maxAttempts <= 0 || attemptCount < maxAttempts;
+    }
+
     /**
      * 成功连接后重置尝试次数
      */

@@ -95,7 +95,6 @@ public class NettyClient {
         ChannelFuture cf = clientBootstrap.connect(remoteAddress.getHost(), remoteAddress.getPort());
         cf.addListener((ChannelFutureListener) future -> {
             if (!future.isSuccess()) {
-                LOG.warn("连接失败，尝试重连...");
                 reconnect(remoteAddress, extras);
             } else {
                 LOG.info("服务端连接成功...");
@@ -113,7 +112,12 @@ public class NettyClient {
     }
 
     public void reconnect(RemoteAddress remoteAddress, Map<String, Object> extras) {
-        reconnectManager.scheduleReconnect(workGroup.next(), () -> doConnect(remoteAddress, extras));
+        if (reconnectManager.canReconnect()) {
+            LOG.warn("连接失败，尝试重连...");
+            reconnectManager.scheduleReconnect(workGroup.next(), () -> doConnect(remoteAddress, extras));
+        } else {
+            LOG.error("连接失败，且已达最大重试次数，停止重连");
+        }
     }
 
     public void connect(Map<String, Object> extras) {
