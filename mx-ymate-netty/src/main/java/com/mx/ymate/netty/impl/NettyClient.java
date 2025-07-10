@@ -8,6 +8,7 @@ import com.mx.ymate.netty.bean.ClientConfig;
 import com.mx.ymate.netty.bean.ClientContext;
 import com.mx.ymate.netty.bean.HandlerConfig;
 import com.mx.ymate.netty.bean.RemoteAddress;
+import com.mx.ymate.netty.handler.connection.ReconnectManager;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static com.mx.ymate.netty.bean.ClientConfig.CLIENT_CTX_KEY;
+import static com.mx.ymate.netty.bean.ClientConfig.REMOTE_ADDRESS_KEY;
 
 /**
  * @Author: mengxiang.
@@ -41,9 +43,16 @@ public class NettyClient {
     private List<RemoteAddress> remoteAddressesList;
     private volatile boolean connected = false;
     private volatile Channel currentChannel;
+    private final ReconnectManager reconnectManager;
 
     public NettyClient(ClientConfig config) {
         this.config = config;
+        this.reconnectManager = new ReconnectManager(
+                config.isReconnectBackoff(),
+                config.isReconnectResetOnSuccess(),
+                config.getReconnectInterval(),
+                config.getReconnectMaxAttempts()
+        );
     }
 
     private List<RemoteAddress> getRemoteAddressList(List<String> remoteAddressStrList) {
@@ -83,7 +92,7 @@ public class NettyClient {
         return this;
     }
 
-    private synchronized void doConnect(RemoteAddress remoteAddress, Map<String, Object> extras) {
+    private synchronized void doConnect(RemoteAddress remoteAddress, Map<String, Object> extras, int retryCount) {
         if (connected) {
             LOG.warn("Netty Client 已连接，忽略重复连接");
             return;
@@ -92,25 +101,39 @@ public class NettyClient {
         ChannelFuture cf = clientBootstrap.connect(remoteAddress.getHost(), remoteAddress.getPort());
         cf.addListener((ChannelFutureListener) future -> {
             if (!future.isSuccess()) {
+                //最大重试次数
+                int maxAttempts = config.getReconnectMaxAttempts();
+                if (retryCount >= maxAttempts) {
+                    LOG.error("重连超过最大次数(" + maxAttempts + ")，停止重连");
+                    return;
+                }
+                int initialRetryDelay = config.getInitialRetryDelay();
+                if (initialRetryDelay <= 0) {
+                    return;
+                }
                 //重连交给后端线程执行
                 future.channel().eventLoop().schedule(() -> {
-                    LOG.error("重连服务端...");
-                    try {
-                        doConnect(remoteAddress, extras);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }, 3, TimeUnit.SECONDS);
+                    int nextRetryCount = retryCount + 1;
+                    LOG.warn("重连服务端失败，尝试第 " + (nextRetryCount) + " 次...");
+                    doConnect(remoteAddress, extras, nextRetryCount);
+                }, initialRetryDelay, TimeUnit.SECONDS);
             } else {
                 LOG.info("服务端连接成功...");
-                1缓存调整  分为 客户端 服务端 ws 分别缓存不同的内容
-                客户端增加一个 ctx，nettyclient 或者 name    以便断连的时候能获取到nettyclient
-                2客户端配置文件增加断线重连开关 以及 断线重连时间
                 currentChannel = future.channel();
-                future.channel().attr(CLIENT_CTX_KEY).set(ClientContext.builder().clientId(config.getName()).putExtras(extras).build());
+                ClientContext clientContext = ClientContext.builder()
+                        .clientId(config.getName())
+                        .putExtras(extras)
+                        .putExtra(REMOTE_ADDRESS_KEY, remoteAddress)
+                        .build();
+                future.channel().attr(CLIENT_CTX_KEY).set(clientContext);
+                reconnectManager.reset();
                 connected = true;
             }
         });
+    }
+
+    public void reconnect(RemoteAddress remoteAddress, Map<String, Object> extras) {
+        reconnectManager.scheduleReconnect(workGroup.next(), () -> doConnect(remoteAddress, extras, 0));
     }
 
     public void connect(Map<String, Object> extras) {
@@ -119,12 +142,12 @@ public class NettyClient {
         }
         //启动客户端去连接服务器端
         for (RemoteAddress remoteAddress : remoteAddressesList) {
-            ThreadUtil.execAsync(() -> doConnect(remoteAddress, extras));
+            ThreadUtil.execAsync(() -> doConnect(remoteAddress, extras, 0));
         }
     }
 
     public void connect(RemoteAddress remoteAddress, Map<String, Object> extras) {
-        ThreadUtil.execAsync(() -> doConnect(remoteAddress, extras));
+        ThreadUtil.execAsync(() -> doConnect(remoteAddress, extras, 0));
     }
 
     public void connect() {
@@ -133,22 +156,22 @@ public class NettyClient {
         }
         //启动客户端去连接服务器端
         for (RemoteAddress remoteAddress : remoteAddressesList) {
-            ThreadUtil.execAsync(() -> doConnect(remoteAddress, null));
+            ThreadUtil.execAsync(() -> doConnect(remoteAddress, null, 0));
         }
     }
 
     public void connect(RemoteAddress remoteAddress) {
-        ThreadUtil.execAsync(() -> doConnect(remoteAddress, null));
+        ThreadUtil.execAsync(() -> doConnect(remoteAddress, null, 0));
     }
 
     public void disconnect() {
         connected = false;
         currentChannel.disconnect();
         currentChannel.close();
-        LOG.info(StrUtil.format("NettyClient[{}]已断开连接",config.getName()));
+        LOG.info(StrUtil.format("NettyClient[{}]已断开连接", config.getName()));
     }
 
-    public void destory() {
+    public void destroy() {
         //优雅退出，释放线程池
         workGroup.shutdownGracefully();
         clientBootstrap = null;

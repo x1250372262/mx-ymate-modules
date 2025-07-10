@@ -159,14 +159,38 @@ public class NettyClientManager {
     }
 
 
-    public void stop(String name) {
+    public void disconnect(String name) {
         NettyClient nettyClient = CLIENT_MAP.get(name);
         if (nettyClient != null) {
-            nettyClient.stop();
+            nettyClient.disconnect();
         }
     }
 
-    public void stopAll() {
-        CLIENT_MAP.forEach((name, nettyClient) -> nettyClient.stop());
+    public void disconnectAll() {
+        CLIENT_MAP.forEach((name, nettyClient) -> nettyClient.disconnect());
+    }
+
+    public void destroy(String name) {
+        NettyClient nettyClient = CLIENT_MAP.get(name);
+        if (nettyClient != null) {
+            nettyClient.destroy();
+        }
+    }
+
+    public void destroyAll() {
+        CLIENT_MAP.forEach((name, nettyClient) -> nettyClient.destroy());
+    }
+
+    public void reconnect(String name, RemoteAddress remoteAddress, Map<String, Object> extras) {
+        NettyClient nettyClient = CLIENT_MAP.get(name);
+        if (nettyClient == null) {
+            LOG.error(StrUtil.format("NettyClient[{}] 没有初始化，请先初始化", name));
+            return;
+        }
+        try {
+            nettyClient.reconnect(remoteAddress, extras);
+        } catch (Exception e) {
+            LOG.error(StrUtil.format("NettyClient[{}] 连接失败", name), e);
+        }
     }
 }

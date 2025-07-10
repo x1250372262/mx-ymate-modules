@@ -120,7 +120,7 @@ public final class Netty implements IModule, INetty {
             initialized = false;
             if (config.isEnabled()) {
                 nettyServerManager.stopAll();
-                nettyClientManager.stopAll();
+                nettyClientManager.destroyAll();
                 nettyWebsocketManager.stop();
             }
             config = null;
