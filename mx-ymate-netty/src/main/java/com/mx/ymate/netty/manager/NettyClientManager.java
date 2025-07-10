@@ -188,6 +188,7 @@ public class NettyClientManager {
             return;
         }
         try {
+            nettyClient.disconnect();
             nettyClient.reconnect(remoteAddress, extras);
         } catch (Exception e) {
             LOG.error(StrUtil.format("NettyClient[{}] 连接失败", name), e);
