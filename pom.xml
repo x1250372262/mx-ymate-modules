@@ -32,7 +32,7 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <ymate.platform.version>2.1.3</ymate.platform.version>
+        <ymate.platform.version>2.1.4-dev</ymate.platform.version>
         <ymate.module.schedule.version>1.0.2-dev</ymate.module.schedule.version>
         <ymate.module.embed.version>1.0.4-dev</ymate.module.embed.version>
         <hutool.all.version>5.8.35</hutool.all.version>
@@ -412,6 +412,12 @@
             <dependency>
                 <groupId>com.mx.modules</groupId>
                 <artifactId>mx-ymate-qwen</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <!--企业微信机器人-->
+            <dependency>
+                <groupId>com.mx.modules</groupId>
+                <artifactId>mx-ymate-work-robot</artifactId>
                 <version>${version}</version>
             </dependency>
         </dependencies>
