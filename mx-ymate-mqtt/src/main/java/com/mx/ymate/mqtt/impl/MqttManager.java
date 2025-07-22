@@ -23,11 +23,14 @@ public class MqttManager {
 
     private final Map<String, MqttClient> MQTT_MAP = new ConcurrentHashMap<>();
     private final Log LOG = LogFactory.getLog(MqttManager.class);
+    private final List<MqttConfig> configList;
 
-    public MqttManager() {
+    public MqttManager(List<MqttConfig> configList) {
+        this.configList = configList;
     }
 
-    public void initAll(List<MqttConfig> configList) {
+
+    public void initAll() {
         for (MqttConfig mqttConfig : configList) {
             String name = mqttConfig.getName();
             if (MQTT_MAP.containsKey(name)) {
@@ -43,7 +46,7 @@ public class MqttManager {
         }
     }
 
-    public void init(String name, List<MqttConfig> configList) {
+    public void init(String name) {
         MqttConfig targetConfig = configList.stream()
                 .filter(cfg -> cfg.getName().equals(name))
                 .findFirst()
@@ -101,10 +104,6 @@ public class MqttManager {
 
 
     public MxResult add(MqttConfig targetConfig) {
-        return add(targetConfig, null);
-    }
-
-    public MxResult add(MqttConfig targetConfig, Map<String, Object> extras) {
         String name = targetConfig.getName();
         if (MQTT_MAP.containsKey(name)) {
             return MxResult.fail().msg(StrUtil.format("MQTT[{}] 已存在", name));
@@ -114,8 +113,19 @@ public class MqttManager {
             return MxResult.fail().msg(StrUtil.format("MQTT[{}] 初始化失败", name));
         }
         MQTT_MAP.put(name, result);
-        result.connect(extras);
         return MxResult.ok();
+    }
+
+    public MxResult addAndConnect(MqttConfig targetConfig) {
+        return addAndConnect(targetConfig,null);
+    }
+
+    public MxResult addAndConnect(MqttConfig targetConfig, Map<String, Object> extras) {
+        MxResult mxResult = add(targetConfig);
+        if(mxResult.isSuccess()){
+            get(targetConfig.getName()).connect(extras);
+        }
+        return mxResult;
     }
 
 

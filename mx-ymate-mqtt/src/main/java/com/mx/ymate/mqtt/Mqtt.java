@@ -93,8 +93,8 @@ public final class Mqtt implements IModule, IMqtt {
             }
             if (config.isEnabled() && config.autoInit()) {
                 //等待框架启动成功
-                mqttManager = new MqttManager();
-                mqttManager.initAll(config.configList());
+                mqttManager = new MqttManager(config.configList());
+                mqttManager.initAll();
             }
             initialized = true;
             YMP.showVersion("初始化 mx-ymate-mqtt-mqtt-${version} 模块成功", new Version(1, 0, 0, Mqtt.class, Version.VersionType.Release));
