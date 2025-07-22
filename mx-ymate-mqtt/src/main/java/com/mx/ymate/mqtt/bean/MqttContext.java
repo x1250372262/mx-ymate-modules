@@ -1,4 +1,4 @@
-package com.mx.ymate.netty.bean;
+package com.mx.ymate.mqtt.bean;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,18 +12,26 @@ import java.util.Map;
  * @Time: 09:38.
  * @Description:
  */
-public class ClientContext {
+public class MqttContext {
 
     private final String clientId;
+
+    private final String clientName;
+
     private final Map<String, Object> extras;
 
-    private ClientContext(Builder builder) {
+    private MqttContext(Builder builder) {
         this.clientId = builder.clientId;
+        this.clientName = builder.clientName;
         this.extras = Collections.unmodifiableMap(new HashMap<>(builder.extras));
     }
 
     public String getClientId() {
         return clientId;
+    }
+
+    public String getClientName() {
+        return clientName;
     }
 
     public Object getExtra(String key) {
@@ -34,6 +42,8 @@ public class ClientContext {
         return extras;
     }
 
+
+
     public static Builder builder() {
         return new Builder();
     }
@@ -43,10 +53,16 @@ public class ClientContext {
      */
     public static class Builder {
         private String clientId;
+        private String clientName;
         private final Map<String, Object> extras = new HashMap<>();
 
         public Builder clientId(String clientId) {
             this.clientId = clientId;
+            return this;
+        }
+
+        public Builder clientName(String clientName) {
+            this.clientName = clientName;
             return this;
         }
 
@@ -62,11 +78,14 @@ public class ClientContext {
             return this;
         }
 
-        public ClientContext build() {
+        public MqttContext build() {
             if (StringUtils.isBlank(clientId)) {
                 throw new IllegalArgumentException("clientId不能为空");
             }
-            return new ClientContext(this);
+            if (StringUtils.isBlank(clientName)) {
+                throw new IllegalArgumentException("clientName不能为空");
+            }
+            return new MqttContext(this);
         }
     }
 }

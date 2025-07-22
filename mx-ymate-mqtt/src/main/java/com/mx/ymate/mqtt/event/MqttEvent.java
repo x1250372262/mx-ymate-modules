@@ -21,6 +21,11 @@ public class MqttEvent extends AbstractEventContext<Object, MqttEvent.EVENT> imp
         MQTT_CONNECT_SUCCESS,
 
         /**
+         * MQTT重连成功
+         */
+        MQTT_RECONNECT_SUCCESS,
+
+        /**
          * MQTT连接失败
          */
         MQTT_CONNECT_FAIL,

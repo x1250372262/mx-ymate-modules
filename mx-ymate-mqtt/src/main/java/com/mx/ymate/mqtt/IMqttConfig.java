@@ -15,11 +15,11 @@
  */
 package com.mx.ymate.mqtt;
 
+import com.mx.ymate.mqtt.bean.MqttConfig;
 import net.ymate.platform.core.beans.annotation.Ignored;
 import net.ymate.platform.core.support.IInitialization;
-import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 
-import java.util.Properties;
+import java.util.List;
 
 /**
  * @Author: mengxiang.
@@ -31,7 +31,9 @@ import java.util.Properties;
 public interface IMqttConfig extends IInitialization<IMqtt> {
 
     String ENABLED = "enabled";
-    String AUTO_CONNECT = "autoConnect";
+    String NAME = "name";
+    String DEFAULT_NAME = "default";
+    String AUTO_INIT = "autoInit";
     String URL = "url";
     String CLIENT_ID = "clientId";
     String USER_NAME = "userName";
@@ -45,8 +47,16 @@ public interface IMqttConfig extends IInitialization<IMqtt> {
     String VERSION = "version";
     String AUTOMATIC_RECONNECTION = "automaticReconnection";
     String RECONNECT_DELAY = "reconnectDelay";
-    String SSL_PROPERTIES = "sslProperties";
     String STORAGE_DIR = "storageDir";
+    String SSL_ENABLED = "ssl.enabled";
+    String SSL_TRUSTSTORE = "ssl.truststore";
+    String SSL_TRUSTSTORE_PASSWORD = "ssl.truststore_password";
+    String SSL_TRUSTSTORE_TYPE = "ssl.truststore_type";
+    String SSL_KEYSTORE = "ssl.keystore";
+    String SSL_KEYSTORE_PASSWORD = "ssl.keystore_password";
+    String SSL_KEYSTORE_TYPE = "ssl.keystore_type";
+    String SSL_PROTOCOL = "ssl.protocol";
+    String WILL_ENABLED = "will.enabled";
     String WILL_TOPIC = "will.topic";
     String WILL_PAYLOAD = "will.payload";
     String WILL_QOS = "will.qos";
@@ -55,6 +65,8 @@ public interface IMqttConfig extends IInitialization<IMqtt> {
     String EX_TIME = "{time}";
     String EX_UUID = "{uuid}";
 
+    String MQTT_VERSION_3_1_1 = "3.1.1";
+    String MQTT_VERSION_3_1 = "3.1";
 
     /**
      * 模块是否已启用, 默认值: true
@@ -64,129 +76,21 @@ public interface IMqttConfig extends IInitialization<IMqtt> {
     boolean isEnabled();
 
     /**
-     * 是否自动连接服务 默认true
-     *
+     * 是否自动初始化
      * @return
      */
-    boolean autoConnect();
+    boolean autoInit();
 
     /**
-     * 连接地址
+     * 配置列表
      * @return
      */
-    String url();
+    List<MqttConfig> configList();
 
     /**
-     * 客户端id {time}代表增加默认时间戳 {uuid}代表增加随机uuid  没有则取本身
+     * 某一个配置
+     * @param name
      * @return
      */
-    String clientId();
-
-    /**
-     * 用户名默认不设置
-     * @return
-     */
-    String userName();
-
-    /**
-     * 密码默认不设置
-     * @return
-     */
-    String password();
-
-    /**
-     * 回调类
-     * @return
-     */
-    MqttCallbackExtended callback();
-
-    /**
-     * 是否清理session，false时可接收离线消息 true忽略离线消息 默认true
-     * @return
-     */
-    boolean cleanSession();
-
-    /**
-     * 是否手动确认消息 默认false
-     * @return
-     */
-    boolean manualAcks();
-
-    /**
-     * 超时时间 默认60s
-     * @return
-     */
-    int connectionTimeout();
-
-    /**
-     * 心跳时间间隔 默认60s 值为0将禁用客户端中的保活处理
-     * @return
-     */
-    int keepAliveInterval();
-
-    /**
-     * 设置“最大空中流量”。请在高流量环境中增加此值。默认值为10
-     * @return
-     */
-    int maxInflight();
-
-    /**
-     * 版本 默认3.1.1
-     * @return
-     */
-    String version();
-
-    /**
-     * 是否自动重连 默认false
-     * @return
-     */
-    boolean automaticReconnection();
-
-    /**
-     * 重新连接之间等待的最长时间
-     * @return
-     */
-    int reconnectDelay();
-
-    /**
-     * SSL配置文件地址
-     * @return
-     */
-    Properties sslProperties();
-
-    /**
-     * 消息保存方式 如果不设置，默认保存在内存中，设置了则保存着指定的目录下
-     * @return
-     */
-    String storageDir();
-
-    /**
-     * 要发布到的主题
-     * @return
-     */
-    String willTopic();
-
-    /**
-     * 消息的字节有效负载
-     * @return
-     */
-    String willPayload();
-
-    /**
-     * qos–在（0、1或2）发布消息的服务质量
-     * @return
-     */
-    int willQos();
-
-    /**
-     * 是否应保留消息
-     * @return
-     */
-    boolean willRetained();
-
-    /**
-     * 是否有遗嘱消息
-     * @return
-     */
-    boolean isHasWill();
+    MqttConfig mqttConfig(String name);
 }
