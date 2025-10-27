@@ -56,6 +56,7 @@ public class SecurityLoginController {
      * @throws Exception
      */
     @RequestMapping(value = "/unlock", method = Type.HttpMethod.POST)
+    @NoLogin
     public IView unlock(@VMxRequired(msg = ID_NOT_EMPTY_MSG, i18nKey = ID_NOT_EMPTY_I18N_KEY)
                         @RequestParam String id,
                         @VMxRequired(msg = PASSWORD_NOT_EMPTY_MSG, i18nKey = PASSWORD_NOT_EMPTY_I18N_KEY)
